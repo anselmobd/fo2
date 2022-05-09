@@ -114,6 +114,16 @@ def get_solicitacao(cursor, id):
         , l.PROCONF_SUBGRUPO TAM
         , l.PROCONF_ITEM COR
         , l.QTDE_PECAS_PROG QTD_ORI
+        , CASE WHEN lp.COD_CONTAINER IS NOT NULL
+                AND lp.COD_CONTAINER <> '0'
+          THEN lp.COD_CONTAINER
+          ELSE '-'
+          END palete
+        , CASE WHEN lp.COD_CONTAINER IS NOT NULL
+                AND lp.COD_CONTAINER <> '0'
+          THEN lp.DATA_INCLUSAO
+          ELSE NULL
+          END inclusao_palete
         FROM pcpc_044 sl -- solicitação / lote 
         -- Na tabela de solicitações aparece a OP de expedição também como
         -- reservada, com situação 4. Para tentar evitar isso, não listo
@@ -131,6 +141,9 @@ def get_solicitacao(cursor, id):
           ON l.SEQUENCIA_ESTAGIO = 1
          AND l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
          AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
+        LEFT JOIN ENDR_014 lp -- lote/palete - oc/container
+          ON lp.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO 
+         AND lp.ORDEM_CONFECCAO = (l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO 
         WHERE sl.SOLICITACAO  = {id}
         ORDER BY
           sl.SITUACAO
