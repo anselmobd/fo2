@@ -30,16 +30,16 @@ class Solicitacao(O2BaseGetView):
     def monta_dados_solicitados(self):
         self.dados_solicitados = get_solicitacao(self.cursor, self.context['solicitacao'])
         self.dados_enderecados = copy.deepcopy(self.dados_solicitados)
-        # self.dados_enderecados.sort(
-        #     key=itemgetter(
-        #         'rota',
-        #         'endereco',
-        #         'situacao',
-        #         'ordem_producao',
-        #         'lote',
-        #     ),
-        #     reverse=True,
-        # )
+        self.dados_enderecados.sort(
+            key=itemgetter(
+                'rota',
+                'endereco',
+                'situacao',
+                'ordem_producao',
+                'lote',
+            ),
+            reverse=True,
+        )
 
     def context_solicitados(self):
         for row in self.dados_solicitados:
