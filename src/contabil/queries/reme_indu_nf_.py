@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from utils.functions.models import dictlist
+from utils.functions.queries import debug_cursor_execute
 from utils.functions.models import rows_to_dict_list
 
 
@@ -35,12 +37,13 @@ def reme_indu_nf(
     situacao_filter = ''
     if situacao == 'A':
         situacao_filter += """ --
-            AND nf.SITUACAO_NFISC = 1
+            AND nf.SITUACAO_NFISC IN (1, 4)
+            AND nf.COD_STATUS = 100
             AND fe.DOCUMENTO IS NULL
         """
     elif situacao == 'C':
         situacao_filter += """ --
-            AND nf.SITUACAO_NFISC != 1
+            AND nf.SITUACAO_NFISC NOT IN (1, 4)
         """
     elif situacao == 'D':
         situacao_filter += """ --
@@ -259,4 +262,6 @@ def reme_indu_nf(
         retorno_filter=retorno_filter,
         )
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    # return rows_to_dict_list(cursor)
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor, name_case=str.upper)
