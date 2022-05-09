@@ -62,13 +62,20 @@ class Solicitacoes(O2BaseGetPostView):
         data = paginator_basic(data, 20, self.page)
 
         for row in data:
-            if row['solicitacao'] == 'Totais:':
-                continue
+            if row['solicitacao']:
+                if row['solicitacao'] == 'Totais:':
+                    continue
+                row['solicitacao|LINK'] = reverse(
+                    'cd:novo_solicitacao',
+                    args=[row['solicitacao']]
+                )
+            else:
+                # row['solicitacao|LINK'] = reverse(
+                #     'cd:novo_solicitacao',
+                #     args=['-']
+                # )
+                row['solicitacao'] = 'Sem Número'
             row['solicitacao|TARGET'] = '_blank'
-            row['solicitacao|LINK'] = reverse(
-                'cd:novo_solicitacao',
-                args=[row['solicitacao']]
-            )
             row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
 
         self.context.update({
