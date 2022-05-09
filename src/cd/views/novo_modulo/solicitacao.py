@@ -34,7 +34,7 @@ class Solicitacao(O2BaseGetView):
             else:
                 self.dados_solicitados = get_solicitacao(
                     self.cursor,
-                    pedido_destino=self.pedido,
+                    pedido_destino=self.context['pedido'],
                 )
         else:
             self.dados_solicitados = get_solicitacao(self.cursor, self.context['solicitacao'])
