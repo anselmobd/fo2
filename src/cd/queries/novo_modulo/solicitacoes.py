@@ -124,6 +124,8 @@ def get_solicitacao(cursor, id):
           THEN lp.DATA_INCLUSAO
           ELSE NULL
           END inclusao_palete
+        , COALESCE(ec.COD_ENDERECO, '-') endereco
+        , ec.DATA_INCLUSAO inclusao_endereco
         FROM pcpc_044 sl -- solicitação / lote 
         -- Na tabela de solicitações aparece a OP de expedição também como
         -- reservada, com situação 4. Para tentar evitar isso, não listo
@@ -144,6 +146,8 @@ def get_solicitacao(cursor, id):
         LEFT JOIN ENDR_014 lp -- lote/palete - oc/container
           ON lp.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO 
          AND lp.ORDEM_CONFECCAO = (l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO 
+        LEFT JOIN ENDR_015 ec -- endereço/container 
+          ON ec.COD_CONTAINER = lp.COD_CONTAINER
         WHERE sl.SOLICITACAO  = {id}
         ORDER BY
           sl.SITUACAO
