@@ -7,7 +7,16 @@ from utils.functions.strings import only_digits
 
 class LotesEmEstoque():
 
-    def __init__(self, cursor, tipo=None, ref=None, get=None, colecao=None, modelo=None, fields_tuple=None):
+    def __init__(
+        self,
+        cursor,
+        tipo=None,
+        ref=None,
+        get=None,
+        colecao=None,
+        modelo=None,
+        fields_tuple=None,
+    ):
         self.cursor = cursor
         self.tipo = tipo
         self.ref = ref
@@ -25,15 +34,12 @@ class LotesEmEstoque():
         )
 
     def dados(self):
-        cursor = self.cursor
-        modelo = self.modelo
-
         sql = self.sql_em_stq.sql()
 
-        debug_cursor_execute(cursor, sql)
-        dados = dictlist(cursor)
+        debug_cursor_execute(self.cursor, sql)
+        dados = dictlist(self.cursor)
 
-        if modelo:
+        if self.modelo:
             dados_modelo = []
         for row in dados:
             try:
@@ -41,9 +47,9 @@ class LotesEmEstoque():
             except ValueError:
                 ref_modelo = 0
             row['modelo'] = ref_modelo
-            if ref_modelo == modelo:
+            if ref_modelo == self.modelo:
                 dados_modelo.append(row)
-        if modelo:
+        if self.modelo:
             return dados_modelo
         else:
             return dados
@@ -83,7 +89,15 @@ class SqlEmEstoque():
         obs.: ref sempre é retornado
     """
 
-    def __init__(self, tipo=None, ref=None, get=None, colecao=None, sinal='+', fields_tuple=None):
+    def __init__(
+        self, 
+        tipo=None, 
+        ref=None, 
+        get=None, 
+        colecao=None, 
+        sinal='+', 
+        fields_tuple=None,
+    ):
         self.tipo = tipo
         self.ref = ref
         self.get = get
@@ -112,23 +126,16 @@ class SqlEmEstoque():
         return condicao, ref
 
     def sql(self):
-        tipo = self.tipo
-        ref = self.ref
-        get = self.get
-        colecao = self.colecao
-        sinal = self.sinal
-        fields_tuple = self.fields_tuple
-
         filter_ref = ''
         ref_conds = []
         ref_in = []
-        if isinstance(ref, str):
-            ref = map(
+        if isinstance(self.ref, str):
+            self.ref = map(
                 str.strip,
-                ref.split(','),
+                self.ref.split(','),
             )
-        if ref is not None:  # iterable
-            for r in ref:
+        if self.ref is not None:  # iterable
+            for r in self.ref:
                 condicao, valor = self.condicao_valor(r)
                 if condicao == '=':
                     ref_in.append(valor)
@@ -143,21 +150,21 @@ class SqlEmEstoque():
 
         join_para_colecao = ""
         filter_colecao = ""
-        if colecao is not None:
+        if self.colecao is not None:
             join_para_colecao = """
                 JOIN BASI_030 r
                 ON r.NIVEL_ESTRUTURA = 1
                 AND r.REFERENCIA = l.PROCONF_GRUPO 
             """
-            filter_colecao = f"AND r.COLECAO = '{colecao}'"
+            filter_colecao = f"AND r.COLECAO = '{self.colecao}'"
 
-        fields_tuple = fields_tuple if fields_tuple else []
-        fields_set = {'ref'}.union(fields_tuple)
+        self.fields_tuple = self.fields_tuple if self.fields_tuple else []
+        fields_set = {'ref'}.union(self.fields_tuple)
 
         distinct = False
-        if get == 'ref':
+        if self.get == 'ref':
             distinct = True
-        elif get == 'lote_qtd':
+        elif self.get == 'lote_qtd':
             fields_set = fields_set.union([
                 'per',
                 'oc',
@@ -170,9 +177,9 @@ class SqlEmEstoque():
             ])
 
         filtra_estagio = "AND l.CODIGO_ESTAGIO = 63"
-        if tipo == 'p':
+        if self.tipo == 'p':
             field_qtd = f"""--
-                , {sinal}l.QTDE_DISPONIVEL_BAIXA qtd
+                , {self.sinal}l.QTDE_DISPONIVEL_BAIXA qtd
             """
             tipo_join = """--
                 JOIN PCPC_020 op
@@ -182,9 +189,9 @@ class SqlEmEstoque():
                 AND op.PEDIDO_VENDA <> 0
                 AND l.QTDE_DISPONIVEL_BAIXA > 0
             """
-        elif tipo == 's':
+        elif self.tipo == 's':
             field_qtd = f"""--
-                , {sinal}sl.QTDE qtd
+                , {self.sinal}sl.QTDE qtd
             """
             tipo_join = """--
                 JOIN PCPC_044 sl
@@ -194,15 +201,15 @@ class SqlEmEstoque():
             tipo_filter = """--
                 AND sl.SITUACAO IN (2, 3, 4)
             """
-        elif tipo and tipo.startswith('i'):
+        elif self.tipo and self.tipo.startswith('i'):
             field_qtd = f"""--
-                , {sinal}l.QTDE_DISPONIVEL_BAIXA qtd
+                , {self.sinal}l.QTDE_DISPONIVEL_BAIXA qtd
             """
             tipo_join = ""
             tipo_filter = """--
                 AND l.QTDE_DISPONIVEL_BAIXA > 0
             """
-            if 'q' in tipo:
+            if 'q' in self.tipo:
                 filtra_estagio = ''
         else:
             field_qtd = ""
@@ -237,8 +244,3 @@ class SqlEmEstoque():
             {filter_colecao} -- filter_colecao
         """
         return sql
-
-
-def refs_em_estoque(cursor):
-    lot_em_stq = LotesEmEstoque( cursor, get='ref')
-    return lot_em_stq.dados()

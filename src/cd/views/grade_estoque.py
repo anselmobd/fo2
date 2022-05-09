@@ -12,7 +12,7 @@ from utils.views import group_rowspan
 
 import cd.forms
 from cd.queries.novo_modulo.grade_cd import grade_estoque
-from cd.queries.novo_modulo.lotes import refs_em_estoque
+from cd.queries.novo_modulo.lotes import LotesEmEstoque
 
 
 class Grade(PermissionRequiredMixin, View):
@@ -95,7 +95,7 @@ class Grade(PermissionRequiredMixin, View):
             # ).exclude(
             #     qtd__lte=0)
 
-            referencias = refs_em_estoque(self.cursor_s)
+            LotesEmEstoque(self.cursor_s, get='ref').dados()
             # referencias = data_rec.distinct().values(
             #     'referencia').order_by('referencia')
             for row in referencias:
