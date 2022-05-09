@@ -11,6 +11,7 @@ def get_solicitacoes(
   pedido_destino=None,
   ref_destino=None,
   ref_reservada=None,
+  lote=None,
 ):
     filtra_solicitacao = f"""--
         AND sl.SOLICITACAO = {solicitacao}
@@ -40,6 +41,13 @@ def get_solicitacoes(
         AND l.PROCONF_GRUPO = '{ref_reservada}'
     """ if ref_reservada else ''
 
+    filtra_lote = ''
+    if lote:
+        filtra_lote = f"""--
+            AND l.PERIODO_PRODUCAO = {lote[:4]}
+            AND l.ORDEM_CONFECCAO = {lote[4:]}
+        """
+    
     if (
         filtra_pedido_destino
         # or filtra_ref_destino
@@ -90,6 +98,7 @@ def get_solicitacoes(
           {filtra_pedido_destino} -- filtra_pedido_destino
           {filtra_ref_destino} -- filtra_ref_destino
           {filtra_ref_reservada} -- filtra_ref_reservada
+          {filtra_lote} -- filtra_lote
         GROUP BY 
           sl.SOLICITACAO
         ORDER BY 
