@@ -21,11 +21,12 @@ from geral.models import (
 
 def pop(request, pop_assunto=None, id=None):
     assunto = PopAssunto.objects.get(slug=pop_assunto)
-    if assunto.grupo_slug == '':
-        titulo = 'POPs de {}'.format(assunto.nome)
-    else:
-        titulo = assunto.nome
-    context = {'titulo': titulo}
+    prefixo = (
+        assunto.grupo_assunto.nome
+        if assunto.grupo_assunto.nome
+        else 'POPs'
+    )    
+    context = {'titulo': f"{prefixo}: {assunto.nome}"}
 
     can_edit = False
     user = None
