@@ -27,6 +27,9 @@
     <hr>
   {% endif %}
   {% if data %}
+    {% if visu_link %}
+      <p><a href="{{visu_link}}" target="_blank">Visualizar como visitante</a></p>  
+    {% endif %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}

@@ -40,6 +40,10 @@ def pop(request, pop_assunto=None, id=None):
                 usuario=request.user, assunto=assunto)
             can_edit = len(verificacao) != 0
 
+    if id is not None and id == '0':
+        can_edit = False
+        id = None
+
     if can_edit:
         if id:
             instance = get_object_or_404(Pop, id=id)
@@ -61,7 +65,9 @@ def pop(request, pop_assunto=None, id=None):
                 form = forms.PopForm(instance=instance)
         form.fields['assunto'].widget = django.forms.HiddenInput()
         context.update({'form': form})
-
+        context.update({
+            'visu_link': reverse('geral:pop', args=[pop_assunto, 0])
+        })
     if can_edit:
         select = Pop.objects.filter(assunto__slug=pop_assunto)
         select = select.order_by('-uploaded_at')
