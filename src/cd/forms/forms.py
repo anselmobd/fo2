@@ -845,6 +845,7 @@ class SolicitacoesForm(forms.Form):
         )
     )
     op = forms.CharField(
+        label='OP',
         required=False,
         min_length=1,
         max_length=6,
