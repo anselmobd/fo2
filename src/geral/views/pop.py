@@ -17,6 +17,7 @@ from geral.models import (
     PopAssunto,
     UsuarioPopAssunto,
 )
+from utils.views import group_rowspan
 
 
 def pop(request, pop_assunto=None, id=None):
@@ -66,7 +67,7 @@ def pop(request, pop_assunto=None, id=None):
         select = select.order_by('-uploaded_at')
     else:
         select = Pop.objects.filter(assunto__slug=pop_assunto, habilitado=True)
-        select = select.order_by('descricao')
+        select = select.order_by('topico', 'descricao')
     select = select.values()
     data = list(select)
     for row in data:
@@ -80,15 +81,18 @@ def pop(request, pop_assunto=None, id=None):
     })
     if can_edit:
         context.update({
-            'headers': ('Adicionado em', 'Título', 'Arquivo POP',
+            'headers': ('Adicionado em', 'Tópico', 'Título', 'Arquivo POP',
                         'Habilitado', 'Editar'),
-            'fields': ('uploaded_at', 'descricao', 'pop',
+            'fields': ('uploaded_at', 'topico', 'descricao', 'pop',
                        'habilitado', 'edit'),
         })
     else:
+        group = ['topico']
+        group_rowspan(data, group)
         context.update({
-            'headers': ['Título'],
-            'fields': ['descricao'],
+            'headers': ['Tópico', 'Título'],
+            'fields': ['topico', 'descricao'],
+            'group': group,
         })
     if get_empresa(request) == 'agator':
         context.update({

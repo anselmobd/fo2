@@ -29,7 +29,7 @@ class InformacaoModuloForm(forms.Form):
 class PopForm(forms.ModelForm):
     class Meta:
         model = Pop
-        fields = ('assunto', 'descricao', 'pop', 'habilitado')
+        fields = ('assunto', 'topico', 'descricao', 'pop', 'habilitado')
 
 
 class ExecGeraFluxoForm(forms.Form):

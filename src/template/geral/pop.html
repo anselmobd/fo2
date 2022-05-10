@@ -28,8 +28,8 @@
   {% endif %}
   {% if data %}
     <table>
-      {% include "layout/html_thead.html" with data=headers only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+      {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
     </table>
   {% else %}
     <h4>Nenhum documento disponível</h4>
