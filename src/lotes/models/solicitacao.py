@@ -20,7 +20,7 @@ class SolicitaLote(models.Model):
         null=True, blank=True,
         verbose_name='Data do embarque')
     usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True,
+        User, on_delete=models.PROTECT, null=True, blank=True,
         verbose_name='usuário')
     ativa = models.NullBooleanField(default=True)
     create_at = models.DateTimeField(
@@ -109,10 +109,10 @@ class SolicitaLoteQtdInactiveManager(models.Manager):
 
 class SolicitaLoteQtd(models.Model):
     solicitacao = models.ForeignKey(
-        SolicitaLote, on_delete=models.CASCADE, null=True, blank=True,
+        SolicitaLote, on_delete=models.PROTECT, null=True, blank=True,
         verbose_name='Solicitação')
     lote = models.ForeignKey(
-        Lote, on_delete=models.CASCADE, null=True, blank=True,
+        Lote, on_delete=models.PROTECT, null=True, blank=True,
         verbose_name='Lote')
     qtd = models.IntegerField(
         default=0, verbose_name='quantidade solicitada')
@@ -185,13 +185,13 @@ class SolicitaLoteQtd(models.Model):
 
 class SolicitaLotePrinted(models.Model):
     solicitacao = models.ForeignKey(
-        SolicitaLote, on_delete=models.CASCADE, null=True, blank=True,
+        SolicitaLote, on_delete=models.PROTECT, null=True, blank=True,
         verbose_name='Solicitação')
     printed_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='etiquetas impressas em')
     printed_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True,
+        User, on_delete=models.PROTECT, null=True, blank=True,
         verbose_name='etiquetas impressas por')
 
     def save(self, *args, **kwargs):
