@@ -103,10 +103,10 @@ intr_adm_site.register(PopGrupoAssunto, PopGrupoAssuntoAdmin)
 
 
 class PopAssuntoAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'slug', 'grupo', 'grupo_slug', 'diretorio']
-    search_fields = ['nome', 'slug', 'grupo', 'grupo_slug', 'diretorio']
+    list_display = ['nome', 'slug', 'grupo_assunto', 'grupo', 'grupo_slug', 'diretorio']
+    search_fields = ['nome', 'slug', 'grupo_assunto', 'grupo', 'grupo_slug', 'diretorio']
     ordering = ['nome']
-    fields = ['nome', 'slug', 'grupo', 'grupo_slug', 'diretorio']
+    fields = ['nome', 'slug', 'grupo_assunto', 'grupo', 'grupo_slug', 'diretorio']
     readonly_fields = ['slug', 'grupo_slug']
 
 

@@ -194,6 +194,11 @@ class PopAssunto(models.Model):
     nome = models.CharField(
         max_length=255, blank=True)
     slug = models.SlugField(default='slug')
+    grupo_assunto = models.ForeignKey(
+        PopGrupoAssunto,
+        on_delete=models.PROTECT,
+        default=1,
+    )
     grupo = models.CharField(
         max_length=255, blank=True)
     grupo_slug = models.SlugField(default='slug')
