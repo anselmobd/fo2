@@ -225,6 +225,8 @@ class Pop(models.Model):
         verbose_name='assunto do POP')
     descricao = models.CharField(
         max_length=255, blank=True, verbose_name='título')
+    topico = models.CharField(
+        max_length=255, blank=True, verbose_name='tópico')
     pop = models.FileField(upload_to=pop_upload_to, verbose_name='Arquivo POP')
     uploaded_at = models.DateTimeField(
         auto_now_add=True, verbose_name='Inserido em')
