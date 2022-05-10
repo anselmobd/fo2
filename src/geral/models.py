@@ -176,6 +176,8 @@ class PopGrupoAssunto(models.Model):
     nome = models.CharField(
         max_length=255, blank=True)
     slug = models.SlugField(default='slug')
+    ordem = models.IntegerField(
+        default=0)
 
     def __str__(self):
         return self.nome
