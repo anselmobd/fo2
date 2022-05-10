@@ -21,7 +21,7 @@ class Empresa(models.Model):
 
 class Colaborador(models.Model):
     user = models.OneToOneField(
-        User, on_delete=models.CASCADE, verbose_name='usuário')
+        User, on_delete=models.PROTECT, verbose_name='usuário')
     matricula = models.CharField(
         max_length=5, unique=True, default='00000',
         verbose_name='matrícula')
