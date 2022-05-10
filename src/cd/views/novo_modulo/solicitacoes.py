@@ -33,6 +33,7 @@ class Solicitacoes(O2BaseGetPostView):
             self.ref_destino,
             self.ref_reservada,
             self.lote,
+            self.op,
         )
 
         totalize_data(data, {
