@@ -1,0 +1,18 @@
+- model: geral.PopGrupoAssunto
+  pk: 1
+  fields:
+    nome: ''
+    slug: ''
+    ordem: 1
+- model: geral.PopGrupoAssunto
+  pk: 2
+  fields:
+    nome: Outras Documentações
+    slug: outras-documentacoes
+    ordem: 2
+- model: geral.PopGrupoAssunto
+  pk: 3
+  fields:
+    nome: SMS
+    slug: sms
+    ordem: 3
