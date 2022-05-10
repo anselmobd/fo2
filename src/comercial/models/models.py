@@ -31,7 +31,7 @@ class ModeloPassado(models.Model):
 
 class ModeloPassadoPeriodo(models.Model):
     modelo = models.ForeignKey(
-        ModeloPassado, on_delete=models.CASCADE)
+        ModeloPassado, on_delete=models.PROTECT)
     ordem = models.IntegerField()
     meses = models.IntegerField()
     peso = models.IntegerField()
@@ -108,7 +108,7 @@ def getMetaEstoqueAtual():
 
 class MetaEstoqueTamanho(models.Model):
     meta = models.ForeignKey(
-        MetaEstoque, on_delete=models.CASCADE)
+        MetaEstoque, on_delete=models.PROTECT)
     tamanho = models.CharField(max_length=3)
     quantidade = models.IntegerField()
     ordem = models.IntegerField(default=0)
@@ -123,7 +123,7 @@ class MetaEstoqueTamanho(models.Model):
 
 class MetaEstoqueCor(models.Model):
     meta = models.ForeignKey(
-        MetaEstoque, on_delete=models.CASCADE)
+        MetaEstoque, on_delete=models.PROTECT)
     cor = models.CharField(max_length=6)
     quantidade = models.IntegerField()
 
