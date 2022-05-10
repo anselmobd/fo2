@@ -90,10 +90,10 @@ class Lote(models.Model):
     local_at = models.DateTimeField(
         db_index=True, null=True, blank=True, verbose_name='localizado em')
     local_usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True,
+        User, on_delete=models.PROTECT, null=True, blank=True,
         verbose_name='localizado por')
     caixa = models.ForeignKey(
-        Caixa, null=True, default=None, on_delete=models.CASCADE)
+        Caixa, null=True, default=None, on_delete=models.PROTECT)
     trail = models.IntegerField(default=0)
     sync_id = models.IntegerField(default=-1)
     sync = models.IntegerField(default=-1)
@@ -135,9 +135,9 @@ class Lote(models.Model):
 
 # class LoteCaixa(models.Model):
 #     lote = models.ForeignKey(
-#         Lote, on_delete=models.CASCADE)
+#         Lote, on_delete=models.PROTECT)
 #     caixa = models.ForeignKey(
-#         Caixa, on_delete=models.CASCADE)
+#         Caixa, on_delete=models.PROTECT)
 #
 #     class Meta:
 #         db_table = "fo2_cd_caixa_lote"
