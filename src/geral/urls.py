@@ -1,6 +1,7 @@
 from django.urls import re_path
 
 import geral.views as views
+from geral.views import pop
 
 
 app_name = 'geral'
@@ -16,7 +17,7 @@ urlpatterns = [
     re_path(r'^resposavel_informativo/$',
         views.informativo.ResponsavelInformativoView.as_view(), name='resposavel_informativo'),
 
-    re_path(r'^pop/(?P<pop_assunto>[^/]+)/(?P<id>\d+)?$', views.pop, name='pop'),
+    re_path(r'^pop/(?P<pop_assunto>[^/]+)/(?P<id>\d+)?$', pop.pop, name='pop'),
 
     re_path(r'^exec_gera_fluxo/$',
         views.ExecGeraFluxo.as_view(), name='exec_gera_fluxo'),
