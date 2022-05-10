@@ -172,6 +172,22 @@ class InformacaoModulo(models.Model):
         db_table = "fo2_ger_modulo_info"
 
 
+class PopGrupoAssunto(models.Model):
+    nome = models.CharField(
+        max_length=255, blank=True)
+    slug = models.SlugField(default='slug')
+
+    def __str__(self):
+        return self.nome
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(PopGrupoAssunto, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_ger_pop_grup_assu"
+
+
 class PopAssunto(models.Model):
     nome = models.CharField(
         max_length=255, blank=True)
