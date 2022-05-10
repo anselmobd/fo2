@@ -95,7 +95,7 @@ class Produto(models.Model):
 
 class ProdutoCor(models.Model):
     produto = models.ForeignKey(
-        Produto, on_delete=models.CASCADE,
+        Produto, on_delete=models.PROTECT,
         verbose_name='Referência')
     cor = models.CharField(
         db_index=True, max_length=6, verbose_name='Cor')
@@ -126,7 +126,7 @@ class ProdutoCor(models.Model):
 
 class ProdutoTamanho(models.Model):
     produto = models.ForeignKey(
-        Produto, on_delete=models.CASCADE,
+        Produto, on_delete=models.PROTECT,
         verbose_name='Referência')
     tamanho = models.ForeignKey(
         Tamanho, on_delete=models.PROTECT)
@@ -153,12 +153,12 @@ class ProdutoTamanho(models.Model):
 
 class ProdutoItem(models.Model):
     produto = models.ForeignKey(
-        Produto, on_delete=models.CASCADE,
+        Produto, on_delete=models.PROTECT,
         verbose_name='Referência')
     cor = models.ForeignKey(
-        ProdutoCor, on_delete=models.CASCADE)
+        ProdutoCor, on_delete=models.PROTECT)
     tamanho = models.ForeignKey(
-        ProdutoTamanho, on_delete=models.CASCADE)
+        ProdutoTamanho, on_delete=models.PROTECT)
     gtin_tag = models.CharField(
         max_length=13, null=True, blank=True,
         verbose_name='GTIN no TAG')
@@ -181,7 +181,7 @@ class ProdutoItem(models.Model):
 
 class ComposicaoLinha(models.Model):
     composicao = models.ForeignKey(
-        Composicao, on_delete=models.CASCADE,
+        Composicao, on_delete=models.PROTECT,
         verbose_name='Composição')
     ordem = models.IntegerField()
     linha = models.CharField(max_length=100)
@@ -200,12 +200,12 @@ class GtinLog(models.Model):
     quando = models.DateTimeField(
         null=True, blank=True)
     produto = models.ForeignKey(
-        Produto, on_delete=models.CASCADE,
+        Produto, on_delete=models.PROTECT,
         verbose_name='Referência')
     cor = models.ForeignKey(
-        ProdutoCor, on_delete=models.CASCADE)
+        ProdutoCor, on_delete=models.PROTECT)
     tamanho = models.ForeignKey(
-        ProdutoTamanho, on_delete=models.CASCADE)
+        ProdutoTamanho, on_delete=models.PROTECT)
     gtin = models.CharField(
         max_length=13, null=True, blank=True,
         verbose_name='GTIN no XML')
