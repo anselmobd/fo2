@@ -57,7 +57,7 @@ class Frequencia(models.Model):
     unidade_tempo = models.ForeignKey(
         UnidadeTempo,
         verbose_name='Unidade de tempo',
-        on_delete=models.CASCADE)
+        on_delete=models.PROTECT)
     qtd_tempo = models.IntegerField(
         'Quantidade de tempo',
         default=1)
@@ -76,7 +76,7 @@ class Maquina(models.Model):
     tipo_maquina = models.ForeignKey(
         TipoMaquina,
         verbose_name='Tipo de máquina',
-        on_delete=models.CASCADE)
+        on_delete=models.PROTECT)
     nome = models.CharField(
         db_index=True,
         max_length=50)
@@ -101,10 +101,10 @@ class Maquina(models.Model):
 
 class UsuarioTipoMaquina(models.Model):
     usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        User, on_delete=models.PROTECT,
         verbose_name='usuário')
     tipo_maquina = models.ForeignKey(
-        TipoMaquina, on_delete=models.CASCADE,
+        TipoMaquina, on_delete=models.PROTECT,
         verbose_name='Tipo de máquina')
 
     class Meta:
@@ -135,7 +135,7 @@ class Atividade(models.Model):
 class AtividadeMetrica(models.Model):
     atividade = models.ForeignKey(
         Atividade,
-        on_delete=models.CASCADE)
+        on_delete=models.PROTECT)
     ordem = models.IntegerField(
         default=0)
     descricao = models.CharField(
@@ -157,12 +157,12 @@ class Rotina(models.Model):
     tipo_maquina = models.ForeignKey(
         TipoMaquina,
         verbose_name='Tipo de máquina',
-        on_delete=models.CASCADE)
+        on_delete=models.PROTECT)
     frequencia = models.ForeignKey(
         Frequencia,
         default=1,
         verbose_name='Período',
-        on_delete=models.CASCADE)
+        on_delete=models.PROTECT)
     nome = models.CharField(
         max_length=50,
         )
@@ -180,12 +180,12 @@ class Rotina(models.Model):
 class RotinaPasso(models.Model):
     rotina = models.ForeignKey(
         Rotina,
-        on_delete=models.CASCADE)
+        on_delete=models.PROTECT)
     ordem = models.IntegerField(
         default=0)
     atividade = models.ForeignKey(
         Atividade,
-        on_delete=models.CASCADE)
+        on_delete=models.PROTECT)
 
     def __str__(self):
         return '{} : {:02} : {}'.format(
@@ -203,15 +203,15 @@ class OS(models.Model):
         verbose_name='número')
     maquina = models.ForeignKey(
         Maquina,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         verbose_name='máquina')
     rotina = models.ForeignKey(
         Rotina,
-        on_delete=models.CASCADE)
+        on_delete=models.PROTECT)
     data_agendada = models.DateField(
         "Data agendada")
     usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        User, on_delete=models.PROTECT,
         verbose_name='usuário')
 
     def __str__(self):
