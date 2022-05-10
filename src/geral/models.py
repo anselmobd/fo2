@@ -59,7 +59,7 @@ class Dispositivos(models.Model):
 
 class RoloBipado(models.Model):
     dispositivo = models.ForeignKey(
-        Dispositivos, on_delete=models.CASCADE, null=True, blank=True)
+        Dispositivos, on_delete=models.PROTECT, null=True, blank=True)
     rolo = models.IntegerField(
         verbose_name='Rolo')
     date = models.DateTimeField(
@@ -71,7 +71,7 @@ class RoloBipado(models.Model):
     cor = models.CharField(
         max_length=6, verbose_name='Cor')
     usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True,
+        User, on_delete=models.PROTECT, null=True, blank=True,
         verbose_name='usuário')
 
     class Meta:
@@ -135,10 +135,10 @@ class PainelModulo(models.Model):
 
 class UsuarioPainelModulo(models.Model):
     usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        User, on_delete=models.PROTECT,
         verbose_name='usuário')
     painel_modulo = models.ForeignKey(
-        PainelModulo, on_delete=models.CASCADE,
+        PainelModulo, on_delete=models.PROTECT,
         verbose_name='módulo de painel')
 
     def __str__(self):
@@ -152,10 +152,10 @@ class UsuarioPainelModulo(models.Model):
 
 class InformacaoModulo(models.Model):
     usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        User, on_delete=models.PROTECT,
         verbose_name='usuário')
     painel_modulo = models.ForeignKey(
-        PainelModulo, on_delete=models.CASCADE,
+        PainelModulo, on_delete=models.PROTECT,
         verbose_name='módulo de painel')
     data = models.DateTimeField(
         null=True, blank=True,
@@ -221,7 +221,7 @@ def pop_upload_to(instance, filename):
 
 class Pop(models.Model):
     assunto = models.ForeignKey(
-        PopAssunto, on_delete=models.CASCADE, default=1,
+        PopAssunto, on_delete=models.PROTECT, default=1,
         verbose_name='assunto do POP')
     descricao = models.CharField(
         max_length=255, blank=True, verbose_name='título')
@@ -237,10 +237,10 @@ class Pop(models.Model):
 
 class UsuarioPopAssunto(models.Model):
     usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        User, on_delete=models.PROTECT,
         verbose_name='usuário')
     assunto = models.ForeignKey(
-        PopAssunto, on_delete=models.CASCADE,
+        PopAssunto, on_delete=models.PROTECT,
         verbose_name='assunto de POP')
 
     class Meta:
@@ -273,7 +273,7 @@ class Parametro(models.Model):
         max_length=255, unique=True, verbose_name='descrição')
 
     tipo = models.ForeignKey(
-        TipoParametro, on_delete=models.CASCADE)
+        TipoParametro, on_delete=models.PROTECT)
 
     ajuda = models.CharField(
         max_length=65535, null=True, blank=True)
@@ -294,10 +294,10 @@ class Parametro(models.Model):
 
 class Config(models.Model):
     parametro = models.ForeignKey(
-        Parametro, on_delete=models.CASCADE)
+        Parametro, on_delete=models.PROTECT)
 
     usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True,
+        User, on_delete=models.PROTECT, null=True, blank=True,
         verbose_name='usuário')
 
     valor = models.CharField(
