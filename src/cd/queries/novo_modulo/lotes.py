@@ -109,6 +109,7 @@ class SqlEmEstoque():
             'ref': "l.PROCONF_GRUPO",
             'per': "l.PERIODO_PRODUCAO",
             'oc': "l.ORDEM_CONFECCAO",
+            'lote': "lp.ORDEM_CONFECCAO",
             'tam': "l.PROCONF_SUBGRUPO",
             'ordem_tam': "tam.ORDEM_TAMANHO",
             'cor': "l.PROCONF_ITEM",
@@ -231,12 +232,12 @@ class SqlEmEstoque():
             {field_qtd} -- field_qtd
             FROM ENDR_014 lp
             JOIN PCPC_040 l
-            ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
-            AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+              ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
+             AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
             {tipo_join} -- tipo_join
             {join_para_colecao} -- join_para_colecao
             LEFT JOIN BASI_220 tam -- cadastro de tamanhos
-            ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
+              ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
             WHERE 1=1
             {filtra_estagio} -- filtra_estagio
             {tipo_filter} -- tipo_filter
