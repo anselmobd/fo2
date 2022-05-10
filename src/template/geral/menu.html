@@ -35,7 +35,7 @@
   {% endif %}
 
   {% if list_geral_pop_assuntos %}
-    {% if 'pop_assuntos'|list_geral_filtro:'grupo_slug==' %}
+    {% if 'pop_assuntos'|list_geral_filtro:'grupo_assunto__slug==' %}
       <br />
       <li>Procedimentos (POPs)</li>
       <ul>

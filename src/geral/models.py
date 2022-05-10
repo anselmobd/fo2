@@ -199,9 +199,6 @@ class PopAssunto(models.Model):
         on_delete=models.PROTECT,
         default=1,
     )
-    grupo = models.CharField(
-        max_length=255, blank=True)
-    grupo_slug = models.SlugField(default='slug')
     diretorio = models.CharField(
         'diretório',
         max_length=50, blank=True)
