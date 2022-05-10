@@ -17,7 +17,7 @@ from lotes.classes import YamlUser
 from systextil.queries.tabela.deposito import query_deposito
 
 import geral.models as models
-from .models import Painel, PainelModulo, PopAssunto
+from .models import Painel, PainelModulo, PopGrupoAssunto, PopAssunto
 
 
 # http://kkabardi.me/post/dynamic-menu-navigation-django/
@@ -40,8 +40,10 @@ def get_list_geral_paineis(context):
 @register.filter
 def list_geral(data):
     if data == 'pop_assuntos_grupos':
-        return PopAssunto.objects.exclude(grupo_slug='').values(
-            'grupo').annotate(Min('grupo_slug')).order_by('grupo')
+        # return PopAssunto.objects.exclude(grupo_slug='').values(
+        #     'grupo').annotate(Min('grupo_slug')).order_by('grupo')
+        return PopGrupoAssunto.objects.exclude(slug='').values(
+            'nome', 'slug').order_by('ordem')
     return ''
 
 

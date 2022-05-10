@@ -39,7 +39,7 @@
       <br />
       <li>Procedimentos (POPs)</li>
       <ul>
-        {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:'grupo_slug==' %}  
+        {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:'grupo_assunto__slug==' %}  
           {% if empresa == 'tussor' %}
             {% if pop_assunto.nome != 'Agator' %}
               <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
@@ -55,9 +55,9 @@
     {% if empresa == 'tussor' %}
       {% for grupo in 'pop_assuntos_grupos'|list_geral %}
         <br />
-        <li>{{grupo.grupo}}</li>
+        <li>{{grupo.nome}}</li>
         <ul>
-          {% with 'grupo_slug=='|add:grupo.grupo_slug__min as filtro %}
+          {% with 'grupo_assunto__slug=='|add:grupo.slug as filtro %}
             {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:filtro %}
               <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
             {% endfor %}
