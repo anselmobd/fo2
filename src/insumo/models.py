@@ -39,7 +39,7 @@ class SugestaoCompra(models.Model):
 
 class SugestaoCompraDatas(models.Model):
     sugestao = models.ForeignKey(
-        SugestaoCompra, on_delete=models.CASCADE,
+        SugestaoCompra, on_delete=models.PROTECT,
         db_index=True,
         verbose_name='Sugestão de compra')
     data_compra = models.DateField(
