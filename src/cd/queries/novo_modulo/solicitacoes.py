@@ -13,6 +13,7 @@ def get_solicitacoes(
   ref_reservada=None,
   lote=None,
   op=None,
+  desc=False,
 ):
     filtra_solicitacao = f"""--
         AND sl.SOLICITACAO = {solicitacao}
@@ -108,7 +109,7 @@ def get_solicitacoes(
         GROUP BY 
           sl.SOLICITACAO
         ORDER BY 
-          sl.SOLICITACAO 
+          sl.SOLICITACAO {"DESC" if desc else ""}
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
