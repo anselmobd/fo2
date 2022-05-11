@@ -13,15 +13,27 @@
         <li><a href="{% url 'geral:configuracao' %}">Edita</a></li>
       </ul>
     {% endif %}
-    {% if list_geral_paineis %}
-      <br />
-      <li>Paineis</li>
-      <ul>
-        {% for painel in list_geral_paineis %}
-        <li><a href="/geral/painel/{{ painel.slug }}/" target="_blank">{{ painel.nome }}</a></li>
-        {% endfor %}
-      </ul>
-    {% endif %}
+  {% endif %}
+
+  {% if list_geral_paineis %}
+    <br />
+    <li>Paineis</li>
+    <ul>
+      {% for painel in list_geral_paineis %}
+        {% if empresa == 'tussor' %}
+          {% if painel.slug != 'painel-da-agator' %}
+            <li><a href="/geral/painel/{{ painel.slug }}/" target="_blank">{{ painel.nome }}</a></li>
+          {% endif %}
+        {% elif empresa == 'agator' %}
+          {% if painel.slug == 'painel-da-agator' %}
+            <li><a href="/geral/painel/{{ painel.slug }}/" target="_blank">{{ painel.nome }}</a></li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if empresa == 'tussor' %}
     {% if list_geral_modulos %}
       <br />
       <li><a href="{% url 'geral:resposavel_informativo' %}">Responsáveis por informativo</a></li>
