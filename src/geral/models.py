@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 
+from base.models import Empresa
+
 
 class RecordTracking(models.Model):
     user = models.CharField(
@@ -82,6 +84,11 @@ class RoloBipado(models.Model):
 
 
 class Painel(models.Model):
+    # empresa = models.ForeignKey(
+    #     Empresa,
+    #     on_delete=models.PROTECT
+    # )
+    # empresa = models.IntegerField()
     nome = models.CharField(
         null=True, blank=True,
         max_length=64)
