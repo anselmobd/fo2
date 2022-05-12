@@ -1,0 +1,17 @@
+{% extends 'systextil/apoio_index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'systextil:apoio_index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <table>
+    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data link=link style=style only %}
+  </table>
+{% endblock %}

@@ -18,4 +18,6 @@ urlpatterns = [
     re_path(r'^sessions/$', sessions.view, name='sessions'),
 
     re_path(r'^table/', include('systextil.urls.table'), name='table'),
+
+    re_path(r'^usuario/', include('systextil.urls.usuario'), name='usuario'),
 ]
