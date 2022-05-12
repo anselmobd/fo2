@@ -1,17 +1,16 @@
-{% extends 'systextil/apoio_index.html' %}
+{% extends 'systextil/index.html' %}
 
-{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="{% url 'systextil:apoio_index' %}">{{ block.super }}</a>{% endblock header.content %}
+{% block title.content %}{{ block.super }} &rsaquo; {{ titulo }}{% endblock title.content %}
 
-{% block stylesheet %}
-  <style>
-    {% include 'layout/simple_table.css' %}
-  </style>
-{% endblock %}
+{% block header.content %}{{ block.super }} &rsaquo; <a href="{% url 'systextil:zera_senha' %}">{{ titulo }}</a>{% endblock header.content %}
 
 {% block content %}
-  <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data link=link style=style only %}
-  </table>
+  <form action="{% url 'systextil:zera_senha' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Zera"/>
+  </form>
+  {% if msg %}
+    <h4>{{msg}}</h4>
+  {% endif %}
 {% endblock %}

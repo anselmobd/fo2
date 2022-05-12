@@ -8,6 +8,6 @@ from systextil.views.usuario import (
 
 urlpatterns = [
 
-    re_path(r'^zera_senha/$', zera_senha.view, name='zera_senha'),
+    re_path(r'^zera_senha/$', zera_senha.ZeraSenha.as_view(), name='zera_senha'),
 
 ]
