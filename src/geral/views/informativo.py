@@ -24,9 +24,20 @@ class ResponsavelInformativoView(View):
             painel_modulo__habilitado=True,
             usuario__is_active=True,
             usuario__is_superuser=False,
-        ).order_by(
+        )
+        
+        if kwargs['empresa'] == 'agator':
+            dados = dados.filter(painel_modulo__nome__startswith='Agator-')
+        else:
+            dados = dados.exclude(painel_modulo__nome__startswith='Agator-')
+
+        dados = dados.order_by(
             'painel_modulo__slug', 'usuario__username'
         ).values(*fields)
+
+        for row in dados:
+            row['painel_modulo__nome'] = row['painel_modulo__nome'].split('-')[-1]
+
         group = ['painel_modulo__nome']
         group_rowspan(dados, ['painel_modulo__nome'])
         context = {

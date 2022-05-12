@@ -33,15 +33,9 @@
     </ul>
   {% endif %}
 
-  {% if empresa == 'tussor' %}
-    {% if list_geral_modulos %}
-      <br />
-      <li><a href="{% url 'geral:resposavel_informativo' %}">Responsáveis por informativo</a></li>
-    {% endif %}
-  {% endif %}
-
   {% if list_geral_modulos %}
     <br />
+    <li><a href="{% url 'geral:resposavel_informativo' empresa %}">Responsáveis por informativo</a></li>
     <li>Manutenção de informativo</li>
     <ul>
       {% for modulo in list_geral_modulos %}
