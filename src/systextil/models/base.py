@@ -38,6 +38,7 @@ class Usuario(models.Model):
     ativo_inativo = models.IntegerField(
         verbose_name='Ativo ou inativo')
 
+    objects_all = models.Manager()
     objects = UsuarioManager()
 
     def __str__(self):
