@@ -41,7 +41,7 @@ class ResponsavelInformativoView(View):
         group = ['painel_modulo__nome']
         group_rowspan(dados, ['painel_modulo__nome'])
         context = {
-            'titulo': 'Responsáveis por informativo',
+            'titulo': f"Responsáveis por informativo {kwargs['empresa'].capitalize()}",
             'headers': ('Módulo', 'Responsável', 'Login'),
             'fields': fields,
             'group': group,
