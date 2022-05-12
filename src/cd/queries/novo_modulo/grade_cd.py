@@ -2,7 +2,7 @@ from pprint import pprint
 
 from utils.functions.models import GradeQtd
 
-from cd.queries.novo_modulo.lotes import SqlEmEstoque
+from cd.queries.novo_modulo.lotes_em_estoque import SqlEmEstoque
 
 
 def grade_estoque(cursor, tipo=None, ref=None):

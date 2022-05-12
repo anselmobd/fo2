@@ -196,8 +196,8 @@ class SqlEmEstoque():
             """
             tipo_join = """--
                 JOIN PCPC_044 sl
-                ON sl.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
-                AND sl.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000) 
+                  ON sl.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
+                 AND sl.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000) 
             """
             tipo_filter = """--
                 AND sl.SITUACAO IN (2, 3, 4)

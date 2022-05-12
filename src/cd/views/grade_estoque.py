@@ -12,7 +12,7 @@ from utils.views import group_rowspan
 
 import cd.forms
 from cd.queries.novo_modulo.grade_cd import grade_estoque
-from cd.queries.novo_modulo.lotes import LotesEmEstoque
+from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 
 
 class Grade(PermissionRequiredMixin, View):

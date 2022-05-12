@@ -21,7 +21,7 @@ from utils.functions.dictlist import (
 )
 
 import cd.forms
-from cd.queries.novo_modulo.lotes import LotesEmEstoque
+from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 
 
 class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
