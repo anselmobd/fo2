@@ -49,7 +49,10 @@ class PedidoFaturavelModelo(View):
             'lead': lead,
         })
 
-        if lead == 0 or (considera_lead == 'n'):
+        if considera_lead == 'n':
+            lead = 0
+
+        if lead == 0:
             busca_periodo = ''
             periodo = ''
         else:
