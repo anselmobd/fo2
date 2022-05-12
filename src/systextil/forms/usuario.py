@@ -12,7 +12,12 @@ class ZeraSenhaForm(forms.Form):
         label="Usuário (login)",
         min_length=1,
         max_length=20,
-        widget=forms.TextInput()
+        widget=forms.TextInput(
+            attrs={
+                'size': 20,
+                'style': 'text-transform:uppercase;',
+            }
+        ),
     )
 
     def __init__(self, *args, **kwargs):
