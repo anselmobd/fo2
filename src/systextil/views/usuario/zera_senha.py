@@ -1,3 +1,4 @@
+import random
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -42,13 +43,13 @@ class ZeraSenha(PermissionRequiredMixin, O2BaseGetPostView):
             })
 
         else:  # confirmado
-            senha = '234'
+            senha = str(random.randint(1000, 9999))
 
             mudou = muda_senha_usuario(
                 cursor,
                 usuario.empresa,
                 usuario.usuario,
-                '234',
+                senha,
             )
 
             if mudou:
