@@ -6,8 +6,9 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 
-from systextil.models.base import Usuario
 from systextil.forms.usuario import ZeraSenhaForm
+from systextil.models.base import Usuario
+from systextil.queries.usuario import muda_senha_usuario
 
 
 
@@ -33,6 +34,25 @@ class ZeraSenha(PermissionRequiredMixin, O2BaseGetPostView):
             })
             return
 
-        self.context.update({
-            'msg': f"Confirma zerar senha de {usuario}",
-        })
+        if self.request.POST.get("zera"):
+            self.context.update({
+                'msg': f"Confirma zerar senha de {usuario}?",
+                'confirmar': True,
+            })
+
+        else:  # confirmado
+            mudou = muda_senha_usuario(
+                cursor,
+                usuario.empresa,
+                usuario.usuario,
+                '234',
+            )
+
+            if mudou:
+                self.context.update({
+                    'msg': f"Zerada a senha de {usuario}",
+                })
+            else:
+                self.context.update({
+                    'msg': f"Erro ao zerar senha de {usuario}!",
+                })

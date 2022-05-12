@@ -8,7 +8,10 @@
   <form action="{% url 'systextil:zera_senha' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Zera"/>
+    <input type="submit" value="Zera" name="zera"/>
+    {% if confirmar %}
+      &nbsp;&nbsp;&nbsp;<input type="submit" value="Confirma" name="confirma"/>
+    {% endif %}
   </form>
   {% if msg %}
     <h4>{{msg}}</h4>
