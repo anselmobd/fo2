@@ -21,12 +21,13 @@ class PedidoFaturavelModelo(View):
     template_name = 'lotes/pedido_faturavel_modelo.html'
     title_name = 'Pedido faturável por modelo'
 
-    def mount_context(self, cursor, modelo, colecao, tam, cor):
+    def mount_context(self, cursor, modelo, colecao, tam, cor, considera_lead):
         context = {
             'modelo': modelo,
             'colecao': colecao,
             'tam': tam,
             'cor': cor,
+            'considera_lead': considera_lead,
         }
         if colecao:
             colecao = colecao.colecao
@@ -47,7 +48,8 @@ class PedidoFaturavelModelo(View):
         context.update({
             'lead': lead,
         })
-        if lead == 0:
+
+        if lead == 0 or (considera_lead == 'n'):
             busca_periodo = ''
             periodo = ''
         else:
@@ -155,8 +157,9 @@ class PedidoFaturavelModelo(View):
             colecao = form.cleaned_data['colecao']
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
+            considera_lead = form.cleaned_data['considera_lead']
             cursor = db_cursor_so(request)
             context.update(
-                self.mount_context(cursor, modelo, colecao, tam, cor))
+                self.mount_context(cursor, modelo, colecao, tam, cor, considera_lead))
         context['form'] = form
         return render(request, self.template_name, context)

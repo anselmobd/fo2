@@ -573,6 +573,12 @@ class BuscaPedidoForm(forms.Form):
         label='Cor', required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    CHOICES = [('s', 'Sim'),
+               ('n', 'Não'),
+               ]
+    considera_lead = forms.ChoiceField(
+        label='Considera configuração de lead', choices=CHOICES, initial='s')
+
     def clean_tam(self):
         tam = self.cleaned_data['tam'].upper()
         data = self.data.copy()
