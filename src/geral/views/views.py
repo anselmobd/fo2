@@ -70,7 +70,7 @@ class PainelView(View):
                 return redirect('apoio_ao_erp')
 
             if modulo.tipo == 'I':
-                dado['modulo_nome'] = modulo.nome
+                dado['modulo_nome'] = modulo.nome.split('-')[-1]
                 dado['dados'] = InformacaoModulo.objects.filter(
                     painel_modulo__slug=dado['modulo'],
                     habilitado=True,
