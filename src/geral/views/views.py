@@ -87,10 +87,15 @@ class PainelView(View):
 
 class InformativoView(LoginRequiredMixin, View):
     Form_class = forms.InformacaoModuloForm
-    template_name = 'geral/informativo.html'
     title_name = 'Informativos'
     context = {}
     informativo_id = None
+
+    def template_name(self, **kwargs):
+        if kwargs['modulo'].startswith('agator-'):
+            return 'geral/informativo_agator.html'
+        else:
+            return 'geral/informativo.html'
 
     def list_informativo(self):
         self.context['informativos'] = InformacaoModulo.objects.filter(
@@ -120,7 +125,7 @@ class InformativoView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         if not self.tem_permissao(request, **kwargs):
-            return render(request, self.template_name, self.context)
+            return render(request, self.template_name(**kwargs), self.context)
 
         self.get_informativo_id(**kwargs)
         if self.informativo_id == 'add':
@@ -138,11 +143,11 @@ class InformativoView(LoginRequiredMixin, View):
                              'habilitado': informativo_por_id[0].habilitado})
                 self.context['form'] = form
 
-        return render(request, self.template_name, self.context)
+        return render(request, self.template_name(**kwargs), self.context)
 
     def post(self, request, *args, **kwargs):
         if not self.tem_permissao(request, **kwargs):
-            return render(request, self.template_name, self.context)
+            return render(request, self.template_name(**kwargs), self.context)
 
         form = None
         self.get_informativo_id(**kwargs)
@@ -177,7 +182,7 @@ class InformativoView(LoginRequiredMixin, View):
                 self.list_informativo()
             else:
                 self.context['form'] = form
-        return render(request, self.template_name, self.context)
+        return render(request, self.template_name(**kwargs), self.context)
 
 
 def gera_fluxo(request, destino, id):

@@ -1,0 +1,81 @@
+{% extends 'geral/index_agator.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/geral/">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% else %}
+  {% if form %}
+    <p><a href="{% url 'geral:informativo_modulo' modulo_slug %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a></p>
+    {% if informativo_id %}
+      <h2>Edita informativo</h2>
+      <form action="{% url 'geral:informativo_modulo' modulo_slug informativo_id %}" method="post">
+    {% else %}
+      <h2>Adiciona informativo</h2>
+      <form action="{% url 'geral:informativo_modulo' modulo_slug 'add' %}" method="post">
+    {% endif %}
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if informativo_id %}
+      <input type="submit" value="Grava"/>
+    {% else %}
+      <input type="submit" value="Adiciona"/>
+    {% endif %}
+    </form>
+  {% else %}
+    <p><a href="{% url 'geral:informativo_modulo' modulo_slug 'add' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a></p>
+  {% endif %}
+  {% if informativos %}
+    {% for informativo in informativos %}
+      <a href="{% url 'geral:informativo_modulo' modulo_slug informativo.id %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+      {{ informativo.data }} - {{ informativo.usuario.first_name }}<br />
+      {% if informativo.habilitado %}
+        <span class="glyphicon glyphicon-ok-circle" style="color: green" aria-hidden="true"></span>
+      {% else %}
+        <span class="glyphicon glyphicon-ban-circle" style="color: red" aria-hidden="true"></span>
+      {% endif %}
+      {{ informativo.chamada }}
+      <hr>
+    {% endfor %}
+  {% endif %}
+{% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  var chamada = document.getElementById("id_chamada")
+  var chamadaSpan = chamada.parentElement.getElementsByTagName('span')[0];
+  var chamadaSpanCor = chamadaSpan.style.color;
+  var chamadaContentOk = chamada.value;
+  var chamadaTamanhoOk = chamadaContentOk.length
+
+  function atuChamadaSpan() {
+    tam = chamada.value.length + (chamada.value.match(/\n/g) || []).length;
+    if (tam > 400) {
+      chamadaSpan.style.color = 'red';
+      chamada.value = chamadaContentOk;
+      tam = chamadaTamanhoOk
+    } else {
+      chamadaSpan.style.color = chamadaSpanCor;
+      chamadaContentOk = chamada.value;
+      chamadaTamanhoOk = tam
+    }
+    chamadaSpan.innerHTML = '(digitados '+tam+'; máximo 200 caracteres)';
+  }
+
+  atuChamadaSpan();
+
+  $("textarea#id_chamada").on('change keyup paste', function () {
+    atuChamadaSpan()
+  });
+
+</script>
+{% endblock %}
