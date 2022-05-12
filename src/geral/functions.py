@@ -29,7 +29,13 @@ def get_list_geral_paineis(context):
             reverse('apoio_ao_erp'),
             reverse('geral:index')]:
         paineis = Painel.objects.filter(habilitado=True)
-        modulos = PainelModulo.objects.filter(habilitado=True).order_by('nome')
+        modulos = PainelModulo.objects.filter(habilitado=True).order_by('nome').values()
+        for modulo in modulos:
+            if modulo['slug'].startswith('agator-'):
+                modulo['empresa'] = 'agator'
+                modulo['nome'] = modulo['nome'].split('-')[-1]
+            else:
+                modulo['empresa'] = 'tussor'
         popAssuntos = PopAssunto.objects.all().order_by('nome')
     return {'list_geral_paineis': paineis,
             'list_geral_modulos': modulos,
