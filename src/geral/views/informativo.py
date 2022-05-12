@@ -28,8 +28,10 @@ class ResponsavelInformativoView(View):
         
         if kwargs['empresa'] == 'agator':
             dados = dados.filter(painel_modulo__nome__startswith='Agator-')
+            template = "geral/responsavel_informativo_agator.html"
         else:
             dados = dados.exclude(painel_modulo__nome__startswith='Agator-')
+            template = "geral/responsavel_informativo.html"
 
         dados = dados.order_by(
             'painel_modulo__slug', 'usuario__username'
@@ -48,4 +50,4 @@ class ResponsavelInformativoView(View):
             'dados': dados,
         }
         return render(
-            request, f"geral/responsavel_informativo.html", context)
+            request, template, context)

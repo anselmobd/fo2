@@ -1,0 +1,21 @@
+{% extends 'geral/index_agator.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'geral:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  {% if dados %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=dados group=group only %}
+    </table>
+  {% else %}
+    <h4>Não há indicações de responsáveis por informativos</h4>
+  {% endif %}
+{% endblock %}
