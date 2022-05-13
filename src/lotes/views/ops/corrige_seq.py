@@ -19,16 +19,16 @@ class CorrigeSequenciamento(PermissionRequiredMixin, O2BaseGetPostView):
         self.Form_class = forms.OpForm
         self.template_name = 'lotes/corrige_sequenciamento.html'
         self.title_name = 'Corrige sequenciamento de lotes de OP'
+        self.cleaned_data2self = True
 
     def mount_context(self):
-        op = self.form.cleaned_data['op']
         self.context.update({
-            'op': op
+            'op': self.op
         })
 
         cursor = db_cursor_so(self.request)
 
-        data = lotes.queries.lote.get_lotes(cursor, op=op, order='o')
+        data = lotes.queries.lote.get_per_oc(cursor, self.op)
         if len(data) == 0:
             self.context.update({
                 'msg_erro': 'Sem lotes',
