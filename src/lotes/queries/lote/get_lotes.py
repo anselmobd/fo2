@@ -1,4 +1,9 @@
-from utils.functions.models import rows_to_dict_list, dict_list_to_lower
+from utils.functions.models import (
+    dict_list_to_lower,
+    dictlist,
+    rows_to_dict_list,
+)
+from utils.functions.queries import debug_cursor_execute
 
 
 def op_lotes(cursor, op):
@@ -106,6 +111,21 @@ def get_imprime_lotes(cursor, op='', tam='', cor='', order='',
         oc_ini=oc_ini, oc_fim=oc_fim, pula=pula, qtd_lotes=qtd_lotes)
     data = dict_list_to_lower(data)
     return data
+
+
+def get_per_oc(cursor, op):
+    sql = f"""
+        SELECT DISTINCT 
+          l.PERIODO_PRODUCAO PERIODO
+        , l.ORDEM_CONFECCAO OC
+        FROM PCPC_040 l
+        WHERE l.ORDEM_PRODUCAO = {op}
+        ORDER BY 
+          l.PERIODO_PRODUCAO
+        , l.ORDEM_CONFECCAO
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor, name_case=str.upper)
 
 
 def get_lotes(cursor, op='', os='', tam='', cor='', order='',
