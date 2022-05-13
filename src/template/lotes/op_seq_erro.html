@@ -10,8 +10,12 @@
 {% endblock %}
 
 {% block content %}
-  <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data link=link style=style only %}
-  </table>
+  {% if data %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data link=link style=style only %}
+    </table>
+  {% else %}
+    <h4>Não foi encontrada nenhuma OP com erro de sequência</h4>
+  {% endif %}
 {% endblock %}
