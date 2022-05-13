@@ -36,18 +36,17 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
         WHERE le.ROWID = %s
     '''
     corrigido = False
-    alt = ''
-    sep = ''
-    ests = ''
-    sep_ests = ''
+    alt_list = []
+    ests_list = []
     for seq in seqs:
-        ests += '{}{}'.format(sep_ests, seq['est'])
-        sep_ests = ', '
+        ests_list.append(f"{seq['est']}")
         if seq['seq_new'] != seq['seq_old']:
             if exec:
                 debug_cursor_execute(cursor, sql_setseq, [seq['seq_new'], seq['rid']])
-            alt += '{}{}-{}'.format(sep, seq['seq_old'], seq['seq_new'])
-            sep = ', '
+            alt_list.append(f"{seq['seq_old']}-{seq['seq_new']}")
             corrigido = True
+
+    ests = ', '.join(ests_list)
+    alt = ', '.join(alt_list)
 
     return corrigido, alt, ests
