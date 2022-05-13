@@ -7,6 +7,9 @@ from lotes.views import (
     prepara_pedido_compra_matriz,
     romaneio_corte,
 )
+from lotes.views.ops import (
+    seq_erro,
+)
 
 
 app_name = 'producao'
@@ -124,6 +127,9 @@ urlpatterns = [
 
     re_path(r'^op/historico/(?P<op>\d+)?/?$', views.ops.historico.Historico.as_view(),
         name='historico_op'),
+
+    re_path(r'^op/seq_erro/?$', seq_erro.view,
+        name='op_seq_erro'),
 
     re_path(r'^op_caixa/$', views.OpCaixa.as_view(), name='op_caixa'),
     re_path(r'^op_caixa/(?P<op>\d+)/$',
