@@ -7,6 +7,7 @@ import lotes.queries.pedido as l_q_p
 
 import comercial.models
 import comercial.queries
+import comercial.queries.devolucao_para_meta
 
 
 @caching_function(
@@ -34,7 +35,7 @@ def dados_meta_no_ano(cursor, hoje):
         f['mes']: int(round(f['valor']/1000)) for f in faturados
     }
 
-    devolvidos = comercial.queries.devolucao_para_meta(
+    devolvidos = comercial.queries.devolucao_para_meta.query(
         cursor, ano_atual)
     for devolvido in devolvidos:
         devolvido['mes'] = int(devolvido['mes'][:2])

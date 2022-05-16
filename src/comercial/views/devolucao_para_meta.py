@@ -16,6 +16,7 @@ import lotes.queries.pedido as l_q_p
 import comercial.forms
 import comercial.models
 import comercial.queries
+import comercial.queries.devolucao_para_meta
 
 
 class DevolucaoParaMeta(O2BaseGetPostView):
@@ -47,7 +48,7 @@ class DevolucaoParaMeta(O2BaseGetPostView):
             'mes': mes_atual,
         })
 
-        faturados = comercial.queries.devolucao_para_meta(
+        faturados = comercial.queries.devolucao_para_meta.query(
             cursor, ano_atual, mes_atual, tipo=apresentacao, ref=ref)
 
         if len(faturados) == 0:
