@@ -85,6 +85,12 @@ def query(cursor, ano, mes=None, tipo='total', empresa=1, ref=None):
         --WHERE fe.DOCUMENTO = 208240
         JOIN ESTQ_005 tre -- transações de estoque
           ON tre.CODIGO_TRANSACAO = fe.CODIGO_TRANSACAO
+        LEFT JOIN FATU_050 f
+          ON f.CGC_9 = fe.CGC_CLI_FOR_9
+         AND f.CGC_4 = fe.CGC_CLI_FOR_4
+         AND f.CGC_2 = fe.CGC_CLI_FOR_2
+         AND f.SERIE_NOTA_FISC = fe.SERIE_DEV
+         AND f.NUM_NOTA_FISCAL = fe.NOTA_DEV
         WHERE 1=1
           AND fe.LOCAL_ENTREGA = {empresa}
           {filtra_ref} -- filtra_ref
@@ -104,6 +110,8 @@ def query(cursor, ano, mes=None, tipo='total', empresa=1, ref=None):
               DATE '{ano}-{mes}-01'
           AND fe.DATA_TRANSACAO <
               DATE '{prox_ano}-{prox_mes}-01'
+          -- se for devolução, nao pode ser devodução especial
+          AND ( f.NUMERO_CAIXA_ECF IS NULL OR f.NUMERO_CAIXA_ECF = 0 )
     """
     if tipo == 'total':
         sql += """
