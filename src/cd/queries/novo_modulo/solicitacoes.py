@@ -46,8 +46,8 @@ def get_solicitacoes(
     filtra_lote = ''
     if lote:
         filtra_lote = f"""--
-            AND l.PERIODO_PRODUCAO = {lote[:4]}
-            AND l.ORDEM_CONFECCAO = {lote[4:]}
+            AND l_filtro.PERIODO_PRODUCAO = {lote[:4]}
+            AND l_filtro.ORDEM_CONFECCAO = {lote[4:]}
         """
     
     filtra_op = f"""--
