@@ -2,12 +2,13 @@
 
 import argparse
 import csv
-from os import replace
 import cx_Oracle
 import locale
 import psycopg2
 import sys
 from datetime import datetime, timedelta
+from operator import itemgetter
+from os import replace
 from pprint import pprint
 
 from db_password import DBPASS_POSTGRE, DBPASS_ORACLE
@@ -289,15 +290,29 @@ class Inventario:
             {k: v for k, v in row.items()}
             for row in self._csvreader
         ]
+        for row in self.planilha:
+            if row['tam'] == '12:00:00':
+                row['tam'] = '0PM'
+            if row['cor'] == '00:00:00':
+                row['cor'] = '0000AM'
+            elif len(row['cor']) < 6:
+                row['cor'] = row['cor'].zfill(6)
 
     def get_csv_refs(self):
         nivel = f"{self.nivel}"
-        data = [
-            (row['nivel'], row['ref'])
+        data = list(set(
+            row['ref']
             for row in self.planilha
             if row['nivel'] == nivel
             and row['ref']
+        ))
+        data.sort()
+        data = [
+            (nivel, ref)
+            for ref in data
         ]
+        # pprint(data)
+        # sys.exit(999)
         return {
             'data': data,
             'keys': ['NIVEL', 'REF'],
@@ -706,8 +721,12 @@ class Inventario:
             WHERE 1=1
               AND i.NIVEL_ESTRUTURA = '{nivel}'
               AND i.GRUPO_ESTRUTURA = '{ref}'
-              AND i.SUBGRU_ESTRUTURA = '{tam}'
+              AND (  i.SUBGRU_ESTRUTURA = '{tam}'
+                  OR i.SUBGRU_ESTRUTURA = '0{tam}'
+                  OR i.SUBGRU_ESTRUTURA = '00{tam}'
+                  )
               AND i.ITEM_ESTRUTURA = '{cor}' 
+              AND i.DESCRICAO_15 NOT LIKE '-%'
         """
         return sql
 
@@ -729,8 +748,14 @@ class Inventario:
                     self.number_pt_to_en(row['preco']),
                     self.number_pt_to_en(row['qtd']),
                 )
+                # print(sql)
                 item_invent = self.db.execute(sql)
-                data.append(item_invent['data'][0])
+                if len(item_invent['data']) > 0:
+                    data.append(item_invent['data'][0])
+                else:
+                    sys.stderr.write(
+                        f"Não encontrado {nivel}.{ref}.{row['tam']}.{row['cor']}\n"
+                    )
         return {
             'data': data,
             'keys': [
@@ -759,9 +784,9 @@ class Inventario:
         else:
             ref_invent = self.get_csv_quant(nivel, ref)
             pass
-        print(nivel, ref)
-        pprint(ref_invent)
-        sys.exit(999)
+        # print(nivel, ref)
+        # pprint(ref_invent)
+        # sys.exit(999)
 
         if self.tipo == 'i':
             self._tipo_params = {
