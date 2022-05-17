@@ -2,6 +2,7 @@
 
 import argparse
 import csv
+from os import replace
 import cx_Oracle
 import locale
 import psycopg2
@@ -323,8 +324,6 @@ class Inventario:
             self._refs = self.db.execute(sql)
         elif self.origem == 'p':
             self._refs = self.get_csv_refs()
-        pprint(self._refs)
-        sys.exit(999)
 
     def get_sql_systextil_refs(self):
         nivel_filter = "AND r.NIVEL_ESTRUTURA = {}".format(self.nivel)
@@ -420,9 +419,6 @@ class Inventario:
     def print(self):
         self.get_refs()
         count = len(self._refs['data'])
-        print(count)
-        pprint(self._refs['data'][:2])
-        sys.exit(999)
         for i, values in enumerate(self._refs['data']):
             row = dict(zip(self._refs['keys'], values))
             sys.stdout.flush()
@@ -677,13 +673,95 @@ class Inventario:
         """
         return sql
 
+    def get_descrs_systextil_sql(self, nivel, ref, tam, cor, preco, qtd):
+        sql = f"""
+            SELECT
+              i.NIVEL_ESTRUTURA NIVEL
+            , i.GRUPO_ESTRUTURA REF
+            , r.DESCR_REFERENCIA REF_DESCR
+            , r.UNIDADE_MEDIDA REF_UNID
+            , um.UNID_MED_TRIB UNIDADE
+            , '01' TIPO_ITEM
+            , r.CLASSIFIC_FISCAL NCM
+            , 0 ALIQ_ICMS
+            , i.SUBGRU_ESTRUTURA TAM
+            , t.DESCR_TAM_REFER TAM_DESCR
+            , i.ITEM_ESTRUTURA COR
+            , i.DESCRICAO_15 COR_DESCR
+            , {preco} PRECO_INFORMADO
+            , {qtd} QTD
+            , {preco} PRECO
+            FROM BASI_010 i
+            JOIN basi_020 t
+              ON t.BASI030_NIVEL030 = i.NIVEL_ESTRUTURA
+             AND t.BASI030_REFERENC = i.GRUPO_ESTRUTURA
+             AND t.TAMANHO_REF = i.SUBGRU_ESTRUTURA
+             AND t.DESCR_TAM_REFER NOT LIKE '-%'
+            JOIN BASI_030 r
+              ON r.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA
+             AND r.REFERENCIA = i.GRUPO_ESTRUTURA
+             AND r.DESCR_REFERENCIA NOT LIKE '-%'
+            JOIN basi_200 um
+              ON um.unidade_medida = r.UNIDADE_MEDIDA
+            WHERE 1=1
+              AND i.NIVEL_ESTRUTURA = '{nivel}'
+              AND i.GRUPO_ESTRUTURA = '{ref}'
+              AND i.SUBGRU_ESTRUTURA = '{tam}'
+              AND i.ITEM_ESTRUTURA = '{cor}' 
+        """
+        return sql
+
+    def number_pt_to_en(self, number):
+        return number.replace(",", ".") 
+
+    def get_csv_quant(self, nivel, ref):
+        data = []
+        for row in self.planilha:
+            if (
+                row['nivel'] == nivel
+                and row['ref'] == ref
+            ):
+                sql = self.get_descrs_systextil_sql(
+                    nivel,
+                    ref,
+                    row['tam'],
+                    row['cor'],
+                    self.number_pt_to_en(row['preco']),
+                    self.number_pt_to_en(row['qtd']),
+                )
+                item_invent = self.db.execute(sql)
+                data.append(item_invent['data'][0])
+        return {
+            'data': data,
+            'keys': [
+                'NIVEL',
+                'REF',
+                'REF_DESCR',
+                'REF_UNID',
+                'UNIDADE',
+                'TIPO_ITEM',
+                'NCM',
+                'ALIQ_ICMS',
+                'TAM',
+                'TAM_DESCR',
+                'COR',
+                'COR_DESCR',
+                'PRECO_INFORMADO',
+                'QTD',
+                'PRECO',
+            ],
+        }
+
     def print_ref(self, nivel, ref):
-        sql = self.get_quant_sql(nivel, ref)
-        ref_invent = self.db.execute(sql)
-        if ref == 'MA001':
-            print(sql)
-            pprint(ref_invent)
-            sys.exit(999)
+        if self.origem in ('s', 'f'):
+            sql = self.get_quant_sql(nivel, ref)
+            ref_invent = self.db.execute(sql)
+        else:
+            ref_invent = self.get_csv_quant(nivel, ref)
+            pass
+        print(nivel, ref)
+        pprint(ref_invent)
+        sys.exit(999)
 
         if self.tipo == 'i':
             self._tipo_params = {
@@ -918,14 +996,12 @@ if __name__ == '__main__':
 
     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
-    if args.origem == 's':
+    if args.origem in ('s', 'p'):
         db = Oracle()
         db.connect()
     elif args.origem == 'f':
         db = Postgre()
         db.connect()
-    else:
-        db = None
 
     inv = Inventario(
         db,
