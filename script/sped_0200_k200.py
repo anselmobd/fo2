@@ -53,10 +53,10 @@ class Sped:
         if (
             args.com_corte
             or (
-                not (
+                (
                     (bloco == bloco_id)
                     and (linha[pos_nivel] == '2')
-                )
+                ) == args.so_corte
             )
         ):
             self.blocos[bloco].append(linha)
@@ -175,8 +175,12 @@ def parse_args():
     parser.add_argument(
         "arqk200",
         help='Bloco K200')
+    # com_corte tem precedência sobre so_corte
     parser.add_argument(
         '--com_corte', action='store_true')
+    # a ausência do so_corte significa so_nao_corte
+    parser.add_argument(
+        '--so_corte', action='store_true')
     return parser.parse_args()
 
 
