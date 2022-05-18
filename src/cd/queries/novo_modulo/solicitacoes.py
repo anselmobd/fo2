@@ -57,7 +57,7 @@ def get_solicitacoes(
 
     filtra_situacao = f"""--
         AND sl.SITUACAO = '{situacao}'
-    """ if situacao and situacao != 'q' else ''
+    """ if situacao and situacao != 't' else ''
 
     if (
         filtra_pedido_destino

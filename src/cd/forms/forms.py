@@ -857,7 +857,7 @@ class SolicitacoesForm(forms.Form):
         )
     )
     CHOICES = [
-        ('q', "Qualquer"),
+        ('t', "Todas"),
         ('1', "1-A confirmar"),
         ('2', "2-Confirmado"),
         ('3', "3-Programado"),
@@ -865,7 +865,7 @@ class SolicitacoesForm(forms.Form):
         ('5', "5-Baixado"),
     ]
     situacao = forms.ChoiceField(
-        label='Com lotes em situação', choices=CHOICES, initial='q'
+        label='Com lotes em situação', choices=CHOICES, initial='t'
     )
     page = forms.IntegerField(
         required=False,
