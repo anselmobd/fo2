@@ -98,9 +98,9 @@ class Solicitacoes(O2BaseGetPostView):
             elif min and max:
                 filtro = f"entre {min} e {max}"
             elif min:
-                filtro = f"maior que {min}"
+                filtro = f"no mínimo {min}"
             elif max:
-                filtro = f"menor que {max}"
+                filtro = f"no máximo {max}"
             filtro = f"Com lotes em situação {filtro}"
             form_report_lines.append(filtro)
 
