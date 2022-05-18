@@ -944,6 +944,17 @@ class NovoEstoqueForm(forms.Form):
         )
     )
 
+    # CHOICES = [
+    #     ('-', "Não filtra"),
+    #     ('s', "Endereçado"),
+    #     ('n', "Não endereçado"),
+    # ]
+    # enderecado = forms.ChoiceField(
+    #     label='No CD',
+    #     choices=CHOICES,
+    #     initial=' ',
+    # )
+
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 
