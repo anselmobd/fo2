@@ -79,12 +79,22 @@ class Solicitacoes(O2BaseGetPostView):
                     args=[row['solicitacao']]
                 )
             else:
+                row['solicitacao'] = 'Sem Número'
+                get_filtro = []
                 if self.pedido_destino:
-                    row['solicitacao'] = 'Sem Número'
+                    get_filtro.append(
+                        f"pedido={self.pedido_destino}"
+                    )
+                if self.op:
+                    get_filtro.append(
+                        f"op={self.op}"
+                    )
+                url_filtro = ','.join(get_filtro)
+                if url_filtro:
                     row['solicitacao|LINK'] = reverse(
                         'cd:novo_solicitacao',
                         args=['-']
-                    )+f"?pedido={self.pedido_destino}"
+                    )+f"?{url_filtro}"
             row['solicitacao|TARGET'] = '_blank'
             row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
 
