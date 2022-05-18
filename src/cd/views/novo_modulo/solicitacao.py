@@ -28,14 +28,15 @@ class Solicitacao(O2BaseGetView):
         self.get_args2context = True
 
     def monta_dados_solicitados(self):
-        if self.context['pedido'] is not None:
-            if self.context['pedido'] == 0:
-                self.dados_solicitados = []
-            else:
+        if self.sem_numero:
+            if self.context['pedido'] or self.context['op']:
                 self.dados_solicitados = get_solicitacao(
                     self.cursor,
                     pedido_destino=self.context['pedido'],
+                    op=self.context['op'],
                 )
+            else:
+                self.dados_solicitados = []
         else:
             self.dados_solicitados = get_solicitacao(self.cursor, self.context['solicitacao'])
 
@@ -383,6 +384,7 @@ class Solicitacao(O2BaseGetView):
         })
 
     def monta_grades_situacao(self):
+        self.grades_situacao = []
         if not self.dados_solicitados:
             self.grades_solicitadas = []
             return
@@ -394,7 +396,6 @@ class Solicitacao(O2BaseGetView):
         situacoes_list = list(situacoes_set)
         situacoes_list.sort()
 
-        self.grades_situacao = []
         for situacao in situacoes_list:
             self.grades_situacao.append({
                 'situacao': situacao,
@@ -411,9 +412,11 @@ class Solicitacao(O2BaseGetView):
         self.cursor = db_cursor_so(self.request)
         self.og = OperacoesGrade()
 
-        if self.context['solicitacao'] == '-':
+        self.sem_numero = self.context['solicitacao'] == '-'
+        if self.sem_numero:
             self.context['solicitacao'] = 'Sem número'
-            self.context['pedido'] = self.request.GET.get('pedido', 0)
+            self.context['pedido'] = self.request.GET.get('pedido', None)
+            self.context['op'] = self.request.GET.get('op', None)
         else:
             self.context['pedido'] = None
 

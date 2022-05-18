@@ -133,6 +133,7 @@ def get_solicitacao(
     cursor,
     solicitacao=None,
     pedido_destino=None,
+    op=None,
 ):
 
     if solicitacao and solicitacao != '-':
@@ -143,6 +144,10 @@ def get_solicitacao(
     filtra_pedido_destino = f"""--
         AND sl.PEDIDO_DESTINO = {pedido_destino}
     """ if pedido_destino else ''
+
+    filtra_op = f"""--
+        AND sl.ORDEM_PRODUCAO = '{op}'
+    """ if op else ''
 
     sql = f"""
         SELECT DISTINCT
@@ -208,6 +213,7 @@ def get_solicitacao(
         WHERE 1=1
           {filtra_solicitacao} -- filtra_solicitacao
           {filtra_pedido_destino} -- filtra_pedido_destino
+          {filtra_op} -- filtra_op
         ORDER BY
           sl.SITUACAO
         , lest.CODIGO_ESTAGIO
