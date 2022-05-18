@@ -154,8 +154,8 @@ class SqlEmEstoque():
         if self.colecao is not None:
             join_para_colecao = """
                 JOIN BASI_030 r
-                ON r.NIVEL_ESTRUTURA = 1
-                AND r.REFERENCIA = l.PROCONF_GRUPO 
+                  ON r.NIVEL_ESTRUTURA = 1
+                 AND r.REFERENCIA = l.PROCONF_GRUPO 
             """
             filter_colecao = f"AND r.COLECAO = '{self.colecao}'"
 
@@ -184,7 +184,7 @@ class SqlEmEstoque():
             """
             tipo_join = """--
                 JOIN PCPC_020 op
-                ON op.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
+                  ON op.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
             """
             tipo_filter = """--
                 AND op.PEDIDO_VENDA <> 0
