@@ -6,6 +6,9 @@
 {% block stylesheet %}
   <style>
     {% include 'layout/simple_table.css' %}
+    hr.separador {
+      border-top: 5px solid #eee;
+    }
   </style>
 {% endblock %}
 
@@ -77,8 +80,7 @@
       <div id="grade_situacao" class="tab-pane fade">
         {% for grade_situacao in grades_situacao %}
           {% if forloop.counter != 1 %}
-            <hr/>
-            <hr/>
+            <hr class="separador"/>
           {% endif %}
           <h3>Situacao: <b>{{ grade_situacao.situacao }}</b></h3>
           {% for grade in grade_situacao.grades %}
