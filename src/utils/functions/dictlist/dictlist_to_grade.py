@@ -13,9 +13,17 @@ def filter_dictlist_to_grade_qtd(
     field_ordem_coluna=None,
     field_quantidade=None,
 ):
+    if not isinstance(field_filter, tuple):
+        field_filter = (field_filter, )
+        value_filter = (value_filter, )
     dados_filtrados = list(
         filter(
-            lambda x: x[field_filter] == value_filter,
+            lambda x: all(
+                [
+                    x[field_filter[i]] == value_filter[i]
+                    for i in range(len(field_filter))
+                ]
+            ),
             dados,
         )
     )

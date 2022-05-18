@@ -19,7 +19,8 @@
       <li class="active"><a data-toggle="tab" href="#lotes">Lotes</a></li>
       <li><a data-toggle="tab" href="#enderecos">Endereços</a></li>
       <li><a data-toggle="tab" href="#pedidos">Pedidos</a></li>
-      <li><a data-toggle="tab" href="#grade_solicitado">Grade das referências solicitadas</a></li>
+      <li><a data-toggle="tab" href="#grade_solicitado">Grades das referências</a></li>
+      <li><a data-toggle="tab" href="#grade_situacao">Grades por situação</a></li>
     </ul>
     <div class="tab-content">
       <div id="lotes" class="tab-pane fade in active">
@@ -71,6 +72,32 @@
             {% include "layout/thead_generic.html" with data=grade.headers style=grade.style thclass='sticky' only %}
             {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data style=grade.style only %}
           </table>
+        {% endfor %}
+      </div>
+      <div id="grade_situacao" class="tab-pane fade">
+        {% for grade_situacao in grades_situacao %}
+          {% if forloop.counter != 1 %}
+            <hr/>
+            <hr/>
+          {% endif %}
+          <h3>Situacao: <b>{{ grade_situacao.situacao }}</b></h3>
+          {% for grade in grade_situacao.grades %}
+            {% if grade.modelo and grade.ref != 'total' %}
+              {% if forloop.counter != 1 %}
+                <hr/>
+              {% endif %}
+              <h4 style="padding-left: 3em;">Modelo: <b>{{ grade.modelo }}</b></h4>
+            {% endif %}
+            {% if grade.ref == 'total' %}
+              <h4 style="padding-left: 3em;">Total do modelo: <b>{{ grade.modelo }}</b></h4>
+            {% else %}
+              <h4 style="padding-left: 6em;">Referência: <b>{{ grade.ref }}</b></h4>
+            {% endif %}
+            <table style="width: auto;">
+              {% include "layout/thead_generic.html" with data=grade.headers style=grade.style thclass='sticky' only %}
+              {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data style=grade.style only %}
+            </table>
+          {% endfor %}
         {% endfor %}
       </div>
     </div>

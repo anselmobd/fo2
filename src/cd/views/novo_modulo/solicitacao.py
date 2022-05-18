@@ -290,14 +290,15 @@ class Solicitacao(O2BaseGetView):
             'p_data': self.dados_pedidos,
         })
 
-    def monta_grades_solicitadas(self):
+    def monta_grades(self, situacao=None):
         if not self.dados_solicitados:
             self.grades_solicitadas = []
             return
 
         refs_solicitadas_set = set()
         for row in self.dados_solicitados:
-            refs_solicitadas_set.add(row['ref'])
+            if not situacao or row['situacao'] == situacao:
+                refs_solicitadas_set.add(row['ref'])
 
         refs_solicitadas = []
         for ref in refs_solicitadas_set:
@@ -311,7 +312,7 @@ class Solicitacao(O2BaseGetView):
             for row in refs_solicitadas
         ], key=itemgetter('modelo', 'ref'))
 
-        self.grades_solicitadas = []
+        grades_solicitadas = []
         modelo_ant = -1
         quant_refs_modelo = 1
         total_modelo = None
@@ -322,14 +323,21 @@ class Solicitacao(O2BaseGetView):
                         'modelo': modelo_ant,
                         'ref': 'total',
                     })
-                    self.grades_solicitadas.append(total_modelo)
+                    grades_solicitadas.append(total_modelo)
                 total_modelo = None
+
+            if situacao:
+                field_filter = ('situacao', 'ref')
+                value_filter = (situacao, ref['ref'])
+            else:
+                field_filter = 'ref'
+                value_filter = ref['ref']
 
             grade_ref = filter_dictlist_to_grade_qtd(
                 self.dados_solicitados,
-                field_filter='ref',
+                field_filter=field_filter,
                 facade_filter='referencia',
-                value_filter=ref['ref'],
+                value_filter=value_filter,
                 field_linha='cor',
                 field_coluna='tam',
                 facade_coluna='Tamanho',
@@ -355,18 +363,48 @@ class Solicitacao(O2BaseGetView):
                 modelo_ant = ref['modelo']
 
 
-            self.grades_solicitadas.append(grade_ref)
+            grades_solicitadas.append(grade_ref)
 
         if quant_refs_modelo > 1:
             total_modelo.update({
                 'modelo': modelo_ant,
                 'ref': 'total',
             })
-            self.grades_solicitadas.append(total_modelo)
+            grades_solicitadas.append(total_modelo)
+
+        return grades_solicitadas
+
+    def monta_grades_solicitadas(self):
+        self.grades_solicitadas = self.monta_grades()
 
     def context_grades_solicitadas(self):
         self.context.update({
             'grades_solicitadas': self.grades_solicitadas,
+        })
+
+    def monta_grades_situacao(self):
+        if not self.dados_solicitados:
+            self.grades_solicitadas = []
+            return
+
+        situacoes_set = set()
+        for row in self.dados_solicitados:
+            situacoes_set.add(row['situacao'])
+
+        situacoes_list = list(situacoes_set)
+        situacoes_list.sort()
+
+        self.grades_situacao = []
+        for situacao in situacoes_list:
+            self.grades_situacao.append({
+                'situacao': situacao,
+                'grades': self.monta_grades(situacao),
+            })
+
+
+    def context_grades_situacao(self):
+        self.context.update({
+            'grades_situacao': self.grades_situacao,
         })
 
     def mount_context(self):
@@ -385,6 +423,8 @@ class Solicitacao(O2BaseGetView):
 
         self.monta_grades_solicitadas()
 
+        self.monta_grades_situacao()
+
         self.context_solicitados()
 
         self.context_enderecos()
@@ -392,3 +432,5 @@ class Solicitacao(O2BaseGetView):
         self.context_pedidos()
 
         self.context_grades_solicitadas()
+
+        self.context_grades_situacao()
