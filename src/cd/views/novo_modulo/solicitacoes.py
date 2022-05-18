@@ -35,7 +35,10 @@ class Solicitacoes(O2BaseGetPostView):
             self.ref_reservada,
             self.lote,
             self.op,
-            self.situacao,
+            self.com_lotes_situacao_de,
+            self.com_lotes_situacao_ate,
+            # self.sem_lotes_situacao_de,
+            # self.sem_lotes_situacao_ate,
             desc=True,
         )
 
@@ -84,6 +87,22 @@ class Solicitacoes(O2BaseGetPostView):
                     )+f"?pedido={self.pedido_destino}"
             row['solicitacao|TARGET'] = '_blank'
             row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
+
+        form_report_lines = []
+        
+        min = self.com_lotes_situacao_de if self.com_lotes_situacao_de.isdigit() else None
+        max = self.com_lotes_situacao_ate if self.com_lotes_situacao_ate.isdigit() else None
+        if min or max:
+            if min == max:
+                filtro = f"igual a {min}"
+            elif min and max:
+                filtro = f"entre {min} e {max}"
+            elif min:
+                filtro = f"maior que {min}"
+            elif max:
+                filtro = f"menor que {max}"
+            filtro = f"Com lotes em situação {filtro}"
+            form_report_lines.append(filtro)
 
         self.context.update({
             'headers': [
@@ -134,4 +153,9 @@ class Solicitacoes(O2BaseGetPostView):
             'data': data,
             'qtd_solicit': qtd_solicit,
             'por_pagina': self.por_pagina,
+            'form_report_excludes': [
+                'com_lotes_situacao_de',
+                'com_lotes_situacao_ate',
+            ],
+            'form_report_lines': form_report_lines,
         })

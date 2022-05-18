@@ -857,16 +857,33 @@ class SolicitacoesForm(forms.Form):
         )
     )
     CHOICES = [
-        ('t', "Todas"),
+        (' ', "Não filtra"),
         ('1', "1-A confirmar"),
         ('2', "2-Confirmado"),
         ('3', "3-Programado"),
         ('4', "4-Solicitado"),
         ('5', "5-Baixado"),
     ]
-    situacao = forms.ChoiceField(
-        label='Com lotes em situação', choices=CHOICES, initial='t'
+    com_lotes_situacao_de = forms.ChoiceField(
+        label='Com lotes em situação: De',
+        choices=CHOICES,
+        initial=' ',
     )
+    com_lotes_situacao_ate = forms.ChoiceField(
+        label='Até',
+        choices=CHOICES,
+        initial=' ',
+    )
+    # sem_lotes_situacao_de = forms.ChoiceField(
+    #     label='Sem lotes na situação: De',
+    #     choices=CHOICES,
+    #     initial=' ',
+    # )
+    # sem_lotes_situacao_ate = forms.ChoiceField(
+    #     label='Até',
+    #     choices=CHOICES,
+    #     initial=' ',
+    # )
     page = forms.IntegerField(
         required=False,
         widget=forms.HiddenInput()

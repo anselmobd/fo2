@@ -6,15 +6,18 @@ from utils.functions.queries import debug_cursor_execute
 
 
 def get_solicitacoes(
-  cursor,
-  solicitacao=None,
-  pedido_destino=None,
-  ref_destino=None,
-  ref_reservada=None,
-  lote=None,
-  op=None,
-  situacao=None,
-  desc=False,
+    cursor,
+    solicitacao=None,
+    pedido_destino=None,
+    ref_destino=None,
+    ref_reservada=None,
+    lote=None,
+    op=None,
+    com_lotes_situacao_de=None,
+    com_lotes_situacao_ate=None,
+    # sem_lotes_situacao_de=None,
+    # sem_lotes_situacao_ate=None,
+    desc=False,
 ):
     filtra_solicitacao = f"""--
         AND sl.SOLICITACAO = {solicitacao}
@@ -55,9 +58,13 @@ def get_solicitacoes(
         AND sl.ORDEM_PRODUCAO = '{op}'
     """ if op else ''
 
-    filtra_situacao = f"""--
-        AND sl.SITUACAO = '{situacao}'
-    """ if situacao and situacao != 't' else ''
+    filtra_com_lotes_situacao_de = f"""--
+        AND sl.SITUACAO >= '{com_lotes_situacao_de}'
+    """ if com_lotes_situacao_de and com_lotes_situacao_de.isdigit() else ''
+
+    filtra_com_lotes_situacao_ate = f"""--
+        AND sl.SITUACAO <= '{com_lotes_situacao_ate}'
+    """ if com_lotes_situacao_ate and com_lotes_situacao_ate.isdigit() else ''
 
     if (
         filtra_pedido_destino
@@ -111,7 +118,8 @@ def get_solicitacoes(
           {filtra_ref_reservada} -- filtra_ref_reservada
           {filtra_lote} -- filtra_lote
           {filtra_op} -- filtra_op
-          {filtra_situacao} -- filtra_situacao
+          {filtra_com_lotes_situacao_de} -- filtra_com_lotes_situacao_de
+          {filtra_com_lotes_situacao_ate} -- filtra_com_lotes_situacao_ate
         GROUP BY 
           sl.SOLICITACAO
         ORDER BY 
