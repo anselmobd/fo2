@@ -29,12 +29,14 @@ class NovoEstoque(O2BaseGetPostView):
         # if self.usa_paginador == 'n':
         #     modelos_por_pagina = 99999
 
+        self.lote = None if self.lote == '' else self.lote
         self.referencia = None if self.referencia == '' else self.referencia
         self.modelo = None if self.modelo == '' else int(self.modelo)
 
         lotes_em_estoque = LotesEmEstoque(
             self.cursor,
             tipo='iq',
+            lote=self.lote,
             ref=self.referencia,
             modelo=self.modelo,
             fields_tuple=(

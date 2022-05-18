@@ -903,18 +903,18 @@ class SolicitacoesForm(forms.Form):
 
 
 class NovoEstoqueForm(forms.Form):
-    # lote = forms.CharField(
-    #     min_length=9,
-    #     max_length=9,
-    #     required=False,
-    #     widget=forms.TextInput(
-    #         attrs={
-    #             'size': 9,
-    #             'type': 'number',
-    #             'autofocus': 'autofocus',
-    #         }
-    #     )
-    # )
+    lote = forms.CharField(
+        min_length=9,
+        max_length=9,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 9,
+                'type': 'number',
+                'autofocus': 'autofocus',
+            }
+        )
+    )
 
     referencia = forms.CharField(
         label='Referência',
