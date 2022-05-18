@@ -24,12 +24,12 @@
       <p>{{por_pagina}} por página</p>
     {% endif %}
     {% include "layout/paginator.html" with data=data url_name='cd:novo_solicitacoes' only %}
-    <p>Legenda: L.=Lotes; Q.=Quantidade de itens; Prod.=Em produção; Fin.=Finalizado<br/>
-    Situçação: 1=A confirmar; 2=Confirmado; 3=Programado; 4=Solicitado; 5=Baixado</p>
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
+    <p>Legenda: L.=Lotes; Q.=Quantidade de itens; Prod.=Em produção; Fin.=Finalizado<br/>
+      Situçação: 1=A confirmar; 2=Confirmado; 3=Programado; 4=Solicitado; 5=Baixado</p>
     {% include "layout/paginator.html" with data=data url_name='cd:novo_solicitacoes' only %}
   {% else %}
     <h4>Nenhuma solicitação encontrada</h4>
