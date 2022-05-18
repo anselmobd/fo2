@@ -46,6 +46,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'lote',
                 'qtd_prog',
                 'qtd_dbaixa',
+                'palete',
             ),
         )
 
@@ -56,6 +57,7 @@ class NovoEstoque(O2BaseGetPostView):
 
         self.context.update({
             'headers': [
+                'Palete',
                 'Modelo',
                 'Ref.',
                 'Tam.',
@@ -66,6 +68,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'Qtd.',
             ],
             'fields': [
+                'palete',
                 'modelo',
                 'ref',
                 'tam',

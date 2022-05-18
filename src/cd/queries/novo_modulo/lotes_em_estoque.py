@@ -115,6 +115,7 @@ class SqlEmEstoque():
             'per': "l.PERIODO_PRODUCAO",
             'oc': "l.ORDEM_CONFECCAO",
             'lote': "lp.ORDEM_CONFECCAO",
+            'palete': "lp.COD_CONTAINER",
             'tam': "l.PROCONF_SUBGRUPO",
             'ordem_tam': "tam.ORDEM_TAMANHO",
             'cor': "l.PROCONF_ITEM",
