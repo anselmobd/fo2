@@ -38,6 +38,7 @@ class Solicitacoes(O2BaseGetPostView):
             desc=True,
         )
 
+        qtd_solicit = len(data)
         totalize_data(data, {
             'sum': [
                 'l1',
@@ -130,4 +131,5 @@ class Solicitacoes(O2BaseGetPostView):
                 tuple(range(2, 19)): 'text-align: right;',
             }),
             'data': data,
+            'qtd_solicit': qtd_solicit,
         })
