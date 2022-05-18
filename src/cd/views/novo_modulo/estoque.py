@@ -32,6 +32,7 @@ class NovoEstoque(O2BaseGetPostView):
         self.lote = None if self.lote == '' else self.lote
         self.referencia = None if self.referencia == '' else self.referencia
         self.modelo = None if self.modelo == '' else int(self.modelo)
+        self.endereco = None if self.endereco == '' else self.endereco
 
         lotes_em_estoque = LotesEmEstoque(
             self.cursor,
@@ -39,6 +40,7 @@ class NovoEstoque(O2BaseGetPostView):
             lote=self.lote,
             ref=self.referencia,
             modelo=self.modelo,
+            endereco=self.endereco,
             fields_tuple=(
                 'tam',
                 'cor',

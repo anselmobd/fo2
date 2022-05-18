@@ -916,6 +916,19 @@ class NovoEstoqueForm(forms.Form):
         )
     )
 
+    endereco = forms.CharField(
+        label='Endereço',
+        min_length=1,
+        max_length=6,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 6,
+                'style': 'text-transform:uppercase;',
+            }
+        )
+    )
+
     referencia = forms.CharField(
         label='Referência',
         required=False,
@@ -974,5 +987,12 @@ class NovoEstoqueForm(forms.Form):
 
         data = self.data.copy()
         data['referencia'] = cleaned
+        self.data = data
+        return cleaned
+
+    def clean_endereco(self):
+        cleaned = self.cleaned_data['endereco'].upper()
+        data = self.data.copy()
+        data['endereco'] = cleaned
         self.data = data
         return cleaned
