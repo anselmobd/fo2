@@ -115,13 +115,22 @@ class SqlEmEstoque():
             'per': "l.PERIODO_PRODUCAO",
             'oc': "l.ORDEM_CONFECCAO",
             'lote': "lp.ORDEM_CONFECCAO",
-            'palete': "lp.COD_CONTAINER",
+            'palete': """--
+                CASE
+                  WHEN lp.COD_CONTAINER IS NOT NULL
+                   AND lp.COD_CONTAINER <> '0'
+                  THEN lp.COD_CONTAINER
+                  ELSE '-'
+                END
+            """,
             'tam': "l.PROCONF_SUBGRUPO",
             'ordem_tam': "tam.ORDEM_TAMANHO",
             'cor': "l.PROCONF_ITEM",
             'op': "l.ORDEM_PRODUCAO",
             'qtd_prog': "l.QTDE_PECAS_PROG",
             'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
+            'rota': "COALESCE(e.ROTA, '-')",
+            'endereco': "COALESCE(ec.COD_ENDERECO, '-')",
         }
 
     def condicao_valor(self, ref):
@@ -244,6 +253,10 @@ class SqlEmEstoque():
             JOIN PCPC_040 l
               ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
              AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+            LEFT JOIN ENDR_015 ec -- endereço/container 
+              ON ec.COD_CONTAINER = lp.COD_CONTAINER
+            LEFT JOIN ENDR_013 e -- endereço
+              ON e.COD_ENDERECO = ec.COD_ENDERECO
             {tipo_join} -- tipo_join
             {join_para_colecao} -- join_para_colecao
             LEFT JOIN BASI_220 tam -- cadastro de tamanhos
