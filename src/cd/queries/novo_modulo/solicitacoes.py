@@ -13,6 +13,7 @@ def get_solicitacoes(
   ref_reservada=None,
   lote=None,
   op=None,
+  situacao=None,
   desc=False,
 ):
     filtra_solicitacao = f"""--
@@ -53,6 +54,10 @@ def get_solicitacoes(
     filtra_op = f"""--
         AND sl.ORDEM_PRODUCAO = '{op}'
     """ if op else ''
+
+    filtra_situacao = f"""--
+        AND sl.SITUACAO = '{situacao}'
+    """ if situacao and situacao != 'q' else ''
 
     if (
         filtra_pedido_destino
@@ -106,6 +111,7 @@ def get_solicitacoes(
           {filtra_ref_reservada} -- filtra_ref_reservada
           {filtra_lote} -- filtra_lote
           {filtra_op} -- filtra_op
+          {filtra_situacao} -- filtra_situacao
         GROUP BY 
           sl.SOLICITACAO
         ORDER BY 
