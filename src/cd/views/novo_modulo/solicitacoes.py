@@ -22,6 +22,7 @@ class Solicitacoes(O2BaseGetPostView):
         self.cleaned_data2data = True
         self.template_name = 'cd/novo_modulo/solicitacoes.html'
         self.title_name = 'Solicitações'
+        self.por_pagina = 20
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
@@ -64,7 +65,7 @@ class Solicitacoes(O2BaseGetPostView):
             'flags': ['NO_TOT_1'],
         })
 
-        data = paginator_basic(data, 20, self.page)
+        data = paginator_basic(data, self.por_pagina, self.page)
 
         for row in data:
             if row['solicitacao']:
@@ -132,4 +133,5 @@ class Solicitacoes(O2BaseGetPostView):
             }),
             'data': data,
             'qtd_solicit': qtd_solicit,
+            'por_pagina': self.por_pagina,
         })
