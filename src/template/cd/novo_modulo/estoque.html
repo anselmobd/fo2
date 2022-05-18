@@ -22,7 +22,7 @@
   <br/>
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
   {% if data %}
-    <p>Lotes endereçados</p>
+    <p>Lotes em paletes</p>
     {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque' only %}
       <table>
         {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
