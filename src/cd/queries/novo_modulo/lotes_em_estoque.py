@@ -17,6 +17,7 @@ class LotesEmEstoque():
         modelo=None,
         fields_tuple=None,
         lote=None,
+        endereco=None,
     ):
         self.cursor = cursor
         self.tipo = tipo
@@ -26,6 +27,7 @@ class LotesEmEstoque():
         self.modelo = modelo
         self.fields_tuple = fields_tuple
         self.lote = lote
+        self.endereco = endereco
 
         self.sql_em_stq = SqlEmEstoque(
             tipo=self.tipo,
@@ -34,6 +36,7 @@ class LotesEmEstoque():
             colecao=self.colecao,
             fields_tuple=self.fields_tuple,
             lote=self.lote,
+            endereco=self.endereco,
         )
 
     def dados(self):
@@ -101,6 +104,7 @@ class SqlEmEstoque():
         sinal='+', 
         fields_tuple=None,
         lote=None,
+        endereco=None,
     ):
         self.tipo = tipo
         self.ref = ref
@@ -109,6 +113,7 @@ class SqlEmEstoque():
         self.sinal = sinal
         self.fields_tuple = fields_tuple
         self.lote = lote
+        self.endereco = endereco
 
         self.available_fields = {
             'ref': "l.PROCONF_GRUPO",
@@ -177,6 +182,10 @@ class SqlEmEstoque():
         filter_lote = ""
         if self.lote is not None:
             filter_lote = f"AND lp.ORDEM_CONFECCAO = '{self.lote}'"
+
+        filter_endereco = ""
+        if self.endereco is not None:
+            filter_endereco = f"AND ec.COD_ENDERECO = '{self.endereco}'"
 
         self.fields_tuple = self.fields_tuple if self.fields_tuple else []
         fields_set = {'ref'}.union(self.fields_tuple)
@@ -267,5 +276,6 @@ class SqlEmEstoque():
             {filter_ref} -- filter_ref
             {filter_colecao} -- filter_colecao
             {filter_lote} -- filter_lote
+            {filter_endereco} -- filter_endereco
         """
         return sql
