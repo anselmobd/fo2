@@ -51,6 +51,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'palete',
                 'endereco',
                 'rota',
+                'estagio',
             ),
         )
 
@@ -72,6 +73,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'Lote',
                 'Qtd.Original',
                 'Qtd.',
+                'Estágio',
             ],
             'fields': [
                 'palete',
@@ -85,10 +87,11 @@ class NovoEstoque(O2BaseGetPostView):
                 'lote',
                 'qtd_prog',
                 'qtd_dbaixa',
+                'estagio',
             ],
             'style': untuple_keys_concat({
-                (5, ): 'text-align: center;',
-                (8, 9): 'text-align: right;',
+                (12, ): 'text-align: center;',
+                (10, 11): 'text-align: right;',
             }),
             'data': lotes,
         })
