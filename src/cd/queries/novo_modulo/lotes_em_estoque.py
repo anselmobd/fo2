@@ -136,6 +136,7 @@ class SqlEmEstoque():
             'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
             'rota': "COALESCE(e.ROTA, '-')",
             'endereco': "COALESCE(ec.COD_ENDERECO, '-')",
+            'estagio': "coalesce(l.CODIGO_ESTAGIO, 999)"
         }
 
     def condicao_valor(self, ref):
