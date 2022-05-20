@@ -6,6 +6,7 @@ from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
 from utils.classes import Perf
 from utils.functions.functions import untuple_keys_concat
+from utils.views import totalize_data
 
 import cd.forms
 from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
@@ -57,8 +58,18 @@ class NovoEstoque(O2BaseGetPostView):
 
         lotes = lotes_em_estoque.dados()
         
+        totalize_data(
+            lotes,
+            {
+                'sum': ['qtd_dbaixa'],
+                'descr': {'lote': 'Total geral:'}
+            }
+        )
+        totalizador_lotes = lotes[-1]
+        del(lotes[-1])
+
         lotes = paginator_basic(lotes, lotes_por_pagina, self.page)
-        # pprint(lotes.__dict__)
+        lotes.object_list.append(totalizador_lotes)
 
         self.context.update({
             'headers': [
