@@ -135,6 +135,7 @@ def get_solicitacao(
     solicitacao=None,
     pedido_destino=None,
     op=None,
+    lote=None,
 ):
 
     if solicitacao and solicitacao != '-':
@@ -149,6 +150,10 @@ def get_solicitacao(
     filtra_op = f"""--
         AND sl.ORDEM_PRODUCAO = '{op}'
     """ if op else ''
+
+    filtra_lote = f"""--
+        AND (l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO = {lote}
+    """ if lote else ''
 
     sql = f"""
         SELECT DISTINCT
@@ -215,6 +220,7 @@ def get_solicitacao(
           {filtra_solicitacao} -- filtra_solicitacao
           {filtra_pedido_destino} -- filtra_pedido_destino
           {filtra_op} -- filtra_op
+          {filtra_lote} -- filtra_lote
         ORDER BY
           sl.SITUACAO
         , lest.CODIGO_ESTAGIO
