@@ -136,11 +136,11 @@ class SqlEmEstoque():
             'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
             'rota': "COALESCE(e.ROTA, '-')",
             'endereco': "COALESCE(ec.COD_ENDERECO, '-')",
-            'estagio': "coalesce(l.CODIGO_ESTAGIO, 999)",
+            'estagio': "COALESCE(l.CODIGO_ESTAGIO, 999)",
             'solicitacoes': """--
-                coalesce(
+                COALESCE(
                   ( SELECT
-                      LISTAGG(DISTINCT sl.SOLICITACAO, ', ')
+                      LISTAGG(DISTINCT COALESCE(TO_CHAR(sl.SOLICITACAO), '#'), ', ')
                       WITHIN GROUP (ORDER BY sl.SOLICITACAO) colicitacoes
                     FROM pcpc_044 sl -- solicitação / lote 
                     WHERE 1=1
