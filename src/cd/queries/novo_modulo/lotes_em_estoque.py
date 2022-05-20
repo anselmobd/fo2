@@ -136,7 +136,12 @@ class SqlEmEstoque():
             'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
             'rota': "COALESCE(e.ROTA, '-')",
             'endereco': "COALESCE(ec.COD_ENDERECO, '-')",
-            'estagio': "coalesce(l.CODIGO_ESTAGIO, 999)"
+            'estagio': "coalesce(l.CODIGO_ESTAGIO, 999)",
+            'solicitacoes': """--
+                ( select
+                  pcpc_044 sl -- solicitação / lote 
+
+            """
         }
 
     def condicao_valor(self, ref):
