@@ -903,6 +903,19 @@ class SolicitacoesForm(forms.Form):
 
 
 class NovoEstoqueForm(forms.Form):
+    string_upper_attrs = {
+        'type': 'string',
+        'style': 'text-transform:uppercase;',
+    }
+
+    autofocus_attrs = {
+        'autofocus': 'autofocus;',
+    }
+
+    placeholder_00 = {
+        'placeholder': '0...',
+    }
+
     lote = forms.CharField(
         min_length=9,
         max_length=9,
@@ -911,7 +924,7 @@ class NovoEstoqueForm(forms.Form):
             attrs={
                 'size': 9,
                 'type': 'number',
-                'autofocus': 'autofocus',
+                **autofocus_attrs
             }
         )
     )
@@ -937,7 +950,7 @@ class NovoEstoqueForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'size': 6,
-                'style': 'text-transform:uppercase;',
+                **string_upper_attrs,
             }
         )
     )
@@ -950,9 +963,22 @@ class NovoEstoqueForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'size': 5,
-                'type': 'string',
-                'style': 'text-transform:uppercase;',
-                'placeholder': '0...',
+                **string_upper_attrs,
+                **placeholder_00,
+            }
+        )
+    )
+
+    cor = forms.CharField(
+        label='Cor',
+        required=False,
+        min_length=1,
+        max_length=6,
+        widget=forms.TextInput(
+            attrs={
+                'size': 6,
+                **string_upper_attrs,
+                **placeholder_00
             }
         )
     )
@@ -965,7 +991,6 @@ class NovoEstoqueForm(forms.Form):
             attrs={
                 'size': 5,
                 'type': 'number',
-                'placeholder': '0',
             }
         )
     )
@@ -1000,6 +1025,18 @@ class NovoEstoqueForm(forms.Form):
 
         data = self.data.copy()
         data['referencia'] = cleaned
+        self.data = data
+        return cleaned
+
+    def clean_cor(self):
+        cleaned = self.cleaned_data['cor']
+        if len(cleaned) == 0:
+            cleaned = ''
+        else:
+            cleaned = cleaned.upper().zfill(6)
+
+        data = self.data.copy()
+        data['cor'] = cleaned
         self.data = data
         return cleaned
 
