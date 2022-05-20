@@ -29,11 +29,16 @@ class Solicitacao(O2BaseGetView):
 
     def monta_dados_solicitados(self):
         if self.sem_numero:
-            if self.context['pedido'] or self.context['op']:
+            if (
+                self.context['pedido']
+                or self.context['op']
+                or self.context['lote']
+            ):
                 self.dados_solicitados = get_solicitacao(
                     self.cursor,
                     pedido_destino=self.context['pedido'],
                     op=self.context['op'],
+                    lote=self.context['lote'],
                 )
             else:
                 self.dados_solicitados = []
@@ -414,9 +419,10 @@ class Solicitacao(O2BaseGetView):
 
         self.sem_numero = self.context['solicitacao'] == '-'
         if self.sem_numero:
-            self.context['solicitacao'] = 'Sem número'
+            self.context['solicitacao'] = '# (sem número)'
             self.context['pedido'] = self.request.GET.get('pedido', None)
             self.context['op'] = self.request.GET.get('op', None)
+            self.context['lote'] = self.request.GET.get('lote', None)
         else:
             self.context['pedido'] = None
 
