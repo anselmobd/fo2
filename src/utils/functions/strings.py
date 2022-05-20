@@ -44,6 +44,16 @@ def only_digits(text):
     return ''.join(filter(str.isdigit, text))
 
 
+def nullif(value, test):
+    """Return None if equal, else return value"""
+    if value != test:
+        return value
+
+
+def nullifempty(value):
+    return nullif(value, '')
+
+
 def split_non_empty(text, sep):
     return [
         t.strip()
