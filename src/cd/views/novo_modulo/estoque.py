@@ -57,6 +57,9 @@ class NovoEstoque(O2BaseGetPostView):
         )
 
         lotes = lotes_em_estoque.dados()
+
+        if len(lotes) == 0:
+            return
         
         totalize_data(
             lotes,
