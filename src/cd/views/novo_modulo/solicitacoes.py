@@ -7,6 +7,11 @@ from fo2.connections import db_cursor_so
 from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
 from utils.functions import untuple_keys_concat
+from utils.functions.strings import (
+    min_max_string,
+    nullifempty,
+    only_digits,
+)
 from utils.views import totalize_data
 
 import cd.forms
@@ -79,7 +84,7 @@ class Solicitacoes(O2BaseGetPostView):
                     args=[row['solicitacao']]
                 )
             else:
-                row['solicitacao'] = 'Sem Número'
+                row['solicitacao'] = '#'
                 get_filtro = []
                 if self.pedido_destino:
                     get_filtro.append(
@@ -100,18 +105,16 @@ class Solicitacoes(O2BaseGetPostView):
 
         form_report_lines = []
         
-        min = self.com_lotes_situacao_de if self.com_lotes_situacao_de.isdigit() else None
-        max = self.com_lotes_situacao_ate if self.com_lotes_situacao_ate.isdigit() else None
-        if min or max:
-            if min == max:
-                filtro = f"igual a {min}"
-            elif min and max:
-                filtro = f"entre {min} e {max}"
-            elif min:
-                filtro = f"no mínimo {min}"
-            elif max:
-                filtro = f"no máximo {max}"
-            filtro = f"Com lotes em situação {filtro}"
+        filtro = min_max_string(
+            self.com_lotes_situacao_de,
+            self.com_lotes_situacao_ate,
+            process_input=(
+                only_digits,
+                nullifempty,
+            ),
+            msg_format="Com lotes em situação {}",
+        )
+        if filtro:
             form_report_lines.append(filtro)
 
         self.context.update({
