@@ -970,7 +970,6 @@ class NovoEstoqueForm(forms.Form):
     )
 
     cor = forms.CharField(
-        label='Cor',
         required=False,
         min_length=1,
         max_length=6,
@@ -979,6 +978,19 @@ class NovoEstoqueForm(forms.Form):
                 'size': 6,
                 **string_upper_attrs,
                 **placeholder_00
+            }
+        )
+    )
+
+    tam = forms.CharField(
+        label='Tamanho',
+        required=False,
+        min_length=1,
+        max_length=3,
+        widget=forms.TextInput(
+            attrs={
+                'size': 3,
+                **string_upper_attrs,
             }
         )
     )
@@ -1037,6 +1049,13 @@ class NovoEstoqueForm(forms.Form):
 
         data = self.data.copy()
         data['cor'] = cleaned
+        self.data = data
+        return cleaned
+
+    def clean_tam(self):
+        cleaned = self.cleaned_data['tam'].upper()
+        data = self.data.copy()
+        data['tam'] = cleaned
         self.data = data
         return cleaned
 

@@ -34,6 +34,7 @@ class NovoEstoque(O2BaseGetPostView):
         self.op = None if self.op == '' else self.op
         self.referencia = None if self.referencia == '' else self.referencia
         self.cor = None if self.cor == '' else self.cor
+        self.tam = None if self.tam == '' else self.tam
         self.modelo = None if self.modelo == '' else int(self.modelo)
         self.endereco = None if self.endereco == '' else self.endereco
 
@@ -43,6 +44,7 @@ class NovoEstoque(O2BaseGetPostView):
             lote=self.lote,
             ref=self.referencia,
             cor=self.cor,
+            tam=self.tam,
             modelo=self.modelo,
             endereco=self.endereco,
             op=self.op,
