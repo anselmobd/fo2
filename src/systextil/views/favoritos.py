@@ -26,7 +26,7 @@ class Favoritos(O2BaseGetPostView):
         self.login = self.login.upper()
 
         try:
-            usuario = Usuario.objects_all.get(
+            _ = Usuario.objects_all.get(
                 usuario=self.login, empresa=self.empresa)
         except Usuario.DoesNotExist:
             self.context.update({
@@ -36,6 +36,8 @@ class Favoritos(O2BaseGetPostView):
 
         dados = favoritos.query(
             self.cursor,
+            self.empresa,
+            self.login,
         )
         pprint(dados)
         if len(dados) == 0:
@@ -45,10 +47,12 @@ class Favoritos(O2BaseGetPostView):
 
         self.context.update({
             'headers': [
-                'nivel',
+                'Programa',
+                'Descrição',
             ],
             'fields': [
-                'nivel',
+                'programa',
+                'descricao',
             ],
             'data': dados,
         })
