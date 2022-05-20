@@ -90,13 +90,13 @@ class Solicitacoes(O2BaseGetPostView):
                     get_filtro.append(
                         f"pedido={self.pedido_destino}"
                     )
-                if self.op:
-                    get_filtro.append(
-                        f"op={self.op}"
-                    )
                 if self.lote:
                     get_filtro.append(
                         f"lote={self.lote}"
+                    )
+                if self.op:
+                    get_filtro.append(
+                        f"op={self.op}"
                     )
                 url_filtro = '&'.join(get_filtro)
                 if url_filtro:
