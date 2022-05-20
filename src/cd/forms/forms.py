@@ -916,6 +916,19 @@ class NovoEstoqueForm(forms.Form):
         )
     )
 
+    op = forms.CharField(
+        label='OP',
+        min_length=1,
+        max_length=6,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 6,
+                'type': 'number',
+            }
+        )
+    )
+
     endereco = forms.CharField(
         label='Endereço',
         min_length=1,
