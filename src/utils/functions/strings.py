@@ -61,6 +61,7 @@ def split_non_empty(text, sep):
         if t.strip()
     ]
 
+
 def lm(string):
     """Left Margin
     Desidenta string de acordo com a identação da primeira linha.
@@ -76,3 +77,23 @@ def lm(string):
     from tabela
     """
     return textwrap.dedent(string)
+
+
+def min_max_string(min, max, process_input=nullifempty, msg_format="{}"):
+    if process_input:
+        min_max = min, max
+        if not isinstance(process_input, tuple):
+            process_input = (process_input, )
+        for process in process_input:
+            min_max = map(process, min_max)
+        min, max = min_max
+    if min or max:
+        if min == max:
+            filtro = f"igual a {min}"
+        elif min and max:
+            filtro = f"entre {min} e {max}"
+        elif min:
+            filtro = f"no mínimo {min}"
+        elif max:
+            filtro = f"no máximo {max}"
+        return msg_format.format(filtro)
