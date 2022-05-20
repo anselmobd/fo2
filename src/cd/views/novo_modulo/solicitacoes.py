@@ -94,6 +94,10 @@ class Solicitacoes(O2BaseGetPostView):
                     get_filtro.append(
                         f"op={self.op}"
                     )
+                if self.lote:
+                    get_filtro.append(
+                        f"lote={self.lote}"
+                    )
                 url_filtro = '&'.join(get_filtro)
                 if url_filtro:
                     row['solicitacao|LINK'] = reverse(

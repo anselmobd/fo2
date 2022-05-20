@@ -70,6 +70,7 @@ def get_solicitacoes(
         filtra_pedido_destino
         # or filtra_ref_destino
         # or filtra_ref_reservada
+        or filtra_lote
         or filtra_op
     ):
         solicitacao_nula = ""
