@@ -79,36 +79,26 @@ class NovoEstoque(O2BaseGetPostView):
         lotes = paginator_basic(lotes, lotes_por_pagina, self.page)
         lotes.object_list.append(totalizador_lotes)
 
+        fields = {
+            'palete': 'Palete',
+            'endereco': 'Endereço',
+            'rota': 'Rota',
+            'modelo': 'Modelo',
+            'ref': 'Ref.',
+            'tam': 'Tam.',
+            'cor': 'Cor',
+            'op': 'OP',
+            'lote': 'Lote',
+            'qtd_prog': 'Qtd.Original',
+            'qtd_dbaixa': 'Qtd.',
+            'estagio': 'Estágio',
+            'solicitacoes': 'Solicitações',
+        }
         self.context.update({
-            'headers': [
-                'Palete',
-                'Endereço',
-                'Rota',
-                'Modelo',
-                'Ref.',
-                'Tam.',
-                'Cor',
-                'OP',
-                'Lote',
-                'Qtd.Original',
-                'Qtd.',
-                'Estágio',
-                'Solicitações',
-            ],
-            'fields': [
-                'palete',
-                'endereco',
-                'rota',
-                'modelo',
-                'ref',
-                'tam',
-                'cor',
+            'headers': fields.values(),
+            'fields': fields.keys(),
+            'safe': [
                 'op',
-                'lote',
-                'qtd_prog',
-                'qtd_dbaixa',
-                'estagio',
-                'solicitacoes',
             ],
             'style': untuple_keys_concat({
                 (12, ): 'text-align: center;',

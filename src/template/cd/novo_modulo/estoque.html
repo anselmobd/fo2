@@ -25,8 +25,8 @@
       <p>Lotes em paletes</p>
       {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque' only %}
         <table>
-          {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
-          {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+          {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
+          {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe style=style only %}
         </table>
       {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque' only %}
     {% else %}
