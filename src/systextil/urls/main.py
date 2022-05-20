@@ -2,6 +2,7 @@ from django.urls import include, re_path
 
 from systextil.views import (
     apoio_index,
+    favoritos,
     index,
     sessions,
 )
@@ -20,4 +21,7 @@ urlpatterns = [
     re_path(r'^table/', include('systextil.urls.table'), name='table'),
 
     re_path(r'^usuario/', include('systextil.urls.usuario'), name='usuario'),
+
+    re_path(r'^favoritos/$', favoritos.Favoritos.as_view(), name='favoritos'),
+
 ]
