@@ -417,7 +417,7 @@ class Solicitacao(O2BaseGetView):
         self.cursor = db_cursor_so(self.request)
         self.og = OperacoesGrade()
 
-        self.sem_numero = self.context['solicitacao'] == '-'
+        self.sem_numero = self.context['solicitacao'] == 'sn'
         if self.sem_numero:
             self.context['solicitacao'] = '# (sem número)'
             self.context['pedido'] = self.request.GET.get('pedido', None)
