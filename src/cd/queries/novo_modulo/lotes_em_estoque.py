@@ -138,9 +138,17 @@ class SqlEmEstoque():
             'endereco': "COALESCE(ec.COD_ENDERECO, '-')",
             'estagio': "coalesce(l.CODIGO_ESTAGIO, 999)",
             'solicitacoes': """--
-                ( select
-                  pcpc_044 sl -- solicitação / lote 
-
+                coalesce(
+                  ( SELECT
+                      LISTAGG(DISTINCT sl.SOLICITACAO, ', ')
+                      WITHIN GROUP (ORDER BY sl.SOLICITACAO) colicitacoes
+                    FROM pcpc_044 sl -- solicitação / lote 
+                    WHERE 1=1
+                      AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                      AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                  ),
+                '-'
+                )
             """
         }
 
