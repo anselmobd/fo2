@@ -26,10 +26,11 @@ class Records():
         self.query.add_table(self.table)
 
         for key in self.filter:
-            self.query.add_filter(
-                key,
-                self.filter[key]
-            )
+            if self.filter[key] is not None:
+                self.query.add_filter(
+                    key,
+                    self.filter[key]
+                )
 
         for field in self.select:
             self.query.add_select_field(field)
