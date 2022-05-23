@@ -14,7 +14,7 @@ class Query():
 
         self.AliasField = namedtuple('AliasField', 'alias field')
         self.TableAlias = namedtuple('TableAlias', 'table alias')
-        self.JoinAlias = namedtuple('JoinAlias', 'table alias from_alias test')
+        self.JoinAlias = namedtuple('JoinAlias', 'table alias conditions')
         self.Condition = namedtuple('Condition', 'left test right')
 
     def add_table(self, alias):
@@ -35,26 +35,31 @@ class Query():
 
             pprint(join_rule)
             if join_rule:
-                join_on_list = []
+                join_conditons = []
                 for join_field_alias in join_rule:
-                    join_field = models.table[alias]['field'][join_field_alias]
+                    join_field = self.AliasField(
+                        alias=alias,
+                        field=models.table[alias]['field'][join_field_alias],
+                    )
                     from_field_alias = join_rule[join_field_alias]
-                    table_field = models.table[from_table]['field'][from_field_alias]
-                    join_on_list.append([
-                        join_field,
-                        "=",
-                        table_field,
-                    ])
+                    table_field = self.AliasField(
+                        alias=from_table,
+                        field=models.table[from_table]['field'][from_field_alias],
+                    )
+                    join_conditons.append(self.Condition(
+                        left=join_field,
+                        test="=",
+                        right=table_field,
+                    ))
                 self.join_list.append(self.JoinAlias(
-                    table_name,
-                    alias,
-                    from_table,
-                    join_on_list,
+                    table=table_name,
+                    alias=alias,
+                    conditions=join_conditons,
                 ))
             else:
                 self.from_tables.append(self.TableAlias(
-                    table_name,
-                    alias,
+                    table=table_name,
+                    alias=alias,
                 ))
             self.tables_disponiveis.add(alias)
 
@@ -69,16 +74,14 @@ class Query():
         )
 
     def mount_joins(self):
-        pprint(self.join_list)
         joins = []
         for join_parms in self.join_list:
-            join_on_list = join_parms.test
-            join_on = "\n AND".join([
-               f"{join_parms.alias}.{parm[0]} {parm[1]} {join_parms.from_alias}.{parm[2]}"
-               for parm in join_on_list
+            conditions = "\n AND".join([
+               self.mount_condition(condition)
+               for condition in join_parms.conditions
             ])
             joins.append(
-                f"JOIN {join_parms.table} {join_parms.alias} \n  ON {join_on}"
+                f"JOIN {join_parms.table} {join_parms.alias}\n  ON {conditions}"
             )
         return "\n".join(joins)
 
