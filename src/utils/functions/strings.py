@@ -44,14 +44,14 @@ def only_digits(text):
     return ''.join(filter(str.isdigit, text))
 
 
-def nullif(value, test):
+def noneif(value, test):
     """Return None if equal, else return value"""
     if value != test:
         return value
 
 
-def nullifempty(value):
-    return nullif(value, '')
+def noneifempty(value):
+    return noneif(value, '')
 
 
 def split_non_empty(text, sep):
@@ -79,7 +79,7 @@ def lm(string):
     return textwrap.dedent(string)
 
 
-def min_max_string(min, max, process_input=nullifempty, msg_format="{}"):
+def min_max_string(min, max, process_input=noneifempty, msg_format="{}"):
     if process_input:
         min_max = min, max
         if not isinstance(process_input, tuple):

@@ -9,7 +9,7 @@ from base.views import O2BaseGetPostView
 from utils.functions import untuple_keys_concat
 from utils.functions.strings import (
     min_max_string,
-    nullifempty,
+    noneifempty,
     only_digits,
 )
 from utils.views import totalize_data
@@ -114,7 +114,7 @@ class Solicitacoes(O2BaseGetPostView):
             self.com_lotes_situacao_ate,
             process_input=(
                 only_digits,
-                nullifempty,
+                noneifempty,
             ),
             msg_format="Com lotes em situação {}",
         )
