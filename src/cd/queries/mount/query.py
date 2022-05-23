@@ -65,9 +65,11 @@ class Query():
 
     def mount_tables(self):
         if not self.from_tables:
-            self.from_tables = ['dual', '']
+            self.from_tables.append(self.TableAlias(
+                table='dual',
+                alias='',
+            ))
 
-        pprint(self.from_tables)
         return ", ".join(
             f"{table.table} {table.alias}"
             for table in self.from_tables
