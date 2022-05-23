@@ -22,39 +22,36 @@ class Query():
             alias not in self.tables_disponiveis
             and alias in models.table
         ):
-            print('add_table', alias)
             table_name = models.table[alias]['table']
 
             join_rule = None
-            for from_table in self.tables_disponiveis:
-                join_key = f"{alias}<{from_table}"
-                pprint(models.join)
+            for from_alias in self.tables_disponiveis:
+                join_key = f"{alias}<{from_alias}"
                 if join_key in models.join:
                     join_rule = models.join[join_key]
                     break
 
-            pprint(join_rule)
             if join_rule:
-                join_conditons = []
-                for join_field_alias in join_rule:
-                    join_field = self.AliasField(
+                conditons = []
+                for left_field_alias in join_rule:
+                    left_field = self.AliasField(
                         alias=alias,
-                        field=models.table[alias]['field'][join_field_alias],
+                        field=models.table[alias]['field'][left_field_alias],
                     )
-                    from_field_alias = join_rule[join_field_alias]
-                    table_field = self.AliasField(
-                        alias=from_table,
-                        field=models.table[from_table]['field'][from_field_alias],
+                    right_field_alias = join_rule[left_field_alias]
+                    right_field = self.AliasField(
+                        alias=from_alias,
+                        field=models.table[from_alias]['field'][right_field_alias],
                     )
-                    join_conditons.append(self.Condition(
-                        left=join_field,
+                    conditons.append(self.Condition(
+                        left=left_field,
                         test="=",
-                        right=table_field,
+                        right=right_field,
                     ))
                 self.join_list.append(self.JoinAlias(
                     table=table_name,
                     alias=alias,
-                    conditions=join_conditons,
+                    conditions=conditons,
                 ))
             else:
                 self.from_tables.append(self.TableAlias(
@@ -77,13 +74,13 @@ class Query():
 
     def mount_joins(self):
         joins = []
-        for join_parms in self.join_list:
+        for join in self.join_list:
             conditions = "\n AND".join([
                self.mount_condition(condition)
-               for condition in join_parms.conditions
+               for condition in join.conditions
             ])
             joins.append(
-                f"JOIN {join_parms.table} {join_parms.alias}\n  ON {conditions}"
+                f"JOIN {join.table} {join.alias}\n  ON {conditions}"
             )
         return "\n".join(joins)
 
@@ -93,8 +90,8 @@ class Query():
         table_field = models.table[table_alias]['field'][field_alias]
         self.filter_list.append(self.Condition(
             self.AliasField(
-                table_alias,
-                table_field,
+                alias=table_alias,
+                field=table_field,
             ),
             "=",
             value,
@@ -128,8 +125,8 @@ class Query():
         self.add_table(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
         self.select_dict[field_alias] = self.AliasField(
-            table_alias,
-            table_field
+            alias=table_alias,
+            field=table_field
         )
 
     def mount_select_fields(self):
