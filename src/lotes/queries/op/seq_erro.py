@@ -23,6 +23,8 @@ def lista_op(cursor):
         JOIN PCPC_020 op
           ON op.ORDEM_PRODUCAO = oe.OP
         WHERE op.COD_CANCELAMENTO = 0 
+        ORDER BY
+          oe.OP
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
