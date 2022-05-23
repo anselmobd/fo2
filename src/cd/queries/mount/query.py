@@ -86,21 +86,24 @@ class Query():
         table_alias, field_alias = alias_field.split('.')
         self.add_table(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
-        self.filter_list.append([
-            f"{table_alias}.{table_field}",
+        self.filter_list.append(self.Condition(
+            self.AliasField(
+                table_alias,
+                table_field,
+            ),
             "=",
             value,
-        ])
+        ))
 
     def mount_where(self):
         pprint(self.filter_list)
         wheres = []
         for filter in self.filter_list:
-            if isinstance(filter[2], str):
-                value = f"'{filter[2]}'"
+            if isinstance(filter.right, str):
+                value = f"'{filter.right}'"
             else:
-                value = filter[2]
-            wheres.append(f"{filter[0]} {filter[1]} {value}")
+                value = filter.right
+            wheres.append(f"{filter.left.alias}.{filter.left.field} {filter.test} {value}")
         where = "\n  AND ".join(wheres)
         where = f"WHERE {where}" if where else ""
         return where
