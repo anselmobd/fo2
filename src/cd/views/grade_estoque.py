@@ -95,7 +95,7 @@ class Grade(PermissionRequiredMixin, View):
             # ).exclude(
             #     qtd__lte=0)
 
-            LotesEmEstoque(self.cursor_s, get='ref').dados()
+            referencias = LotesEmEstoque(self.cursor_s, get='ref').dados()
             # referencias = data_rec.distinct().values(
             #     'referencia').order_by('referencia')
             for row in referencias:
