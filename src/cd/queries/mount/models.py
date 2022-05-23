@@ -21,7 +21,7 @@ table = {
 }
 
 join = {
-    'lp+op': {
-        'op', 'op'
+    'op<lp': {
+        'op': 'op'
     }
 }
