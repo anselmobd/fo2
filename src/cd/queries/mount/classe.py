@@ -3,7 +3,7 @@ from pprint import pprint
 from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
-from cd.queries.consulta import models
+from cd.queries.mount import models
 
 
 class Records():
