@@ -98,9 +98,12 @@ class Query():
             value,
         ))
 
+    def mount_alias_field(self, alias_field):
+        return f"{alias_field.alias}.{alias_field.field}"
+
     def mount_alias_field_value(self, alias_field):
         if isinstance(alias_field, self.AliasField):
-            return f"{alias_field.alias}.{alias_field.field}"
+            return self.mount_alias_field(alias_field)
         else:
             if isinstance(alias_field, str):
                 return f"'{alias_field}'"
