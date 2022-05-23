@@ -1,12 +1,27 @@
 table = {
     'lp': {
         'table': "ENDR_014",
-        'descr': "lote/palete",
+        'descr': "Lote/Palete",
         'field': {
-            'palete': 'COD_CONTAINER',
-            'op': 'ORDEM_PRODUCAO',
-            'lote': 'ORDEM_CONFECCAO',
-            'data': 'DATA_INCLUSAO',
+            'palete': "COD_CONTAINER",
+            'op': "ORDEM_PRODUCAO",
+            'lote': "ORDEM_CONFECCAO",
+            'data': "DATA_INCLUSAO",
         }
+    },
+    'op': {
+        'table': "PCPC_020",
+        'descr': "OP",
+        'field': {
+            'op': "ORDEM_PRODUCAO",
+            'ref': "REFERENCIA_PECA",
+            'pedido': "PEDIDO_VENDA",
+        }
+    },
+}
+
+join = {
+    'lp+op': {
+        'op', 'op'
     }
 }
