@@ -16,32 +16,6 @@ class Records():
         table=None,
     ):
         self.cursor = cursor
-
-        self.statement = Statement(
-            select=select,
-            filter=filter,
-            table=table,
-        )
-
-    def data(self):
-        sql = self.statement.sql()
-
-        debug_cursor_execute(self.cursor, sql)
-        data = dictlist(self.cursor)
-
-        return data
-
-
-class Statement():
-    """Monta Statement
-    """
-
-    def __init__(
-        self, 
-        select=None, 
-        filter=None, 
-        table=None, 
-    ):
         self.select = select
         self.filter = filter
         self.table = table
@@ -61,3 +35,11 @@ class Statement():
             self.query.add_select_field(field)
 
         return self.query.sql()
+
+    def data(self):
+        sql = self.sql()
+
+        debug_cursor_execute(self.cursor, sql)
+        data = dictlist(self.cursor)
+
+        return data
