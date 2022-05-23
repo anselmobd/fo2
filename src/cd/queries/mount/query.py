@@ -11,7 +11,11 @@ class Query():
         self.filter_list = []
         self.select_dict = {}
         self.join_list = []
+
         self.AliasField = namedtuple('AliasField', 'alias field')
+        self.TableAlias = namedtuple('TableAlias', 'table alias')
+        self.JoinAlias = namedtuple('JoinAlias', 'table alias from_alias test')
+        self.Condition = namedtuple('Condition', 'left test right')
 
     def add_table(self, alias):
         if (
@@ -41,17 +45,17 @@ class Query():
                         "=",
                         table_field,
                     ])
-                self.join_list.append([
+                self.join_list.append(self.JoinAlias(
                     table_name,
                     alias,
                     from_table,
                     join_on_list,
-                ])
+                ))
             else:
-                self.from_tables.append([
+                self.from_tables.append(self.TableAlias(
                     table_name,
                     alias,
-                ])
+                ))
             self.tables_disponiveis.add(alias)
 
     def mount_tables(self):
@@ -60,7 +64,7 @@ class Query():
 
         pprint(self.from_tables)
         return ", ".join(
-            f"{table[0]} {table[1]}"
+            f"{table.table} {table.alias}"
             for table in self.from_tables
         )
 
@@ -68,13 +72,13 @@ class Query():
         pprint(self.join_list)
         joins = []
         for join_parms in self.join_list:
-            join_on_list = join_parms[3]
+            join_on_list = join_parms.test
             join_on = "\n AND".join([
-               f"{join_parms[1]}.{parm[0]} {parm[1]} {join_parms[2]}.{parm[2]}"
+               f"{join_parms.alias}.{parm[0]} {parm[1]} {join_parms.from_alias}.{parm[2]}"
                for parm in join_on_list
             ])
             joins.append(
-                f"JOIN {join_parms[0]} {join_parms[1]} \n  ON {join_on}"
+                f"JOIN {join_parms.table} {join_parms.alias} \n  ON {join_on}"
             )
         return "\n".join(joins)
 
