@@ -37,7 +37,7 @@ class Query():
         wheres = []
         for filter in self.filter_list:
             wheres.append(f"{filter[0]} {filter[1]} {filter[2]}")
-        return "\n AND ".join(wheres)
+        return "\n  AND ".join(wheres)
 
     def add_select_field(self, alias_field):
         table_alias, field_alias = alias_field.split('.')
