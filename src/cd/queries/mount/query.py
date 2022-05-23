@@ -1,3 +1,4 @@
+from collections import namedtuple
 from pprint import pprint
 
 from cd.queries.mount import models
@@ -8,8 +9,9 @@ class Query():
         self.from_tables = []
         self.tables_disponiveis = set()
         self.filter_list = []
-        self.select_list = {}
+        self.select_dict = {}
         self.join_list = []
+        self.AliasField = namedtuple('AliasField', 'alias field')
 
     def add_table(self, alias):
         if (
@@ -103,19 +105,19 @@ class Query():
         table_alias, field_alias = alias_field.split('.')
         self.add_table(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
-        self.select_list[field_alias] = [
+        self.select_dict[field_alias] = self.AliasField(
             table_alias,
-            table_field,
-        ]
+            table_field
+        )
 
     def mount_select_fields(self):
-        if not self.select_list:
-            self.select_list = ['CURRENT_TIMESTAMP']
+        if not self.select_dict:
+            self.select_dict = ['CURRENT_TIMESTAMP']
 
-        pprint(self.select_list)
+        pprint(self.select_dict)
         return "\n, ".join([
-            f"{self.select_list[alias][0]}.{self.select_list[alias][1]} {alias}"
-            for alias in self.select_list
+            f"{self.select_dict[alias].alias}.{self.select_dict[alias].field} {alias}"
+            for alias in self.select_dict
         ])
 
     def sql(self):
@@ -131,5 +133,5 @@ class Query():
             f"{joins} -- joins",
             f"{where} -- where",
         ])
-        print(sql)
+
         return sql
