@@ -104,19 +104,16 @@ class Query():
             return alias_field
 
     def mount_condition(self, condition):
-        print('mount_condition', condition)
         left = self.mount_alias_field_value(condition.left)
         right = self.mount_alias_field_value(condition.right)
         return f"{left} {condition.test} {right}"
 
     def mount_where(self):
-        pprint(self.filter_list)
-        wheres = []
-        for filter in self.filter_list:
-            wheres.append(self.mount_condition(filter))
-        where = "\n  AND ".join(wheres)
-        where = f"WHERE {where}" if where else ""
-        return where
+        where = "\n  AND ".join([
+            self.mount_condition(filter)
+            for filter in self.filter_list
+        ])
+        return f"WHERE {where}" if where else ""
 
     def add_select_field(self, alias_field):
         table_alias, field_alias = alias_field.split('.')
