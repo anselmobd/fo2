@@ -8,7 +8,7 @@ class Query():
         self.from_tables = []
         self.tables_disponiveis = set()
         self.filter_list = []
-        self.select_list = []
+        self.select_list = {}
         self.join_list = []
 
     def add_table(self, alias):
@@ -53,10 +53,10 @@ class Query():
             self.tables_disponiveis.add(alias)
 
     def mount_tables(self):
-        pprint(self.from_tables)
         if not self.from_tables:
-            self.from_tables = ['dual']
+            self.from_tables = ['dual', '']
 
+        pprint(self.from_tables)
         return ", ".join(
             f"{table[0]} {table[1]}"
             for table in self.from_tables
@@ -103,16 +103,20 @@ class Query():
         table_alias, field_alias = alias_field.split('.')
         self.add_table(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
-        self.select_list.append(
-            f"{table_alias}.{table_field} {field_alias}",
-        )
+        self.select_list[field_alias] = [
+            table_alias,
+            table_field,
+        ]
 
     def mount_select_fields(self):
-        pprint(self.select_list)
         if not self.select_list:
-            self.select_list = [1]
+            self.select_list = ['CURRENT_TIMESTAMP']
 
-        return "\n, ".join(self.select_list)
+        pprint(self.select_list)
+        return "\n, ".join([
+            f"{self.select_list[alias][0]}.{self.select_list[alias][1]} {alias}"
+            for alias in self.select_list
+        ])
 
     def sql(self):
         select_fields = self.mount_select_fields()
