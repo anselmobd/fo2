@@ -54,6 +54,9 @@ class Query():
 
     def mount_tables(self):
         pprint(self.from_tables)
+        if not self.from_tables:
+            self.from_tables = ['dual']
+
         return ", ".join(
             f"{table[0]} {table[1]}"
             for table in self.from_tables
@@ -74,10 +77,11 @@ class Query():
         return "\n".join(joins)
 
     def add_filter(self, alias_field, value):
-        alias, field = alias_field.split('.')
-        table_field = models.table[alias]['field'][field]
+        table_alias, field_alias = alias_field.split('.')
+        self.add_table(table_alias)
+        table_field = models.table[table_alias]['field'][field_alias]
         self.filter_list.append([
-            f"{alias}.{table_field}",
+            f"{table_alias}.{table_field}",
             "=",
             value,
         ])
@@ -86,8 +90,14 @@ class Query():
         pprint(self.filter_list)
         wheres = []
         for filter in self.filter_list:
-            wheres.append(f"{filter[0]} {filter[1]} {filter[2]}")
-        return "\n  AND ".join(wheres)
+            if isinstance(filter[2], str):
+                value = f"'{filter[2]}'"
+            else:
+                value = filter[2]
+            wheres.append(f"{filter[0]} {filter[1]} {value}")
+        where = "\n  AND ".join(wheres)
+        where = f"WHERE {where}" if where else ""
+        return where
 
     def add_select_field(self, alias_field):
         table_alias, field_alias = alias_field.split('.')
@@ -99,28 +109,23 @@ class Query():
 
     def mount_select_fields(self):
         pprint(self.select_list)
+        if not self.select_list:
+            self.select_list = [1]
+
         return "\n, ".join(self.select_list)
 
     def sql(self):
-        if not self.from_tables:
-            self.from_tables = ['dual']
-        tables = self.mount_tables()
-
-        joins = self.mount_joins()
-
-        where = self.mount_where()
-        where = f"WHERE {where}" if where else ""
-
-        if not self.select_list:
-            self.select_list = [1]
         select_fields = self.mount_select_fields()
+        tables = self.mount_tables()
+        joins = self.mount_joins()
+        where = self.mount_where()
 
         sql = "\n".join([
             "SELECT",
             f"  {select_fields}",
             f"FROM {tables}",
-            f"{joins}",
-            f"{where}",
+            f"{joins} -- joins",
+            f"{where} -- where",
         ])
         print(sql)
         return sql
