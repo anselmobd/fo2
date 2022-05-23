@@ -95,15 +95,25 @@ class Query():
             value,
         ))
 
+    def mount_alias_field_value(self, alias_field):
+        if isinstance(alias_field, self.AliasField):
+            return f"{alias_field.alias}.{alias_field.field}"
+        else:
+            if isinstance(alias_field, str):
+                return f"'{alias_field}'"
+            return alias_field
+
+    def mount_condition(self, condition):
+        print('mount_condition', condition)
+        left = self.mount_alias_field_value(condition.left)
+        right = self.mount_alias_field_value(condition.right)
+        return f"{left} {condition.test} {right}"
+
     def mount_where(self):
         pprint(self.filter_list)
         wheres = []
         for filter in self.filter_list:
-            if isinstance(filter.right, str):
-                value = f"'{filter.right}'"
-            else:
-                value = filter.right
-            wheres.append(f"{filter.left.alias}.{filter.left.field} {filter.test} {value}")
+            wheres.append(self.mount_condition(filter))
         where = "\n  AND ".join(wheres)
         where = f"WHERE {where}" if where else ""
         return where
