@@ -15,13 +15,30 @@ class Query():
             alias not in self.tables_disponiveis
             and alias in models.table
         ):
-            table_name = models.table[alias]['table']
-            self.from_tables.append(f"{table_name} {alias}")
+            join_rule = None
+            for table_from in self.tables_disponiveis:
+                join_key = f"{table_from} {alias}"
+                if join_key in models.join:
+                    join_rule = models.join[join_key]
+                    break
+
+            print(join_rule)
+            if join_rule:
+                pass
+            else:
+                table_name = models.table[alias]['table']
+                self.from_tables.append([
+                    table_name,
+                    alias,
+                ])
             self.tables_disponiveis.add(alias)
 
     def mount_tables(self):
         pprint(self.from_tables)
-        return ", ".join(self.from_tables)
+        return ", ".join(
+            f"{table[0]} {table[1]}"
+            for table in self.from_tables
+        )
 
     def add_filter(self, alias_field, value):
         alias, field = alias_field.split('.')
@@ -41,6 +58,7 @@ class Query():
 
     def add_select_field(self, alias_field):
         table_alias, field_alias = alias_field.split('.')
+        self.add_table(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
         self.select_list.append(
             f"{table_alias}.{table_field} {field_alias}",
