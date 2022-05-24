@@ -21,6 +21,7 @@ class Query():
         self.JoinAlias = namedtuple('JoinAlias', 'table alias conditions')
         self.Condition = namedtuple('Condition', 'left test right')
         self.TemplateFields = namedtuple('TemplateFields', 'template fields')
+        self.Template = namedtuple('Template', 'template')
 
     def get_join_rules(self, alias):
         if 'joined_to' in models.table[alias]:
@@ -171,12 +172,13 @@ class Query():
     def mount_alias_field_value(self, alias_field):
         if isinstance(alias_field, self.AliasField):
             return self.mount_alias_field(alias_field)
-        elif isinstance(alias_field, self.TemplateFields):
+        if isinstance(alias_field, self.TemplateFields):
             return self.mount_template_fields(alias_field)
-        else:
-            if isinstance(alias_field, str):
-                return f"'{alias_field}'"
-            return alias_field
+        if isinstance(alias_field, self.Template):
+            return alias_field.template
+        if isinstance(alias_field, str):
+            return f"'{alias_field}'"
+        return alias_field
 
     def mount_condition(self, condition):
         left = self.mount_alias_field_value(condition.left)
