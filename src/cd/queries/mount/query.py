@@ -45,6 +45,29 @@ class Query():
             field=models.table[alias]['field'][field],
         )
 
+    def make_template_field(self, from_alias, right_rule):
+        right_alias_fields = []
+        if len(right_rule) == 2:
+            right_rule_fields = right_rule[1]
+            if not isinstance(right_rule_fields, tuple):
+                right_rule_fields = (right_rule_fields, )
+            for right_rule_field in right_rule_fields:
+                right_alias_fields.append(
+                    self.make_alias_field(
+                        from_alias,
+                        right_rule_field,
+                    )
+                )
+            right_field = self.TemplateFields(
+                template=right_rule[0],
+                fields=right_alias_fields
+            )
+        else:
+            right_field = self.Template(
+                template=right_rule[0],
+            )
+        return right_field
+
     def join_conditions(self, alias, join_rule):
         conditions = []
         for left_rule in join_rule.rules:
@@ -52,27 +75,8 @@ class Query():
 
             right_rule = join_rule.rules[left_rule]
             if isinstance(right_rule, tuple):
-                right_alias_fields = []
-                if len(right_rule) == 2:
-                    right_rule_fields = right_rule[1]
-                    if not isinstance(right_rule_fields, tuple):
-                        right_rule_fields = (right_rule_fields, )
-                    for right_rule_field in right_rule_fields:
-                        right_alias_fields.append(
-                            self.make_alias_field(
-                                join_rule.from_alias,
-                                right_rule_field,
-                            )
-                        )
-                    right_field = self.TemplateFields(
-                        template=right_rule[0],
-                        fields=right_alias_fields
-                    )
-                else:
-                    right_field = self.Template(
-                        template=right_rule[0],
-                    )
-
+                right_field = self.make_template_field(
+                    join_rule.from_alias, right_rule)
             else:
                 right_field = self.make_alias_field(
                     join_rule.from_alias, right_rule)
