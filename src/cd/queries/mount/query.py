@@ -8,11 +8,11 @@ from cd.queries.mount import models
 
 class Query():
     def __init__(self):
-        self.from_tables = []
-        self.tables_disponiveis = set()
-        self.filter_list = []
-        self.select_list = []
-        self.join_list = []
+        self.table_aliases = set()
+        self.fields = []
+        self.froms = []
+        self.joins = []
+        self.filters = []
 
         self.AliasField = namedtuple('AliasField', 'alias field')
         self.ValueAlias = namedtuple('ValueAlias', 'value alias')
@@ -22,13 +22,13 @@ class Query():
 
     def add_table(self, alias):
         if (
-            alias not in self.tables_disponiveis
+            alias not in self.table_aliases
             and alias in models.table
         ):
             table_name = models.table[alias]['table']
 
             join_rule = None
-            for from_alias in self.tables_disponiveis:
+            for from_alias in self.table_aliases:
                 join_key = f"{alias}<{from_alias}"
                 if join_key in models.join:
                     join_rule = models.join[join_key]
@@ -51,33 +51,33 @@ class Query():
                         test="=",
                         right=right_field,
                     ))
-                self.join_list.append(self.JoinAlias(
+                self.joins.append(self.JoinAlias(
                     table=table_name,
                     alias=alias,
                     conditions=conditons,
                 ))
             else:
-                self.from_tables.append(self.TableAlias(
+                self.froms.append(self.TableAlias(
                     table=table_name,
                     alias=alias,
                 ))
-            self.tables_disponiveis.add(alias)
+            self.table_aliases.add(alias)
 
     def mount_tables(self):
-        if not self.from_tables:
-            self.from_tables.append(self.TableAlias(
+        if not self.froms:
+            self.froms.append(self.TableAlias(
                 table='dual',
                 alias='',
             ))
 
         return ", ".join(
             f"{table.table} {table.alias}"
-            for table in self.from_tables
+            for table in self.froms
         )
 
     def mount_joins(self):
         joins = []
-        for join in self.join_list:
+        for join in self.joins:
             conditions = "\n AND".join([
                self.mount_condition(condition)
                for condition in join.conditions
@@ -91,7 +91,7 @@ class Query():
         table_alias, field_alias = alias_field.split('.')
         self.add_table(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
-        self.filter_list.append(self.Condition(
+        self.filters.append(self.Condition(
             self.AliasField(
                 alias=table_alias,
                 field=table_field,
@@ -127,7 +127,7 @@ class Query():
     def mount_where(self):
         where = "\n  AND ".join([
             self.mount_condition(filter)
-            for filter in self.filter_list
+            for filter in self.filters
         ])
         return f"WHERE {where}" if where else ""
 
@@ -135,7 +135,7 @@ class Query():
         table_alias, field_alias = alias_field.split('.')
         self.add_table(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
-        self.select_list.append(self.ValueAlias(
+        self.fields.append(self.ValueAlias(
             value=self.AliasField(
                 alias=table_alias,
                 field=table_field
@@ -143,9 +143,9 @@ class Query():
             alias=field_alias,
         ))
 
-    def mount_select_fields(self):
-        if not self.select_list:
-            self.select_list.append(self.ValueAlias(
+    def mount_fields(self):
+        if not self.fields:
+            self.fields.append(self.ValueAlias(
                 value=self.AliasField(
                     alias='',
                     field='CURRENT_TIMESTAMP'
@@ -155,18 +155,18 @@ class Query():
 
         return "\n, ".join([
             f"{self.mount_alias_field_value(value_alias.value)} {value_alias.alias}"
-            for value_alias in self.select_list
+            for value_alias in self.fields
         ])
 
     def sql(self):
-        select_fields = self.mount_select_fields()
+        fields = self.mount_fields()
         tables = self.mount_tables()
         joins = self.mount_joins()
         where = self.mount_where()
 
         sql = "\n".join([
             "SELECT",
-            f"  {select_fields}",
+            f"  {fields}",
             f"FROM {tables}",
             f"{joins} -- joins",
             f"{where} -- where",
