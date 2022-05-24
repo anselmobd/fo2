@@ -17,29 +17,42 @@ class Query():
         self.AliasField = namedtuple('AliasField', 'alias field')
         self.ValueAlias = namedtuple('ValueAlias', 'value alias')
         self.TableAlias = namedtuple('TableAlias', 'table alias')
+        self.JoinRules = namedtuple('JoinRules', 'from_alias rules')
         self.JoinAlias = namedtuple('JoinAlias', 'table alias conditions')
         self.Condition = namedtuple('Condition', 'left test right')
 
-    def add_join(self, alias):
-        table_name = models.table[alias]['table']
 
-        join_rule = None
-        for from_alias in self.table_aliases:
-            if from_alias in models.table[alias]['joined_to']:
-                join_rule = models.table[alias]['joined_to'][from_alias]
-                break
+    def get_join_rules(self, alias):
+        if 'joined_to' in models.table[alias]:
+            return [
+                self.JoinRules(
+                    from_alias=from_alias,
+                    rules=models.table[alias]['joined_to'][from_alias],
+                )
+                for from_alias in self.table_aliases
+                if from_alias in models.table[alias]['joined_to']
+            ]
+
+    def get_join_rule(self, alias):
+        join_rules = self.get_join_rules(alias)
+        if join_rules:
+            return join_rules[0]
+
+    def add_join(self, alias):
+        join_rule = self.get_join_rule(alias)
 
         if join_rule:
+            table_name = models.table[alias]['table']
             conditons = []
-            for left_field_alias in join_rule:
+            for left_field_alias in join_rule.rules:
                 left_field = self.AliasField(
                     alias=alias,
                     field=models.table[alias]['field'][left_field_alias],
                 )
-                right_field_alias = join_rule[left_field_alias]
+                right_field_alias = join_rule.rules[left_field_alias]
                 right_field = self.AliasField(
-                    alias=from_alias,
-                    field=models.table[from_alias]['field'][right_field_alias],
+                    alias=join_rule.from_alias,
+                    field=models.table[join_rule.from_alias]['field'][right_field_alias],
                 )
                 conditons.append(self.Condition(
                     left=left_field,
