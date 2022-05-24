@@ -154,6 +154,9 @@ class Query():
     def add_filter(self, alias_field, value):
         table_alias, field_alias = alias_field.split('.')
         self.add_alias(table_alias)
+        self.filter_append(table_alias, field_alias, value)
+
+    def filter_append(self, table_alias, field_alias, value):
         table_field = models.table[table_alias]['field'][field_alias]
         self.filters.append(self.Condition(
             left=self.AliasField(
