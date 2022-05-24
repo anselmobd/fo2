@@ -92,12 +92,12 @@ class Query():
         self.add_table(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
         self.filters.append(self.Condition(
-            self.AliasField(
+            left=self.AliasField(
                 alias=table_alias,
                 field=table_field,
             ),
-            "=",
-            value,
+            test="=",
+            right=value,
         ))
 
     def mount_alias_field(self, alias_field):
