@@ -106,12 +106,26 @@ class Query():
 
         self.joins_append(alias, join_rule)
 
+        self.add_conditions(alias)
+
+    def add_conditions(self, alias):
+        table_dict = models.table[alias]
+        if 'condition' in table_dict:
+            conditions = table_dict['condition']
+            for key in conditions:
+                self.filter_append(
+                    alias,
+                    key,
+                    conditions[key],
+                )
+
     def add_table(self, alias):
         table_name = models.table[alias]['table']
         self.froms.append(self.TableAlias(
             table=table_name,
             alias=alias,
         ))
+        self.add_conditions(alias)
 
     def add_alias(self, alias):
         if (
