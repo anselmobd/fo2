@@ -7,7 +7,7 @@ table = {
             'op': "ORDEM_PRODUCAO",
             'lote': "ORDEM_CONFECCAO",
             'data': "DATA_INCLUSAO",
-        }
+        },
     },
     'op': {
         'table': "PCPC_020",
@@ -16,12 +16,11 @@ table = {
             'op': "ORDEM_PRODUCAO",
             'ref': "REFERENCIA_PECA",
             'pedido': "PEDIDO_VENDA",
-        }
+        },
+        'joined_to': {
+            'lp': {
+                'op': 'op'
+            },
+        },
     },
-}
-
-join = {
-    'op<lp': {
-        'op': 'op'
-    }
 }

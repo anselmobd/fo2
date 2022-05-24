@@ -29,9 +29,8 @@ class Query():
 
             join_rule = None
             for from_alias in self.table_aliases:
-                join_key = f"{alias}<{from_alias}"
-                if join_key in models.join:
-                    join_rule = models.join[join_key]
+                if from_alias in models.table[alias]['joined_to']:
+                    join_rule = models.table[alias]['joined_to'][from_alias]
                     break
 
             if join_rule:
