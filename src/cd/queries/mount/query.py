@@ -69,7 +69,6 @@ class Query():
 
         if join_rule:
             self.joins_append(alias, join_rule)
-            return True
 
     def add_table(self, alias):
         table_name = models.table[alias]['table']
@@ -83,7 +82,9 @@ class Query():
             alias not in self.table_aliases
             and alias in models.table
         ):
-            if not self.add_join(alias):
+            if self.table_aliases:
+                self.add_join(alias)
+            else:
                 self.add_table(alias)
 
             self.table_aliases.add(alias)
