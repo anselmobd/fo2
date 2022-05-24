@@ -1,7 +1,7 @@
 table = {
     'lp': {
-        'table': "ENDR_014",
         'descr': "Lote/Palete",
+        'table': "ENDR_014",
         'field': {
             'palete': "COD_CONTAINER",
             'op': "ORDEM_PRODUCAO",
@@ -9,9 +9,28 @@ table = {
             'data': "DATA_INCLUSAO",
         },
     },
+    'sl': {
+        'descr': "Solicitação/Lote",
+        'table': "PCPC_044",
+        'field': {
+            'sol': "SOLICITACAO",
+            'op': "ORDEM_PRODUCAO",
+            'oc': "ORDEM_CONFECCAO",
+            'qtd': "QTDE",
+            'ped_dest': "PEDIDO_DESTINO",
+            'ref_dest': "GRUPO_DESTINO",
+            'sit': "SITUACAO",
+        },
+        'joined_to': {
+            'lp': {
+                'op': 'op',
+                'oc': ("MOD({}, 100000)", 'lote'),
+            },
+        },
+    },
     'op': {
-        'table': "PCPC_020",
         'descr': "OP",
+        'table': "PCPC_020",
         'field': {
             'op': "ORDEM_PRODUCAO",
             'ref': "REFERENCIA_PECA",
@@ -24,8 +43,8 @@ table = {
         },
     },
     'l_ref': {
+        'descr': "lote de referência - sempre apenas o primeiro estágio",
         'table': "PCPC_040",
-        'descr': "lote referência - sempre apenas o primeiro estágio",
         'field': {
             'op': "ORDEM_PRODUCAO",
             'oc': "ORDEM_CONFECCAO",
