@@ -45,4 +45,6 @@ class Records():
         debug_cursor_execute(self.cursor, sql)
         data = dictlist(self.cursor)
 
+        self.query.apply_makes(data)
+
         return data

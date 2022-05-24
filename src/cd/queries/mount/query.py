@@ -13,8 +13,10 @@ class Query():
         self.froms = []
         self.joins = []
         self.filters = []
+        self.makes = set()
 
         self.AliasField = namedtuple('AliasField', 'alias field')
+        self.MakeField = namedtuple('MakeField', 'table field alias')
         self.ValueAlias = namedtuple('ValueAlias', 'value alias')
         self.TableAlias = namedtuple('TableAlias', 'table alias')
         self.JoinRules = namedtuple('JoinRules', 'from_alias rules')
@@ -230,10 +232,29 @@ class Query():
         else:
             return field_alias_local, field_alias_local
 
+    def add_make(self, table, field, alias):
+        if 'make' not in models.table[table]:
+            return
+        if field not in models.table[table]['make']:
+            return
+        self.makes.add(
+            self.MakeField(
+                table=table,
+                field=field,
+                alias=alias,
+            )
+        )
+
     def add_select_field(self, alias_field):
         table_alias, field_alias = alias_field.split('.')
         field_alias, alias_local = self.get_alias_local(field_alias)
         self.add_alias(table_alias)
+        self.add_make(
+            table_alias,
+            field_alias,
+            alias_local,
+        )
+
         table_field = models.table[table_alias]['field'][field_alias]
         self.fields.append(self.ValueAlias(
             value=self.AliasField(
@@ -273,3 +294,18 @@ class Query():
         ])
 
         return sql
+
+
+    def apply_makes(self, data):
+        for row in data:
+            for make in self.makes:
+                if make.alias not in row:
+                    continue
+                if 'make' not in models.table[make.table]:
+                    continue
+                if make.field not in models.table[make.table]['make']:
+                    continue
+                make_rule = models.table[
+                    make.table]['make'][
+                        make.field]
+                row[make.alias] = make_rule[0](row[make.alias], make_rule[1])
