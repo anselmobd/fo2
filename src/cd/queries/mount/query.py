@@ -1,6 +1,8 @@
 from collections import namedtuple
 from pprint import pprint
 
+from utils.functions.strings import noneifempty
+
 from cd.queries.mount import models
 
 
@@ -99,7 +101,15 @@ class Query():
         ))
 
     def mount_alias_field(self, alias_field):
-        return f"{alias_field.alias}.{alias_field.field}"
+        return '.'.join(
+            filter(
+                None,
+                [
+                    noneifempty(alias_field.alias),
+                    noneifempty(alias_field.field),
+                ]
+            )
+        )
 
     def mount_alias_field_value(self, alias_field):
         if isinstance(alias_field, self.AliasField):
