@@ -25,7 +25,7 @@ table = {
         },
     },
     'l_ref': {
-        'table': "PCPC_020",
+        'table': "PCPC_040",
         'descr': "lote referência - sempre apenas o primeiro estágio",
         'field': {
             'op': "ORDEM_PRODUCAO",
