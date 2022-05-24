@@ -9,10 +9,11 @@ class Query():
         self.from_tables = []
         self.tables_disponiveis = set()
         self.filter_list = []
-        self.select_dict = {}
+        self.select_list = []
         self.join_list = []
 
         self.AliasField = namedtuple('AliasField', 'alias field')
+        self.ValueAlias = namedtuple('ValueAlias', 'value alias')
         self.TableAlias = namedtuple('TableAlias', 'table alias')
         self.JoinAlias = namedtuple('JoinAlias', 'table alias conditions')
         self.Condition = namedtuple('Condition', 'left test right')
@@ -124,19 +125,27 @@ class Query():
         table_alias, field_alias = alias_field.split('.')
         self.add_table(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
-        self.select_dict[field_alias] = self.AliasField(
-            alias=table_alias,
-            field=table_field
-        )
+        self.select_list.append(self.ValueAlias(
+            value=self.AliasField(
+                alias=table_alias,
+                field=table_field
+            ),
+            alias=field_alias,
+        ))
 
     def mount_select_fields(self):
-        if not self.select_dict:
-            self.select_dict = ['CURRENT_TIMESTAMP']
+        if not self.select_list:
+            self.select_list.append(self.ValueAlias(
+                value=self.AliasField(
+                    alias='',
+                    field='CURRENT_TIMESTAMP'
+                ),
+                alias='',
+            ))
 
-        pprint(self.select_dict)
         return "\n, ".join([
-            f"{self.select_dict[alias].alias}.{self.select_dict[alias].field} {alias}"
-            for alias in self.select_dict
+            f"{self.mount_alias_field_value(value_alias.value)} {value_alias.alias}"
+            for value_alias in self.select_list
         ])
 
     def sql(self):
