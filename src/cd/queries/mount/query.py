@@ -39,14 +39,17 @@ class Query():
         if join_rules:
             return join_rules[0]
 
+    def make_alias_field(self, alias, field):
+        return self.AliasField(
+            alias=alias,
+            field=models.table[alias]['field'][field],
+        )
+
     def join_conditions(self, alias, join_rule):
         conditions = []
         for left_rule in join_rule.rules:
-            left_field = self.AliasField(
-                alias=alias,
-                field=models.table[
-                    alias]['field'][left_rule],
-            )
+            left_field = self.make_alias_field(alias, left_rule)
+
             right_rule = join_rule.rules[left_rule]
             if isinstance(right_rule, tuple):
                 right_rule_fields = []
@@ -56,11 +59,9 @@ class Query():
                         right_rule_field_aliases = (right_rule_field_aliases, )
                     for right_rule_field_alias in right_rule_field_aliases:
                         right_rule_fields.append(
-                            self.AliasField(
-                                alias=join_rule.from_alias,
-                                field=models.table[
-                                    join_rule.from_alias]['field'][
-                                        right_rule_field_alias],
+                            self.make_alias_field(
+                                join_rule.from_alias,
+                                right_rule_field_alias,
                             )
                         )
                     right_field = self.TemplateFields(
@@ -71,17 +72,17 @@ class Query():
                     right_field = self.Template(
                         template=right_rule[0],
                     )
+
             else:
-                right_field = self.AliasField(
-                    alias=join_rule.from_alias,
-                    field=models.table[
-                        join_rule.from_alias]['field'][right_rule],
-                )
+                right_field = self.make_alias_field(
+                    join_rule.from_alias, right_rule)
+
             conditions.append(self.Condition(
                 left=left_field,
                 test="=",
                 right=right_field,
             ))
+
         return conditions
 
     def joins_append(self, alias, join_rule):
