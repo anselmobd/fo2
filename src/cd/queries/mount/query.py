@@ -38,32 +38,37 @@ class Query():
         if join_rules:
             return join_rules[0]
 
+    def joins_append(self, alias, join_rule):
+        table_name = models.table[alias]['table']
+        conditons = []
+        for left_field_alias in join_rule.rules:
+            left_field = self.AliasField(
+                alias=alias,
+                field=models.table[
+                    alias]['field'][left_field_alias],
+            )
+            right_field = self.AliasField(
+                alias=join_rule.from_alias,
+                field=models.table[
+                    join_rule.from_alias]['field'][
+                        join_rule.rules[left_field_alias]],
+            )
+            conditons.append(self.Condition(
+                left=left_field,
+                test="=",
+                right=right_field,
+            ))
+        self.joins.append(self.JoinAlias(
+            table=table_name,
+            alias=alias,
+            conditions=conditons,
+        ))
+
     def add_join(self, alias):
         join_rule = self.get_join_rule(alias)
 
         if join_rule:
-            table_name = models.table[alias]['table']
-            conditons = []
-            for left_field_alias in join_rule.rules:
-                left_field = self.AliasField(
-                    alias=alias,
-                    field=models.table[alias]['field'][left_field_alias],
-                )
-                right_field_alias = join_rule.rules[left_field_alias]
-                right_field = self.AliasField(
-                    alias=join_rule.from_alias,
-                    field=models.table[join_rule.from_alias]['field'][right_field_alias],
-                )
-                conditons.append(self.Condition(
-                    left=left_field,
-                    test="=",
-                    right=right_field,
-                ))
-            self.joins.append(self.JoinAlias(
-                table=table_name,
-                alias=alias,
-                conditions=conditons,
-            ))
+            self.joins_append(alias, join_rule)
             return True
 
     def add_table(self, alias):
