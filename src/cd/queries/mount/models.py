@@ -37,11 +37,11 @@ table = {
         'condition': {
             'seq': (1, ),
         },
-        # 'joined_to': {
-        #     'lp': {
-        #         'op': 'op',
-        #         'oc': ("MOD({}, 100000)", 'oc'),
-        #     },
-        # },
+        'joined_to': {
+            'lp': {
+                'op': 'op',
+                'oc': ("MOD({}, 100000)", 'lote'),
+            },
+        },
     },
 }
