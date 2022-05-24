@@ -10,6 +10,7 @@ from utils.views import totalize_data
 
 import cd.forms
 from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
+from cd.queries.mount.records import Records
 
 
 class NovoEstoque(O2BaseGetPostView):
@@ -108,3 +109,54 @@ class NovoEstoque(O2BaseGetPostView):
             }),
             'data': lotes,
         })
+
+        self.oc = self.lote[4:] if self.lote else None
+        records = Records(
+            self.cursor,
+            table='lp',
+            filter={
+                'lp.lote': self.lote,
+                'lp.op': self.op,
+                'op.ref': self.referencia,
+                'l_ref.cor': self.cor,
+                'l_ref.tam': self.tam,
+            },
+            select=(
+                'lp.palete',
+                'op.ref',
+                'l_ref.cor',
+                'l_ref.tam',
+                'lp.op',
+                'lp.lote',
+                'sl.sol',
+                'sl.qtd sl_qtd',
+                'sl.sit',
+                'sl.ped_dest',
+                'sl.ref_dest',
+            )
+        )
+        data = records.data()[:100]
+        pprint(data)
+        colunas = (
+            'palete',
+            'ref',
+            'cor',
+            'tam',
+            'op',
+            'lote',
+            'sol',
+            'sl_qtd',
+            'sit',
+            'ped_dest',
+            'ref_dest',
+        )
+        self.context.update({
+            'r_headers': colunas,
+            'r_fields': colunas,
+            'r_data': data,
+        })
+
+        records = Records(
+            self.cursor,
+        )
+        pprint(records.data()[:10])
