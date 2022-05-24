@@ -19,8 +19,29 @@ table = {
         },
         'joined_to': {
             'lp': {
-                'op': 'op'
+                'op': 'op',
+                # 'op': ("       {}      --", 'op'),
             },
         },
+    },
+    'l_ref': {
+        'table': "PCPC_020",
+        'descr': "lote referência - sempre apenas o primeiro estágio",
+        'field': {
+            'op': "ORDEM_PRODUCAO",
+            'oc': "ORDEM_CONFECCAO",
+            'cor': "PROCONF_ITEM",
+            'tam': "PROCONF_SUBGRUPO",
+            'seq': "l.SEQUENCIA_ESTAGIO",
+        },
+        'condition': {
+            'seq': (1, ),
+        },
+        # 'joined_to': {
+        #     'lp': {
+        #         'op': 'op',
+        #         'oc': ("MOD({}, 100000)", 'oc'),
+        #     },
+        # },
     },
 }
