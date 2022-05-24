@@ -1,3 +1,5 @@
+from utils.functions import coalesce
+
 table = {
     'lp': {
         'descr': "Lote/Palete",
@@ -20,6 +22,9 @@ table = {
             'ped_dest': "PEDIDO_DESTINO",
             'ref_dest': "GRUPO_DESTINO",
             'sit': "SITUACAO",
+        },
+        'make': {
+            'sol': (coalesce, '#'),
         },
         'joined_to': {
             'lp': {
