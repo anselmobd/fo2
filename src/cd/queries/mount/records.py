@@ -23,7 +23,7 @@ class Records():
         self.query = query.Query()
 
     def sql(self):
-        self.query.add_table(self.table)
+        self.query.add_alias(self.table)
 
         if self.filter:
             for key in self.filter:

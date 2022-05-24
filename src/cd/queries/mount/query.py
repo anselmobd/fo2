@@ -20,46 +20,54 @@ class Query():
         self.JoinAlias = namedtuple('JoinAlias', 'table alias conditions')
         self.Condition = namedtuple('Condition', 'left test right')
 
+    def add_join(self, alias):
+        table_name = models.table[alias]['table']
+
+        join_rule = None
+        for from_alias in self.table_aliases:
+            if from_alias in models.table[alias]['joined_to']:
+                join_rule = models.table[alias]['joined_to'][from_alias]
+                break
+
+        if join_rule:
+            conditons = []
+            for left_field_alias in join_rule:
+                left_field = self.AliasField(
+                    alias=alias,
+                    field=models.table[alias]['field'][left_field_alias],
+                )
+                right_field_alias = join_rule[left_field_alias]
+                right_field = self.AliasField(
+                    alias=from_alias,
+                    field=models.table[from_alias]['field'][right_field_alias],
+                )
+                conditons.append(self.Condition(
+                    left=left_field,
+                    test="=",
+                    right=right_field,
+                ))
+            self.joins.append(self.JoinAlias(
+                table=table_name,
+                alias=alias,
+                conditions=conditons,
+            ))
+            return True
+
     def add_table(self, alias):
+        table_name = models.table[alias]['table']
+        self.froms.append(self.TableAlias(
+            table=table_name,
+            alias=alias,
+        ))
+
+    def add_alias(self, alias):
         if (
             alias not in self.table_aliases
             and alias in models.table
         ):
-            table_name = models.table[alias]['table']
+            if not self.add_join(alias):
+                self.add_table(alias)
 
-            join_rule = None
-            for from_alias in self.table_aliases:
-                if from_alias in models.table[alias]['joined_to']:
-                    join_rule = models.table[alias]['joined_to'][from_alias]
-                    break
-
-            if join_rule:
-                conditons = []
-                for left_field_alias in join_rule:
-                    left_field = self.AliasField(
-                        alias=alias,
-                        field=models.table[alias]['field'][left_field_alias],
-                    )
-                    right_field_alias = join_rule[left_field_alias]
-                    right_field = self.AliasField(
-                        alias=from_alias,
-                        field=models.table[from_alias]['field'][right_field_alias],
-                    )
-                    conditons.append(self.Condition(
-                        left=left_field,
-                        test="=",
-                        right=right_field,
-                    ))
-                self.joins.append(self.JoinAlias(
-                    table=table_name,
-                    alias=alias,
-                    conditions=conditons,
-                ))
-            else:
-                self.froms.append(self.TableAlias(
-                    table=table_name,
-                    alias=alias,
-                ))
             self.table_aliases.add(alias)
 
     def mount_tables(self):
@@ -88,7 +96,7 @@ class Query():
 
     def add_filter(self, alias_field, value):
         table_alias, field_alias = alias_field.split('.')
-        self.add_table(table_alias)
+        self.add_alias(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
         self.filters.append(self.Condition(
             left=self.AliasField(
@@ -132,7 +140,7 @@ class Query():
 
     def add_select_field(self, alias_field):
         table_alias, field_alias = alias_field.split('.')
-        self.add_table(table_alias)
+        self.add_alias(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
         self.fields.append(self.ValueAlias(
             value=self.AliasField(
