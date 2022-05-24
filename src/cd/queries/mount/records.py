@@ -25,15 +25,17 @@ class Records():
     def sql(self):
         self.query.add_table(self.table)
 
-        for key in self.filter:
-            if self.filter[key] is not None:
-                self.query.add_filter(
-                    key,
-                    self.filter[key]
-                )
+        if self.filter:
+            for key in self.filter:
+                if self.filter[key] is not None:
+                    self.query.add_filter(
+                        key,
+                        self.filter[key]
+                    )
 
-        for field in self.select:
-            self.query.add_select_field(field)
+        if self.select:
+            for field in self.select:
+                self.query.add_select_field(field)
 
         return self.query.sql()
 
