@@ -224,8 +224,15 @@ class Query():
         ])
         return f"WHERE {where}" if where else ""
 
+    def get_alias_local(self, field_alias_local):
+        if ' ' in field_alias_local:
+            return field_alias_local.split(' ')
+        else:
+            return field_alias_local, field_alias_local
+
     def add_select_field(self, alias_field):
         table_alias, field_alias = alias_field.split('.')
+        field_alias, alias_local = self.get_alias_local(field_alias)
         self.add_alias(table_alias)
         table_field = models.table[table_alias]['field'][field_alias]
         self.fields.append(self.ValueAlias(
@@ -233,7 +240,7 @@ class Query():
                 alias=table_alias,
                 field=table_field
             ),
-            alias=field_alias,
+            alias=alias_local,
         ))
 
     def mount_fields(self):
