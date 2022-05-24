@@ -52,21 +52,21 @@ class Query():
 
             right_rule = join_rule.rules[left_rule]
             if isinstance(right_rule, tuple):
-                right_rule_fields = []
+                right_alias_fields = []
                 if len(right_rule) == 2:
-                    right_rule_field_aliases = right_rule[1]
-                    if not isinstance(right_rule_field_aliases, tuple):
-                        right_rule_field_aliases = (right_rule_field_aliases, )
-                    for right_rule_field_alias in right_rule_field_aliases:
-                        right_rule_fields.append(
+                    right_rule_fields = right_rule[1]
+                    if not isinstance(right_rule_fields, tuple):
+                        right_rule_fields = (right_rule_fields, )
+                    for right_rule_field in right_rule_fields:
+                        right_alias_fields.append(
                             self.make_alias_field(
                                 join_rule.from_alias,
-                                right_rule_field_alias,
+                                right_rule_field,
                             )
                         )
                     right_field = self.TemplateFields(
                         template=right_rule[0],
-                        fields=right_rule_fields
+                        fields=right_alias_fields
                     )
                 else:
                     right_field = self.Template(
