@@ -120,41 +120,7 @@ class NovoEstoque(O2BaseGetPostView):
         )
         return records.data()[:100]
 
-    def mount_context(self):
-        p = Perf(id='GradeEstoqueTotais', on=True)
-
-        self.cursor = db_cursor_so(self.request)
-
-        self.lotes_por_pagina = 20
-        # if self.usa_paginador == 'n':
-        #     self.lotes_por_pagina = 99999
-
-        self.lote = None if self.lote == '' else self.lote
-        self.op = None if self.op == '' else self.op
-        self.referencia = None if self.referencia == '' else self.referencia
-        self.cor = None if self.cor == '' else self.cor
-        self.tam = None if self.tam == '' else self.tam
-        self.modelo = None if self.modelo == '' else int(self.modelo)
-        self.endereco = None if self.endereco == '' else self.endereco
-
-        self.lotes = self.get_lotes()
-
-        if len(self.lotes) > 0:
-            self.mount_lotes()
-
-        if (
-            self.lote is None
-            and self.op is None
-            and self.referencia is None
-            and self.cor is None
-            and self.tam is None
-        ):
-            return
-
-        self.oc = self.lote[4:] if self.lote else None
-
-        self.rec_data = self.get_rec_data()
-
+    def mount_rec_data(self):
         totalize_data(
             self.rec_data,
             {
@@ -182,6 +148,42 @@ class NovoEstoque(O2BaseGetPostView):
             'r_fields': colunas,
             'r_data': self.rec_data,
         })
+
+    def mount_context(self):
+        p = Perf(id='GradeEstoqueTotais', on=True)
+
+        self.cursor = db_cursor_so(self.request)
+
+        self.lotes_por_pagina = 20
+        # if self.usa_paginador == 'n':
+        #     self.lotes_por_pagina = 99999
+
+        self.lote = None if self.lote == '' else self.lote
+        self.op = None if self.op == '' else self.op
+        self.referencia = None if self.referencia == '' else self.referencia
+        self.cor = None if self.cor == '' else self.cor
+        self.tam = None if self.tam == '' else self.tam
+        self.modelo = None if self.modelo == '' else int(self.modelo)
+        self.endereco = None if self.endereco == '' else self.endereco
+
+        self.lotes = self.get_lotes()
+
+        if len(self.lotes) > 0:
+            self.mount_lotes()
+
+        if (
+            self.lote is not None
+            or self.op is not None
+            or self.referencia is not None
+            or self.cor is not None
+            or self.tam is not None
+        ):
+            self.oc = self.lote[4:] if self.lote else None
+
+            self.rec_data = self.get_rec_data()
+
+            if len(self.rec_data) > 0:
+                self.mount_rec_data()
 
         # records = Records(
         #     self.cursor,
