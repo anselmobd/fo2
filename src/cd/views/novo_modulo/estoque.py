@@ -42,10 +42,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'ref_dest': ['Ref.Destino'],
             },
             ['header', '+style'],
-            style = {
-                'r': 'text-align: right;',
-                'c': 'text-align: center;',
-            }
+            style = {'_': 'text-align'},
         )
 
     def get_lotes_em_estoque(self):
