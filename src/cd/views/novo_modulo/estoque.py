@@ -21,7 +21,31 @@ class NovoEstoque(O2BaseGetPostView):
         self.cleaned_data2self = True
         self.template_name = 'cd/novo_modulo/estoque.html'
         self.title_name = 'Estoque'
+
         self.lotes_por_pagina = 20
+
+        self.table_defs = TableDefs(
+            {
+                'palete': [],
+                'endereco': ['Endereço'],
+                'rota': [],
+                'modelo': [],
+                'ref': ['Ref.'],
+                'tam': ['Tam.'],
+                'cor': [],
+                'op': ['OP'],
+                'lote': [],
+                'qtd_prog': ['Qtd.Original', 'r'],
+                'qtd_dbaixa': ['Qtd.', 'r'],
+                'estagio': ['Estágio', 'c'],
+                'solicitacoes': ['Solicitações'],
+            },
+            ['header', '+style'],
+            style = {
+                'r': 'text-align: right;',
+                'c': 'text-align: center;',
+            }
+        )
 
     def get_lotes_em_estoque(self):
         lotes_em_estoque = LotesEmEstoque(
@@ -64,37 +88,15 @@ class NovoEstoque(O2BaseGetPostView):
         self.lotes = paginator_basic(self.lotes, self.lotes_por_pagina, self.page)
         self.lotes.object_list.append(totalizador_lotes)
 
-        self.table_defs = TableDefs(
-            {
-                'palete': [],
-                'endereco': ['Endereço'],
-                'rota': [],
-                'modelo': [],
-                'ref': ['Ref.'],
-                'tam': ['Tam.'],
-                'cor': [],
-                'op': ['OP'],
-                'lote': [],
-                'qtd_prog': ['Qtd.Original', 'r'],
-                'qtd_dbaixa': ['Qtd.', 'r'],
-                'estagio': ['Estágio', 'c'],
-                'solicitacoes': ['Solicitações'],
-            },
-            ['header', '+style'],
-            style = {
-                'r': 'text-align: right;',
-                'c': 'text-align: center;',
-            }
-        )
-
-        headers, fields, style = self.table_defs.hfs()
+        self.context.update(self.table_defs.hfs_dict(
+            'palete', 'endereco', 'rota',
+            'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
+            'qtd_prog', 'qtd_dbaixa', 'estagio', 'solicitacoes'
+        ))
         self.context.update({
-            'headers': headers,
-            'fields': fields,
             'safe': [
                 'op',
             ],
-            'style': style,
             'data': self.lotes,
         })
 
