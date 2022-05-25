@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views import View
 
 from utils.functions.format import format_cnpj, format_cpf
-from utils.views import TableDefs
+from utils.table_defs import TableDefs
 
 import comercial.forms as forms
 import comercial.queries as queries

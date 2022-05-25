@@ -8,7 +8,8 @@ from fo2.connections import db_cursor_so
 from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
 from geral.functions import has_permission
-from utils.views import totalize_data, TableDefs
+from utils.table_defs import TableDefs
+from utils.views import totalize_data
 
 from estoque import forms, queries
 

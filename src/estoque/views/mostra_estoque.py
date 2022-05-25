@@ -9,7 +9,8 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from geral.functions import has_permission, request_user
-from utils.views import TableDefs, request_hash_trail, totalize_data
+from utils.table_defs import TableDefs
+from utils.views import request_hash_trail, totalize_data
 
 import produto.queries
 
