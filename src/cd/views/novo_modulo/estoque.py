@@ -26,15 +26,11 @@ class NovoEstoque(O2BaseGetPostView):
 
         self.table_defs = TableDefs(
             {
-                'palete': [],
+                'palete rota modelo cor lote': [],
                 'endereco': ['Endereço'],
-                'rota': [],
-                'modelo': [],
                 'ref': ['Ref.'],
                 'tam': ['Tam.'],
-                'cor': [],
                 'op': ['OP'],
-                'lote': [],
                 'qtd_prog qtd_lote': ['Qtd.Original', 'r'],
                 'qtd_dbaixa': ['Qtd.', 'r'],
                 'estagio': ['Estágio', 'c'],
