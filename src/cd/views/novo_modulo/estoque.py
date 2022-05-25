@@ -92,6 +92,12 @@ class NovoEstoque(O2BaseGetPostView):
             'data': self.lotes,
         })
 
+    def mount_estoque(self):
+        self.lotes = self.get_lotes_em_estoque()
+
+        if len(self.lotes) > 0:
+            self.mount_lotes_em_estoque()
+
     def get_records_data(self):
         records = Records(
             self.cursor,
@@ -149,6 +155,25 @@ class NovoEstoque(O2BaseGetPostView):
             'r_data': self.rec_data,
         })
 
+    def mount_estoque_test(self):
+        if any([
+            self.lote,
+            self.op,
+            self.referencia,
+            self.cor,
+            self.tam,
+        ]):
+
+            self.rec_data = self.get_records_data()
+
+            if len(self.rec_data) > 0:
+                self.mount_records_data()
+
+        # records = Records(
+        #     self.cursor,
+        # )
+        # pprint(records.data()[:10])
+
     def mount_context(self):
         p = Perf(id='GradeEstoqueTotais', on=True)
 
@@ -168,25 +193,6 @@ class NovoEstoque(O2BaseGetPostView):
 
         self.oc = self.lote[4:] if self.lote else None
 
-        self.lotes = self.get_lotes_em_estoque()
+        self.mount_estoque()
 
-        if len(self.lotes) > 0:
-            self.mount_lotes_em_estoque()
-
-        if any(
-            self.lote,
-            self.op,
-            self.referencia,
-            self.cor,
-            self.tam,
-        ):
-
-            self.rec_data = self.get_records_data()
-
-            if len(self.rec_data) > 0:
-                self.mount_records_data()
-
-        # records = Records(
-        #     self.cursor,
-        # )
-        # pprint(records.data()[:10])
+        self.mount_estoque_test()
