@@ -35,10 +35,15 @@ class NovoEstoque(O2BaseGetPostView):
                 'cor': [],
                 'op': ['OP'],
                 'lote': [],
-                'qtd_prog': ['Qtd.Original', 'r'],
+                'qtd_prog qtd_lote': ['Qtd.Original', 'r'],
                 'qtd_dbaixa': ['Qtd.', 'r'],
                 'estagio': ['Estágio', 'c'],
                 'solicitacoes': ['Solicitações'],
+                'sol': ['Solicitação'],
+                'qtd_sol': ['Qtd.Solic.'],
+                'sit': ['Situação'],
+                'ped_dest': ['Ped.Destino'],
+                'ref_dest': ['Ref.Destino'],
             },
             ['header', '+style'],
             style = {
@@ -142,24 +147,13 @@ class NovoEstoque(O2BaseGetPostView):
                 'descr': {'sol': 'Total:'}
             }
         )
-
-        colunas = (
-            'palete',
-            'ref',
-            'cor',
-            'tam',
-            'op',
-            'lote',
-            'qtd_lote',
-            'sol',
-            'qtd_sol',
-            'sit',
-            'ped_dest',
-            'ref_dest',
-        )
+        self.context.update(self.table_defs.hfs_dict(
+            'palete', 'ref', 'cor', 'tam',
+            'op', 'lote', 'qtd_lote',
+            'sol', 'qtd_sol', 'sit', 'ped_dest', 'ref_dest',
+            sufixo='r_'
+        ))
         self.context.update({
-            'r_headers': colunas,
-            'r_fields': colunas,
             'r_data': self.rec_data,
         })
 
