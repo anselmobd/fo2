@@ -49,8 +49,8 @@ class Query():
 
     def make_template_field(self, from_alias, right_rule):
         right_alias_fields = []
-        if len(right_rule) == 2:
-            right_rule_fields = right_rule[1]
+        if len(right_rule) > 1:
+            right_rule_fields = right_rule[1:]
             if not isinstance(right_rule_fields, tuple):
                 right_rule_fields = (right_rule_fields, )
             for right_rule_field in right_rule_fields:
