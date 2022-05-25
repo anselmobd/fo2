@@ -83,9 +83,8 @@ class TableDefs(object):
         self.defs(*cols)
         return self.headers, self.fields, self.style
 
-    def hfs_dict(self, *cols, sufixo=None):
+    def hfs_dict(self, *cols, sufixo=''):
         self.defs(*cols)
-        sufixo = f"{sufixo}_" if sufixo else ''
         return {
             f'{sufixo}headers': self.headers,
             f'{sufixo}fields': self.fields,
@@ -96,9 +95,8 @@ class TableDefs(object):
         self.defs(*cols)
         return self.headers, self.fields, self.style, self.decimals
 
-    def hfsd_dict(self, *cols, sufixo=None):
+    def hfsd_dict(self, *cols, sufixo=''):
         self.defs(*cols)
-        sufixo = f"{sufixo}_" if sufixo else ''
         return {
             f'{sufixo}headers': self.headers,
             f'{sufixo}fields': self.fields,
