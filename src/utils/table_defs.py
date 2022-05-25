@@ -30,6 +30,8 @@ class TableDefs(object):
         '''
         super(TableDefs, self).__init__()
         self.kwargs = kwargs
+        self.default_kwargs()
+
         self.cols_list = []
 
         definition = self.un_multiple_cols(definition)
@@ -37,6 +39,21 @@ class TableDefs(object):
             self.definition = definition
         else:
             self.definition = self.convert(definition, keys)
+
+    def default_kwargs(self):
+        if 'style' in self.kwargs:
+            style = {}
+            for key in self.kwargs['style']:
+                if key == '_':
+                    if self.kwargs['style'][key] == 'text-align':
+                        style.update({
+                            'l': 'text-align: left;',
+                            'c': 'text-align: center;',
+                            'r': 'text-align: right;',
+                        })
+                else:
+                    style[key] = self.kwargs['style'][key]
+            self.kwargs['style'] = style
 
     def un_multiple_cols(self, definition):
         new_def = {}
