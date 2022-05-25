@@ -50,40 +50,19 @@ class NovoEstoque(O2BaseGetPostView):
 
         return lotes_em_estoque.dados()
 
-    def mount_context(self):
-        p = Perf(id='GradeEstoqueTotais', on=True)
-
-        self.cursor = db_cursor_so(self.request)
-
-        self.lotes_por_pagina = 20
-        # if self.usa_paginador == 'n':
-        #     self.lotes_por_pagina = 99999
-
-        self.lote = None if self.lote == '' else self.lote
-        self.op = None if self.op == '' else self.op
-        self.referencia = None if self.referencia == '' else self.referencia
-        self.cor = None if self.cor == '' else self.cor
-        self.tam = None if self.tam == '' else self.tam
-        self.modelo = None if self.modelo == '' else int(self.modelo)
-        self.endereco = None if self.endereco == '' else self.endereco
-
-        lotes = self.get_lotes()
-
-        if len(lotes) == 0:
-            return
-        
+    def mount_lotes(self):
         totalize_data(
-            lotes,
+            self.lotes,
             {
                 'sum': ['qtd_dbaixa'],
                 'descr': {'lote': 'Total geral:'}
             }
         )
-        totalizador_lotes = lotes[-1]
-        del(lotes[-1])
+        totalizador_lotes = self.lotes[-1]
+        del(self.lotes[-1])
 
-        lotes = paginator_basic(lotes, self.lotes_por_pagina, self.page)
-        lotes.object_list.append(totalizador_lotes)
+        self.lotes = paginator_basic(self.lotes, self.lotes_por_pagina, self.page)
+        self.lotes.object_list.append(totalizador_lotes)
 
         fields = {
             'palete': 'Palete',
@@ -110,8 +89,30 @@ class NovoEstoque(O2BaseGetPostView):
                 (12, ): 'text-align: center;',
                 (10, 11): 'text-align: right;',
             }),
-            'data': lotes,
+            'data': self.lotes,
         })
+
+    def mount_context(self):
+        p = Perf(id='GradeEstoqueTotais', on=True)
+
+        self.cursor = db_cursor_so(self.request)
+
+        self.lotes_por_pagina = 20
+        # if self.usa_paginador == 'n':
+        #     self.lotes_por_pagina = 99999
+
+        self.lote = None if self.lote == '' else self.lote
+        self.op = None if self.op == '' else self.op
+        self.referencia = None if self.referencia == '' else self.referencia
+        self.cor = None if self.cor == '' else self.cor
+        self.tam = None if self.tam == '' else self.tam
+        self.modelo = None if self.modelo == '' else int(self.modelo)
+        self.endereco = None if self.endereco == '' else self.endereco
+
+        self.lotes = self.get_lotes()
+
+        if len(self.lotes) > 0:
+            self.mount_lotes()
 
         if (
             self.lote is None
