@@ -4,8 +4,8 @@ from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
-from utils.classes import Perf
 from utils.functions.functions import untuple_keys_concat
+from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
 import cd.forms
@@ -21,6 +21,7 @@ class NovoEstoque(O2BaseGetPostView):
         self.cleaned_data2self = True
         self.template_name = 'cd/novo_modulo/estoque.html'
         self.title_name = 'Estoque'
+        self.lotes_por_pagina = 20
 
     def get_lotes_em_estoque(self):
         lotes_em_estoque = LotesEmEstoque(
@@ -47,7 +48,6 @@ class NovoEstoque(O2BaseGetPostView):
                 'solicitacoes',
             ),
         )
-
         return lotes_em_estoque.dados()
 
     def mount_lotes_em_estoque(self):
@@ -64,31 +64,37 @@ class NovoEstoque(O2BaseGetPostView):
         self.lotes = paginator_basic(self.lotes, self.lotes_por_pagina, self.page)
         self.lotes.object_list.append(totalizador_lotes)
 
-        fields = {
-            'palete': 'Palete',
-            'endereco': 'Endereço',
-            'rota': 'Rota',
-            'modelo': 'Modelo',
-            'ref': 'Ref.',
-            'tam': 'Tam.',
-            'cor': 'Cor',
-            'op': 'OP',
-            'lote': 'Lote',
-            'qtd_prog': 'Qtd.Original',
-            'qtd_dbaixa': 'Qtd.',
-            'estagio': 'Estágio',
-            'solicitacoes': 'Solicitações',
-        }
+        self.table_defs = TableDefs(
+            {
+                'palete': [],
+                'endereco': ['Endereço'],
+                'rota': [],
+                'modelo': [],
+                'ref': ['Ref.'],
+                'tam': ['Tam.'],
+                'cor': [],
+                'op': ['OP'],
+                'lote': [],
+                'qtd_prog': ['Qtd.Original', 'r'],
+                'qtd_dbaixa': ['Qtd.', 'r'],
+                'estagio': ['Estágio', 'c'],
+                'solicitacoes': ['Solicitações'],
+            },
+            ['header', '+style'],
+            style = {
+                'r': 'text-align: right;',
+                'c': 'text-align: center;',
+            }
+        )
+
+        headers, fields, style = self.table_defs.hfs()
         self.context.update({
-            'headers': fields.values(),
-            'fields': fields.keys(),
+            'headers': headers,
+            'fields': fields,
             'safe': [
                 'op',
             ],
-            'style': untuple_keys_concat({
-                (12, ): 'text-align: center;',
-                (10, 11): 'text-align: right;',
-            }),
+            'style': style,
             'data': self.lotes,
         })
 
@@ -174,15 +180,7 @@ class NovoEstoque(O2BaseGetPostView):
         # )
         # pprint(records.data()[:10])
 
-    def mount_context(self):
-        p = Perf(id='GradeEstoqueTotais', on=True)
-
-        self.cursor = db_cursor_so(self.request)
-
-        self.lotes_por_pagina = 20
-        # if self.usa_paginador == 'n':
-        #     self.lotes_por_pagina = 99999
-
+    def filter_inputs(self):
         self.lote = None if self.lote == '' else self.lote
         self.op = None if self.op == '' else self.op
         self.referencia = None if self.referencia == '' else self.referencia
@@ -191,7 +189,15 @@ class NovoEstoque(O2BaseGetPostView):
         self.modelo = None if self.modelo == '' else int(self.modelo)
         self.endereco = None if self.endereco == '' else self.endereco
 
+        # if self.usa_paginador == 'n':
+        #     self.lotes_por_pagina = 99999
+
         self.oc = self.lote[4:] if self.lote else None
+
+    def mount_context(self):
+        self.cursor = db_cursor_so(self.request)
+
+        self.filter_inputs()
 
         self.mount_estoque()
 
