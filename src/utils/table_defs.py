@@ -31,10 +31,19 @@ class TableDefs(object):
         super(TableDefs, self).__init__()
         self.kwargs = kwargs
         self.cols_list = []
+
+        definition = self.un_multiple_cols(definition)
         if keys is None:
             self.definition = definition
         else:
             self.definition = self.convert(definition, keys)
+
+    def un_multiple_cols(self, definition):
+        new_def = {}
+        for key in definition:
+            for sub_key in key.split():
+                new_def[sub_key] = definition[key]
+        return new_def
 
     def convert(self, definition, keys):
         result = {}
