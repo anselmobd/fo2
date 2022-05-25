@@ -22,7 +22,7 @@ class NovoEstoque(O2BaseGetPostView):
         self.template_name = 'cd/novo_modulo/estoque.html'
         self.title_name = 'Estoque'
 
-    def get_lotes(self):
+    def get_lotes_em_estoque(self):
         lotes_em_estoque = LotesEmEstoque(
             self.cursor,
             tipo='iq',
@@ -50,7 +50,7 @@ class NovoEstoque(O2BaseGetPostView):
 
         return lotes_em_estoque.dados()
 
-    def mount_lotes(self):
+    def mount_lotes_em_estoque(self):
         totalize_data(
             self.lotes,
             {
@@ -92,7 +92,7 @@ class NovoEstoque(O2BaseGetPostView):
             'data': self.lotes,
         })
 
-    def get_rec_data(self):
+    def get_records_data(self):
         records = Records(
             self.cursor,
             table='lp',
@@ -120,7 +120,7 @@ class NovoEstoque(O2BaseGetPostView):
         )
         return records.data()[:100]
 
-    def mount_rec_data(self):
+    def mount_records_data(self):
         totalize_data(
             self.rec_data,
             {
@@ -166,24 +166,25 @@ class NovoEstoque(O2BaseGetPostView):
         self.modelo = None if self.modelo == '' else int(self.modelo)
         self.endereco = None if self.endereco == '' else self.endereco
 
-        self.lotes = self.get_lotes()
+        self.oc = self.lote[4:] if self.lote else None
+
+        self.lotes = self.get_lotes_em_estoque()
 
         if len(self.lotes) > 0:
-            self.mount_lotes()
+            self.mount_lotes_em_estoque()
 
-        if (
-            self.lote is not None
-            or self.op is not None
-            or self.referencia is not None
-            or self.cor is not None
-            or self.tam is not None
+        if any(
+            self.lote,
+            self.op,
+            self.referencia,
+            self.cor,
+            self.tam,
         ):
-            self.oc = self.lote[4:] if self.lote else None
 
-            self.rec_data = self.get_rec_data()
+            self.rec_data = self.get_records_data()
 
             if len(self.rec_data) > 0:
-                self.mount_rec_data()
+                self.mount_records_data()
 
         # records = Records(
         #     self.cursor,
