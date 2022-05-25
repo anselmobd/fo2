@@ -92,6 +92,34 @@ class NovoEstoque(O2BaseGetPostView):
             'data': self.lotes,
         })
 
+    def get_rec_data(self):
+        records = Records(
+            self.cursor,
+            table='lp',
+            filter={
+                'lp.lote': self.lote,
+                'lp.op': self.op,
+                'op.ref': self.referencia,
+                'l_ref.cor': self.cor,
+                'l_ref.tam': self.tam,
+            },
+            select=(
+                'lp.palete',
+                'op.ref',
+                'l_ref.cor',
+                'l_ref.tam',
+                'lp.op',
+                'lp.lote',
+                'l_ref.qtd_lote',
+                'sl.sol',
+                'sl.qtd qtd_sol',
+                'sl.sit',
+                'sl.ped_dest',
+                'sl.ref_dest',
+            )
+        )
+        return records.data()[:100]
+
     def mount_context(self):
         p = Perf(id='GradeEstoqueTotais', on=True)
 
@@ -124,35 +152,11 @@ class NovoEstoque(O2BaseGetPostView):
             return
 
         self.oc = self.lote[4:] if self.lote else None
-        records = Records(
-            self.cursor,
-            table='lp',
-            filter={
-                'lp.lote': self.lote,
-                'lp.op': self.op,
-                'op.ref': self.referencia,
-                'l_ref.cor': self.cor,
-                'l_ref.tam': self.tam,
-            },
-            select=(
-                'lp.palete',
-                'op.ref',
-                'l_ref.cor',
-                'l_ref.tam',
-                'lp.op',
-                'lp.lote',
-                'l_ref.qtd_lote',
-                'sl.sol',
-                'sl.qtd qtd_sol',
-                'sl.sit',
-                'sl.ped_dest',
-                'sl.ref_dest',
-            )
-        )
-        data = records.data()[:100]
+
+        self.rec_data = self.get_rec_data()
 
         totalize_data(
-            data,
+            self.rec_data,
             {
                 'sum': ['qtd_sol'],
                 'descr': {'sol': 'Total:'}
@@ -176,7 +180,7 @@ class NovoEstoque(O2BaseGetPostView):
         self.context.update({
             'r_headers': colunas,
             'r_fields': colunas,
-            'r_data': data,
+            'r_data': self.rec_data,
         })
 
         # records = Records(
