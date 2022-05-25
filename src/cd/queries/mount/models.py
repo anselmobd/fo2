@@ -10,6 +10,12 @@ table = {
             'lote': "ORDEM_CONFECCAO",
             'data': "DATA_INCLUSAO",
         },
+        'joined_to': {
+            'l_ref': {
+                'op': 'op',
+                'lote': ("{}*100000+{}", 'per', 'oc'),
+            },
+        },
     },
     'sl': {
         'descr': "Solicitação/Lote",
@@ -52,6 +58,7 @@ table = {
         'table': "PCPC_040",
         'field': {
             'op': "ORDEM_PRODUCAO",
+            'per': "PERIODO_PRODUCAO",
             'oc': "ORDEM_CONFECCAO",
             'cor': "PROCONF_ITEM",
             'tam': "PROCONF_SUBGRUPO",
