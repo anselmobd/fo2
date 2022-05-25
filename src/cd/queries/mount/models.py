@@ -56,6 +56,7 @@ table = {
             'cor': "PROCONF_ITEM",
             'tam': "PROCONF_SUBGRUPO",
             'seq': "SEQUENCIA_ESTAGIO",
+            'qtd_lote': "QTDE_PECAS_PROG",
         },
         'condition': {
             'seq': 1,
