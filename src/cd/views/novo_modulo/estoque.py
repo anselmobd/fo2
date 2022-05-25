@@ -22,23 +22,7 @@ class NovoEstoque(O2BaseGetPostView):
         self.template_name = 'cd/novo_modulo/estoque.html'
         self.title_name = 'Estoque'
 
-    def mount_context(self):
-        p = Perf(id='GradeEstoqueTotais', on=True)
-
-        self.cursor = db_cursor_so(self.request)
-
-        lotes_por_pagina = 20
-        # if self.usa_paginador == 'n':
-        #     modelos_por_pagina = 99999
-
-        self.lote = None if self.lote == '' else self.lote
-        self.op = None if self.op == '' else self.op
-        self.referencia = None if self.referencia == '' else self.referencia
-        self.cor = None if self.cor == '' else self.cor
-        self.tam = None if self.tam == '' else self.tam
-        self.modelo = None if self.modelo == '' else int(self.modelo)
-        self.endereco = None if self.endereco == '' else self.endereco
-
+    def get_lotes(self):
         lotes_em_estoque = LotesEmEstoque(
             self.cursor,
             tipo='iq',
@@ -64,7 +48,26 @@ class NovoEstoque(O2BaseGetPostView):
             ),
         )
 
-        lotes = lotes_em_estoque.dados()
+        return lotes_em_estoque.dados()
+
+    def mount_context(self):
+        p = Perf(id='GradeEstoqueTotais', on=True)
+
+        self.cursor = db_cursor_so(self.request)
+
+        self.lotes_por_pagina = 20
+        # if self.usa_paginador == 'n':
+        #     self.lotes_por_pagina = 99999
+
+        self.lote = None if self.lote == '' else self.lote
+        self.op = None if self.op == '' else self.op
+        self.referencia = None if self.referencia == '' else self.referencia
+        self.cor = None if self.cor == '' else self.cor
+        self.tam = None if self.tam == '' else self.tam
+        self.modelo = None if self.modelo == '' else int(self.modelo)
+        self.endereco = None if self.endereco == '' else self.endereco
+
+        lotes = self.get_lotes()
 
         if len(lotes) == 0:
             return
@@ -79,7 +82,7 @@ class NovoEstoque(O2BaseGetPostView):
         totalizador_lotes = lotes[-1]
         del(lotes[-1])
 
-        lotes = paginator_basic(lotes, lotes_por_pagina, self.page)
+        lotes = paginator_basic(lotes, self.lotes_por_pagina, self.page)
         lotes.object_list.append(totalizador_lotes)
 
         fields = {
