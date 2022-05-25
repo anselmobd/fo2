@@ -33,12 +33,14 @@
       <h4>Nenhum lote encontrado</h4>
     {% endif %}
   {% endif %}
-  <hr>
-  <h4>Teste de nova rotina abaixo</h4>
-  <table>
-    {% include "layout/thead_generic.html" with data=r_headers safe=r_safe style=r_style thclass='sticky' only %}
-    {% include "layout/tbody_generic.html" with fields=r_fields data=r_data safe=r_safe style=r_style only %}
-  </table>
+  {% if r_data %}
+    <hr>
+    <h4>Teste de nova rotina abaixo (até 100 registros)</h4>
+    <table>
+      {% include "layout/thead_generic.html" with data=r_headers safe=r_safe style=r_style thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=r_fields data=r_data safe=r_safe style=r_style only %}
+    </table>
+  {% endif %}
 {% endblock content %}
 
 {% block javascript %}

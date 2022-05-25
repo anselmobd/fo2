@@ -110,6 +110,15 @@ class NovoEstoque(O2BaseGetPostView):
             'data': lotes,
         })
 
+        if (
+            self.lote is None
+            and self.op is None
+            and self.referencia is None
+            and self.cor is None
+            and self.tam is None
+        ):
+            return
+
         self.oc = self.lote[4:] if self.lote else None
         records = Records(
             self.cursor,
@@ -128,15 +137,24 @@ class NovoEstoque(O2BaseGetPostView):
                 'l_ref.tam',
                 'lp.op',
                 'lp.lote',
+                'l_ref.qtd_lote',
                 'sl.sol',
-                'sl.qtd sl_qtd',
+                'sl.qtd qtd_sol',
                 'sl.sit',
                 'sl.ped_dest',
                 'sl.ref_dest',
             )
         )
         data = records.data()[:100]
-        pprint(data)
+
+        totalize_data(
+            data,
+            {
+                'sum': ['qtd_sol'],
+                'descr': {'sol': 'Total:'}
+            }
+        )
+
         colunas = (
             'palete',
             'ref',
@@ -144,8 +162,9 @@ class NovoEstoque(O2BaseGetPostView):
             'tam',
             'op',
             'lote',
+            'qtd_lote',
             'sol',
-            'sl_qtd',
+            'qtd_sol',
             'sit',
             'ped_dest',
             'ref_dest',
@@ -156,7 +175,7 @@ class NovoEstoque(O2BaseGetPostView):
             'r_data': data,
         })
 
-        records = Records(
-            self.cursor,
-        )
-        pprint(records.data()[:10])
+        # records = Records(
+        #     self.cursor,
+        # )
+        # pprint(records.data()[:10])
