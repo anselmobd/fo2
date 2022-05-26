@@ -9,8 +9,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-import lotes.models
-import lotes.queries
+from lotes.models.inventario import InventarioLote
 from lotes.queries.lote import get_lote
 from lotes.views.lote.conserto_lote import dict_conserto_lote
 
@@ -37,6 +36,17 @@ class QtdEmLote(LoginRequiredMixin, View):
 
     def zera_conf(self):
         self.zera('_conf')
+
+    def grava_inventario_lote(self, usuario, lote, quantidade):
+        try:
+            invent = InventarioLote()
+            invent.lote = lote
+            invent.quantidade = quantidade
+            invent.usuario = usuario
+            invent.save()
+            return None
+        except Exception as e:
+            return e
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
@@ -73,12 +83,17 @@ class QtdEmLote(LoginRequiredMixin, View):
             self.zera_conf()
             return
 
-        grava_qtd_em_lote(self.request.user)
-        self.context.update({
-            'confirmado': True,
-            'lote': lote,
-            'quant': quant,
-        })
+        erro_exec = self.grava_inventario_lote(
+            self.request.user, lote, quant)
+        if erro_exec:
+            self.context.update({
+                'erro': f"Problenas ao gravar dados <{erro_exec}>."})
+        else:
+            self.context.update({
+                'confirmado': True,
+                'lote': lote,
+                'quant': quant,
+            })
         self.zera_conf()
 
     def get(self, request, *args, **kwargs):
@@ -92,9 +107,3 @@ class QtdEmLote(LoginRequiredMixin, View):
             self.context['form'].data = self.context['form'].data.copy()
             self.mount_context()
         return render(request, self.template_name, self.context)
-
-
-def grava_qtd_em_lote(user):
-    # lote.local_usuario = user
-    # lote.save()
-    pass
