@@ -1101,3 +1101,21 @@ class QtdEmLoteForm(forms.Form):
         required=False,
         widget=forms.HiddenInput()
     )
+
+
+class ListaLoteInventForm(forms.Form):
+    filtro = forms.CharField(
+        min_length=1,
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'autofocus': 'autofocus'
+            }
+        )
+    )
+
+    page = forms.IntegerField(
+        required=False,
+        widget=forms.HiddenInput()
+    )

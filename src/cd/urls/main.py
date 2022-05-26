@@ -11,6 +11,7 @@ from cd.views import (
     endereco_imprime,
     endereco_conteudo_importa,
     esvazia_palete,
+    lista_lotes_invent,
     localiza_lote,
     qtd_em_lote,
     palete,
@@ -194,5 +195,10 @@ urlpatterns = [
     re_path(r'^qtd_em_lote/$',
         qtd_em_lote.QtdEmLote.as_view(),
         name='qtd_em_lote'),
+
+
+    re_path(r'^lista_lotes_invent/$',
+        lista_lotes_invent.ListaLoteInvent.as_view(),
+        name='lista_lotes_invent'),
 
 ]
