@@ -1,0 +1,47 @@
+{% extends 'cd/layout_m.html' %}
+
+{% block stylesheet %}
+  <style>
+  {% include 'layout/simple_table.css' %}
+  table {
+    font-size: 2vw;
+  }
+  .sucesso {
+    color: green;
+  }
+  .msg {
+    text-align: center;
+  }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="leftcol50">
+      <p>
+        {{ titulo }}
+      </p>
+    </div>
+    <div class="rightcol50">
+      <a class="botao back" href="{% url 'cd:coletor' %}">Coletor</a>
+    </div>
+  </div>
+  <hr>
+  <form action="{% url 'cd:qtd_em_lote' %}" method="post">
+    {% csrf_token %}
+      {{ form.as_p }}
+    {% if identificado %}
+      <input type="submit" name="confirma" value="Confirma"/>
+    {% else %}
+      <input type="submit" name="informa" value="Informa"/>
+    {% endif %}
+  </form>
+  {% if erro %}
+    <p class="erro msg">Erro!</p>
+    <p class="erro msg">{{ erro }}</p>
+  {% endif %}
+  {% if confirmado %}
+    <p class="sucesso msg">Sucesso!</p>
+    <p class="sucesso msg">Lote {{lote}} com {{quant}} peça{{quant|pluralize}}</p>
+  {% endif %}
+{% endblock content %}

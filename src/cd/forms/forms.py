@@ -1065,3 +1065,39 @@ class NovoEstoqueForm(forms.Form):
         data['endereco'] = cleaned
         self.data = data
         return cleaned
+
+
+class QtdEmLoteForm(forms.Form):
+    quant = forms.IntegerField(
+        label='Qtd. peças',
+        min_value=1,
+        max_value=100,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'number',
+                'size': 3,
+                'autofocus': 'autofocus',
+            }
+        )
+    )
+
+    lote = forms.CharField(
+        max_length=9,
+        min_length=9,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'number',
+                'size': 9,
+            }
+        )
+    )
+
+    quant_conf = forms.IntegerField(
+        required=False,
+        widget=forms.HiddenInput()
+    )
+
+    lote_conf = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput()
+    )

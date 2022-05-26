@@ -12,6 +12,7 @@ from cd.views import (
     endereco_conteudo_importa,
     esvazia_palete,
     localiza_lote,
+    qtd_em_lote,
     palete,
     vizualiza_esvaziamento,
 )
@@ -189,4 +190,9 @@ urlpatterns = [
     re_path(r'^novo/estoque/(?P<ordem>.)/(?P<filtro>.+)/$',
         estoque.NovoEstoque.as_view(), name='novo_estoque_filtro'),
     re_path(r'^novo/estoque/$', estoque.NovoEstoque.as_view(), name='novo_estoque'),
+
+    re_path(r'^qtd_em_lote/$',
+        qtd_em_lote.QtdEmLote.as_view(),
+        name='qtd_em_lote'),
+
 ]

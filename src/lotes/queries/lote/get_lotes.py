@@ -408,3 +408,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         if len(data) != 0:
             del(data[0])
     return data
+
+
+def get_lote(cursor, lote):
+    return [1]
