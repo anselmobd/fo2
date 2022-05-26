@@ -177,14 +177,14 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5434',
     },
-    'so': {  # Systextil Oficial
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'xe',
-        'USER': 'systextil',
-        'PASSWORD': DBPASS_SO,
-        'HOST': 'localhost',
-        'PORT': '28521',
-    },
+    # 'so': {  # Systextil Oficial
+    #     'ENGINE': 'django.db.backends.oracle',
+    #     'NAME': 'xe',
+    #     'USER': 'systextil',
+    #     'PASSWORD': DBPASS_SO,
+    #     'HOST': 'localhost',
+    #     'PORT': '28521',
+    # },
     'sn': {  # Systextil OC (nuvem) via VPN
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'localhost:14521/db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
