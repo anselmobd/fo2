@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django import forms
 from django.conf import settings
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
@@ -24,7 +24,7 @@ from cd.queries.endereco import (
 )
 
 
-class QtdEmLote(View):
+class QtdEmLote(LoginRequiredMixin, View):
 
     def __init__(self):
         self.Form_class = cd.forms.QtdEmLoteForm
