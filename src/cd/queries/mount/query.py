@@ -8,7 +8,7 @@ from cd.queries.mount import models
 
 class Query():
     def __init__(self):
-        self.table_aliases = set()
+        self.table_aliases = []
         self.fields = []
         self.froms = []
         self.joins = []
@@ -139,7 +139,7 @@ class Query():
             else:
                 self.add_table(alias)
 
-            self.table_aliases.add(alias)
+            self.table_aliases.append(alias)
 
     def mount_tables(self):
         if not self.froms:
