@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from utils.functions.models import (
     dict_list_to_lower,
     dictlist,
@@ -408,7 +410,3 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         if len(data) != 0:
             del(data[0])
     return data
-
-
-def get_lote(cursor, lote):
-    return [1]
