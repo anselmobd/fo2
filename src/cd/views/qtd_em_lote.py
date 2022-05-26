@@ -73,7 +73,7 @@ class QtdEmLote(View):
             self.zera_conf()
             return
 
-        grava_qtd_em_lote()
+        grava_qtd_em_lote(self.request.user)
         self.context.update({
             'confirmado': True,
             'lote': lote,
@@ -86,7 +86,7 @@ class QtdEmLote(View):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        request = self.request
+        self.request = request
         self.context['form'] = self.Form_class(request.POST)
         if self.context['form'].is_valid():
             self.context['form'].data = self.context['form'].data.copy()
@@ -94,5 +94,7 @@ class QtdEmLote(View):
         return render(request, self.template_name, self.context)
 
 
-def grava_qtd_em_lote():
+def grava_qtd_em_lote(user):
+    # lote.local_usuario = user
+    # lote.save()
     pass
