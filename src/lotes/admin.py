@@ -17,6 +17,7 @@ from .models import (
     SolicitaLotePedido,
     SolicitaLotePrinted,
     UsuarioImpresso,
+    InventarioLote,
 )
 
 
@@ -126,3 +127,12 @@ class EnderecoDisponivelAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(EnderecoDisponivel, EnderecoDisponivelAdmin)
+
+
+class InventarioLoteAdmin(admin.ModelAdmin):
+    list_display = ['lote', 'quantidade', 'usuario', 'quando']
+    ordering = ['-quando']
+    search_fields = ['lote', 'usuario', 'quando']
+
+
+intr_adm_site.register(InventarioLote, InventarioLoteAdmin)
