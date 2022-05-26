@@ -9,6 +9,7 @@ from fo2.connections import db_cursor_so
 from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
 from base.forms.forms2 import PedidoForm2
 from geral.functions import get_empresa
+from utils.functions import coalesce
 
 import lotes.models as models
 import lotes.queries as queries
@@ -95,11 +96,16 @@ class Pedido(View):
         # Solicitações
         s_data = get_solicitacoes(cursor, pedido_destino=pedido)
         for row in s_data:
+            if row['solicitacao']:
+                solicitacao_url = row['solicitacao']
+            else:
+                solicitacao_url = 'sn'
+                row['solicitacao'] = '#'
             row['solicitacao|TARGET'] = '_blank'
             row['solicitacao|LINK'] = reverse(
                 'cd:novo_solicitacao',
-                args=[row['solicitacao']]
-            )
+                args=[solicitacao_url]
+            )+f"?pedido={pedido}"
 
         self.context.update({
             's_headers': ["Solicitação"],
