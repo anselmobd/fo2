@@ -42,15 +42,15 @@ class InventarioLote(models.Model):
     #     verbose_name='fim da correção',
     # )
 
-#     def save(self, *args, **kwargs):
-#         # # se tem "id" é alteração
-#         # if self.id:
-#         #     raise QtdEmLote.DoesNotExist
-#         #     for qel in QtdEmLote.objects.filter(lote=self.lote)                        
-#         self.quando = timezone.now()
+    def save(self, *args, **kwargs):
+        # # se tem "id" é alteração
+        # if self.id:
+        #     raise QtdEmLote.DoesNotExist
+        #     for qel in QtdEmLote.objects.filter(lote=self.lote)                        
+        self.quando = timezone.now()
 
-#         super(InventarioLote, self).save(*args, **kwargs)
+        super(InventarioLote, self).save(*args, **kwargs)
 
-#     class Meta:
-#         db_table = "fo2_inventario_lote"
-#         verbose_name = "Inventário de lote"
+    class Meta:
+        db_table = "fo2_inventario_lote"
+        verbose_name = "Inventário de lote"
