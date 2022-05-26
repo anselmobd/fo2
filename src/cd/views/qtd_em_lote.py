@@ -11,7 +11,7 @@ from fo2.connections import db_cursor_so
 
 import lotes.models
 import lotes.queries
-from lotes.queries.lote.get_lotes import get_lote
+from lotes.queries.lote import get_lote
 from lotes.views.lote.conserto_lote import dict_conserto_lote
 
 import cd.forms
@@ -48,9 +48,8 @@ class QtdEmLote(View):
 
         self.context['identificado'] = False
         self.zera()
-        pprint([quant_conf, lote_conf, quant, lote])
 
-        dados_lote = get_lote(cursor, lote)
+        dados_lote = get_lote.query(cursor, lote)
         if not dados_lote:
             self.context.update({
                 'erro': "Lote inexistênte."})
