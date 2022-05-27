@@ -73,11 +73,16 @@ def query_endereco(cursor, tipo='TO'):
     debug_cursor_execute(cursor, sql)
     data = dictlist(cursor)
     
+    data = data_details_from_end(data, 'end')
+
+    return data
+
+def data_details_from_end(data, end_field):
     for row in data:
         if not row['palete']:
             row['palete'] = '-'
-        parts = endereco_split(row['end'])
-        tamanho = len(row['end'])
+        parts = endereco_split(row[end_field])
+        tamanho = len(row[end_field])
         row['bloco'] = parts['bloco']
         row['andar'] = parts['andar']
         row['coluna'] = parts['coluna']
