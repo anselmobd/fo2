@@ -21,6 +21,11 @@ class InventarioLote(models.Model):
     quando = models.DateTimeField(
         verbose_name='informado em',
     )
+    diferenca = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name='direrença',
+    )
     # versao = models.IntegerField(
     #     default=0,
     #     verbose_name='versão')
