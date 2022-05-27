@@ -30,6 +30,11 @@ class ConfrontaQtdLote(O2BaseGetView):
                 row.diferenca = row.quantidade - qtds_lotes_63[0]['qtd']
                 row.save()
 
+    def zera_diferenca(self, lote, quando):
+        row_lote = InventarioLote.objects.get(lote=lote, quando=quando)
+        row_lote.diferenca = 0
+        row_lote.save()
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
@@ -74,6 +79,7 @@ class ConfrontaQtdLote(O2BaseGetView):
                     row_63 = lotes_63_dict[row['lote']]
                     row['qtd_63'] = row_63['qtd']
                     if row['quantidade'] == row['qtd_63']:
+                        self.zera_diferenca(row['lote'], row['quando'])
                         continue
                     row['mensagem'] = self.mensagens[
                         compare(
