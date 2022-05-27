@@ -6,6 +6,7 @@ from cd.views import (
     api_lote,
     api_palete,
     compara_apoio_systextil,
+    confronta_qtd_lote,
     conteudo_local,
     endereco,
     endereco_imprime,
@@ -196,6 +197,9 @@ urlpatterns = [
         qtd_em_lote.QtdEmLote.as_view(),
         name='qtd_em_lote'),
 
+    re_path(r'^confronta_qtd_lote/$',
+        confronta_qtd_lote.ConfrontaQtdLote.as_view(),
+        name='confronta_qtd_lote'),
 
     re_path(r'^lista_lotes_invent/$',
         lista_lotes_invent.ListaLoteInvent.as_view(),
