@@ -3,8 +3,10 @@ from pprint import pprint
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetView
+from utils.functions import untuple_keys_concat
 
 from lotes.models.inventario import InventarioLote
+
 from cd.queries.inventario_lote import get_qtd_lotes_63
 
 
@@ -49,13 +51,14 @@ class ConfrontaQtdLote(O2BaseGetView):
 
             qtds_lotes_63 = get_qtd_lotes_63(cursor, lotes)
             qtds_lotes = {
-                f"{row['lote']}": row['qtd']
+                f"{row['lote']}": row
                 for row in qtds_lotes_63
             }
 
             for row in data:
                 if row['lote'] in qtds_lotes:
-                    row['qtd_63'] = qtds_lotes[row['lote']]
+                    row_63 = qtds_lotes[row['lote']]
+                    row['qtd_63'] = row_63['qtd']
                     if row['quantidade'] == row['qtd_63']:
                         continue
                     row['mensagem'] = self.mensagens[
@@ -64,22 +67,33 @@ class ConfrontaQtdLote(O2BaseGetView):
                             row['qtd_63'],
                         )
                     ]
+                    row['op'] = f"{row_63['op']}"
+                    row['periodo'] = f"{row_63['periodo']}"
+                    row['oc'] = f"{row_63['oc']}"
                     data_show.append(row)
 
             if len(data_show) >= self.quant_inconsist or todos:
                 break
 
+        data_show = data_show[:self.quant_inconsist]
         fields = {
-            'lote': "Lote",
-            'quantidade': "Quantidade inventariada",
-            'mensagem': "Mensagem",
-            'qtd_63': "Quantidade no estágio 63",
             'usuario__username': "Usuário",
             'quando': "Quando",
+            'lote': "Lote",
+            'quantidade': "Quant. inventariada",
+            'mensagem': "Mensagem",
+            'qtd_63': "Quant. no estágio 63",
+            'op': "OP",
+            'periodo': "Periodo",
+            'oc': "OC",
         }
         self.context.update({
             'headers': fields.values(),
             'fields': fields.keys(),
+            'style': untuple_keys_concat({
+                (4, 5, 6): 'text-align: center;',
+                (7, 8, 9): 'text-align: right;',
+            }),
             'data': data_show,
             'quant_inconsist': self.quant_inconsist,
         })
