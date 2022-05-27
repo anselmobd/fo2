@@ -10,6 +10,9 @@ def get_qtd_lotes_63(cursor, lotes):
     if not lotes:
         return []
 
+    if isinstance(lotes, (int, str)):
+        lotes = [lotes]
+
     filtros_periodo_oc = []
     for lote in lotes:
         periodo, oc = periodo_oc(lote)
