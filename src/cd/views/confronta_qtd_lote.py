@@ -23,12 +23,21 @@ class ConfrontaQtdLote(O2BaseGetView):
             1: "é maior que",
         }
 
+    def calcula_diferencas(self):
+        for row in InventarioLote.objects.filter(diferenca=None):
+            qtds_lotes_63 = get_qtd_lotes_63(self.cursor, row.lote)
+            if qtds_lotes_63:
+                row.diferenca = row.quantidade - qtds_lotes_63[0]['qtd']
+                row.save()
+
     def mount_context(self):
-        cursor = db_cursor_so(self.request)
+        self.cursor = db_cursor_so(self.request)
+
+        self.calcula_diferencas()
 
         conta_lotes = InventarioLote.objects.count()
 
-        data = InventarioLote.objects.all()
+        data = InventarioLote.objects.exclude(diferenca=None)
         data = data.order_by(
             'quando',
         ).values(
@@ -51,7 +60,7 @@ class ConfrontaQtdLote(O2BaseGetView):
                     has_row = False
                     break
 
-            qtds_lotes_63 = get_qtd_lotes_63(cursor, lotes)
+            qtds_lotes_63 = get_qtd_lotes_63(self.cursor, lotes)
             qtds_lotes = {
                 f"{row['lote']}": row
                 for row in qtds_lotes_63
