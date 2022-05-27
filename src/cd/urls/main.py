@@ -23,6 +23,7 @@ from cd.views.novo_modulo import (
     grade_estoque_totais,
     solicitacao,
     solicitacoes,
+    visao_cd,
 )
 from cd.views.api.palete.print import PaletePrint
 
@@ -204,5 +205,8 @@ urlpatterns = [
     re_path(r'^lista_lotes_invent/$',
         lista_lotes_invent.ListaLoteInvent.as_view(),
         name='lista_lotes_invent'),
+
+    re_path(r'^novo/visao_cd/$',
+        visao_cd.VisaoCd.as_view(), name='novo_visao_cd'),
 
 ]
