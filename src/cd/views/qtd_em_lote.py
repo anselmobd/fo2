@@ -21,6 +21,7 @@ from cd.queries.endereco import (
     get_palete,
     palete_guarda_hist,
 )
+from cd.queries.inventario_lote import get_qtd_lotes_63
 
 
 class QtdEmLote(LoginRequiredMixin, View):
@@ -37,7 +38,7 @@ class QtdEmLote(LoginRequiredMixin, View):
     def zera_conf(self):
         self.zera('_conf')
 
-    def grava_inventario_lote(self, usuario, lote, quantidade):
+    def grava_inventario_lote(self, usuario, lote, quantidade, dados_lote):
         try:
             invent = InventarioLote()
             invent.lote = lote
@@ -59,7 +60,8 @@ class QtdEmLote(LoginRequiredMixin, View):
         self.context['identificado'] = False
         self.zera()
 
-        dados_lote = get_lote.query(cursor, lote)
+        # dados_lote = get_lote.query(cursor, lote)
+        dados_lote = get_qtd_lotes_63(cursor, lote)
         if not dados_lote:
             self.context.update({
                 'erro': "Lote inexistênte."})
@@ -84,7 +86,7 @@ class QtdEmLote(LoginRequiredMixin, View):
             return
 
         erro_exec = self.grava_inventario_lote(
-            self.request.user, lote, quant)
+            self.request.user, lote, quant, dados_lote)
         if erro_exec:
             self.context.update({
                 'erro': f"Problenas ao gravar dados <{erro_exec}>."})
