@@ -36,17 +36,17 @@ class ConfrontaQtdLote(O2BaseGetView):
             'quando',
         )
         idata = iter(data)
-        lotes = []
         data_show = []
-        todos = False
-        while True:
+        has_row = True
+        while has_row:
+            lotes = []
             for _ in range(self.quant_inconsist):
                 try:
                     row = next(idata)
                     pprint(row)
                     lotes.append(row['lote'])
                 except StopIteration:
-                    todos = True
+                    has_row = False
                     break
 
             qtds_lotes_63 = get_qtd_lotes_63(cursor, lotes)
@@ -72,7 +72,7 @@ class ConfrontaQtdLote(O2BaseGetView):
                     row['oc'] = f"{row_63['oc']}"
                     data_show.append(row)
 
-            if len(data_show) >= self.quant_inconsist or todos:
+            if len(data_show) >= self.quant_inconsist:
                 break
 
         data_show = data_show[:self.quant_inconsist]
