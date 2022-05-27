@@ -11,8 +11,9 @@
 
 {% block content %}
   {% if data %}
-    <p>Lista {{quant_inconsist}} primeira{{quant_inconsist|pluralize}} inconsistência{{quant_inconsist|pluralize}}</p>
-    <table>
+  <p>{{conta_lotes}} lote{{conta_lotes|pluralize}} inventariado{{conta_lotes|pluralize}}</p>
+  <p>Lista {{quant_inconsist}} primeira{{quant_inconsist|pluralize}} inconsistência{{quant_inconsist|pluralize}}</p>
+  <table>
       {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>

@@ -26,6 +26,8 @@ class ConfrontaQtdLote(O2BaseGetView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
+        conta_lotes = InventarioLote.objects.count()
+
         data = InventarioLote.objects.all()
         data = data.order_by(
             'quando',
@@ -95,6 +97,7 @@ class ConfrontaQtdLote(O2BaseGetView):
                 (7, 8, 9): 'text-align: right;',
             }),
             'data': data_show,
+            'conta_lotes': conta_lotes,
             'quant_inconsist': self.quant_inconsist,
         })
 
