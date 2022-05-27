@@ -13,7 +13,8 @@ from utils.views import group_rowspan, totalize_grouped_data
 
 import lotes.models
 
-from cd.queries.endereco import query_endereco
+from cd.queries.endereco import query_endereco, data_details_from_end
+from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 
 
 class VisaoCd(View):
@@ -25,26 +26,49 @@ class VisaoCd(View):
 
     def mount_context(self):
         context = {}
-        cursor = db_cursor_so(self.request)
+        self.cursor = db_cursor_so(self.request)
 
-        enderecos = query_endereco(cursor)
+        # enderecos = query_endereco(cursor)
+        lotes_em_estoque = LotesEmEstoque(
+            self.cursor,
+            tipo='i',
+            fields_tuple=(
+                'tam',
+                'cor',
+                'op',
+                'lote',
+                'qtd_prog',
+                'qtd_dbaixa',
+                'palete',
+                'endereco',
+                'rota',
+                'estagio',
+                'solicitacoes',
+            ),
+        )
+        lotes = lotes_em_estoque.dados()
+        lotes = data_details_from_end(lotes, 'endereco')
 
         dados = {}
-        for end in enderecos:
+        for end in lotes: 
             dados_key = self.DataKey(
                 espaco=end['espaco'],
                 bloco=end['bloco'],
             )
-            if dados_key in dados:
-                dados[dados_key] += 1
-            else:
-                dados[dados_key] = 1
+            if dados_key not in dados:
+                dados[dados_key] = {
+                    'enderecos': set(),
+                    'lotes': set(),
+                }
+            dados[dados_key]['enderecos'].add(end['endereco'])
+            dados[dados_key]['lotes'].add(end['lote'])
 
         data = [
             {
                 'espaco': dados_key.espaco,
                 'bloco': dados_key.bloco,
-                'qtd_ends': dados[dados_key],
+                'qtd_ends': len(dados[dados_key]['enderecos']),
+                'qtd_lotes': len(dados[dados_key]['lotes']),
             }
             for dados_key in dados
         ]
@@ -53,24 +77,17 @@ class VisaoCd(View):
             'espaco': 'Espaço',
             'bloco': 'Bloco',
             'qtd_ends': 'Qtd. Endereços',
+            'qtd_lotes': 'Qtd. lotes',
         }
-            # 'andar',
-            # 'bloco',
-            # 'coluna',
-            # 'end',
-            # 'order_ap',
-            # 'palete',
-            # 'prioridade',
-            # 'rota',
 
         context.update({
             'headers': fields.values(),
             'fields': fields.keys(),
             'data': data,
-            # 'group': group,
-            # 'style': {3: 'text-align: right;',
-            #           4: 'text-align: right;',
-            #           5: 'text-align: right;'},
+            'style': {
+                3: 'text-align: right;',
+                4: 'text-align: right;',
+            },
         })
 
         return context
