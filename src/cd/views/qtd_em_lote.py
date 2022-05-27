@@ -43,6 +43,7 @@ class QtdEmLote(LoginRequiredMixin, View):
             invent = InventarioLote()
             invent.lote = lote
             invent.quantidade = quantidade
+            invent.diferenca = quantidade - dados_lote[0]['qtd']
             invent.usuario = usuario
             invent.save()
             return None
