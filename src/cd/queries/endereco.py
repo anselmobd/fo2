@@ -6,7 +6,7 @@ from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
-def query_endereco(cursor, tipo):
+def query_endereco(cursor, tipo='TO'):
     where_tipo = []
     if tipo == 'IE':
         where_tipo = [
