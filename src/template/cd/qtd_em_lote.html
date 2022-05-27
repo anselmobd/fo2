@@ -27,6 +27,9 @@
     </div>
   </div>
   <hr>
+  {% if form.lote_conf.value %}
+    <p>Lote informado: {{form.lote_conf.value}}</p>
+  {% endif %}
   <form action="{% url 'cd:qtd_em_lote' %}" method="post">
     {% csrf_token %}
       {{ form.as_p }}
