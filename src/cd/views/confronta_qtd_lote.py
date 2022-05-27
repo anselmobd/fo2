@@ -18,9 +18,9 @@ class ConfrontaQtdLote(O2BaseGetView):
         self.title_name = 'Confronta quant. lotes'
         self.quant_inconsist = 20
         self.mensagens = {
-            -1: "é menor que",
-            0: "é igual a",
-            1: "é maior que",
+            -1: "menor que",
+            0: "igual a",
+            1: "maior que",
         }
 
     def calcula_diferencas(self):
@@ -36,9 +36,10 @@ class ConfrontaQtdLote(O2BaseGetView):
         self.calcula_diferencas()
 
         conta_lotes = InventarioLote.objects.count()
+        conta_corretos = InventarioLote.objects.filter(diferenca=0).count()
 
-        data = InventarioLote.objects.exclude(diferenca=None)
-        data = data.order_by(
+        invent_lote = InventarioLote.objects.exclude(diferenca=None)
+        invent_lote = invent_lote.order_by(
             'quando',
         ).values(
             'lote',
@@ -46,29 +47,31 @@ class ConfrontaQtdLote(O2BaseGetView):
             'usuario__username',
             'quando',
         )
-        idata = iter(data)
+        iter_invent_lote = iter(invent_lote)
         data_show = []
         has_row = True
         while has_row:
-            lotes = []
+            lotes_parcial = []
+            invent_parcial = []
             for _ in range(self.quant_inconsist):
                 try:
-                    row = next(idata)
+                    row = next(iter_invent_lote)
                     pprint(row)
-                    lotes.append(row['lote'])
+                    lotes_parcial.append(row['lote'])
+                    invent_parcial.append(row)
                 except StopIteration:
                     has_row = False
                     break
 
-            qtds_lotes_63 = get_qtd_lotes_63(self.cursor, lotes)
-            qtds_lotes = {
+            lotes_63 = get_qtd_lotes_63(self.cursor, lotes_parcial)
+            lotes_63_dict = {
                 f"{row['lote']}": row
-                for row in qtds_lotes_63
+                for row in lotes_63
             }
 
-            for row in data:
-                if row['lote'] in qtds_lotes:
-                    row_63 = qtds_lotes[row['lote']]
+            for row in invent_parcial:
+                if row['lote'] in lotes_63_dict:
+                    row_63 = lotes_63_dict[row['lote']]
                     row['qtd_63'] = row_63['qtd']
                     if row['quantidade'] == row['qtd_63']:
                         continue
@@ -107,6 +110,8 @@ class ConfrontaQtdLote(O2BaseGetView):
             }),
             'data': data_show,
             'conta_lotes': conta_lotes,
+            'conta_corretos': conta_corretos,
+            'conta_inconsistentes': conta_lotes - conta_corretos,
             'quant_inconsist': self.quant_inconsist,
         })
 
