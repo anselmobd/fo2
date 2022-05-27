@@ -24,6 +24,9 @@ def get_qtd_lotes_63(cursor, lotes):
     sql = f"""
         SELECT
           l.PERIODO_PRODUCAO*100000+l.ORDEM_CONFECCAO lote
+        , l.PERIODO_PRODUCAO periodo
+        , l.ORDEM_CONFECCAO oc
+        , l.ORDEM_PRODUCAO op
         , l.QTDE_DISPONIVEL_BAIXA qtd
         FROM PCPC_040 l
         WHERE ({filtro_periodos_ocs})
