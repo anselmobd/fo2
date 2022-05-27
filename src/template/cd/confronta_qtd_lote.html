@@ -6,18 +6,16 @@
 {% block stylesheet %}
   <style>
     {% include 'layout/simple_table.css' %}
-    {% include "layout/paginator_stylesheet.css" %}
   </style>
 {% endblock %}
 
 {% block content %}
   {% if data %}
-    <!-- { % include "layout/paginator.html" with data=data url_name='cd:confronta_qtd_lote' only %} -->
+    <p>Lista {{quant_inconsist}} primeira{{quant_inconsist|pluralize}} inconsistência{{quant_inconsist|pluralize}}</p>
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
-    <!-- { % include "layout/paginator.html" with data=data url_name='cd:confronta_qtd_lote' only %} -->
   {% else %}
     <h4>Nenhum lote encontrado</h4>
   {% endif %}

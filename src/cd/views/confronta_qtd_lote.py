@@ -2,7 +2,6 @@ from pprint import pprint
 
 from fo2.connections import db_cursor_so
 
-from base.paginator import paginator_basic
 from base.views import O2BaseGetView
 
 from lotes.models.inventario import InventarioLote
@@ -15,11 +14,15 @@ class ConfrontaQtdLote(O2BaseGetView):
         super(ConfrontaQtdLote, self).__init__(*args, **kwargs)
         self.template_name = 'cd/confronta_qtd_lote.html'
         self.title_name = 'Confronta quant. lotes'
-        self.por_pagina = 20
+        self.quant_inconsist = 20
+        self.mensagens = {
+            -1: "é menor que",
+            0: "é igual a",
+            1: "é maior que",
+        }
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
-        page = self.request.GET.get('page', 1)
 
         data = InventarioLote.objects.all()
         data = data.order_by(
@@ -30,34 +33,41 @@ class ConfrontaQtdLote(O2BaseGetView):
             'usuario__username',
             'quando',
         )
-        qtd_invent = len(data)
+        idata = iter(data)
+        lotes = []
+        data_show = []
+        todos = False
+        while True:
+            for _ in range(self.quant_inconsist):
+                try:
+                    row = next(idata)
+                    pprint(row)
+                    lotes.append(row['lote'])
+                except StopIteration:
+                    todos = True
+                    break
 
-        data = paginator_basic(data, self.por_pagina, page)
+            qtds_lotes_63 = get_qtd_lotes_63(cursor, lotes)
+            qtds_lotes = {
+                f"{row['lote']}": row['qtd']
+                for row in qtds_lotes_63
+            }
 
-        lotes = [
-            row['lote']
-            for row in data
-        ]
-        qtds_lotes_63 = get_qtd_lotes_63(cursor, lotes)
-        qtds_lotes = {
-            f"{row['lote']}": row['qtd']
-            for row in qtds_lotes_63
-        }
+            for row in data:
+                if row['lote'] in qtds_lotes:
+                    row['qtd_63'] = qtds_lotes[row['lote']]
+                    if row['quantidade'] == row['qtd_63']:
+                        continue
+                    row['mensagem'] = self.mensagens[
+                        compare(
+                            row['quantidade'],
+                            row['qtd_63'],
+                        )
+                    ]
+                    data_show.append(row)
 
-        mensagens = {
-            -1: "é menor que",
-            0: "é igual a",
-            1: "é maior que",
-        }
-
-        for row in data:
-            row['qtd_63'] = qtds_lotes[row['lote']]
-            row['mensagem'] = mensagens[
-                compare(
-                    row['quantidade'],
-                    row['qtd_63'],
-                )
-            ]
+            if len(data_show) >= self.quant_inconsist or todos:
+                break
 
         fields = {
             'lote': "Lote",
@@ -70,9 +80,8 @@ class ConfrontaQtdLote(O2BaseGetView):
         self.context.update({
             'headers': fields.values(),
             'fields': fields.keys(),
-            'data': data,
-            'qtd_invent': qtd_invent,
-            'por_pagina': self.por_pagina,
+            'data': data_show,
+            'quant_inconsist': self.quant_inconsist,
         })
 
 
