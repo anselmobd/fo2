@@ -10,6 +10,9 @@ class Inventario(models.Model):
         verbose_name='início',
     )
 
+    def __str__(self):
+        return self.inicio.strftime("%d/%m/%Y %H:%M")
+
     def save(self, *args, **kwargs):
         if self.id:
             self.inicio = timezone.now()
@@ -22,6 +25,13 @@ class Inventario(models.Model):
 
 
 class InventarioLote(models.Model):
+    inventario = models.ForeignKey(
+        Inventario,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        verbose_name='inventário',
+    )
     lote = models.CharField(
         db_index=True,
         max_length=9,

@@ -131,10 +131,10 @@ intr_adm_site.register(EnderecoDisponivel, EnderecoDisponivelAdmin)
 
 
 class InventarioLoteAdmin(admin.ModelAdmin):
-    list_display = ['lote', 'quantidade', 'diferenca', 'usuario', 'quando']
+    list_display = ['inventario', 'lote', 'quantidade', 'diferenca', 'usuario', 'quando']
     ordering = ['-quando']
     search_fields = ['lote', 'usuario__username', 'quando']
-
+    list_filter = ['inventario']
 
 intr_adm_site.register(InventarioLote, InventarioLoteAdmin)
 
