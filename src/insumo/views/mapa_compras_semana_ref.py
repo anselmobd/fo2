@@ -1,4 +1,5 @@
 import datetime
+import time
 import math
 from pprint import pprint
 
@@ -31,6 +32,8 @@ def ajax_mapa_compras_semana_ref(request, item, dtini, qtdsem):
     if cached_result is not None:
         fo2logger.info('cached '+key_cache)
         return cached_result
+
+    time.sleep(1) # Sleep for 3 seconds
 
     template_name = 'insumo/ajax_mapa_compras_semana_ref.html'
 
