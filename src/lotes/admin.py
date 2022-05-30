@@ -10,14 +10,15 @@ from .models import (
     EnderecoDisponivel,
     Impresso,
     ImpressoraTermica,
+    Inventario,
+    InventarioLote,
     Lote,
-    RegraColecao,
     ModeloTermica,
+    RegraColecao,
     SolicitaLote,
     SolicitaLotePedido,
     SolicitaLotePrinted,
     UsuarioImpresso,
-    InventarioLote,
 )
 
 
@@ -136,3 +137,11 @@ class InventarioLoteAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(InventarioLote, InventarioLoteAdmin)
+
+
+class InventarioAdmin(admin.ModelAdmin):
+    list_display = ['inicio']
+    ordering = ['-inicio']
+
+
+intr_adm_site.register(Inventario, InventarioAdmin)

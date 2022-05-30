@@ -5,6 +5,22 @@ from django.db import models
 from django.utils import timezone
 
 
+class Inventario(models.Model):
+    inicio = models.DateTimeField(
+        verbose_name='início',
+    )
+
+    def save(self, *args, **kwargs):
+        if self.id:
+            self.inicio = timezone.now()
+
+        super(Inventario, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_inventario"
+        verbose_name = "Inventário"
+
+
 class InventarioLote(models.Model):
     lote = models.CharField(
         db_index=True,
