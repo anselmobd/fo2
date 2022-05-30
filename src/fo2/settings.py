@@ -191,12 +191,12 @@ DATABASES = {
         'USER': 'systextil',
         'PASSWORD': DBPASS_SH,
     },
-    'snd': {  # Systextil OC (nuvem) direto via internet
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': '152.67.55.216:1521/db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
-        'USER': 'systextil',
-        'PASSWORD': DBPASS_SH,
-    },
+    # 'snd': {  # Systextil OC (nuvem) direto via internet
+    #     'ENGINE': 'django.db.backends.oracle',
+    #     'NAME': '152.67.55.216:1521/db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
+    #     'USER': 'systextil',
+    #     'PASSWORD': DBPASS_SH,
+    # },
     'persona': {  # Nasajon
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': "nasajon_db3_20200617_163619",
