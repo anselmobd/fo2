@@ -53,7 +53,7 @@ class InventarioLote(models.Model):
         #     raise QtdEmLote.DoesNotExist
         #     for qel in QtdEmLote.objects.filter(lote=self.lote)                        
 
-        # se tem "id" é inclusão
+        # se não tem "id" é inclusão
         if not self.id:
             self.quando = timezone.now()
 
