@@ -7,6 +7,7 @@ from django.db.models import F, Sum, Value
 from django.db.models.functions import Coalesce
 
 from fo2.connections import db_cursor_so
+from lotes.models.inventario import Inventario
 
 from utils.functions.digits import fo2_digit_valid
 from utils.functions.strings import only_digits, is_only_digits
@@ -14,6 +15,7 @@ from utils.functions.strings import only_digits, is_only_digits
 from systextil.models import Colecao
 
 import lotes.models
+from lotes.models import Inventario
 import lotes.queries.lote
 from comercial.queries import get_tabela_preco
 
@@ -1104,6 +1106,11 @@ class QtdEmLoteForm(forms.Form):
 
 
 class ListaLoteInventForm(forms.Form):
+    inventario = forms.ModelChoiceField(
+        label='Inventário',
+        queryset=Inventario.objects.all().order_by('-inicio'),
+        initial=Inventario.objects.order_by('-inicio').first(),
+    )
     filtro = forms.CharField(
         min_length=1,
         max_length=20,

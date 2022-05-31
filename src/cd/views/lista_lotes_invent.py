@@ -5,7 +5,10 @@ from django.db.models import Q
 from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
 
-from lotes.models.inventario import InventarioLote
+from lotes.models.inventario import (
+    Inventario,
+    InventarioLote,
+)
 
 from cd.forms import ListaLoteInventForm
 
@@ -22,13 +25,16 @@ class ListaLoteInvent(O2BaseGetPostView):
         self.por_pagina = 20
 
     def mount_context(self):
+        data = InventarioLote.objects.filter(
+            inventario=self.inventario
+        )
+
         if self.filtro:
-            data = InventarioLote.objects.filter(
+            data = data.filter(
                 Q(lote__contains=self.filtro) |
                 Q(usuario__username__icontains=self.filtro)
             )
-        else:
-            data = InventarioLote.objects.all()
+
         data = data.order_by(
             '-quando',
         ).values(
