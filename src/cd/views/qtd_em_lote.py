@@ -84,11 +84,11 @@ class QtdEmLote(LoginRequiredMixin, View):
             self.zera_conf()
             return
         else:
-            existe = InventarioLote.objects.get(
-                inventario=Inventario.objects.order_by('-inicio').first(),
-                lote=lote
-            )
-            if existe:
+            try:
+                existe = InventarioLote.objects.get(
+                    inventario=Inventario.objects.order_by('-inicio').first(),
+                    lote=lote
+                )
                 agora = timezone.now().strftime("%d/%m %H:%M:%S")
                 quando = existe.quando.strftime("%d/%m %H:%M:%S")
                 self.context.update({
@@ -99,6 +99,8 @@ class QtdEmLote(LoginRequiredMixin, View):
                         "de repetição de numeração."})
                 self.zera_conf()
                 return
+            except InventarioLote.DoesNotExist:
+                pass
 
         if quant_conf != quant:
             self.context.update({
