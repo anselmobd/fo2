@@ -92,10 +92,10 @@ class QtdEmLote(LoginRequiredMixin, View):
                 agora = timezone.now().strftime("%d/%m %H:%M:%S")
                 quando = existe.quando.strftime("%d/%m %H:%M:%S")
                 self.context.update({
-                    'erro': f"Quantidade {existe.quantidade} do lote {lote} já anotada "
-                        f"por {existe.usuario.username} em {quando}.<br/><br/>"
+                    'erro': f"Quantidade {existe.quantidade} do lote {lote} "
+                        f"informada por {existe.usuario.username} em {quando}.<br/><br/>"
                         f"Agora é {agora}.<br/><br/>"
-                        "Caso necessário separe este lote para análise "
+                        "Caso necessário, separe este lote para análise "
                         "de repetição de numeração."})
                 self.zera_conf()
                 return
