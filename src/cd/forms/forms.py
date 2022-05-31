@@ -15,9 +15,13 @@ from utils.functions.strings import only_digits, is_only_digits
 from systextil.models import Colecao
 
 import lotes.models
-from lotes.models import Inventario
 import lotes.queries.lote
 from comercial.queries import get_tabela_preco
+from lotes.models import Inventario
+from lotes.models.inventario import (
+    Inventario,
+    InventarioLote,
+)
 
 
 class RearrumarForm(forms.Form):
@@ -1126,3 +1130,23 @@ class ListaLoteInventForm(forms.Form):
         required=False,
         widget=forms.HiddenInput()
     )
+
+class ConfrontaQtdLoteForm(forms.Form):
+    usuario = forms.ChoiceField(
+        label='Usuário',
+        required=False,
+        initial=None
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(ConfrontaQtdLoteForm, self).__init__(*args, **kwargs)
+        invent_lotes = InventarioLote.objects.filter(
+            inventario=Inventario.objects.order_by('-inicio').first(),
+        ).distinct('usuario')
+        CHOICES_USUARIO = [(None, 'Todos')]
+        for invent_lote in invent_lotes:
+            CHOICES_USUARIO.append((
+                invent_lote.usuario,
+                invent_lote.usuario.username,
+            ))
+        self.fields['usuario'].choices = CHOICES_USUARIO

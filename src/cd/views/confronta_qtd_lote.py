@@ -2,7 +2,7 @@ from pprint import pprint
 
 from fo2.connections import db_cursor_so
 
-from base.views import O2BaseGetView
+from base.views import O2BaseGetPostView
 from utils.functions import untuple_keys_concat
 
 from lotes.models.inventario import (
@@ -10,14 +10,16 @@ from lotes.models.inventario import (
     InventarioLote,
 )
 
-
+from cd.forms import ConfrontaQtdLoteForm
 from cd.queries.inventario_lote import get_qtd_lotes_63
 
 
-class ConfrontaQtdLote(O2BaseGetView):
+class ConfrontaQtdLote(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(ConfrontaQtdLote, self).__init__(*args, **kwargs)
+        self.Form_class = ConfrontaQtdLoteForm
+        self.cleaned_data2self = True
         self.template_name = 'cd/confronta_qtd_lote.html'
         self.title_name = 'Confronta quant. lotes'
         self.quant_inconsist = 100
@@ -47,6 +49,10 @@ class ConfrontaQtdLote(O2BaseGetView):
         lotes = InventarioLote.objects.filter(
             inventario=Inventario.objects.order_by('inicio').last()
         )
+        if self.usuario:
+            lotes = lotes.filter(
+                usuario__username=self.usuario,
+            )
         conta_lotes = lotes.count()
         conta_corretos = lotes.filter(diferenca=0).count()
 
