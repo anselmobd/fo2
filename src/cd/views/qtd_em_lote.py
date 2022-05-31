@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 from django.views import View
 
 from fo2.connections import db_cursor_so
@@ -83,14 +84,18 @@ class QtdEmLote(LoginRequiredMixin, View):
             self.zera_conf()
             return
         else:
-            existe = InventarioLote.objects.filter(
+            existe = InventarioLote.objects.get(
                 inventario=Inventario.objects.order_by('-inicio').first(),
                 lote=lote
             )
             if existe:
+                agora = timezone.now().strftime("%d/%m %H:%M:%S")
+                quando = existe.quando.strftime("%d/%m %H:%M:%S")
                 self.context.update({
-                    'erro': "Lote já gravado. "
-                        "Separe este lote para análise "
+                    'erro': f"Quantidade {existe.quantidade} do lote {lote} já anotada "
+                        f"por {existe.usuario.username} em {quando}.<br/><br/>"
+                        f"Agora é {agora}.<br/><br/>"
+                        "Caso necessário separe este lote para análise "
                         "de repetição de numeração."})
                 self.zera_conf()
                 return

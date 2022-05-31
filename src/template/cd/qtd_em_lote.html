@@ -41,7 +41,7 @@
   </form>
   {% if erro %}
     <p class="erro msg">Erro!</p>
-    <p class="erro msg">{{ erro }}</p>
+    <p class="erro msg">{{ erro|safe }}</p>
   {% endif %}
   {% if confirmado %}
     <p class="sucesso msg">Sucesso!</p>
