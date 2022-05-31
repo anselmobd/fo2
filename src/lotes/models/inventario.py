@@ -80,6 +80,7 @@ class InventarioLote(models.Model):
 
         # se não tem "id" é inclusão
         if not self.id:
+            self.inventario=Inventario.objects.order_by('inicio').last()
             self.quando = timezone.now()
 
         super(InventarioLote, self).save(*args, **kwargs)
