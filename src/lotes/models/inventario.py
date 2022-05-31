@@ -88,3 +88,4 @@ class InventarioLote(models.Model):
     class Meta:
         db_table = "fo2_inventario_lote"
         verbose_name = "Inventário de lote"
+        unique_together = [["lote", "quando"]]
