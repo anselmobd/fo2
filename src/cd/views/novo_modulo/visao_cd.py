@@ -1,19 +1,14 @@
-import operator
-import re
 from collections import namedtuple
 from pprint import pprint
 
 from django.shortcuts import render
-from django.urls import reverse
 from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.views import group_rowspan, totalize_grouped_data
+from utils.views import totalize_data
 
-import lotes.models
-
-from cd.queries.endereco import query_endereco, data_details_from_end
+from cd.queries.endereco import data_details_from_end
 from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 
 
@@ -72,6 +67,14 @@ class VisaoCd(View):
             }
             for dados_key in dados
         ]
+
+
+        totalize_data(data, {
+            'sum': ['qtd_ends', 'qtd_lotes'],
+            'count': [],
+            'descr': {'espaco': 'Totais:'},
+            'row_style': 'font-weight: bold;',
+        })
 
         fields = {
             'espaco': 'Espaço',
