@@ -28,8 +28,6 @@ class InventarioLote(models.Model):
     inventario = models.ForeignKey(
         Inventario,
         on_delete=models.PROTECT,
-        null=True,
-        blank=True,
         verbose_name='inventário',
     )
     lote = models.CharField(
