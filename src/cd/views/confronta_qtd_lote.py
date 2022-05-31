@@ -20,7 +20,7 @@ class ConfrontaQtdLote(O2BaseGetView):
         super(ConfrontaQtdLote, self).__init__(*args, **kwargs)
         self.template_name = 'cd/confronta_qtd_lote.html'
         self.title_name = 'Confronta quant. lotes'
-        self.quant_inconsist = 50
+        self.quant_inconsist = 100
         self.mensagens = {
             -1: "menor que",
             0: "igual a",
