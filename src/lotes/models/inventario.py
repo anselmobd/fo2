@@ -14,7 +14,8 @@ class Inventario(models.Model):
         return self.inicio.strftime("%d/%m/%Y %H:%M")
 
     def save(self, *args, **kwargs):
-        if self.id:
+        # se não tem ID, é inserção
+        if not self.id:
             self.inicio = timezone.now()
 
         super(Inventario, self).save(*args, **kwargs)
