@@ -9,7 +9,10 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from lotes.models.inventario import InventarioLote
+from lotes.models.inventario import (
+    Inventario,
+    InventarioLote,
+)
 from lotes.queries.lote import get_lote
 from lotes.views.lote.conserto_lote import dict_conserto_lote
 
@@ -79,6 +82,18 @@ class QtdEmLote(LoginRequiredMixin, View):
                 'erro': "Lote não confirmado."})
             self.zera_conf()
             return
+        else:
+            existe = InventarioLote.objects.filter(
+                inventario=Inventario.objects.order_by('-inicio').first(),
+                lote=lote
+            )
+            if existe:
+                self.context.update({
+                    'erro': "Lote já gravado. "
+                        "Separe este lote para análise "
+                        "de repetição de numeração."})
+                self.zera_conf()
+                return
 
         if quant_conf != quant:
             self.context.update({
