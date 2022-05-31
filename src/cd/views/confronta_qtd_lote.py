@@ -5,7 +5,11 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetView
 from utils.functions import untuple_keys_concat
 
-from lotes.models.inventario import InventarioLote
+from lotes.models.inventario import (
+    Inventario,
+    InventarioLote,
+)
+
 
 from cd.queries.inventario_lote import get_qtd_lotes_63
 
@@ -40,10 +44,13 @@ class ConfrontaQtdLote(O2BaseGetView):
 
         self.calcula_diferencas()
 
-        conta_lotes = InventarioLote.objects.count()
-        conta_corretos = InventarioLote.objects.filter(diferenca=0).count()
+        lotes = InventarioLote.objects.filter(
+            inventario=Inventario.objects.order_by('inicio').last()
+        )
+        conta_lotes = lotes.count()
+        conta_corretos = lotes.filter(diferenca=0).count()
 
-        invent_lote = InventarioLote.objects.exclude(diferenca=None)
+        invent_lote = lotes.exclude(diferenca=None)
         invent_lote = invent_lote.order_by(
             'quando',
         ).values(
