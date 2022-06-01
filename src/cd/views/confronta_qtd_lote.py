@@ -110,6 +110,9 @@ class ConfrontaQtdLote(O2BaseGetPostView):
                     row['oc'] = f"{row_63['oc']}"
                     row['qtd_ori'] = f"{row_63['qtd_ori']}"
                     row['qtd_lote'] = f"{row_63['qtd_lote']}"
+                    row['ref'] = f"{row_63['ref']}"
+                    row['cor'] = f"{row_63['cor']}"
+                    row['tam'] = f"{row_63['tam']}"
                     data_show.append(row)
 
             if len(data_show) >= self.quant_inconsist:
@@ -122,12 +125,15 @@ class ConfrontaQtdLote(O2BaseGetPostView):
             'lote': "Lote",
             'quantidade': "Quant. inventariada",
             'mensagem': "Mensagem",
-            'qtd_63': "Quant. no estágio 63",
+            'qtd_63': "Quant. estágio 63",
             'qtd_ori': "Tamanho do lote",
             'qtd_lote': "Quant. do lote",
             'op': "OP",
             'periodo': "Periodo",
             'oc': "OC",
+            'ref': "Ref.",
+            'cor': "Cor",
+            'tam': "Tam.",
         }
         self.context.update({
             'headers': fields.values(),
