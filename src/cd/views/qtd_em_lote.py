@@ -69,7 +69,7 @@ class QtdEmLote(LoginRequiredMixin, View):
         dados_lote = get_qtd_lotes_63(cursor, lote)
         if not dados_lote:
             self.context.update({
-                'erro': "Lote inexistênte."})
+                'erro': f"Lote {lote} inexistênte no estágio 63."})
             return
 
         if not lote_conf:
