@@ -97,7 +97,7 @@ class ConfrontaQtdLote(O2BaseGetPostView):
                     if row['quantidade'] == row['qtd_63']:
                         self.zera_diferenca(row['lote'], row['quando'])
                         continue
-                    if up and row['quantidade'] <= row_63['qtd_ori']:
+                    if up and row['quantidade'] <= row_63['qtd_lote']:
                         continue
                     row['mensagem'] = self.mensagens[
                         compare(
@@ -109,6 +109,7 @@ class ConfrontaQtdLote(O2BaseGetPostView):
                     row['periodo'] = f"{row_63['periodo']}"
                     row['oc'] = f"{row_63['oc']}"
                     row['qtd_ori'] = f"{row_63['qtd_ori']}"
+                    row['qtd_lote'] = f"{row_63['qtd_lote']}"
                     data_show.append(row)
 
             if len(data_show) >= self.quant_inconsist:
@@ -123,6 +124,7 @@ class ConfrontaQtdLote(O2BaseGetPostView):
             'mensagem': "Mensagem",
             'qtd_63': "Quant. no estágio 63",
             'qtd_ori': "Tamanho do lote",
+            'qtd_lote': "Quant. do lote",
             'op': "OP",
             'periodo': "Periodo",
             'oc': "OC",
