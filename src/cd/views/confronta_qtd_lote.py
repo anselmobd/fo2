@@ -104,6 +104,7 @@ class ConfrontaQtdLote(O2BaseGetPostView):
                     row['op'] = f"{row_63['op']}"
                     row['periodo'] = f"{row_63['periodo']}"
                     row['oc'] = f"{row_63['oc']}"
+                    row['qtd_ori'] = f"{row_63['qtd_ori']}"
                     data_show.append(row)
 
             if len(data_show) >= self.quant_inconsist:
@@ -117,6 +118,7 @@ class ConfrontaQtdLote(O2BaseGetPostView):
             'quantidade': "Quant. inventariada",
             'mensagem': "Mensagem",
             'qtd_63': "Quant. no estágio 63",
+            'qtd_ori': "Tamanho do lote",
             'op': "OP",
             'periodo': "Periodo",
             'oc': "OC",
@@ -125,8 +127,8 @@ class ConfrontaQtdLote(O2BaseGetPostView):
             'headers': fields.values(),
             'fields': fields.keys(),
             'style': untuple_keys_concat({
-                (4, 5, 6): 'text-align: center;',
-                (7, 8, 9): 'text-align: right;',
+                (4, 5, 6, 7): 'text-align: center;',
+                (8, 9, 10): 'text-align: right;',
             }),
             'data': data_show,
             'conta_lotes': conta_lotes,
