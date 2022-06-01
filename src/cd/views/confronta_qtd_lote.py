@@ -133,8 +133,8 @@ class ConfrontaQtdLote(O2BaseGetPostView):
             'headers': fields.values(),
             'fields': fields.keys(),
             'style': untuple_keys_concat({
-                (4, 5, 6, 7): 'text-align: center;',
-                (8, 9, 10): 'text-align: right;',
+                (4, 5, 6, 7, 8): 'text-align: center;',
+                (9, 10, 11): 'text-align: right;',
             }),
             'data': data_show,
             'conta_lotes': conta_lotes,
