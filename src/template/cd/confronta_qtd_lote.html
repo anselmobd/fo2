@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-  <form action="{% url 'cd:confronta_qtd_lote' %}" method="post">
+  <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>

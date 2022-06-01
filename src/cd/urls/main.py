@@ -198,7 +198,7 @@ urlpatterns = [
         qtd_em_lote.QtdEmLote.as_view(),
         name='qtd_em_lote'),
 
-    re_path(r'^confronta_qtd_lote/$',
+    re_path(r'^confronta_qtd_lote/(?P<up>.+)?/?$',
         confronta_qtd_lote.ConfrontaQtdLote.as_view(),
         name='confronta_qtd_lote'),
 

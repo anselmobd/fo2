@@ -43,6 +43,8 @@ class ConfrontaQtdLote(O2BaseGetPostView):
         row_lote.save()
 
     def mount_context(self):
+        up = self.kwargs.get('up', False)
+ 
         self.cursor = db_cursor_so(self.request)
 
         self.calcula_diferencas()
@@ -94,6 +96,8 @@ class ConfrontaQtdLote(O2BaseGetPostView):
                     row['qtd_63'] = row_63['qtd']
                     if row['quantidade'] == row['qtd_63']:
                         self.zera_diferenca(row['lote'], row['quando'])
+                        continue
+                    if up and row['quantidade'] <= row_63['qtd_ori']:
                         continue
                     row['mensagem'] = self.mensagens[
                         compare(
