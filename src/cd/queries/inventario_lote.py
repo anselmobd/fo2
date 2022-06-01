@@ -31,6 +31,7 @@ def get_qtd_lotes_63(cursor, lotes):
         , l.ORDEM_CONFECCAO oc
         , l.ORDEM_PRODUCAO op
         , l.QTDE_DISPONIVEL_BAIXA qtd
+        , l.QTDE_PECAS_PROG qtd_ori
         FROM PCPC_040 l
         WHERE ({filtro_periodos_ocs})
           AND l.CODIGO_ESTAGIO = 63
