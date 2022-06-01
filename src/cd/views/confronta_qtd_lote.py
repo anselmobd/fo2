@@ -4,6 +4,7 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 from utils.functions import untuple_keys_concat
+from utils.functions.logica import compare
 
 from lotes.models.inventario import (
     Inventario,
@@ -133,7 +134,3 @@ class ConfrontaQtdLote(O2BaseGetPostView):
             'conta_inconsistentes': conta_lotes - conta_corretos,
             'quant_inconsist': self.quant_inconsist,
         })
-
-
-def compare(a, b):
-    return (a > b) - (a < b) 
