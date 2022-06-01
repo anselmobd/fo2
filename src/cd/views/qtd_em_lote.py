@@ -84,6 +84,15 @@ class QtdEmLote(LoginRequiredMixin, View):
             self.zera_conf()
             return
 
+        qtd_ori = dados_lote[0]['qtd_ori']
+        if quant > qtd_ori:
+            self.context.update({
+                'erro': f"Lote {lote}: <br/>"
+                    f"Quantidade informada ({quant}) não pode ser "
+                    f"maior que o tamanho do lote ({qtd_ori})."})
+            self.zera_conf()
+            return
+
         if lote_conf != lote:
             self.context.update({
                 'erro': "Lote não confirmado."})
