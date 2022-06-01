@@ -78,35 +78,35 @@ class QtdEmLote(LoginRequiredMixin, View):
             self.context['identificado'] = True
             return
 
-        if lote_conf != lote:
-            self.context.update({
-                'erro': "Lote não confirmado."})
-            self.zera_conf()
-            return
-        else:
-            try:
-                existe = InventarioLote.objects.get(
-                    inventario=Inventario.objects.order_by('-inicio').first(),
-                    lote=lote
-                )
-                agora = timezone.now().strftime("%d/%m %H:%M:%S")
-                quando = existe.quando.strftime("%d/%m %H:%M:%S")
-                self.context.update({
-                    'erro': f"Quantidade {existe.quantidade} do lote {lote} "
-                        f"informada por {existe.usuario.username} em {quando}.<br/><br/>"
-                        f"Agora é {agora}.<br/><br/>"
-                        "Caso necessário, separe este lote para análise "
-                        "de repetição de numeração."})
-                self.zera_conf()
-                return
-            except InventarioLote.DoesNotExist:
-                pass
-
         if quant_conf != quant:
             self.context.update({
                 'erro': "Quantidade não confirmada."})
             self.zera_conf()
             return
+
+        if lote_conf != lote:
+            self.context.update({
+                'erro': "Lote não confirmado."})
+            self.zera_conf()
+            return
+
+        try:
+            existe = InventarioLote.objects.get(
+                inventario=Inventario.objects.order_by('-inicio').first(),
+                lote=lote
+            )
+            agora = timezone.now().strftime("%d/%m %H:%M:%S")
+            quando = existe.quando.strftime("%d/%m %H:%M:%S")
+            self.context.update({
+                'erro': f"Quantidade {existe.quantidade} do lote {lote} "
+                    f"informada por {existe.usuario.username} em {quando}.<br/><br/>"
+                    f"Agora é {agora}.<br/><br/>"
+                    "Caso necessário, separe este lote para análise "
+                    "de repetição de numeração."})
+            self.zera_conf()
+            return
+        except InventarioLote.DoesNotExist:
+            pass
 
         erro_exec = self.grava_inventario_lote(
             self.request.user, lote, quant, dados_lote)
