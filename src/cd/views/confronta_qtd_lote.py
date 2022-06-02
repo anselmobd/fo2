@@ -42,13 +42,7 @@ class ConfrontaQtdLote(O2BaseGetPostView):
         row_lote.diferenca = 0
         row_lote.save()
 
-    def mount_context(self):
-        up = self.kwargs.get('up', False)
- 
-        self.cursor = db_cursor_so(self.request)
-
-        self.calcula_diferencas()
-
+    def get_lotes(self):
         lotes = InventarioLote.objects.filter(
             inventario=Inventario.objects.order_by('inicio').last()
         )
@@ -56,8 +50,16 @@ class ConfrontaQtdLote(O2BaseGetPostView):
             lotes = lotes.filter(
                 usuario__username=self.usuario,
             )
-        conta_lotes = lotes.count()
-        conta_corretos = lotes.filter(diferenca=0).count()
+        return lotes
+
+    def mount_context(self):
+        up = self.kwargs.get('up', False)
+ 
+        self.cursor = db_cursor_so(self.request)
+
+        self.calcula_diferencas()
+
+        lotes = self.get_lotes()
 
         invent_lote = lotes.exclude(diferenca=0)
         invent_lote = invent_lote.order_by(
@@ -119,6 +121,11 @@ class ConfrontaQtdLote(O2BaseGetPostView):
                 break
 
         data_show = data_show[:self.quant_inconsist]
+
+        lotes = self.get_lotes()
+        conta_lotes = lotes.count()
+        conta_corretos = lotes.filter(diferenca=0).count()
+
         fields = {
             'usuario__username': "Usuário",
             'quando': "Quando",
