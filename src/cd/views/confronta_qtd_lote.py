@@ -59,7 +59,7 @@ class ConfrontaQtdLote(O2BaseGetPostView):
         conta_lotes = lotes.count()
         conta_corretos = lotes.filter(diferenca=0).count()
 
-        invent_lote = lotes.exclude(diferenca=None)
+        invent_lote = lotes.exclude(diferenca=0)
         invent_lote = invent_lote.order_by(
             'quando',
         ).values(
@@ -74,7 +74,7 @@ class ConfrontaQtdLote(O2BaseGetPostView):
         while has_row:
             lotes_parcial = []
             invent_parcial = []
-            for _ in range(self.quant_inconsist*10):
+            for _ in range(self.quant_inconsist):
                 try:
                     row = next(iter_invent_lote)
                     pprint(row)
