@@ -74,7 +74,7 @@ class ConfrontaQtdLote(O2BaseGetPostView):
         while has_row:
             lotes_parcial = []
             invent_parcial = []
-            for _ in range(self.quant_inconsist):
+            for _ in range(self.quant_inconsist*10):
                 try:
                     row = next(iter_invent_lote)
                     pprint(row)
