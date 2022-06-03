@@ -75,4 +75,27 @@ table = {
             },
         },
     },
+    'l_63': {
+        'descr': "lote no 63 - sempre apenas o estágio 63 (se houver)",
+        'table': "PCPC_040",
+        'field': {
+            'op': "ORDEM_PRODUCAO",
+            'per': "PERIODO_PRODUCAO",
+            'oc': "ORDEM_CONFECCAO",
+            'cor': "PROCONF_ITEM",
+            'tam': "PROCONF_SUBGRUPO",
+            'seq': "SEQUENCIA_ESTAGIO",
+            'qtd_lote': "QTDE_PECAS_PROG",
+            'est': "CODIGO_ESTAGIO",
+        },
+        'condition': {
+            'est': 63,
+        },
+        'joined_to': {
+            'lp': {
+                'op': 'op',
+                'oc': ("MOD({}, 100000)", 'lote'),
+            },
+        },
+    },
 }
