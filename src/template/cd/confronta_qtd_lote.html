@@ -15,20 +15,22 @@
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
   </form>
-  {% include "layout/form_inputs_report.html" with form=form h=4 only %}
-  {% if conta_lotes %}
-    <p>{{conta_lotes}} lote{{conta_lotes|pluralize}} inventariado{{conta_lotes|pluralize}}:
-      {{conta_corretos}} lote{{conta_corretos|pluralize}} coerente{{conta_corretos|pluralize}};
-      {{conta_inconsistentes}} lote{{conta_inconsistentes|pluralize}} inconsistente{{conta_inconsistentes|pluralize}};
-    </p>
-  {% endif %}
-  {% if data %}
-  <p>Lista {{quant_inconsist}} primeira{{quant_inconsist|pluralize}} inconsistência{{quant_inconsist|pluralize}}</p>
-  <table>
-      {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
-    </table>
-  {% else %}
-    <h4>Nenhum lote encontrado</h4>
+  {% if request.POST %}
+    {% include "layout/form_inputs_report.html" with form=form h=4 only %}
+    {% if conta_lotes %}
+      <p>{{conta_lotes}} lote{{conta_lotes|pluralize}} inventariado{{conta_lotes|pluralize}}:
+        {{conta_corretos}} lote{{conta_corretos|pluralize}} coerente{{conta_corretos|pluralize}};
+        {{conta_inconsistentes}} lote{{conta_inconsistentes|pluralize}} inconsistente{{conta_inconsistentes|pluralize}};
+      </p>
+    {% endif %}
+    {% if data %}
+    <p>Lista {{quant_inconsist}} primeira{{quant_inconsist|pluralize}} inconsistência{{quant_inconsist|pluralize}}</p>
+    <table>
+        {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+      </table>
+    {% else %}
+      <h4>Nenhum lote encontrado</h4>
+    {% endif %}
   {% endif %}
 {% endblock content %}
