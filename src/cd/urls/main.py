@@ -7,6 +7,7 @@ from cd.views import (
     api_palete,
     compara_apoio_systextil,
     confronta_qtd_lote,
+    confronta_qtd_solicit,
     conteudo_local,
     endereco,
     endereco_imprime,
@@ -208,5 +209,9 @@ urlpatterns = [
 
     re_path(r'^novo/visao_cd/$',
         visao_cd.VisaoCd.as_view(), name='novo_visao_cd'),
+
+    re_path(r'^confronta_qtd_solicit/(?P<up>.+)?/?$',
+        confronta_qtd_solicit.ConfrontaQtdSolicit.as_view(),
+        name='confronta_qtd_solicit'),
 
 ]
