@@ -86,10 +86,12 @@ table = {
             'per': "PERIODO_PRODUCAO",
             'oc': "ORDEM_CONFECCAO",
             'cor': "PROCONF_ITEM",
+            'ref': "PROCONF_GRUPO",
             'tam': "PROCONF_SUBGRUPO",
             'seq': "SEQUENCIA_ESTAGIO",
             'qtd_lote': "QTDE_PECAS_PROG",
             'est': "CODIGO_ESTAGIO",
+            'qtd': "QTDE_DISPONIVEL_BAIXA",
         },
         'condition': {
             'est': 63,
@@ -98,6 +100,10 @@ table = {
             'lp': {
                 'op': 'op',
                 'oc': ("MOD({}, 100000)", 'lote'),
+            },
+            'sl': {
+                'op': 'op',
+                'oc': 'oc',
             },
         },
     },
