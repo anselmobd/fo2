@@ -36,4 +36,5 @@ class ConfrontaQtdSolicit(O2BaseGetView):
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
             'data': data,
+            'safe': ['op', 'per', 'oc', 'lote', 'sols']
         })
