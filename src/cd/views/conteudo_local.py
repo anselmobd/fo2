@@ -158,14 +158,15 @@ class ConteudoLocal(View):
         self.local = form.cleaned_data['local'].upper()
 
         self.tipo_local = self.get_tipo_local(self.local)
+        nome_tipo_local = self._NOME_TIPO_LOCAL[self.tipo_local]
         if not self.local_ok():
             self.context.update({
-                'erro': f"{self._NOME_TIPO_LOCAL[self.tipo_local].capitalize()} inexistênte."})
+                'erro': f"{nome_tipo_local.capitalize()} inexistênte."})
             return
 
         self.context.update({
             'local': self.local,
-            'nome_tipo_local': self._NOME_TIPO_LOCAL[self.tipo_local],
+            'nome_tipo_local': nome_tipo_local,
         })
 
         self.lotes_end = lotes_em_local(self.cursor, self.local)
@@ -176,7 +177,7 @@ class ConteudoLocal(View):
             self.get_lotes()
         else:
             self.context.update({
-                'erro': f"Zero lote no {self._NOME_TIPO_LOCAL[self.tipo_local]} {self.local}."})
+                'erro': f"Zero lote no {nome_tipo_local} {self.local}."})
 
         if self.tipo_local == self._PALETE:
             self.get_esvaziamentos()
