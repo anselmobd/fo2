@@ -2,6 +2,7 @@ from pprint import pprint
 
 from fo2.connections import db_cursor_so
 
+from base.paginator import paginator_basic
 from base.views import O2BaseGetView
 from utils.table_defs import TableDefs
 
@@ -13,6 +14,7 @@ class ConfrontaQtdSolicit(O2BaseGetView):
         super(ConfrontaQtdSolicit, self).__init__(*args, **kwargs)
         self.template_name = 'cd/confronta_qtd_solicit.html'
         self.title_name = 'Confronta quant. solicitadas'
+        self.por_pagina = 50
 
         self.table_defs = TableDefs(
             {
@@ -30,11 +32,17 @@ class ConfrontaQtdSolicit(O2BaseGetView):
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
+        page = self.request.GET.get('page', 1)
 
         data = inconsist_qtd_solicit.query(self.cursor)
+        inconsist_len = len(data)
+
+        data = paginator_basic(data, self.por_pagina, page)
 
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
             'data': data,
-            'safe': ['op', 'per', 'oc', 'lote', 'sols']
+            'safe': ['op', 'per', 'oc', 'lote', 'sols'],
+            'por_pagina': self.por_pagina,
+            'inconsist_len': inconsist_len,
         })
