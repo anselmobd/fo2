@@ -14,6 +14,7 @@
   <h4>{{inconsist_len}} inconsistência{{inconsist_len|pluralize}} encontrada{{inconsist_len|pluralize}}</h4>
   {% include "layout/paginator_get.html" with data=data url_name='cd:confronta_qtd_solicit' only %}
   <p>{{por_pagina}} lotes por página</p>
+  <p>Apenas situçação: 1 (A confirmar), 2 (Confirmado), 3 (Programado) ou 4 (Solicitado)</p>
   <table>
     {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe style=style only %}

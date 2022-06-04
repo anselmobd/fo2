@@ -20,7 +20,7 @@ def query(cursor):
           ON l_63.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
          AND l_63.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO -- joins
         WHERE l_63.CODIGO_ESTAGIO = 63 -- WHERE
-          AND sl.SITUACAO IN (2, 3, 4)
+          AND sl.SITUACAO IN (1, 2, 3, 4)
           -- AND l_63.PROCONF_GRUPO like 'B0002'
         HAVING 
           l_63.QTDE_A_PRODUZIR_PACOTE < sum(sl.QTDE)
