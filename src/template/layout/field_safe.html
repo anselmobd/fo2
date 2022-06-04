@@ -1,0 +1,7 @@
+{% with field|add:'|SAFE' as field_safe %}
+  {% if field in safe or row|get_item:field_safe %}
+    {{ row|get_item:field|safe }}
+  {% else %}
+    {{ row|get_item:field }}
+  {% endif %}
+{% endwith %}

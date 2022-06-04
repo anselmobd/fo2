@@ -8,11 +8,11 @@
           {% if fdecimals is not None %}
             {{ row|get_item:field|floatformat:fdecimals|transp_decimals|safe }}
           {% else %}
-            {{ row|get_item:field }}
+            {% include "layout/field_safe.html" with row=row field=field safe=safe only %}
           {% endif %}
         {% endwith %}
       {% else %}
-        {{ row|get_item:field }}
+        {% include "layout/field_safe.html" with row=row field=field safe=safe only %}
       {% endif %}
     {% endif %}
   {% endwith %}

@@ -5,13 +5,7 @@
 {% endwith %}
 
 {% if field in pre %}<pre>{% endif %}
-{% with field|add:'|SAFE' as field_safe %}
-  {% if field in safe or row|get_item:field_safe %}
-    {{ row|get_item:field|safe }}
-  {% else %}
-    {% include "layout/html_tbody_fieldlink.html" with row=row field=field count=count decimals=decimals only %}
-  {% endif %}
-{% endwith %}
+{% include "layout/html_tbody_fieldlink.html" with row=row field=field count=count decimals=decimals safe=safe only %}
 {% if field in pre %}</pre>{% endif %}
 
 {% with field|add:'|HOVER' as field_hover %}
