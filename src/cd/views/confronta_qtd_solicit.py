@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
@@ -38,6 +40,10 @@ class ConfrontaQtdSolicit(O2BaseGetView):
         inconsist_len = len(data)
 
         data = paginator_basic(data, self.por_pagina, page)
+
+        for row in data.object_list:
+            row['lote|LINK'] = reverse(
+                'producao:posicao__get', args=[row['lote']])
 
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
