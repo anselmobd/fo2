@@ -77,39 +77,45 @@ def query_endereco(cursor, tipo='TO'):
 
     return data
 
+
+def row_details_from_end(row, end_field):
+    parts = endereco_split(row[end_field])
+    tamanho = len(row[end_field])
+    row['bloco'] = parts['bloco']
+    row['andar'] = parts['andar']
+    row['coluna'] = parts['coluna']
+    if tamanho != 6:
+        row['prioridade'] = 5
+        row['order_ap'] = 0
+        row['espaco'] = 'Indefinido'
+    elif parts['espaco'] == '1' and parts['bloco'] in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+        row['prioridade'] = 1
+        row['order_ap'] = 10000 + int(parts['coluna']) * 100 + int(parts['andar'])
+        row['espaco'] = 'Estantes'
+    elif parts['espaco'] == '1' and parts['bloco'] == 'L':
+        row['prioridade'] = 2
+        row['order_ap'] = int(parts['apartamento'])
+        row['espaco'] = 'Lateral'
+    elif parts['espaco'] == '1' and parts['bloco'] == 'Q':
+        row['prioridade'] = 3
+        row['order_ap'] = int(parts['apartamento'])
+        row['espaco'] = 'Quarto andar'
+    elif parts['espaco'] == '2' and parts['bloco'] == 'S':
+        row['prioridade'] = 4
+        row['order_ap'] = 0
+        row['espaco'] = 'Externo'
+    else:
+        row['prioridade'] = 5
+        row['order_ap'] = 0
+        row['espaco'] = 'Indefinido'
+    return row
+
+
 def data_details_from_end(data, end_field):
     for row in data:
         if not row['palete']:
             row['palete'] = '-'
-        parts = endereco_split(row[end_field])
-        tamanho = len(row[end_field])
-        row['bloco'] = parts['bloco']
-        row['andar'] = parts['andar']
-        row['coluna'] = parts['coluna']
-        if tamanho != 6:
-            row['prioridade'] = 5
-            row['order_ap'] = 0
-            row['espaco'] = 'Indefinido'
-        elif parts['espaco'] == '1' and parts['bloco'] in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
-            row['prioridade'] = 1
-            row['order_ap'] = 10000 + int(parts['coluna']) * 100 + int(parts['andar'])
-            row['espaco'] = 'Estantes'
-        elif parts['espaco'] == '1' and parts['bloco'] == 'L':
-            row['prioridade'] = 2
-            row['order_ap'] = int(parts['apartamento'])
-            row['espaco'] = 'Lateral'
-        elif parts['espaco'] == '1' and parts['bloco'] == 'Q':
-            row['prioridade'] = 3
-            row['order_ap'] = int(parts['apartamento'])
-            row['espaco'] = 'Quarto andar'
-        elif parts['espaco'] == '2' and parts['bloco'] == 'S':
-            row['prioridade'] = 4
-            row['order_ap'] = 0
-            row['espaco'] = 'Externo'
-        else:
-            row['prioridade'] = 5
-            row['order_ap'] = 0
-            row['espaco'] = 'Indefinido'
+        row = row_details_from_end(row, end_field)
 
     data.sort(key=operator.itemgetter('prioridade', 'bloco', 'order_ap'))
 
