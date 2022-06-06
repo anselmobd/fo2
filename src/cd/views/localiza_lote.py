@@ -37,7 +37,7 @@ class LocalizaLote(View):
 
         if not local:
             context.update({
-                'erro': 'Lote não endereçado.'})
+                'erro': f"Lote {lote} não endereçado."})
             return context
 
         if len(local) > 1:
