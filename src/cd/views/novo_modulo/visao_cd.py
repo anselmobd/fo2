@@ -6,7 +6,10 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.views import totalize_data
+from utils.views import (
+    group_rowspan,
+    totalize_grouped_data,
+)
 
 from cd.queries.endereco import data_details_from_end
 from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
@@ -68,13 +71,18 @@ class VisaoCd(View):
             for dados_key in dados
         ]
 
-
-        totalize_data(data, {
+        group = ['espaco']
+        totalize_grouped_data(data, {
+            'group': group,
             'sum': ['qtd_ends', 'qtd_lotes'],
             'count': [],
             'descr': {'espaco': 'Totais:'},
+            'global_sum': ['qtd_ends', 'qtd_lotes'],
+            'global_descr': {'espaco': 'Totais gerais:'},
+            'flags': ['NO_TOT_1'],
             'row_style': 'font-weight: bold;',
         })
+        group_rowspan(data, group)
 
         fields = {
             'espaco': 'Espaço',
@@ -87,6 +95,7 @@ class VisaoCd(View):
             'headers': fields.values(),
             'fields': fields.keys(),
             'data': data,
+            'group': group,
             'style': {
                 3: 'text-align: right;',
                 4: 'text-align: right;',
