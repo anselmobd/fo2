@@ -188,12 +188,11 @@ def add_endereco(cursor, endereco):
     except Exception as e:
         return repr(e)
 
-def lotes_em_local(cursor, local):
-    if local:
-        filtro = f"""--
-            WHERE ec.COD_ENDERECO = '{local}'
-              OR UPPER(lp.COD_CONTAINER)  = '{local}'
-        """
+def lotes_em_local(cursor, local=None):
+    filtro = f"""--
+        WHERE ec.COD_ENDERECO = '{local}'
+            OR UPPER(lp.COD_CONTAINER)  = '{local}'
+    """ if local else ''
     sql = f"""
         SELECT
           ec.COD_ENDERECO endereco
