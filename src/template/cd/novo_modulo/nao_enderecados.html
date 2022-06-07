@@ -21,7 +21,9 @@
     <h4>{{nao_end_len}} empenho{{nao_end_len|pluralize}} não endereçado{{nao_end_len|pluralize}}</h4>
     <h4>{{lotes_len}} lote{{lotes_len|pluralize}} diferente{{lotes_len|pluralize}}</h4>
     {% include "layout/paginator.html" with data=data url_name='cd:nao_enderecados' only %}
-    <p>{{por_pagina}} lotes por página</p>
+    {% if por_pagina != 999999 %}
+      <p>{{por_pagina}} lotes por página</p>
+    {% endif %}
     <table>
       {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe style=style only %}

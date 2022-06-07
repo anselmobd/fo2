@@ -40,6 +40,9 @@ class NaoEnderecados(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
+        if self.usa_paginador == 'n':
+            self.por_pagina = 999999
+
         data = nao_enderecados.query(
             self.cursor,
             self.sol_de,
