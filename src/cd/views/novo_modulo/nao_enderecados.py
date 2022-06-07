@@ -27,10 +27,14 @@ class NaoEnderecados(O2BaseGetPostView):
             {
                 'sol': ['Solicitação'],
                 'ped': ['Ped. destino'],
+                'sit': ['Situação'],
                 'op': ['OP'],
                 'oc': ['OC'],
-                'sit': ['Situação'],
+                'ref': ['Ref.'],
+                'tam': ['Tam.'],
+                'cor': ['Cor'],
                 'qtd_sol': ['Qtd. solicit.', 'r'],
+                'qtd_63': ['Qtd. Est. 63', 'r'],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
@@ -63,7 +67,7 @@ class NaoEnderecados(O2BaseGetPostView):
 
         for row in data.object_list:
             if not row['sol']:
-                row['sol'] = '-'
+                row['sol'] = 0
 
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({

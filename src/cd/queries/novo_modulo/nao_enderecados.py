@@ -28,16 +28,29 @@ def query(cursor, sol_de, sol_ate, situacao):
         , sl.ORDEM_CONFECCAO oc
         , sl.SITUACAO sit
         , sl.QTDE qtd_sol
+        , l_ref.PROCONF_GRUPO ref
+        , l_ref.PROCONF_SUBGRUPO tam
+        , l_ref.PROCONF_ITEM cor
+        , COALESCE(l.QTDE_DISPONIVEL_BAIXA, 0) qtd_63
         FROM PCPC_044 sl
         LEFT JOIN ENDR_014 lp
           ON lp.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
          AND MOD(lp.ORDEM_CONFECCAO, 100000) = sl.ORDEM_CONFECCAO
         LEFT JOIN ENDR_015 ec -- endereço/container 
           ON ec.COD_CONTAINER = lp.COD_CONTAINER
+        LEFT JOIN PCPC_040 l_ref
+          ON l_ref.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO 
+         AND l_ref.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
+         AND l_ref.SEQUENCIA_ESTAGIO = 1
+        LEFT JOIN PCPC_040 l
+          ON l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO 
+         AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
+         AND l.CODIGO_ESTAGIO = 63
         WHERE 1=1
           AND sl.ORDEM_CONFECCAO <> 0 
           AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
           AND ec.COD_ENDERECO IS NULL 
+          AND COALESCE(l.QTDE_DISPONIVEL_BAIXA, 1000) > 0
           {filtra_sol_de} -- filtra_sol_de
           {filtra_sol_ate} -- filtra_sol_ate
           {filtra_situacao} -- filtra_situacao
