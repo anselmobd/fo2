@@ -14,7 +14,8 @@
   <form method="post" name="myForm">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="busca" value="Busca" onclick="o2SetPage1AndSubmit()"/>
+    <input type="submit" name="busca" value="Busca" />
+    <!-- onclick="o2SetPage1AndSubmit()"/> -->
   </form>
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=4 only %}

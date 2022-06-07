@@ -1213,4 +1213,14 @@ class NaoEnderecadosForm(forms.Form):
         choices=CHOICES_PAGINADOR, initial='s')
 
     page = forms.IntegerField(
-        required=False, widget=forms.HiddenInput())
+        label='Página',
+        min_value=1,
+        required=False,
+        initial=1,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'number',
+                'size': 5,
+            }
+        )
+    )
