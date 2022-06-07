@@ -131,6 +131,8 @@ def endereco_split(endereco):
         'andar' : None,
         'coluna' : None,
     }
+    if not endereco:
+        return parts
     try:
         end_parts = re.search('^([0-9])([A-Z]?[0-9]?[A-Z])([0-9]+)$', endereco)
     except Exception:
