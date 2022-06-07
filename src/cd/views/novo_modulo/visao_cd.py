@@ -1,3 +1,4 @@
+import operator
 from collections import namedtuple
 from pprint import pprint
 
@@ -32,6 +33,8 @@ class VisaoCd(View):
         for row in lotes:
             ecd.endereco = row['endereco']
             row.update(ecd.details_dict)
+
+        lotes.sort(key=operator.itemgetter('prioridade', 'bloco', 'order_ap'))
 
         dados = {}
         for end in lotes:
