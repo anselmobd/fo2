@@ -110,12 +110,15 @@ def add_endereco(cursor, endereco):
     except Exception as e:
         return repr(e)
 
-def lotes_em_local(cursor, local=None):
+def lotes_em_local(cursor, local=None, bloco=None):
     """Lista lotes paletezados"""
     filtro = f"""--
         WHERE ec.COD_ENDERECO = '{local}'
             OR UPPER(lp.COD_CONTAINER)  = '{local}'
     """ if local else ''
+    filtro_bloco = f"""--
+        WHERE ec.COD_ENDERECO LIKE '{bloco}%'
+    """ if bloco else ''
     sql = f"""
         SELECT
           ec.COD_ENDERECO endereco
@@ -127,6 +130,7 @@ def lotes_em_local(cursor, local=None):
         LEFT JOIN ENDR_015 ec -- endereço/container
           ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
         {filtro} -- filtro
+        {filtro_bloco} -- filtro_bloco
         ORDER BY
           lp.DATA_INCLUSAO DESC
     """
