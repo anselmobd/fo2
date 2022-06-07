@@ -14,6 +14,7 @@ class EnderecoCd():
         # properties
         self.valido = None
         self.espaco = None
+        self.espaco_cod = None
         self.bloco = None
         self.andar = None
         self.coluna = None
@@ -43,30 +44,37 @@ class EnderecoCd():
                 self.prioridade = 5
                 self.order_ap = 0
                 self.espaco = 'Indefinido (len)'
+                self.espaco_cod = None
             elif parts['espaco'] == '1' and parts['bloco'] in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
                 self.prioridade = 1
                 self.order_ap = 10000 + int(parts['coluna']) * 100 + int(parts['andar'])
                 self.espaco = 'Estantes'
+                self.espaco_cod = 1
             elif parts['espaco'] == '1' and parts['bloco'] == 'L':
                 self.prioridade = 2
                 self.order_ap = int(parts['apartamento'])
                 self.espaco = 'Lateral'
+                self.espaco_cod = 1
             elif parts['espaco'] == '1' and parts['bloco'] == 'Q':
                 self.prioridade = 3
                 self.order_ap = int(parts['apartamento'])
                 self.espaco = 'Quarto andar'
+                self.espaco_cod = 1
             elif parts['espaco'] == '2' and parts['bloco'] == 'S':
                 self.prioridade = 4
                 self.order_ap = 0
                 self.espaco = 'Externo'
+                self.espaco_cod = 2
             else:
                 self.valido = False
                 self.prioridade = 6
                 self.order_ap = 0
                 self.espaco = 'Indefinido (else)'
+                self.espaco_cod = None
         else:
             self.valido = False
             self.espaco = 'Não endereçado'
+            self.espaco_cod = 0
             self.bloco = '-'
             self.andar = '-'
             self.coluna = '-'
@@ -78,6 +86,7 @@ class EnderecoCd():
         return {
             'valido': self.valido,
             'espaco': self.espaco,
+            'espaco_cod': self.espaco_cod,
             'bloco': self.bloco,
             'andar': self.andar,
             'coluna': self.coluna,
