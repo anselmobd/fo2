@@ -1013,6 +1013,16 @@ class NovoEstoqueForm(forms.Form):
         )
     )
 
+    CHOICES = [
+        ('el', "Endereço, lote"),
+        ('mod', "Modelo, referência"),
+    ]
+    order = forms.ChoiceField(
+        label='Ordenação',
+        choices=CHOICES,
+        initial='el',
+    )
+
     # CHOICES = [
     #     ('-', "Não filtra"),
     #     ('s', "Endereçado"),

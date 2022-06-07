@@ -1,3 +1,4 @@
+import operator
 from pprint import pprint
 
 from fo2.connections import db_cursor_so
@@ -58,6 +59,7 @@ class NovoEstoque(O2BaseGetPostView):
             op=self.op,
             fields_tuple=(
                 'tam',
+                'ordem_tam',
                 'cor',
                 'op',
                 'lote',
@@ -73,6 +75,13 @@ class NovoEstoque(O2BaseGetPostView):
         return lotes_em_estoque.dados()
 
     def mount_lotes_em_estoque(self):
+
+        if self.order:
+            if self.order == 'el':
+                self.lotes.sort(key=operator.itemgetter('endereco', 'lote', 'ref', 'ordem_tam', 'cor'))
+            elif self.order == 'mod':
+                self.lotes.sort(key=operator.itemgetter('modelo', 'ref', 'ordem_tam', 'cor'))
+
         totalize_data(
             self.lotes,
             {
@@ -177,6 +186,7 @@ class NovoEstoque(O2BaseGetPostView):
         self.tam = None if self.tam == '' else self.tam
         self.modelo = None if self.modelo == '' else int(self.modelo)
         self.endereco = None if self.endereco == '' else self.endereco
+        self.order = None if self.order == '-' else self.order
 
         # if self.usa_paginador == 'n':
         #     self.lotes_por_pagina = 99999
@@ -190,4 +200,4 @@ class NovoEstoque(O2BaseGetPostView):
 
         self.mount_estoque()
 
-        self.mount_estoque_test()
+        # self.mount_estoque_test()
