@@ -197,6 +197,7 @@ def add_endereco(cursor, endereco):
         return repr(e)
 
 def lotes_em_local(cursor, local=None):
+    """Lista lotes paletezados"""
     filtro = f"""--
         WHERE ec.COD_ENDERECO = '{local}'
             OR UPPER(lp.COD_CONTAINER)  = '{local}'
