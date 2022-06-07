@@ -11,10 +11,8 @@ from utils.views import (
     totalize_grouped_data,
 )
 
-from cd.queries.endereco import (
-    EnderecoCd,
-    lotes_em_local,
-)
+from cd.classes.endereco import EnderecoCd
+from cd.queries.endereco import lotes_em_local
 from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 
 
