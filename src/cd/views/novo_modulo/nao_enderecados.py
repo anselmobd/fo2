@@ -1,3 +1,4 @@
+from collections import namedtuple
 from pprint import pprint
 
 from django.urls import reverse
@@ -30,6 +31,7 @@ class NaoEnderecados(O2BaseGetView):
             ['header', '+style'],
             style = {'_': 'text-align'},
         )
+        self.Lote = namedtuple('Lote', 'op oc')
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -37,6 +39,14 @@ class NaoEnderecados(O2BaseGetView):
 
         data = nao_enderecados.query(self.cursor)
         nao_end_len = len(data)
+
+        lotes = set()
+        for row in data:
+            lotes.add(self.Lote(
+                row['op'],
+                row['oc'],
+            ))
+        lotes_len = len(lotes)
 
         data = paginator_basic(data, self.por_pagina, page)
 
@@ -50,4 +60,5 @@ class NaoEnderecados(O2BaseGetView):
             'safe': ['op', 'oc', 'ped', 'sol'],
             'por_pagina': self.por_pagina,
             'nao_end_len': nao_end_len,
+            'lotes_len': lotes_len,
         })

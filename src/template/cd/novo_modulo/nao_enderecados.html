@@ -12,6 +12,7 @@
 
 {% block content %}
   <h4>{{nao_end_len}} empenho{{nao_end_len|pluralize}} não endereçado{{nao_end_len|pluralize}}</h4>
+  <h4>{{lotes_len}} lote{{lotes_len|pluralize}} diferente{{lotes_len|pluralize}}</h4>
   {% include "layout/paginator_get.html" with data=data url_name='cd:nao_enderecados' only %}
   <p>{{por_pagina}} lotes por página</p>
   <table>
