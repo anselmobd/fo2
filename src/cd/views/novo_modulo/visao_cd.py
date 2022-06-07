@@ -14,7 +14,6 @@ from utils.views import (
 
 from cd.classes.endereco import EnderecoCd
 from cd.queries.endereco import lotes_em_local
-from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 
 
 class VisaoCd(View):
