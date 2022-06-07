@@ -5,18 +5,18 @@ from utils.functions.queries import debug_cursor_execute
 
 
 def query(cursor, sol_de, sol_ate, situacao):
-    filtra_sol_de = f"""
+    filtra_sol_de = f"""--
         AND coalesce(sl.SOLICITACAO, 0) >= {sol_de}
     """ if sol_de else ''
 
-    filtra_sol_ate = f"""
+    filtra_sol_ate = f"""--
         AND coalesce(sl.SOLICITACAO, 0) <= {sol_ate}
     """ if sol_ate else ''
 
     filtra_situacao = ""
     if situacao:
         lista_sit = ', '.join(situacao)
-        filtra_situacao = f"""
+        filtra_situacao = f"""--
             AND sl.SITUACAO in ({lista_sit})
         """
 
@@ -36,6 +36,7 @@ def query(cursor, sol_de, sol_ate, situacao):
           ON ec.COD_CONTAINER = lp.COD_CONTAINER
         WHERE 1=1
           AND sl.ORDEM_CONFECCAO <> 0 
+          AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
           AND ec.COD_ENDERECO IS NULL 
           {filtra_sol_de} -- filtra_sol_de
           {filtra_sol_ate} -- filtra_sol_ate
