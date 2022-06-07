@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block content %}
+  <p>Lotes com mais quantidade empenhada do que disponível no 63 (com: OC diferente de '0'; GRUPO_DESTINO diferente de '0' e '00000')</p>
   <h4>{{inconsist_len}} inconsistência{{inconsist_len|pluralize}} encontrada{{inconsist_len|pluralize}}</h4>
   {% include "layout/paginator_get.html" with data=data url_name='cd:confronta_qtd_solicit' only %}
   <p>{{por_pagina}} lotes por página</p>
