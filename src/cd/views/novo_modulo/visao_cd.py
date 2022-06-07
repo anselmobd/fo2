@@ -3,6 +3,7 @@ from collections import namedtuple
 from pprint import pprint
 
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from fo2.connections import db_cursor_so
@@ -21,7 +22,7 @@ class VisaoCd(View):
     def __init__(self):
         self.template_name = 'cd/novo_modulo/visao_cd.html'
         self.title_name = 'Visão do CD'
-        self.DataKey = namedtuple('DataKey', 'espaco bloco')
+        self.DataKey = namedtuple('DataKey', 'espaco espaco_cod bloco')
 
     def mount_context(self):
         context = {}
@@ -39,6 +40,7 @@ class VisaoCd(View):
         for end in lotes:
             dados_key = self.DataKey(
                 espaco=end['espaco'],
+                espaco_cod=end['espaco_cod'],
                 bloco=end['bloco'],
             )
             if dados_key not in dados:
@@ -49,15 +51,19 @@ class VisaoCd(View):
             dados[dados_key]['enderecos'].add(end['endereco'])
             dados[dados_key]['lotes'].add(end['lote'])
 
-        data = [
-            {
+        data = []
+        for dados_key in dados:
+            row = {
                 'espaco': dados_key.espaco,
                 'bloco': dados_key.bloco,
                 'qtd_ends': len(dados[dados_key]['enderecos']),
                 'qtd_lotes': len(dados[dados_key]['lotes']),
             }
-            for dados_key in dados
-        ]
+            row['qtd_ends|LINK'] = reverse(
+                'cd:novo_visao_bloco__get', args=[
+                    f"{dados_key.espaco_cod}{dados_key.bloco}"
+                ])
+            data.append(row)
 
         group = ['espaco']
         totalize_grouped_data(data, {
