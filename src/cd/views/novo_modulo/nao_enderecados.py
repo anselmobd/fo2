@@ -7,6 +7,11 @@ from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
+from utils.functions.strings import (
+    min_max_string,
+    noneifempty,
+    only_digits,
+)
 from utils.table_defs import TableDefs
 
 from cd.queries.novo_modulo import nao_enderecados
@@ -69,6 +74,20 @@ class NaoEnderecados(O2BaseGetPostView):
             if not row['sol']:
                 row['sol'] = 0
 
+        form_report_lines = []
+        
+        filtro = min_max_string(
+            self.sol_de,
+            self.sol_ate,
+            process_input=(
+                only_digits,
+                noneifempty,
+            ),
+            msg_format="Solicitação {}",
+        )
+        if filtro:
+            form_report_lines.append(filtro)
+
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
             'data': data,
@@ -76,4 +95,11 @@ class NaoEnderecados(O2BaseGetPostView):
             'por_pagina': self.por_pagina,
             'nao_end_len': nao_end_len,
             'lotes_len': lotes_len,
+            'form_report_lines': form_report_lines,
+            'form_report_excludes': [
+                'sol_de',
+                'sol_ate',
+                'usa_paginador',
+                'page',
+            ],
         })

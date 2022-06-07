@@ -18,9 +18,11 @@
     <!-- onclick="o2SetPage1AndSubmit()"/> -->
   </form>
   {% if request.POST %}
-    {% include "layout/form_inputs_report.html" with form=form h=4 only %}
-    <h4>{{nao_end_len}} empenho{{nao_end_len|pluralize}} não endereçado{{nao_end_len|pluralize}}</h4>
-    <h4>{{lotes_len}} lote{{lotes_len|pluralize}} diferente{{lotes_len|pluralize}}</h4>
+    {% include "layout/form_inputs_report.html" with form=form h=4 excludes=form_report_excludes lines=form_report_lines only %}
+    <p>Empenhos sem endereçamento no CD (com: OC diferente de '0'; GRUPO_DESTINO diferente de '0' e '00000';
+      lote com quantidade no estágio 63 ou sem estágio 63)</p>
+    <h4>{{nao_end_len}} empenho{{nao_end_len|pluralize}} não endereçado{{nao_end_len|pluralize}}, sendo
+      {{lotes_len}} lote{{lotes_len|pluralize}} diferente{{lotes_len|pluralize}}</h4>
     {% include "layout/paginator.html" with data=data url_name='cd:nao_enderecados' only %}
     {% if por_pagina != 999999 %}
       <p>{{por_pagina}} lotes por página</p>
