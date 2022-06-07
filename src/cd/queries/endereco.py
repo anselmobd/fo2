@@ -178,7 +178,7 @@ def lotes_itens_em_local(cursor, local=None, bloco=None):
         , lp.ORDEM_PRODUCAO op
         , lp.ORDEM_CONFECCAO lote
         , lp.DATA_INCLUSAO data
-        , l.QTDE_DISPONIVEL_BAIXA qtd
+        , l.QTDE_A_PRODUZIR_PACOTE qtd
         FROM ENDR_014 lp -- lote/palete - oc/container
         LEFT JOIN ENDR_015 ec -- endereço/container
           ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
