@@ -1,0 +1,22 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+    {% include "layout/paginator_stylesheet.css" %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h4>{{nao_end_len}} empenho{{nao_end_len|pluralize}} não endereçado{{nao_end_len|pluralize}}</h4>
+  {% include "layout/paginator_get.html" with data=data url_name='cd:nao_enderecados' only %}
+  <p>{{por_pagina}} lotes por página</p>
+  <table>
+    {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe style=style only %}
+  </table>
+  {% include "layout/paginator_get.html" with data=data url_name='cd:nao_enderecados' only %}
+{% endblock content %}

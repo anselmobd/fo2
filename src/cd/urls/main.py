@@ -22,6 +22,7 @@ from cd.views import (
 from cd.views.novo_modulo import (
     estoque,
     grade_estoque_totais,
+    nao_enderecados,
     solicitacao,
     solicitacoes,
     visao_bloco,
@@ -217,5 +218,9 @@ urlpatterns = [
     re_path(r'^confronta_qtd_solicit/(?P<up>.+)?/?$',
         confronta_qtd_solicit.ConfrontaQtdSolicit.as_view(),
         name='confronta_qtd_solicit'),
+
+    re_path(r'^nao_enderecados/(?P<up>.+)?/?$',
+        nao_enderecados.NaoEnderecados.as_view(),
+        name='nao_enderecados'),
 
 ]
