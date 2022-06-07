@@ -214,7 +214,7 @@ class SqlEmEstoque():
 
         filter_endereco = ""
         if self.endereco is not None:
-            filter_endereco = f"AND ec.COD_ENDERECO = '{self.endereco}'"
+            filter_endereco = f"AND ec.COD_ENDERECO LIKE '{self.endereco}%'"
 
         filter_op = ""
         if self.op is not None:
