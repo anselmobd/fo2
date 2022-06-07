@@ -6,7 +6,7 @@ from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 from cd.classes.endereco import EnderecoCd
-from cd.functions.endereco import endereco_split
+from cd.functions.endereco import calc_rota
 
 
 def query_endereco(cursor, tipo='TO'):
@@ -92,28 +92,6 @@ def data_details_from_end(data, end_field):
     data.sort(key=operator.itemgetter('prioridade', 'bloco', 'order_ap'))
 
     return data
-
-
-def calc_rota(endereco):
-    ruas = {
-        'A': 'AB',
-        'B': 'AB',
-        'C': 'CD',
-        'D': 'CD',
-        'E': 'EF',
-        'F': 'EF',
-        'G': 'GH',
-        'H': 'GH',
-    }
-    parts = endereco_split(endereco)
-    if parts['bloco'] in ruas:
-        icoluna = int(parts['coluna'])
-        irota = icoluna//2
-        rua = ruas[parts['bloco']]
-        rota = f"{parts['espaco']}{rua}{irota:02}"
-    else:
-        rota = f"{parts['espaco']}{parts['bloco']}"
-    return rota
 
 
 def add_endereco(cursor, endereco):
