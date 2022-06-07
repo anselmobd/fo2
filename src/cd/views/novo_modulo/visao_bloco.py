@@ -45,7 +45,7 @@ class VisaoBloco(View):
 
         data = [
             {
-                'endereco': dados_key,
+                'endereco': dados_key if dados_key else 'Não endereçado',
                 'qtd_lotes': len(dados[dados_key]['lotes']),
             }
             for dados_key in dados
@@ -72,7 +72,7 @@ class VisaoBloco(View):
                 2: 'text-align: right;',
                 3: 'text-align: right;',
             },
-            'bloco': self.bloco,
+            'bloco': 'Não endereçado' if self.bloco == '0-' else self.bloco,
         })
 
     def get(self, request, *args, **kwargs):
