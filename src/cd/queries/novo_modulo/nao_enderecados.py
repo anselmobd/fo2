@@ -4,10 +4,25 @@ from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
-def query(cursor):
+def query(cursor, sol_de, sol_ate, situacao):
+    filtra_sol_de = f"""
+        AND coalesce(sl.SOLICITACAO, 0) >= {sol_de}
+    """ if sol_de else ''
+
+    filtra_sol_ate = f"""
+        AND coalesce(sl.SOLICITACAO, 0) <= {sol_ate}
+    """ if sol_ate else ''
+
+    filtra_situacao = ""
+    if situacao:
+        lista_sit = ', '.join(situacao)
+        filtra_situacao = f"""
+            AND sl.SITUACAO in ({lista_sit})
+        """
+
     sql = f"""
         SELECT
-          sl.SOLICITACAO sol
+          coalesce(sl.SOLICITACAO, 0) sol
         , sl.PEDIDO_DESTINO ped
         , sl.ORDEM_PRODUCAO op
         , sl.ORDEM_CONFECCAO oc
@@ -22,6 +37,9 @@ def query(cursor):
         WHERE 1=1
           AND sl.ORDEM_CONFECCAO <> 0 
           AND ec.COD_ENDERECO IS NULL 
+          {filtra_sol_de} -- filtra_sol_de
+          {filtra_sol_ate} -- filtra_sol_ate
+          {filtra_situacao} -- filtra_situacao
         ORDER BY 
           sl.SOLICITACAO
         , sl.PEDIDO_DESTINO
