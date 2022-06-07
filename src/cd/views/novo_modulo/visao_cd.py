@@ -11,7 +11,10 @@ from utils.views import (
     totalize_grouped_data,
 )
 
-from cd.queries.endereco import data_details_from_end
+from cd.queries.endereco import (
+    EnderecoCd,
+    lotes_em_local,
+)
 from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 
 
@@ -26,29 +29,14 @@ class VisaoCd(View):
         context = {}
         self.cursor = db_cursor_so(self.request)
 
-        # enderecos = query_endereco(cursor)
-        lotes_em_estoque = LotesEmEstoque(
-            self.cursor,
-            tipo='i',
-            fields_tuple=(
-                'tam',
-                'cor',
-                'op',
-                'lote',
-                'qtd_prog',
-                'qtd_dbaixa',
-                'palete',
-                'endereco',
-                'rota',
-                'estagio',
-                'solicitacoes',
-            ),
-        )
-        lotes = lotes_em_estoque.dados()
-        lotes = data_details_from_end(lotes, 'endereco')
+        ecd = EnderecoCd()
+        lotes = lotes_em_local(self.cursor)
+        for row in lotes:
+            ecd.endereco = row['endereco']
+            row.update(ecd.details_dict)
 
         dados = {}
-        for end in lotes: 
+        for end in lotes:
             dados_key = self.DataKey(
                 espaco=end['espaco'],
                 bloco=end['bloco'],
