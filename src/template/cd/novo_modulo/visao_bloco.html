@@ -1,0 +1,21 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if data %}
+  <a href="{% url 'cd:novo_visao_cd' %}">Visão do CD&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a><br />
+  <h3>Bloco {{ bloco }}</h3>
+  <table>
+    {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
+  </table>
+{% endif %}
+{% endblock content %}
