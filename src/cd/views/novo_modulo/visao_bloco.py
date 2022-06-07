@@ -27,7 +27,7 @@ class VisaoBloco(View):
             ecd.endereco = row['endereco']
             row.update(ecd.details_dict)
 
-        lotes.sort(key=operator.itemgetter('prioridade', 'bloco', 'order_ap'))
+        lotes.sort(key=operator.itemgetter('endereco'))
 
         dados = {}
         for end in lotes:
