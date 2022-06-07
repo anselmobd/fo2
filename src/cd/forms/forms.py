@@ -1160,3 +1160,49 @@ class ConfrontaQtdLoteForm(forms.Form):
                 invent_lote.usuario.username,
             ))
         self.fields['usuario'].choices = CHOICES_USUARIO
+
+
+class NaoEnderecadosForm(forms.Form):
+    sol_de = forms.CharField(
+        label='Solicitação: De',
+        required=False,
+        min_length=1,
+        max_length=5,
+        widget=forms.TextInput(
+            attrs={
+                'autofocus': 'autofocus',
+                'size': 5,
+                'type': 'number',
+            }
+        )
+    )
+
+    sol_ate = forms.CharField(
+        label='Até',
+        required=False,
+        min_length=1,
+        max_length=5,
+        widget=forms.TextInput(
+            attrs={
+                'autofocus': 'autofocus',
+                'size': 5,
+                'type': 'number',
+            }
+        )
+    )
+
+    situacao = forms.CharField(
+        label='Situações',
+        min_length=1,
+        max_length=5,
+        required=False,
+        initial='1234',
+        widget=forms.TextInput(
+            attrs={
+                'size': 5,
+            }
+        )
+    )
+
+    page = forms.IntegerField(
+        required=False, widget=forms.HiddenInput())

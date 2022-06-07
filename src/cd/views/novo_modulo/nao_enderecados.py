@@ -6,15 +6,19 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
-from base.views import O2BaseGetView
+from base.views import O2BaseGetPostView
 from utils.table_defs import TableDefs
 
 from cd.queries.novo_modulo import nao_enderecados
+from cd.forms import NaoEnderecadosForm
 
-class NaoEnderecados(O2BaseGetView):
+class NaoEnderecados(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(NaoEnderecados, self).__init__(*args, **kwargs)
+        self.Form_class = NaoEnderecadosForm
+        self.form_class_has_initial = True
+        self.cleaned_data2self = True
         self.template_name = 'cd/novo_modulo/nao_enderecados.html'
         self.title_name = 'Empenhos não endereçados'
         self.por_pagina = 50
@@ -35,9 +39,13 @@ class NaoEnderecados(O2BaseGetView):
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
-        page = self.request.GET.get('page', 1)
 
-        data = nao_enderecados.query(self.cursor)
+        data = nao_enderecados.query(
+            self.cursor,
+            self.sol_de,
+            self.sol_ate,
+            self.situacao,
+        )
         nao_end_len = len(data)
 
         lotes = set()
@@ -48,7 +56,7 @@ class NaoEnderecados(O2BaseGetView):
             ))
         lotes_len = len(lotes)
 
-        data = paginator_basic(data, self.por_pagina, page)
+        data = paginator_basic(data, self.por_pagina, self.page)
 
         for row in data.object_list:
             if not row['sol']:
