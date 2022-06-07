@@ -1,5 +1,4 @@
 import operator
-from collections import namedtuple
 from pprint import pprint
 
 from django.shortcuts import render
@@ -7,14 +6,10 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.views import (
-    group_rowspan,
-    totalize_data,
-    totalize_grouped_data,
-)
+from utils.views import totalize_data
 
 from cd.classes.endereco import EnderecoCd
-from cd.queries.endereco import lotes_em_local
+from cd.queries.endereco import lotes_itens_em_local
 
 
 class VisaoBloco(View):
@@ -27,7 +22,7 @@ class VisaoBloco(View):
         self.cursor = db_cursor_so(self.request)
 
         ecd = EnderecoCd()
-        lotes = lotes_em_local(self.cursor, bloco=self.bloco)
+        lotes = lotes_itens_em_local(self.cursor, bloco=self.bloco)
         for row in lotes:
             ecd.endereco = row['endereco']
             row.update(ecd.details_dict)
@@ -40,19 +35,22 @@ class VisaoBloco(View):
                 dados[end['endereco']] = {
                     'enderecos': set(),
                     'lotes': set(),
+                    'qtd_itens': 0,
                 }
             dados[end['endereco']]['lotes'].add(end['lote'])
+            dados[end['endereco']]['qtd_itens'] += end['qtd']
 
         data = [
             {
                 'endereco': dados_key if dados_key else 'Não endereçado',
                 'qtd_lotes': len(dados[dados_key]['lotes']),
+                'qtd_itens': dados[dados_key]['qtd_itens'],
             }
             for dados_key in dados
         ]
 
         totalize_data(data, {
-            'sum': ['qtd_lotes'],
+            'sum': ['qtd_lotes', 'qtd_itens'],
             'count': [],
             'descr': {'endereco': 'Totais:'},
             'flags': ['NO_TOT_1'],
@@ -62,6 +60,7 @@ class VisaoBloco(View):
         fields = {
             'endereco': 'Endereço',
             'qtd_lotes': 'Qtd. lotes',
+            'qtd_itens': 'Qtd. itens',
         }
 
         self.context.update({
