@@ -115,8 +115,9 @@ def lotes_em_local(cursor, local=None, bloco=None):
     """Lista lotes paletezados"""
 
     filtro = f"""--
-        WHERE ec.COD_ENDERECO = '{local}'
+        AND ( ec.COD_ENDERECO = '{local}'
             OR UPPER(lp.COD_CONTAINER)  = '{local}'
+            )
     """ if local else ''
 
     filtro_bloco = ""
