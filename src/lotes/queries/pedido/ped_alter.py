@@ -64,11 +64,16 @@ def inclui_pedido_item(cursor, pedido, nat_cod, nat_uf, seq, row):
     cursor.execute(sql)
 
 
-def pedidos_filial_na_data(cursor, data):
+def pedidos_filial_na_data(cursor, data=None):
+    filtra_data = f"""--
+        AND p.DATA_EMIS_VENDA = DATE '{data}'
+        AND p.DATA_ENTR_VENDA = DATE '{data}'
+    """ if data else ''
     sql = f"""
         SELECT
           p.PEDIDO_VENDA ped
         , p.OBSERVACAO obs
+        , p.DATA_EMIS_VENDA data
         , f.NUM_NOTA_FISCAL nf
         FROM PEDI_100 p
         LEFT JOIN FATU_050 f
@@ -76,20 +81,20 @@ def pedidos_filial_na_data(cursor, data):
         WHERE 1=1
           AND p.CODIGO_EMPRESA = 3
           AND p.COD_CANCELAMENTO = 0
-          AND p.DATA_EMIS_VENDA = DATE '{data}'
-          AND p.DATA_ENTR_VENDA = DATE '{data}'
+          {filtra_data} -- filtra_data
     """
     debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
 
     peds = {}
     for row in dados:
-        obs = row.pop('obs')
+        # obs = row.pop('obs')
+        obs = row['obs']
         if not obs:
             continue
         if not re.search('^\[MPCFM\] ', obs):
             continue
-        if not re.search(f"Data: {data}", obs):
+        if data and not re.search(f"Data: {data}", obs):
             continue
         if re.search("Producao para estoque:", obs):
             cliente = 'estoque'
