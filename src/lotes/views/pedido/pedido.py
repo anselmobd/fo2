@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 
 from django.shortcuts import render
@@ -13,6 +14,7 @@ from utils.functions import coalesce
 
 import lotes.models as models
 import lotes.queries as queries
+from lotes.queries.pedido.ped_alter import pedidos_filial_na_data
 
 
 class Pedido(View):
@@ -49,6 +51,7 @@ class Pedido(View):
             return
 
         empresa = data[0]['CODIGO_EMPRESA']
+        fantasia = data[0]['FANTASIA']
 
         for row in data:
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
@@ -115,6 +118,14 @@ class Pedido(View):
 
         # OPs
         o_data = queries.pedido.ped_op(cursor, pedido)
+
+        tem_15 = sum([
+            row['TEM_15']
+            for row in o_data    
+        ]) > 0
+        if tem_15:
+            dados_filial = pedidos_filial_na_data(cursor, fantasia=fantasia)
+
         for row in o_data:
             row['ORDEM_PRODUCAO|LINK'] = '/lotes/op/{}'.format(
                 row['ORDEM_PRODUCAO'])
@@ -134,18 +145,33 @@ class Pedido(View):
                 row['SITUACAO'] = 'Cancelada'
             else:
                 row['SITUACAO'] = 'Ativa'
+
+            row['NF_FILIAL'] = '-'
             if row['TEM_15'] == 1:
                 row['TEM_15'] = 'S'
+                for nf in dados_filial[fantasia.lower()]:
+                    op_match = re.findall('OP\(([^\)]+)\)', nf['obs'])
+                    if not op_match:
+                        continue
+                    ops = set().union(*[
+                        op_str.split(', ')
+                        for op_str in op_match
+                    ])
+                    if f"{row['ORDEM_PRODUCAO']}" in ops:
+                        row['NF_FILIAL'] = nf['nf']
+                        break
             else:
                 row['TEM_15'] = 'N'
 
         self.context.update({
             'o_headers': ('Stuação', 'OP', 'Tipo',
                             'Referência', 'OP principal', 'Quantidade',
-                            'Data Digitação', 'Data Corte', 'Tem Corte(15)?'),
+                            'Data Digitação', 'Data Corte',
+                            'Tem est. 15?', 'NF filial'),
             'o_fields': ('SITUACAO', 'ORDEM_PRODUCAO', 'TIPO',
                             'REFERENCIA_PECA', 'ORDEM_PRINCIPAL', 'QTD',
-                            'DT_DIGITACAO', 'DT_CORTE', 'TEM_15'),
+                            'DT_DIGITACAO', 'DT_CORTE',
+                            'TEM_15', 'NF_FILIAL'),
             'o_data': o_data,
         })
 
