@@ -66,9 +66,9 @@ class Pedido(View):
 
         self.context.update({
             'headers': ('Empresa', 'Data de emissão', 'Data de embarque',
-                        'Cliente', 'Código do pedido no cliente'),
+                        'Cliente', 'Fantasia', 'Código do pedido no cliente'),
             'fields': ('EMPRESA', 'DT_EMISSAO', 'DT_EMBARQUE',
-                        'CLIENTE', 'PEDIDO_CLIENTE'),
+                        'CLIENTE', 'FANTASIA', 'PEDIDO_CLIENTE'),
             'data': data,
         })
 
