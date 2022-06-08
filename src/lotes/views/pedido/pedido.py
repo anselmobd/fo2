@@ -134,14 +134,18 @@ class Pedido(View):
                 row['SITUACAO'] = 'Cancelada'
             else:
                 row['SITUACAO'] = 'Ativa'
+            if row['TEM_15'] == 1:
+                row['TEM_15'] = 'S'
+            else:
+                row['TEM_15'] = 'N'
 
         self.context.update({
             'o_headers': ('Stuação', 'OP', 'Tipo',
                             'Referência', 'OP principal', 'Quantidade',
-                            'Data Digitação', 'Data Corte'),
+                            'Data Digitação', 'Data Corte', 'Tem Corte(15)?'),
             'o_fields': ('SITUACAO', 'ORDEM_PRODUCAO', 'TIPO',
                             'REFERENCIA_PECA', 'ORDEM_PRINCIPAL', 'QTD',
-                            'DT_DIGITACAO', 'DT_CORTE'),
+                            'DT_DIGITACAO', 'DT_CORTE', 'TEM_15'),
             'o_data': o_data,
         })
 
