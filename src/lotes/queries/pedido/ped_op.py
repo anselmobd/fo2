@@ -31,6 +31,17 @@ def ped_op(cursor, pedido):
         , o.DATA_PROGRAMACAO DT_DIGITACAO
         , o.DATA_ENTRADA_CORTE DT_CORTE
         , o.SITUACAO
+        , CASE
+            WHEN EXISTS (
+              SELECT
+                l.ORDEM_PRODUCAO
+              FROM pcpc_040 l
+              WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+                AND l.CODIGO_ESTAGIO = 15
+            )
+            THEN 1
+            ELSE 0
+          END TEM_15
         FROM PCPC_020 o -- OP
         WHERE o.PEDIDO_VENDA = %s
         ORDER BY
