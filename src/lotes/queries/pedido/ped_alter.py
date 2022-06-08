@@ -64,7 +64,7 @@ def inclui_pedido_item(cursor, pedido, nat_cod, nat_uf, seq, row):
     cursor.execute(sql)
 
 
-def pedidos_filial_na_data(cursor, data=None):
+def pedidos_filial_na_data(cursor, data=None, fantasia=None):
     filtra_data = f"""--
         AND p.DATA_EMIS_VENDA = DATE '{data}'
         AND p.DATA_ENTR_VENDA = DATE '{data}'
@@ -103,6 +103,8 @@ def pedidos_filial_na_data(cursor, data=None):
             if not cliente_match:
                 continue
             cliente = cliente_match.group(1).lower()
+        if fantasia and cliente.upper() != fantasia.upper():
+            continue
         if cliente not in peds:
             peds[cliente] = []
         peds[cliente].append(row)
