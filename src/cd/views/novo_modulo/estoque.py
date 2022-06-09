@@ -139,7 +139,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'l_ref.cor': self.cor,
                 'l_ref.tam': self.tam,
             },
-            select=(
+            fields=(
                 'lp.palete',
                 'op.ref',
                 'l_ref.cor',

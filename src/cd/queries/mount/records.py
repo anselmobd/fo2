@@ -11,12 +11,12 @@ class Records():
     def __init__(
         self,
         cursor,
-        select=None,
+        fields=None,
         filter=None,
         table=None,
     ):
         self.cursor = cursor
-        self.select = select
+        self.fields = fields
         self.filter = filter
         self.table = table
 
@@ -33,8 +33,8 @@ class Records():
                         self.filter[key]
                     )
 
-        if self.select:
-            for field in self.select:
+        if self.fields:
+            for field in self.fields:
                 self.query.add_select_field(field)
 
         return self.query.sql()
