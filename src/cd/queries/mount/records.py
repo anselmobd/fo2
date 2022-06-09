@@ -4,6 +4,7 @@ from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 from cd.queries.mount import query
+from cd.queries.mount import select
 
 
 class Records():
@@ -21,6 +22,7 @@ class Records():
         self.table = table
 
         self.query = query.Query()
+        self.select = select.Select()
 
     def sql(self):
         self.query.add_alias(self.table)
