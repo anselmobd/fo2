@@ -25,7 +25,8 @@ class Records():
         self.select = select.Select()
 
     def sql(self):
-        self.query.add_alias(self.table)
+        if self.table:
+            self.query.add_alias(self.table)
 
         if self.fields:
             for field in self.fields:
