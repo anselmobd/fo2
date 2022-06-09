@@ -33,11 +33,11 @@ class NovoEstoque(O2BaseGetPostView):
                 'tam': ['Tam.'],
                 'op': ['OP'],
                 'qtd_prog qtd_lote': ['Tamanho lote', 'r'],
-                'qtd_dbaixa': ['Qtd. 63', 'r'],
+                'qtd_dbaixa': ['Qtd. Est.', 'r'],
                 'estagio': ['Estágio', 'c'],
-                'solicitacoes': ['Solicitações'],
+                'solicitacoes': ['Solicitações', 'c'],
                 'sol': ['Solicitação'],
-                'qtd_sol': ['Qtd.Solic.'],
+                'qtd_sol': ['Qtd.Solic.', 'r'],
                 'sit': ['Situação'],
                 'ped_dest': ['Ped.Destino'],
                 'ref_dest': ['Ref.Destino'],
@@ -70,6 +70,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'rota',
                 'estagio',
                 'solicitacoes',
+                'qtd_sol',
             ),
         )
         return lotes_em_estoque.dados()
@@ -85,7 +86,7 @@ class NovoEstoque(O2BaseGetPostView):
         totalize_data(
             self.lotes,
             {
-                'sum': ['qtd_dbaixa'],
+                'sum': ['qtd_dbaixa', 'qtd_sol'],
                 'descr': {'lote': 'Total geral:'}
             }
         )
@@ -98,7 +99,8 @@ class NovoEstoque(O2BaseGetPostView):
         self.context.update(self.table_defs.hfs_dict(
             'palete', 'endereco', 'rota',
             'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
-            'qtd_prog', 'qtd_dbaixa', 'estagio', 'solicitacoes'
+            'qtd_prog', 'qtd_dbaixa', 'estagio',
+            'solicitacoes', 'qtd_sol',
         ))
         self.context.update({
             'safe': [
