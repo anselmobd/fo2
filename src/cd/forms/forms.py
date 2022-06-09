@@ -922,15 +922,15 @@ class NovoEstoqueForm(forms.Form):
         'placeholder': '0...',
     }
 
-    lote = forms.CharField(
-        min_length=9,
-        max_length=9,
+    endereco = forms.CharField(
+        label='Endereço',
+        min_length=1,
+        max_length=6,
         required=False,
         widget=forms.TextInput(
             attrs={
-                'size': 9,
-                'type': 'number',
-                **autofocus_attrs
+                'size': 6,
+                **string_upper_attrs,
             }
         )
     )
@@ -948,15 +948,27 @@ class NovoEstoqueForm(forms.Form):
         )
     )
 
-    endereco = forms.CharField(
-        label='Endereço',
-        min_length=1,
-        max_length=6,
+    lote = forms.CharField(
+        min_length=9,
+        max_length=9,
         required=False,
         widget=forms.TextInput(
             attrs={
-                'size': 6,
-                **string_upper_attrs,
+                'size': 9,
+                'type': 'number',
+                **autofocus_attrs
+            }
+        )
+    )
+
+    modelo = forms.CharField(
+        required=False,
+        min_length=1,
+        max_length=5,
+        widget=forms.TextInput(
+            attrs={
+                'size': 5,
+                'type': 'number',
             }
         )
     )
@@ -997,18 +1009,6 @@ class NovoEstoqueForm(forms.Form):
             attrs={
                 'size': 3,
                 **string_upper_attrs,
-            }
-        )
-    )
-
-    modelo = forms.CharField(
-        required=False,
-        min_length=1,
-        max_length=5,
-        widget=forms.TextInput(
-            attrs={
-                'size': 5,
-                'type': 'number',
             }
         )
     )
