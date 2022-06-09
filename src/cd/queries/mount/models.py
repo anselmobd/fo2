@@ -32,6 +32,9 @@ table = {
         'make': {
             'sol': (coalesce, '#'),
         },
+        'condition': {
+            'oc': ['<>', 0],
+        },
         'joined_to': {
             'lp': {
                 'op': 'op',
