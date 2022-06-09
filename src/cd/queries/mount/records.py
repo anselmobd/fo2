@@ -31,6 +31,9 @@ class Records():
         if self.fields:
             for field in self.fields:
                 self.query.add_select_field(field)
+                self.select.fields.add(field)
+
+        print(self.select)
 
         if self.filters:
             for key in self.filters:
