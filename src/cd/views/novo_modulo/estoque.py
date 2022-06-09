@@ -154,7 +154,9 @@ class NovoEstoque(O2BaseGetPostView):
                 'sl.ref_dest',
             )
         )
-        return records.data()[:100]
+        dados = records.data()[:100]
+        dados.sort(key=operator.itemgetter('lote', 'ref', 'tam', 'cor'))
+        return dados
 
     def mount_records_data(self):
         totalize_data(
