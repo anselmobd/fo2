@@ -10,7 +10,11 @@ from fo2.connections import db_cursor_so
 from lotes.models.inventario import Inventario
 
 from utils.functions.digits import fo2_digit_valid
-from utils.functions.strings import only_digits, is_only_digits
+from utils.functions.strings import (
+    is_only_digits,
+    only_alnum,
+    only_digits,
+)
 
 from systextil.models import Colecao
 
@@ -1076,7 +1080,9 @@ class NovoEstoqueForm(forms.Form):
         return cleaned
 
     def clean_endereco(self):
-        cleaned = self.cleaned_data['endereco'].upper()
+        cleaned = only_alnum(
+            self.cleaned_data.get('endereco', '')
+        ).upper()
         data = self.data.copy()
         data['endereco'] = cleaned
         self.data = data
