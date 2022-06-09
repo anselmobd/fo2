@@ -164,7 +164,19 @@ class SqlEmEstoque():
                   ),
                 '-'
                 )
-            """
+            """,
+            'qtd_sol': """--
+                COALESCE(
+                  ( SELECT
+                      SUM(sl.QTDE) qtd_sol
+                    FROM pcpc_044 sl -- solicitação / lote 
+                    WHERE 1=1
+                      AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                      AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                  ),
+                0
+                )
+            """,
         }
 
     def condicao_valor(self, ref):
