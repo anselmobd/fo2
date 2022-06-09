@@ -22,6 +22,7 @@ class Query():
         self.JoinRules = namedtuple('JoinRules', 'from_alias rules')
         self.JoinAlias = namedtuple('JoinAlias', 'table alias conditions')
         self.Condition = namedtuple('Condition', 'left test right')
+        self.TestValue = namedtuple('TestValue', 'test value')
         self.TemplateFields = namedtuple('TemplateFields', 'template fields')
         self.Template = namedtuple('Template', 'template')
 
@@ -172,15 +173,29 @@ class Query():
         self.add_alias(table_alias)
         self.filter_append(table_alias, field_alias, value)
 
-    def filter_append(self, table_alias, field_alias, value):
+    def make_test_value(self, test_value):
+        if isinstance(test_value, list):
+            test=test_value[0]
+            value=test_value[1]
+        else:
+            test='='
+            value=test_value
+        test_value_tuple = self.TestValue(
+            test=test,
+            value=value,
+        )
+        return test_value_tuple
+
+    def filter_append(self, table_alias, field_alias, test_value):
         table_field = models.table[table_alias]['field'][field_alias]
+        test_value_tuple = self.make_test_value(test_value)
         self.filters.append(self.Condition(
             left=self.AliasField(
                 alias=table_alias,
                 field=table_field,
             ),
-            test="=",
-            right=value,
+            test=test_value_tuple.test,
+            right=test_value_tuple.value,
         ))
 
     def mount_alias_field(self, alias_field):
