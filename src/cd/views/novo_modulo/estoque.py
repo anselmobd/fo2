@@ -131,7 +131,7 @@ class NovoEstoque(O2BaseGetPostView):
     def get_records_data(self):
         records = Records(
             self.cursor,
-            filter={
+            filters={
                 'lp.lote': self.lote,
                 'lp.op': self.op,
                 'op.ref': self.referencia,

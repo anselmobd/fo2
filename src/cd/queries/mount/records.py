@@ -13,12 +13,12 @@ class Records():
         self,
         cursor,
         fields=None,
-        filter=None,
+        filters=None,
         table=None,
     ):
         self.cursor = cursor
         self.fields = fields
-        self.filter = filter
+        self.filters = filters
         self.table = table
 
         self.query = query.Query()
@@ -32,12 +32,12 @@ class Records():
             for field in self.fields:
                 self.query.add_select_field(field)
 
-        if self.filter:
-            for key in self.filter:
-                if self.filter[key] is not None:
+        if self.filters:
+            for key in self.filters:
+                if self.filters[key] is not None:
                     self.query.add_filter(
                         key,
-                        self.filter[key]
+                        self.filters[key]
                     )
 
         return self.query.sql()
