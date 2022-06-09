@@ -27,6 +27,10 @@ class Records():
     def sql(self):
         self.query.add_alias(self.table)
 
+        if self.fields:
+            for field in self.fields:
+                self.query.add_select_field(field)
+
         if self.filter:
             for key in self.filter:
                 if self.filter[key] is not None:
@@ -34,10 +38,6 @@ class Records():
                         key,
                         self.filter[key]
                     )
-
-        if self.fields:
-            for field in self.fields:
-                self.query.add_select_field(field)
 
         return self.query.sql()
 
