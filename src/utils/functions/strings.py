@@ -44,6 +44,10 @@ def only_digits(text):
     return ''.join(filter(str.isdigit, text))
 
 
+def only_alnum(text):
+    return ''.join(filter(str.isalnum, text))
+
+
 def noneif(value, test):
     """Return None if equal, else return value"""
     if value != test:
