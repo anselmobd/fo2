@@ -32,12 +32,13 @@ class NovoEstoque(O2BaseGetPostView):
                 'ref': ['Ref.'],
                 'tam': ['Tam.'],
                 'op': ['OP'],
-                'qtd_prog qtd_lote': ['Tamanho lote', 'r'],
-                'qtd_dbaixa': ['Qtd. Est.', 'r'],
+                'qtd_prog qtd_lote': ['Tam.Lote', 'r'],
+                'qtd_dbaixa': ['Qtd.Est.', 'r'],
                 'estagio': ['Estágio', 'c'],
                 'solicitacoes': ['Solicitações', 'c'],
                 'sol': ['Solicitação'],
                 'qtd_sol': ['Qtd.Solic.', 'r'],
+                'qtd_disp': ['Qtd.Disp.', 'r'],
                 'sit': ['Situação'],
                 'ped_dest': ['Ped.Destino'],
                 'ref_dest': ['Ref.Destino'],
@@ -73,7 +74,10 @@ class NovoEstoque(O2BaseGetPostView):
                 'qtd_sol',
             ),
         )
-        return lotes_em_estoque.dados()
+        dados = lotes_em_estoque.dados()
+        for row in dados:
+            row['qtd_disp'] = row['qtd_dbaixa'] - row['qtd_sol']
+        return dados
 
     def mount_lotes_em_estoque(self):
 
@@ -86,21 +90,30 @@ class NovoEstoque(O2BaseGetPostView):
         totalize_data(
             self.lotes,
             {
-                'sum': ['qtd_dbaixa', 'qtd_sol'],
-                'descr': {'lote': 'Total geral:'}
+                'sum': ['qtd_dbaixa', 'qtd_sol', 'qtd_disp'],
+                'descr': {'lote': 'Total geral:'},
+                'row_style':
+                    "font-weight: bold;"
+                    "background-image: linear-gradient(#DDD, white);",
+                'flags': ['NO_TOT_1'],
             }
         )
         totalizador_lotes = self.lotes[-1]
         del(self.lotes[-1])
 
         self.lotes = paginator_basic(self.lotes, self.lotes_por_pagina, self.page)
+
+        for row in self.lotes.object_list:
+            if row['qtd_disp'] < 0:
+                row['qtd_disp|STYLE'] = 'color: red;'
+
         self.lotes.object_list.append(totalizador_lotes)
 
         self.context.update(self.table_defs.hfs_dict(
             'palete', 'endereco', 'rota',
             'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
             'qtd_prog', 'qtd_dbaixa', 'estagio',
-            'solicitacoes', 'qtd_sol',
+            'solicitacoes', 'qtd_sol', 'qtd_disp',
         ))
         self.context.update({
             'safe': [
