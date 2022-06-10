@@ -21,6 +21,7 @@ from cd.views import (
 )
 from cd.views.novo_modulo import (
     estoque,
+    disponibilidade,
     grade_estoque_totais,
     nao_enderecados,
     solicitacao,
@@ -222,5 +223,8 @@ urlpatterns = [
     re_path(r'^nao_enderecados/(?P<up>.+)?/?$',
         nao_enderecados.NaoEnderecados.as_view(),
         name='nao_enderecados'),
+
+    re_path(r'^disponibilidade/$',
+        disponibilidade.Disponibilidade.as_view(), name='disponibilidade'),
 
 ]
