@@ -36,6 +36,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'estagio': ['Estágio', 'c'],
                 'solicitacoes': ['Solicitações', 'c'],
                 'sol': ['Solicitação'],
+                'qtd_emp': ['Qtd.Empen.', 'r'],
                 'qtd_sol': ['Qtd.Solic.', 'r'],
                 'qtd_disp': ['Qtd.Disp.', 'r'],
                 'sit': ['Situação'],
@@ -71,11 +72,12 @@ class NovoEstoque(O2BaseGetPostView):
                 'estagio',
                 'solicitacoes',
                 'qtd_sol',
+                'qtd_emp',
             ),
         )
         dados = lotes_em_estoque.dados()
         for row in dados:
-            row['qtd_disp'] = row['qtd_dbaixa'] - row['qtd_sol']
+            row['qtd_disp'] = row['qtd_dbaixa'] - row['qtd_emp'] - row['qtd_sol']
         return dados
 
     def mount_lotes_em_estoque(self):
@@ -89,7 +91,7 @@ class NovoEstoque(O2BaseGetPostView):
         totalize_data(
             self.lotes,
             {
-                'sum': ['qtd_dbaixa', 'qtd_sol', 'qtd_disp'],
+                'sum': ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'qtd_disp'],
                 'descr': {'lote': 'Total geral:'},
                 'row_style':
                     "font-weight: bold;"
@@ -112,7 +114,7 @@ class NovoEstoque(O2BaseGetPostView):
             'palete', 'endereco', 'rota',
             'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
             'qtd_prog', 'qtd_dbaixa', 'estagio',
-            'solicitacoes', 'qtd_sol', 'qtd_disp',
+            'solicitacoes', 'qtd_emp', 'qtd_sol', 'qtd_disp',
         ))
         self.context.update({
             'safe': [
