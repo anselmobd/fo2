@@ -8,6 +8,7 @@ from lotes.functions.varias import modelo_de_ref
 
 def query(
     cursor,
+    fields='ref',
     ref=None,
     colecao=None,
     modelo=None,
@@ -48,9 +49,25 @@ def query(
         ]
     )
 
+    fields_tuple = {
+        'ref': ('ref', ),
+    }
+    if not isinstance(fields, tuple):
+        fields = fields_tuple[fields]
+
+    field_statement = {
+        'ref': "l.PROCONF_GRUPO",
+    }
+    fields_statements = "\n".join(
+        [
+            f"{field_statement[info]} {info}"
+            for info in fields_tuple
+        ]
+    )
+
     sql = f"""
         SELECT DISTINCT
-          l.PROCONF_GRUPO ref
+          {fields_statements} -- fields_statements
         FROM ENDR_014 lp
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
