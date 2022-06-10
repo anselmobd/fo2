@@ -5,11 +5,10 @@ from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
-from utils.functions.functions import untuple_keys_concat
 from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
-import cd.forms
+from cd.forms.novo_estoque import NovoEstoqueForm
 from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 from cd.queries.mount.records import Records
 
@@ -18,7 +17,7 @@ class NovoEstoque(O2BaseGetPostView):
 
     def __init__(self):
         super(NovoEstoque, self).__init__()
-        self.Form_class = cd.forms.NovoEstoqueForm
+        self.Form_class = NovoEstoqueForm
         self.cleaned_data2self = True
         self.template_name = 'cd/novo_modulo/estoque.html'
         self.title_name = 'Estoque'
