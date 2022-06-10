@@ -117,14 +117,12 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             for row in referencias
         ]
 
-        # inventario = lotes_em_estoque(self.cursor, tipo='i', ref=filtra_ref, get='lote_qtd')
-        lot_em_stq = LotesEmEstoque(
+        inventario = refs_em_palets.query(
             self.cursor,
-            tipo='i',
+            fields='inv',
             ref=filtra_ref,
-            get='lote_qtd'
+            com_qtd_63=True,
         )
-        inventario = lot_em_stq.dados()
         p.prt('inventario')
 
         # pedido = lotes_em_estoque(self.cursor, tipo='p', ref=filtra_ref, get='lote_qtd')
