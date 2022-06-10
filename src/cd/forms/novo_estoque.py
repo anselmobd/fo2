@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django import forms
 
-from o2.forms.custom import FormWidgetAttrs
+from o2.forms.widget_attrs import FormWidgetAttrs
 from utils.functions.strings import (
     is_only_digits,
     only_alnum,

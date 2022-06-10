@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django import forms
 
-from o2.forms.custom import FormWidgetAttrs
+from o2.forms.widget_attrs import FormWidgetAttrs
 
 
 class CriaUsuarioForm(forms.Form):

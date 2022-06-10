@@ -4,7 +4,7 @@ from pprint import pprint
 from django import forms
 
 import geral.functions
-from o2.forms.custom import FormWidgetAttrs
+from o2.forms.widget_attrs import FormWidgetAttrs
 
 import estoque.models
 
