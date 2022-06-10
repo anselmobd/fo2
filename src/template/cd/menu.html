@@ -36,14 +36,18 @@
   </ul>
   <li>Análises</li>
   <ul>
-    <li><a href="{% url 'cd:grade_estoque_totais' %}">Totais de grades do estoque</a></li>
-    <li><a href="{% url 'cd:grade_estoque' %}">Grades do estoque (pesado)</a></li>
     <li><a href="{% url 'cd:novo_estoque' %}">Estoque CD</a></li>
     <li><a href="{% url 'cd:novo_visao_cd' %}">Visão do CD</a></li>
     <li><a href="{% url 'cd:disponibilidade' %}">Disponibilidade</a></li>
   </ul>
 
+  {% if request.user.is_authenticated and request.user.username == 'anselmo_sis' %}
   <br/>
+  <li>Sistema novo rascunho</li>
+  <ul>
+    <li><a href="{% url 'cd:grade_estoque_totais' %}">Totais de grades do estoque</a></li>
+    <li><a href="{% url 'cd:grade_estoque' %}">Grades do estoque (pesado)</a></li>
+  </ul>
   <li>Sistema antigo</li>
   <ul>
   <!-- <li><a href="{% url 'cd:movimentacao' %}">Movimentação</a></li> -->
@@ -84,4 +88,6 @@
   </ul> -->
   <!-- <li><a href="{% url 'cd:mapa:index' %}">Mapa</a></li> -->
   </ul>
+  {% endif %}
+
 </ul>
