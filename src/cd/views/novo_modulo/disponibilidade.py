@@ -22,6 +22,7 @@ from utils.functions.dictlist import (
 
 from cd.forms.disponibilidade import DisponibilidadeForm
 from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
+from cd.queries.novo_modulo import refs_em_palets
 
 
 class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
@@ -63,17 +64,12 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         self.referencia = None if self.referencia == '' else self.referencia
         self.modelo = None if self.modelo == '' else int(self.modelo)
 
-        # referencias = lotes_em_estoque(
-        #     self.cursor, ref=self.referencia, colecao=colecao_codigo,
-        #     modelo=self.modelo, get='ref')
-        lot_em_stq = LotesEmEstoque(
+        referencias = refs_em_palets.query(
             self.cursor,
             ref=self.referencia,
             colecao=colecao_codigo,
             modelo=self.modelo,
-            get='ref',
         )
-        referencias = lot_em_stq.dados()
         p.prt('referencias')
 
         if tabela_codigo:
