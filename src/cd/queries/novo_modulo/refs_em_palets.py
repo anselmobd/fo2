@@ -114,9 +114,9 @@ def query(
          AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
         {joins_statements} -- joins_statements
         WHERE 1=1
-          {filtra_ref} -- filtra_ref
-          {filtra_colecao} -- filtra_colecao
           {filtra_lote} -- filtra_lote
+          {filtra_colecao} -- filtra_colecao
+          {filtra_ref} -- filtra_ref
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist(cursor)
