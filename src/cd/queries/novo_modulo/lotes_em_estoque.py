@@ -161,6 +161,8 @@ class SqlEmEstoque():
                     WHERE 1=1
                       AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                       AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                      AND sl.ORDEM_CONFECCAO <> 0 
+                      AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
                   ),
                 '-'
                 )
@@ -173,6 +175,8 @@ class SqlEmEstoque():
                     WHERE 1=1
                       AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                       AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                      AND sl.ORDEM_CONFECCAO <> 0 
+                      AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
                   ),
                 0
                 )
