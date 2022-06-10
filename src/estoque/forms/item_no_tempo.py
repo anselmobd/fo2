@@ -3,32 +3,25 @@ from pprint import pprint
 from django import forms
 
 import geral.functions
+from o2.forms.custom import FormWidgetAttrs
 
 
 class ItemNoTempoForm(forms.Form):
-
-    string_upper_attrs = {
-        'type': 'string',
-        'style': 'text-transform:uppercase;',
-        }
-
-    autofocus_attrs = {
-        'autofocus': 'autofocus;',
-        }
+    a = FormWidgetAttrs()
 
     ref = forms.CharField(
         label='Referência',
         required=True, min_length=5, max_length=5,
         widget=forms.TextInput(attrs={
-            **autofocus_attrs, **string_upper_attrs}))
+            **a.autofocus, **a.string_upper}))
 
     cor = forms.CharField(
         label='Cor', required=True, max_length=6,
-        widget=forms.TextInput(attrs=string_upper_attrs))
+        widget=forms.TextInput(attrs=a.string_upper))
 
     tam = forms.CharField(
         label='Tamanho', required=True, min_length=1, max_length=3,
-        widget=forms.TextInput(attrs=string_upper_attrs))
+        widget=forms.TextInput(attrs=a.string_upper))
 
     deposito = forms.ChoiceField(
         label='Depósito', required=True,
