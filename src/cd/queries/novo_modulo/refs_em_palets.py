@@ -71,10 +71,10 @@ def query(
         'qtd': "l.QTDE_DISPONIVEL_BAIXA",
     }
 
-    fields_statements = "\n".join(
+    fields_statements = "\n, ".join(
         [
             f"{field_statement[field]} {field}"
-            for field in fields_tuple
+            for field in fields
         ]
     )
 
@@ -82,7 +82,7 @@ def query(
         'ordem_tam': "tam",
     }
 
-    for field in fields_tuple:
+    for field in fields:
         if field in field_join:
             joins.add(field_join[field])
 
