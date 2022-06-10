@@ -4,27 +4,13 @@ from pprint import pprint
 from django import forms
 
 import geral.functions
+from o2.forms.custom import FormWidgetAttrs
 
 import estoque.models
 
 
 class TransferenciaForm(forms.Form):
-    string_upper_attrs = {
-        'type': 'string',
-        'style': 'text-transform:uppercase;',
-        }
-
-    autofocus_attrs = {
-        'autofocus': 'autofocus;',
-        }
-
-    placeholder_00 = {
-        'placeholder': '0...',
-        }
-
-    placeholder_00_00 = {
-        'placeholder': '0... 0... ...',
-        }
+    a = FormWidgetAttrs()
 
     CHOICES = [
         ('1', '1 - Produtos confeccionados'),
@@ -39,22 +25,22 @@ class TransferenciaForm(forms.Form):
         label='Referência', required=True, min_length=1, max_length=5,
         widget=forms.TextInput(attrs={
             'size': 5,
-            **autofocus_attrs, **string_upper_attrs, **placeholder_00}))
+            **a.autofocus, **a.string_upper, **a.placeholder_0}))
 
     cor = forms.CharField(
         label='Cor', required=True, min_length=1, max_length=6,
         widget=forms.TextInput(attrs={
-            'size': 6, **string_upper_attrs, **placeholder_00}))
+            'size': 6, **a.string_upper, **a.placeholder_0}))
 
     cores = forms.CharField(
         label='Cores', required=True, min_length=1,
         widget=forms.TextInput(attrs={
-            **string_upper_attrs, **placeholder_00_00}))
+            **a.string_upper, **a.placeholder_0_0}))
 
     tam = forms.CharField(
         label='Tamanho', required=True, min_length=1, max_length=3,
         widget=forms.TextInput(attrs={
-            'size': 3, **string_upper_attrs}))
+            'size': 3, **a.string_upper}))
 
     qtd = forms.IntegerField(
         label='Quantidade',
@@ -71,22 +57,22 @@ class TransferenciaForm(forms.Form):
     nova_ref = forms.CharField(
         label='Nova referência', required=False, max_length=5,
         widget=forms.TextInput(attrs={
-            'size': 5, **string_upper_attrs, **placeholder_00}))
+            'size': 5, **a.string_upper, **a.placeholder_0}))
 
     nova_cor = forms.CharField(
         label='Nova cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={
-            'size': 6, **string_upper_attrs, **placeholder_00}))
+            'size': 6, **a.string_upper, **a.placeholder_0}))
 
     novas_cores = forms.CharField(
         label='Novas cores', required=True, min_length=1,
         widget=forms.TextInput(attrs={
-            **string_upper_attrs, **placeholder_00_00}))
+            **a.string_upper, **a.placeholder_0_0}))
 
     novo_tam = forms.CharField(
         label='Novo tamanho', required=False, max_length=3,
         widget=forms.TextInput(attrs={
-            'size': 3, **string_upper_attrs}))
+            'size': 3, **a.string_upper}))
 
     num_doc = forms.ChoiceField(
         label='Número de documento', required=False,
