@@ -8,6 +8,8 @@ from django.core.cache import cache
 from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
 from utils.functions import dec_months, my_make_key_cache, fo2logger
 
+from lotes.functions.varias import modelo_de_ref
+
 
 def get_modelo_dims(cursor, modelo=None, get=None):
     select_get = ''
@@ -697,6 +699,16 @@ def itens_tabela_preco(cursor, col, mes, seq):
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def modelos_tabela_preco(cursor, col, mes, seq):
+    itens = itens_tabela_preco(cursor, col, mes, seq)
+    modelos = set()
+    for item in itens:
+        modelo = modelo_de_ref(item['ref'])
+        if modelo:
+            modelos.add(modelo)
+    return modelos
 
 
 def itens_tabela_preco_cor_tam(cursor, col, mes, seq):
