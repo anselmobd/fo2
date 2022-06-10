@@ -9,6 +9,8 @@ from django.db.models.functions import Coalesce
 from fo2.connections import db_cursor_so
 from lotes.models.inventario import Inventario
 
+
+from o2.forms.custom import FormWidgetAttrs
 from utils.functions.digits import fo2_digit_valid
 from utils.functions.strings import (
     is_only_digits,
@@ -913,18 +915,7 @@ class SolicitacoesForm(forms.Form):
 
 
 class NovoEstoqueForm(forms.Form):
-    string_upper_attrs = {
-        'type': 'string',
-        'style': 'text-transform:uppercase;',
-    }
-
-    autofocus_attrs = {
-        'autofocus': 'autofocus;',
-    }
-
-    placeholder_00 = {
-        'placeholder': '0...',
-    }
+    a = FormWidgetAttrs()
 
     endereco = forms.CharField(
         label='Endereço',
@@ -934,7 +925,8 @@ class NovoEstoqueForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'size': 6,
-                **string_upper_attrs,
+                **a.string_upper,
+                **a.autofocus,
             }
         )
     )
@@ -960,7 +952,6 @@ class NovoEstoqueForm(forms.Form):
             attrs={
                 'size': 9,
                 'type': 'number',
-                **autofocus_attrs
             }
         )
     )
@@ -985,8 +976,8 @@ class NovoEstoqueForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'size': 5,
-                **string_upper_attrs,
-                **placeholder_00,
+                **a.string_upper,
+                **a.placeholder_0,
             }
         )
     )
@@ -998,8 +989,8 @@ class NovoEstoqueForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'size': 6,
-                **string_upper_attrs,
-                **placeholder_00
+                **a.string_upper,
+                **a.placeholder_0,
             }
         )
     )
@@ -1012,7 +1003,7 @@ class NovoEstoqueForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'size': 3,
-                **string_upper_attrs,
+                **a.string_upper,
             }
         )
     )
