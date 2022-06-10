@@ -68,7 +68,6 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             ref=self.referencia,
             colecao=colecao_codigo,
             modelo=self.modelo,
-            com_qtd_63=True,
         )
         p.prt('referencias')
 

@@ -11,7 +11,7 @@ def query(
     ref=None,
     colecao=None,
     modelo=None,
-    com_qtd_63=False,
+    com_qtd_63=True,
 ):
     joins = set()
 
