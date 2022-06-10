@@ -684,7 +684,9 @@ def get_tabela_preco(cursor, col=None, mes=None, seq=None, tipo=None, order=None
     return rows_to_dict_list_lower(cursor)
 
 
-def itens_tabela_preco(cursor, col, mes, seq):
+def itens_tabela_preco(cursor, col, mes=None, seq=None):
+    if not mes:
+        col, mes, seq = col.split('.')
     sql = f"""
         SELECT
           r.DESCR_REFERENCIA
@@ -701,7 +703,7 @@ def itens_tabela_preco(cursor, col, mes, seq):
     return rows_to_dict_list_lower(cursor)
 
 
-def modelos_tabela_preco(cursor, col, mes, seq):
+def modelos_tabela_preco(cursor, col, mes=None, seq=None):
     itens = itens_tabela_preco(cursor, col, mes, seq)
     modelos = set()
     for item in itens:
