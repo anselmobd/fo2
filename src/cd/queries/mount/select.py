@@ -33,25 +33,16 @@ class Base():
 
 class Field(Base):
 
-    def __init__(self, field):
-        partes = re.split(r"([\. ])", field.strip())
-        if len(partes) > 5:
-            raise ValueError("Field mal definido")
+    def __init__(self, value_alias):
+        value_alias = value_alias.strip()
 
-        try:
-            pos_dot = partes.index('.')
-            table_alias = partes[pos_dot-1]
-            partes = partes[pos_dot+1:]
-        except ValueError:
-            table_alias = None
+        partes = re.split(r"[ ]", value_alias)
+        value = partes[0]
+        local_alias = None if len(partes) == 1 else partes[-1]
 
-        try:
-            pos_dot = partes.index(' ')
-            local_alias = partes[-1]
-        except ValueError:
-            local_alias = None
-
-        field_alias = partes[0]
+        partes = re.split(r"[\.]", value)
+        table_alias = None if len(partes) == 1 else partes[0]
+        field_alias = partes[-1]
 
         self.field = ValueAlias(
             AliasField(
