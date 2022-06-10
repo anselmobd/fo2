@@ -40,34 +40,68 @@ def query(
         AND l.SEQUENCIA_ESTAGIO = 1
     """
 
-    join_statement = {
-        'r': """--
-            JOIN BASI_030 r
-              ON r.NIVEL_ESTRUTURA = 1
-             AND r.REFERENCIA = l.PROCONF_GRUPO 
-        """
-    }
-
-    joins_statements = "\n".join(
-        [
-            join_statement[join]
-            for join in joins
-        ]
-    )
-
     fields_tuple = {
         'ref': ('ref', ),
+        'inv': (
+            'ref',
+            'ordem_tam',
+            'tam',
+            'op',
+            'qtd_prog',
+            'qtd_dbaixa',
+            'oc',
+            'per',
+            'cor',
+            'qtd',
+        ),
     }
     if not isinstance(fields, (tuple, list)):
         fields = fields_tuple[fields]
 
     field_statement = {
         'ref': "l.PROCONF_GRUPO",
+        'ordem_tam': "COALESCE(tam.ORDEM_TAMANHO, 0)",
+        'tam': "l.PROCONF_SUBGRUPO",
+        'op': "l.ORDEM_PRODUCAO",
+        'qtd_prog': "l.QTDE_PECAS_PROG",
+        'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
+        'oc': "l.ORDEM_CONFECCAO",
+        'per': "l.PERIODO_PRODUCAO",
+        'cor': "l.PROCONF_ITEM",
+        'qtd': "l.QTDE_DISPONIVEL_BAIXA",
     }
+
     fields_statements = "\n".join(
         [
-            f"{field_statement[info]} {info}"
-            for info in fields_tuple
+            f"{field_statement[field]} {field}"
+            for field in fields_tuple
+        ]
+    )
+
+    field_join = {
+        'ordem_tam': "tam",
+    }
+
+    for field in fields_tuple:
+        if field in field_join:
+            joins.add(field_join[field])
+
+    join_statement = {
+        'r': """--
+            JOIN BASI_030 r -- referencia
+              ON r.NIVEL_ESTRUTURA = 1
+             AND r.REFERENCIA = l.PROCONF_GRUPO 
+        """,
+        'tam': """--
+            LEFT JOIN BASI_220 tam -- cadastro de tamanhos
+              ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO 
+        """,
+    }
+
+    joins_statements = "\n".join(
+        [
+            join_statement[join]
+            for join in joins
         ]
     )
 
