@@ -84,10 +84,9 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             if filtra_modelo(row)
         ])))
 
-        qtd_referencias = len([
-            row
+        qtd_referencias = sum([
+            row['modelo'] in modelos
             for row in referencias
-            if row['modelo'] in modelos
         ])
 
         self.context.update({
