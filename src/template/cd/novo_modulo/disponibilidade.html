@@ -29,7 +29,7 @@
     {% endif %}
     {% include "layout/paginator.html" with data=dados url_name='cd:disponibilidade' only %}
     <p>Modelos: {% for dado in dados %}{% if forloop.counter != 1 %}, {% endif %}{{ dado.value|safe }}{% endfor %}</p>
-    <p>Inventário = Endereçado e quantidade no 63-CD.<br/>
+    <p>Inventário = Lotes em palete com quantidade no 63-CD.<br/>
       Pedidos = Inventário, porém apenas OPs de pedido.<br/>
       Solicitações = Endereçado, com 63-CD no roteiro e situação 2(Confirmado), 3(Programado) ou 4(Solicitado).<br/>
       Disponível = Inventário - (junção de Pedidos e Solicitações)</p>
