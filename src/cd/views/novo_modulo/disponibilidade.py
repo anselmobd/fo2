@@ -102,11 +102,14 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         dados_modelos, modelos = list_paginator_basic(
             modelos, modelos_por_pagina, self.page)
 
-        referencias = sorted([
-            row
-            for row in referencias
-            if row['modelo'] in modelos
-        ], key=itemgetter('modelo', 'ref'))
+        referencias = sorted(
+            [
+                row
+                for row in referencias
+                if row['modelo'] in modelos
+            ],
+            key=itemgetter('modelo', 'ref')
+        )
         p.prt('paginator')
 
         filtra_ref = [
