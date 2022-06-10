@@ -705,7 +705,7 @@ def modelos_tabela_preco(cursor, col, mes, seq):
     itens = itens_tabela_preco(cursor, col, mes, seq)
     modelos = set()
     for item in itens:
-        modelo = modelo_de_ref(item['ref'])
+        modelo = modelo_de_ref(item['grupo_estrutura'])
         if modelo:
             modelos.add(modelo)
     return modelos
