@@ -2,21 +2,16 @@ from pprint import pprint
 
 from django import forms
 
+from o2.forms.custom import FormWidgetAttrs
+
 
 class CriaUsuarioForm(forms.Form):
-
-    number_attrs = {
-        'type': 'number;',
-        }
-
-    autofocus_attrs = {
-        'autofocus': 'autofocus;',
-        }
+    a = FormWidgetAttrs()
 
     codigo = forms.CharField(
         label='Código (matrícula)', required=True, max_length=5,
         widget=forms.TextInput(attrs={
-            **autofocus_attrs, **number_attrs}))
+            **a.autofocus, **a.number}))
 
     cpf = forms.CharField(
         label='CPF', required=False, max_length=11,
