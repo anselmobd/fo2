@@ -10,9 +10,8 @@ from base.paginator import list_paginator_basic
 from base.views import O2BaseGetPostView
 from utils.classes import Perf
 from utils.functions.dictlist.dictlist_to_grade import filter_dictlist_to_grade_qtd
-from utils.functions.strings import only_digits
 
-from comercial.queries import itens_tabela_preco
+from comercial.queries import modelos_tabela_preco
 
 
 from utils.functions.dictlist import (
@@ -69,26 +68,21 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             ref=self.referencia,
             colecao=colecao_codigo,
             modelo=self.modelo,
+            com_qtd_63=True,
         )
         p.prt('referencias')
 
         if tabela_codigo:
-            tabela_chunks = tabela_codigo.split('.')
-            itens_tabela = itens_tabela_preco(self.cursor, *tabela_chunks)
-            modelos_tabela = set([
-                int(only_digits(row['grupo_estrutura']))
-                for row in itens_tabela
-            ])
-            modelos = sorted(list(set([
-                row['modelo']
-                for row in referencias
-                if row['modelo'] in modelos_tabela
-            ])))
+            modelos_tabela = modelos_tabela_preco(self.cursor, tabela_codigo)
+            filtra_modelo = lambda row: row['modelo'] in modelos_tabela
         else:
-            modelos = sorted(list(set([
-                row['modelo']
-                for row in referencias
-            ])))
+            filtra_modelo = lambda row: True
+
+        modelos = sorted(list(set([
+            row['modelo']
+            for row in referencias
+            if filtra_modelo(row)
+        ])))
 
         qtd_referencias = len([
             row
