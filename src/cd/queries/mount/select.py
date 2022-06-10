@@ -22,7 +22,16 @@ From = namedtuple('From', 'alias')
 Join = namedtuple('Join', 'alias condition')
 
 
-class Field():
+class Base():
+
+    def structure(self):
+        pass
+
+    def __repr__(self) -> str:
+        return pformat(self.structure())
+
+
+class Field(Base):
 
     def __init__(self, field):
         partes = re.split(r"([\. ])", field.strip())
@@ -64,11 +73,8 @@ class Field():
     def structure(self):
         return self.field
 
-    def __repr__(self) -> str:
-        return pformat(self.structure())
 
-
-class Fields():
+class Fields(Base):
 
     def __init__(self):
         self.fields = []
@@ -81,11 +87,8 @@ class Fields():
     def structure(self):
         return self.fields
 
-    def __repr__(self) -> str:
-        return pformat(self.structure())
 
-
-class Tables():
+class Tables(Base):
 
     def __init__(self):
         self.tables = []
@@ -106,11 +109,8 @@ class Tables():
     def structure(self):
         return self.tables
 
-    def __repr__(self) -> str:
-        return pformat(self.structure())
 
-
-class Select():
+class Select(Base):
 
     def __init__(self):
         self.statement = Statement(
@@ -136,6 +136,3 @@ class Select():
 
     def structure(self):
         return self.statement
-
-    def __repr__(self) -> str:
-        return pformat(self.structure())
