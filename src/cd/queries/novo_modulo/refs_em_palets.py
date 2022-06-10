@@ -16,9 +16,15 @@ def query(
 ):
     joins = set()
 
-    filtra_ref = f"""--
-        AND l.PROCONF_GRUPO = '{ref}'
-    """ if ref else ''
+    if isinstance(ref, (tuple, list)):
+        ref_virgulas = ', '.join([f"'{r}'" for r in ref])
+        filtra_ref = f"""--
+            AND l.PROCONF_GRUPO in ({ref_virgulas})
+        """
+    else:
+        filtra_ref = f"""--
+            AND l.PROCONF_GRUPO = '{ref}'
+        """ if ref else ''
 
     filtra_colecao = ''
     if colecao:
@@ -52,7 +58,7 @@ def query(
     fields_tuple = {
         'ref': ('ref', ),
     }
-    if not isinstance(fields, tuple):
+    if not isinstance(fields, (tuple, list)):
         fields = fields_tuple[fields]
 
     field_statement = {
