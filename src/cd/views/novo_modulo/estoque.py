@@ -216,4 +216,4 @@ class NovoEstoque(O2BaseGetPostView):
 
         self.mount_estoque()
 
-        self.mount_estoque_test()
+        # self.mount_estoque_test()
