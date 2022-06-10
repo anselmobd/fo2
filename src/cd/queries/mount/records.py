@@ -28,10 +28,12 @@ class Records():
         if self.table:
             self.query.add_alias(self.table)
 
+        self.select.add_from('lp')
+        self.select.add_field('field alias')
         if self.fields:
             for field in self.fields:
                 self.query.add_select_field(field)
-                self.select.fields.add(field)
+                self.select.add_field(field)
 
         print(self.select)
 
