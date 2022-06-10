@@ -1,6 +1,15 @@
 from pprint import pprint
 
+from utils.functions.strings import only_digits
+
 
 def periodo_oc(lote):
     if len(lote) == 9:
         return lote[:4], lote[4:]
+
+
+def modelo_de_ref(ref):
+    try:
+        return int(only_digits(ref))
+    except ValueError:
+        return 0
