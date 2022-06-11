@@ -141,9 +141,6 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         )
         p.prt('solicitado')
 
-        # ped_solit = odl.merge(empenhado, solicitado, ['op', 'oc'], ['qtd'])
-        # p.prt('ped_solit')
-
         grades = []
         modelo_ant = -1
         quant_refs_modelo = 1
@@ -179,9 +176,6 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
                 gzerada = og.update_gzerada(gzerada, grade_solicitado_ref)
             p.prt(f"{referencia} grade_solicitado_ref")
 
-            # grade_ped_solit_ref = self.grade_dados(ped_solit, referencia)
-            # p.prt(f"{referencia} grade_ped_solit_ref")
-
             grade_invent_ref = og.soma_grades(gzerada, grade_invent_ref)
             p.prt(f"{referencia} soma_grades grade_invent_ref")
 
@@ -193,21 +187,13 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
                 grade_solicitado_ref = og.soma_grades(gzerada, grade_solicitado_ref)
                 p.prt(f"{referencia} soma_grades grade_solicitado_ref")
 
-            # grade_ped_solit_ref = og.soma_grades(gzerada, grade_ped_solit_ref)
-            # p.prt(f"{referencia} soma_grades grade_ped_solit_ref")
-
-            if grade_empenhado_ref['total'] == 0 and grade_solicitado_ref['total'] == 0:
-                grade_disponivel_ref = grade_invent_ref
-            else:
-                grade_disponivel_ref = copy.deepcopy(grade_invent_ref)
-                if grade_empenhado_ref['total'] != 0:
-                    grade_disponivel_ref = og.subtrai_grades(
-                        grade_disponivel_ref, grade_empenhado_ref)
-                if grade_solicitado_ref['total'] != 0:
-                    grade_disponivel_ref = og.subtrai_grades(
-                        grade_disponivel_ref, grade_solicitado_ref)
-                # grade_disponivel_ref = og.subtrai_grades(
-                #     grade_disponivel_ref, grade_ped_solit_ref)
+            grade_disponivel_ref = copy.deepcopy(grade_invent_ref)
+            if grade_empenhado_ref['total'] != 0:
+                grade_disponivel_ref = og.subtrai_grades(
+                    grade_disponivel_ref, grade_empenhado_ref)
+            if grade_solicitado_ref['total'] != 0:
+                grade_disponivel_ref = og.subtrai_grades(
+                    grade_disponivel_ref, grade_solicitado_ref)
             p.prt(f"{referencia} grade_disponivel_ref")
 
             if total_modelo:
