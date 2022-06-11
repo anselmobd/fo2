@@ -172,7 +172,7 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             grade_empenhado_ref = self.grade_dados(empenhado, referencia)
             if grade_empenhado_ref['total'] != 0:
                 gzerada = og.update_gzerada(gzerada, grade_empenhado_ref)
-            p.prt(f"{referencia} grade_pedido_ref")
+            p.prt(f"{referencia} grade_empenhado_ref")
 
             grade_solicitado_ref = self.grade_dados(solicitado, referencia)
             if grade_solicitado_ref['total'] != 0:
@@ -187,7 +187,7 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
 
             if grade_empenhado_ref['total'] != 0:
                 grade_empenhado_ref = og.soma_grades(gzerada, grade_empenhado_ref)
-                p.prt(f"{referencia} soma_grades grade_pedido_ref")
+                p.prt(f"{referencia} soma_grades grade_empenhado_ref")
 
             if grade_solicitado_ref['total'] != 0:
                 grade_solicitado_ref = og.soma_grades(gzerada, grade_solicitado_ref)
@@ -228,7 +228,7 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             if self.apresenta == 'g':
                 grade_ref.update({
                     'inventario': grade_invent_ref,
-                    'pedido': grade_empenhado_ref,
+                    'empenhado': grade_empenhado_ref,
                     'solicitacoes': grade_solicitado_ref,
                 })
 
