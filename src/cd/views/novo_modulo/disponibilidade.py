@@ -133,14 +133,12 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         )
         p.prt('empenhado')
 
-        # solicitado = lotes_em_estoque(self.cursor, tipo='s', ref=filtra_ref, get='lote_qtd')
-        lot_em_stq = LotesEmEstoque(
+        solicitado = refs_em_palets.query(
             self.cursor,
-            tipo='s',
+            fields='sol',
             ref=filtra_ref,
-            get='lote_qtd'
+            com_qtd_63=True,
         )
-        solicitado = lot_em_stq.dados()
         p.prt('solicitado')
 
         # ped_solit = odl.merge(empenhado, solicitado, ['op', 'oc'], ['qtd'])
@@ -172,7 +170,6 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             p.prt(f"{referencia} grade_invent_ref")
 
             grade_empenhado_ref = self.grade_dados(empenhado, referencia)
-            pprint(grade_empenhado_ref)
             if grade_empenhado_ref['total'] != 0:
                 gzerada = og.update_gzerada(gzerada, grade_empenhado_ref)
             p.prt(f"{referencia} grade_pedido_ref")
