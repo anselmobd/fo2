@@ -178,7 +178,7 @@ class SqlEmEstoque():
                       AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
                       AND sl.ORDEM_CONFECCAO <> 0 
                       AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
-                      AND sl.SITUACAO = 4
+                      AND sl.SITUACAO IN (1, 2, 3, 4)
                       AND sl.SOLICITACAO IS NOT NULL
                   ),
                 0
@@ -194,7 +194,7 @@ class SqlEmEstoque():
                       AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
                       AND sl.ORDEM_CONFECCAO <> 0 
                       AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
-                      AND sl.SITUACAO IN (1, 2, 3)
+                      AND sl.SITUACAO IN (1, 2, 3, 4)
                       AND sl.SOLICITACAO IS NULL
                   ),
                 0
