@@ -62,6 +62,16 @@ def query(
             'per',
             'cor',
         ),
+        'sol': (
+            'ref',
+            'ordem_tam',
+            'tam',
+            'op',
+            'qtd_sol qtd',
+            'oc',
+            'per',
+            'cor',
+        ),
     }
     if not isinstance(fields, (tuple, list)):
         fields = fields_tuple[fields]
@@ -89,6 +99,22 @@ def query(
                     AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
                     AND sl.SITUACAO IN (1, 2, 3)
                     AND sl.SOLICITACAO IS NULL
+                ),
+                0
+            )
+        """,
+        'qtd_sol': """--
+            COALESCE(
+                ( SELECT
+                    SUM(sl.QTDE) qtd_sol
+                  FROM pcpc_044 sl -- solicitação / lote 
+                  WHERE 1=1
+                    AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                    AND sl.ORDEM_CONFECCAO <> 0 
+                    AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
+                    AND sl.SITUACAO = 4
+                    AND sl.SOLICITACAO IS NOT NULL
                 ),
                 0
             )
