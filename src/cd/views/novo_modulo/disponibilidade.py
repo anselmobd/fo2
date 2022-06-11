@@ -82,14 +82,14 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             for row in referencias
             if filtra_modelo(row)
         ])))
-
+        qtd_modelos = len(modelos)
         qtd_referencias = sum([
             row['modelo'] in modelos
             for row in referencias
         ])
 
         self.context.update({
-            'qtd_modelos': len(modelos),
+            'qtd_modelos': qtd_modelos,
             'qtd_referencias': qtd_referencias,
         })
 
@@ -145,10 +145,8 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         modelo_ant = -1
         quant_refs_modelo = 1
         total_modelo = None
-        quant_refs_geral = 0
         total_geral = None
         for row_ref in referencias:
-            quant_refs_geral += 1
             referencia = row_ref['ref']
             modelo = row_ref['modelo']
 
@@ -236,7 +234,7 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
                 'total_modelo': modelo_ant,
             })
 
-        if quant_refs_geral > 1:
+        if qtd_modelos > 1:
             grades.append({
                 'disponivel': og.grade_filtra_linhas_zeradas(total_geral, total_field='total'),
                 'total_modelo': 'geral',
