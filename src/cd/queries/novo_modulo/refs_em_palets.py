@@ -72,6 +72,18 @@ def query(
             'per',
             'cor',
         ),
+        'all': (
+            'ref',
+            'ordem_tam',
+            'tam',
+            'op',
+            'oc',
+            'per',
+            'cor',
+            'qtd',
+            'qtd_emp',
+            'qtd_sol',
+        ),
     }
     if not isinstance(fields, (tuple, list)):
         fields = fields_tuple[fields]

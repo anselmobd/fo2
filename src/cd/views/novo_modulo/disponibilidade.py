@@ -119,26 +119,32 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
 
         inventario = refs_em_palets.query(
             self.cursor,
-            fields='inv',
+            fields='all',
             ref=filtra_ref,
             com_qtd_63=True,
         )
         p.prt('inventario')
 
-        empenhado = refs_em_palets.query(
-            self.cursor,
-            fields='emp',
-            ref=filtra_ref,
-            com_qtd_63=True,
-        )
+        # empenhado = refs_em_palets.query(
+        #     self.cursor,
+        #     fields='emp',
+        #     ref=filtra_ref,
+        #     com_qtd_63=True,
+        # )
+        empenhado = copy.deepcopy(inventario)
+        for row in empenhado:
+            row['qtd'] = row['qtd_emp']
         p.prt('empenhado')
 
-        solicitado = refs_em_palets.query(
-            self.cursor,
-            fields='sol',
-            ref=filtra_ref,
-            com_qtd_63=True,
-        )
+        # solicitado = refs_em_palets.query(
+        #     self.cursor,
+        #     fields='sol',
+        #     ref=filtra_ref,
+        #     com_qtd_63=True,
+        # )
+        solicitado = copy.deepcopy(inventario)
+        for row in solicitado:
+            row['qtd'] = row['qtd_sol']
         p.prt('solicitado')
 
         grades = []
