@@ -10,6 +10,7 @@ from lotes.views import (
 from lotes.views.ops import (
     seq_erro,
 )
+from lotes.views.analise import produzir_grade_empenho
 
 
 app_name = 'producao'
@@ -47,6 +48,10 @@ urlpatterns = [
 
     re_path(r'^analise/grade_produzir_modelo/$',
         views.analise.GradeProduzirSoModelo.as_view(), name='analise_grade_produzir_modelo'),
+
+    re_path(r'^analise/produzir_grade_empenho/$',
+        produzir_grade_empenho.ProduzirGradeEmpenho.as_view(),
+        name='analise_produzir_grade_empenho'),
 
     re_path(r'^analise/periodo_alter/$',
         views.analise.PeriodoAlter.as_view(), name='analise_periodo_alter'),
