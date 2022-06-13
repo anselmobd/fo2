@@ -24,8 +24,11 @@ class VisaoBloco(View):
         ecd = EnderecoCd()
         lotes = lotes_itens_em_local(self.cursor, bloco=self.bloco)
         for row in lotes:
-            ecd.endereco = row['endereco']
-            row.update(ecd.details_dict)
+            if row['endereco']:
+                ecd.endereco = row['endereco']
+                row.update(ecd.details_dict)
+            else:
+                row['endereco'] = row['palete']
 
         lotes.sort(key=operator.itemgetter('endereco'))
 
@@ -62,6 +65,8 @@ class VisaoBloco(View):
             'qtd_lotes': 'Qtd. lotes',
             'qtd_itens': 'Qtd. itens',
         }
+        if self.bloco == '0-':
+            fields['endereco'] = 'Palete'
 
         self.context.update({
             'headers': fields.values(),
