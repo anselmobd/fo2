@@ -104,8 +104,9 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
-        ('qq', "Qualquer estágio"),
-        ('63', "Estágio 63"),
+        ('iq', "Qualquer estágio"),
+        ('i', "Estágio 63"),
+        ('in', "Estágio não 63"),
     ]
     estagio = forms.ChoiceField(
         label='Estágio',

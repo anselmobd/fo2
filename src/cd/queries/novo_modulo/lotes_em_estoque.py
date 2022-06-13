@@ -80,6 +80,7 @@ class SqlEmEstoque():
         p = lotes que aparece no inventário (opção acima) e são de OPs de Pedidos
         s = solicitado (situação 2, 3 ou 4) de OP com estágio 63
         iq = inventário: todos os lotes endereçados e com quantidade em qq estágio
+        in = inventário: todos os lotes endereçados e com quantidade não no estágio 63
         None = todos os lotes
     ref: filtro de referências, caso não None
         iterable = uma lista de cond_expr
@@ -316,6 +317,8 @@ class SqlEmEstoque():
             """
             if 'q' in self.tipo:
                 filtra_estagio = ''
+            elif 'n' in self.tipo:
+                filtra_estagio = "AND l.CODIGO_ESTAGIO <> 63"
         else:
             field_qtd = ""
             tipo_join = ""
