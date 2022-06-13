@@ -153,6 +153,16 @@ class SqlEmEstoque():
             'rota': "COALESCE(e.ROTA, '-')",
             'endereco': "COALESCE(ec.COD_ENDERECO, '-')",
             'estagio': "COALESCE(l.CODIGO_ESTAGIO, 999)",
+            'est_sol': """
+                ( SELECT 
+                    max(ls.CODIGO_ESTAGIO)
+                  FROM pcpc_040 ls
+                  WHERE 1=1
+                    AND ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                    AND ls.ORDEM_CONFECCAO = ls.ORDEM_CONFECCAO
+                    AND ls.QTDE_DISPONIVEL_BAIXA > 0
+                )
+            """,
             'solicitacoes': """--
                 COALESCE(
                   ( SELECT
