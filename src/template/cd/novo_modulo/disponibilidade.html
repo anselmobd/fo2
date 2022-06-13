@@ -41,8 +41,8 @@
       {% endif %}
       {% if grade.total_modelo %}
         {% if grade.total_modelo == 'geral' %}
-        <hr>
-        <h4 style="padding-left: 8em;"><b>Total geral</b></h4>
+          <hr>
+          <h4 style="padding-left: 8em;"><b>Total geral das grades acima</b></h4>
         {% else %}
           <h4 style="padding-left: 6em;">Total do modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.total_modelo %}">{{ grade.total_modelo|safe }}</a></b></h4>
         {% endif %}
