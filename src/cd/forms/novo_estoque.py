@@ -104,6 +104,16 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
+        ('qq', "Qualquer estágio"),
+        ('63', "Estágio 63"),
+    ]
+    estagio = forms.ChoiceField(
+        label='Estágio',
+        choices=CHOICES,
+        initial='qq',
+    )
+
+    CHOICES = [
         ('el', "Endereço, lote"),
         ('mod', "Modelo, referência"),
     ]

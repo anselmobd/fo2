@@ -50,7 +50,7 @@ class NovoEstoque(O2BaseGetPostView):
     def get_lotes_em_estoque(self):
         lotes_em_estoque = LotesEmEstoque(
             self.cursor,
-            tipo='iq',
+            tipo='iq' if self.estagio == 'qq' else 'i',
             lote=self.lote,
             ref=self.referencia,
             cor=self.cor,

@@ -22,7 +22,7 @@
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=4 only %}
     {% if data %}
-      <p>Lotes em paletes, qualquer estágio [Empenhos com OC diferente de '0', GRUPO_DESTINO diferente de '0' e '00000' e
+      <p>Lotes em paletes [Empenhos com OC diferente de '0', GRUPO_DESTINO diferente de '0' e '00000' e
         Situação: 1(A confirmar), 2(Confirmado), 3(Programado) ou 4(Solicitado)]</p>
       {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque' only %}
         <table>
