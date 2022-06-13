@@ -55,6 +55,7 @@ class NovoEstoque(O2BaseGetPostView):
             ref=self.referencia,
             cor=self.cor,
             tam=self.tam,
+            colecao=self.colecao,
             modelo=self.modelo,
             endereco=self.endereco,
             op=self.op,
@@ -209,6 +210,7 @@ class NovoEstoque(O2BaseGetPostView):
         self.modelo = None if self.modelo == '' else int(self.modelo)
         self.endereco = None if self.endereco == '' else self.endereco
         self.order = None if self.order == '-' else self.order
+        self.colecao = None if self.colecao == '' else self.colecao
 
         # if self.usa_paginador == 'n':
         #     self.lotes_por_pagina = 99999
