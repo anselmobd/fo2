@@ -70,6 +70,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'endereco',
                 'rota',
                 'estagio',
+                'est_sol',
                 'solicitacoes',
                 'qtd_sol',
                 'qtd_emp',
@@ -77,6 +78,10 @@ class NovoEstoque(O2BaseGetPostView):
         )
         dados = lotes_em_estoque.dados()
         for row in dados:
+            if row['estagio'] != row['est_sol']:
+                row['solicitacoes'] = '-'
+                row['qtd_emp'] = 0
+                row['qtd_sol'] = 0
             row['qtd_disp'] = row['qtd_dbaixa'] - row['qtd_emp'] - row['qtd_sol']
         return dados
 
