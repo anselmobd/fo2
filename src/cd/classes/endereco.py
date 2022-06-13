@@ -12,14 +12,17 @@ class EnderecoCd():
         self.endereco = endereco
 
         # properties
-        self.valido = None
-        self.espaco = None
-        self.espaco_cod = None
-        self.bloco = None
-        self.andar = None
-        self.coluna = None
-        self.prioridade = None
-        self.order_ap = None
+        self.properties_padrao()
+
+    def properties_padrao(self):
+        self.valido = False
+        self.espaco = 'Não endereçado'
+        self.espaco_cod = 0
+        self.bloco = '-'
+        self.andar = '-'
+        self.coluna = '-'
+        self.prioridade = 7
+        self.order_ap = 0
 
     @property
     def endereco(self):
@@ -72,14 +75,7 @@ class EnderecoCd():
                 self.espaco = 'Indefinido (else)'
                 self.espaco_cod = None
         else:
-            self.valido = False
-            self.espaco = 'Não endereçado'
-            self.espaco_cod = 0
-            self.bloco = '-'
-            self.andar = '-'
-            self.coluna = '-'
-            self.prioridade = 7
-            self.order_ap = 0
+            self.properties_padrao()
 
     @property
     def details_dict(self):
