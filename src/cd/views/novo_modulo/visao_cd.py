@@ -56,7 +56,10 @@ class VisaoCd(View):
             row = {
                 'espaco': dados_key.espaco,
                 'bloco': dados_key.bloco,
-                'qtd_ends': len(dados[dados_key]['enderecos']),
+                'qtd_ends': (
+                    0 if dados_key.bloco == '-'
+                    else len(dados[dados_key]['enderecos'])
+                ),
                 'qtd_lotes': len(dados[dados_key]['lotes']),
             }
             row['qtd_ends|LINK'] = reverse(
@@ -95,6 +98,7 @@ class VisaoCd(View):
                 4: 'text-align: right;',
             },
         })
+
 
         return context
 
