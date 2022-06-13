@@ -28,7 +28,7 @@ def query(
 
     filtra_colecao = ''
     if colecao:
-        filter_colecao = f"""
+        filtra_colecao = f"""
             AND r.COLECAO = '{colecao}'
         """
         joins.add('r')
