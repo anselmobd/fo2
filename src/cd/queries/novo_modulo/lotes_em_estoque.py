@@ -154,13 +154,22 @@ class SqlEmEstoque():
             'endereco': "COALESCE(ec.COD_ENDERECO, '-')",
             'estagio': "COALESCE(l.CODIGO_ESTAGIO, 999)",
             'est_sol': """
-                ( SELECT 
-                    max(ls.CODIGO_ESTAGIO)
-                  FROM pcpc_040 ls
-                  WHERE 1=1
-                    AND ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                    AND ls.ORDEM_CONFECCAO = ls.ORDEM_CONFECCAO
-                    AND ls.QTDE_DISPONIVEL_BAIXA > 0
+                ( SELECT
+                    MOD(( SELECT 
+                            MAX(
+                              CASE WHEN l.CODIGO_ESTAGIO = 63 THEN 163
+                              ELSE l.CODIGO_ESTAGIO
+                              END
+                            )
+                          FROM pcpc_040 l
+                          WHERE 1=1
+                            AND l.ORDEM_PRODUCAO = 32079
+                            AND l.ORDEM_CONFECCAO = 2281
+                            AND l.QTDE_DISPONIVEL_BAIXA > 0
+                        )
+                    , 100
+                    )
+                  FROM dual
                 )
             """,
             'solicitacoes': """--
