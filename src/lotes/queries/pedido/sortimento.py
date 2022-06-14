@@ -15,6 +15,7 @@ def sortimento(cursor, **kwargs):
     cancelado = argdef('cancelado', 't')  # default todos os pedidos
     faturado = argdef('faturado', 't')  # default todos os pedidos
     faturavel = argdef('faturavel', 't')  # default todos os pedidos
+    solicitado = argdef('solicitado', 't')  # default todos os pedidos
     total = argdef('total', None)
 
     filtra_pedido = ''
@@ -80,6 +81,26 @@ def sortimento(cursor, **kwargs):
         filtro_faturavel = """--
             AND fok.NUM_NOTA_FISCAL IS NOT NULL"""
 
+    filtro_solicitado = ''
+    if solicitado == 's':  # solicitado
+        filtro_solicitado = """--
+            AND EXISTS
+                ( SELECT
+                    1
+                FROM pcpc_044 sl -- solicitação / lote 
+                WHERE sl.PEDIDO_DESTINO = ped.PEDIDO_VENDA
+                )
+        """
+    elif solicitado == 'n':  # não solicitado
+        filtro_solicitado = """--
+            AND NOT EXISTS
+                ( SELECT
+                    1
+                FROM pcpc_044 sl -- solicitação / lote 
+                WHERE sl.PEDIDO_DESTINO = ped.PEDIDO_VENDA
+                )
+        """
+
     grade_args = {}
     if total is not None:
         grade_args = {
@@ -119,6 +140,7 @@ def sortimento(cursor, **kwargs):
               {filtro_cancelado} -- filtro_cancelado
               {filtro_faturado} -- filtro_faturado
               {filtro_faturavel} -- filtro_faturavel
+              {filtro_solicitado} -- filtro_solicitado
             ORDER BY
               t.ORDEM_TAMANHO
         '''.format(
@@ -128,6 +150,7 @@ def sortimento(cursor, **kwargs):
             filtro_cancelado=filtro_cancelado,
             filtro_faturado=filtro_faturado,
             filtro_faturavel=filtro_faturavel,
+            filtro_solicitado=filtro_solicitado,
         )
     )
 
