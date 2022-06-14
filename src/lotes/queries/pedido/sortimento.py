@@ -89,6 +89,7 @@ def sortimento(cursor, **kwargs):
                     1
                 FROM pcpc_044 sl -- solicitação / lote 
                 WHERE sl.PEDIDO_DESTINO = ped.PEDIDO_VENDA
+                  AND sl.SITUACAO <> 0
                 )
         """
     elif solicitado == 'n':  # não solicitado
@@ -98,6 +99,7 @@ def sortimento(cursor, **kwargs):
                     1
                 FROM pcpc_044 sl -- solicitação / lote 
                 WHERE sl.PEDIDO_DESTINO = ped.PEDIDO_VENDA
+                  AND sl.SITUACAO <> 0
                 )
         """
 
