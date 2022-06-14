@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from django.contrib.auth.mixins import PermissionRequiredMixin
+# from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.connections import db_cursor_so
 
@@ -13,14 +13,14 @@ from cd.forms.endereco import EnderecoImprimeForm
 from cd.queries.endereco import query_endereco
 
 
-class EnderecoImprime(PermissionRequiredMixin, O2BaseGetPostView):
+class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin, 
 
     def __init__(self, *args, **kwargs):
         super(EnderecoImprime, self).__init__(*args, **kwargs)
         self.Form_class = EnderecoImprimeForm
         self.form_class_has_initial = True
         self.cleaned_data2self = True
-        self.permission_required = 'cd.can_admin_pallet'
+        # self.permission_required = 'cd.can_admin_pallet'
         self.template_name = 'cd/endereco_imprime.html'
         self.title_name = 'Imprime Endereços'
         self.cleaned_data2self = True
