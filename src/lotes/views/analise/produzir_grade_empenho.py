@@ -179,7 +179,7 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
             lotes.queries.pedido.sortimento(
                 cursor, tipo_sort='c', descr_sort=False, modelo=modelo,
-                cancelado='n', faturavel='f', total='Total',
+                cancelado='n', faturavel='f', total='Total', solicitado='n',
                 periodo=':{}'.format(periodo))
 
         gped = None
