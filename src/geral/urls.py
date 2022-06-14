@@ -1,6 +1,7 @@
 from django.urls import re_path
 
 import geral.views as views
+from geral.views import configuracao
 from geral.views import pop
 
 
@@ -28,6 +29,6 @@ urlpatterns = [
     re_path(r'^roteiros_de_fluxo/(?P<id>.+)/$',
         views.roteiros_de_fluxo, name='roteiros_de_fluxo'),
 
-    re_path(r'^configuracao/$', views.Configuracao.as_view(), name='configuracao'),
+    re_path(r'^configuracao/$', configuracao.Configuracao.as_view(), name='configuracao'),
 
 ]
