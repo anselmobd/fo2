@@ -182,7 +182,7 @@ class SqlEmEstoque():
                       AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                       AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
                       AND sl.ORDEM_CONFECCAO <> 0 
-                      AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
+                      AND sl.GRUPO_DESTINO <> '0'
                       AND sl.SITUACAO IN (1, 2, 3, 4)
                   ),
                 '-'
@@ -197,7 +197,7 @@ class SqlEmEstoque():
                       AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                       AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
                       AND sl.ORDEM_CONFECCAO <> 0 
-                      AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
+                      AND sl.GRUPO_DESTINO <> '0'
                       AND sl.SITUACAO IN (1, 2, 3, 4)
                       AND sl.SOLICITACAO IS NOT NULL
                   ),
@@ -213,7 +213,7 @@ class SqlEmEstoque():
                       AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                       AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
                       AND sl.ORDEM_CONFECCAO <> 0 
-                      AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
+                      AND sl.GRUPO_DESTINO <> '0'
                       AND sl.SITUACAO IN (1, 2, 3, 4)
                       AND sl.SOLICITACAO IS NULL
                   ),
