@@ -8,12 +8,14 @@ from fo2.connections import db_cursor_so
 from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetPostView
 from geral.functions import config_get_value
+from utils.functions.dictlist.dictlist_to_grade import dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
 from utils.views import totalize_data
 
 import comercial.models
 import produto.models
 import produto.queries
+from cd.queries.novo_modulo import refs_em_palets
 from comercial.views.estoque import grade_meta_estoque
 
 import lotes.models
@@ -123,6 +125,47 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
             }
             gzerada = og.update_gzerada(gzerada, gopa)
 
+
+        referencias = refs_em_palets.query(
+            cursor,
+            modelo=modelo,
+        )
+
+        filtra_ref = [
+            row['ref']
+            for row in referencias
+        ]
+
+        empenhado = refs_em_palets.query(
+            cursor,
+            fields='all',
+            ref=filtra_ref,
+            com_qtd_63=True,
+        )
+
+        for row in empenhado:
+            row['qtd'] = row['qtd_emp'] + row['qtd_sol']
+
+        grade_empenhado = dictlist_to_grade_qtd(
+            empenhado,
+            field_linha='cor',
+            field_coluna='tam',
+            facade_coluna='Tamanho',
+            field_ordem_coluna='ordem_tam',
+            field_quantidade='qtd',
+        )
+        total_sol = grade_empenhado['total']
+
+        gsol = None
+        if total_sol != 0:
+            gsol = {
+                'headers': grade_empenhado['headers'],
+                'fields': grade_empenhado['fields'],
+                'data': grade_empenhado['data'],
+                'style': grade_empenhado['style'],
+            }
+            gzerada = og.update_gzerada(gzerada, gsol)
+
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.context.update({
             'dias_alem_lead': dias_alem_lead,
@@ -169,6 +212,12 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
                 'gopa': gopa,
             })
 
+        if gsol is not None:
+            gsol = og.soma_grades(gzerada, gsol)
+            self.context.update({
+                'gsol': gsol,
+            })
+
         if gped is not None:
             gped = og.soma_grades(gzerada, gped)
             self.context.update({
@@ -201,15 +250,27 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
                 'gm': gm,
             })
 
-        gopp = None
+        gopp1 = None
         if total_op != 0 or total_ped != 0:
             if total_ped == 0:
-                gopp = gop
+                gopp1 = gop
             elif total_op == 0:
-                gopp = og.subtrai_grades(gzerada, gped)
+                gopp1 = og.subtrai_grades(gzerada, gped)
             else:
-                gopp = og.subtrai_grades(gop, gped)
+                gopp1 = og.subtrai_grades(gop, gped)
 
+        gopp2 = None
+        if gopp1 or total_sol != 0:
+            if total_sol == 0:
+                gopp2 = gopp1
+            elif gopp1 is None:
+                gopp2 = og.subtrai_grades(gzerada, gsol)
+            else:
+                gopp2 = og.subtrai_grades(gopp1, gsol)
+
+        gopp = None
+        if gopp2:
+            gopp = gopp2
             self.context.update({
                 'gopp': gopp,
             })

@@ -120,6 +120,26 @@
       <thead class="layout">
         <tr>
           <th colspan="99">
+            <h3>Solicitações</h3>
+          </th>
+        </tr>
+      </thead>
+      {% if gsol %}
+        {% include "layout/thead_generic.html" with data=gsol.headers style=gsol.style only %}
+        {% include "layout/tbody_generic.html" with fields=gsol.fields data=gsol.data style=gsol.style only %}
+      {% else %}
+        <thead class="layout">
+          <tr>
+            <th colspan="99">
+              <h4>Modelo sem solicitações</h4>
+            </th>
+          </tr>
+        </thead>
+      {% endif %}
+
+      <thead class="layout">
+        <tr>
+          <th colspan="99">
             <h3>Carteira de pedidos</h3>
             <p>Obs.: Pedidos com data de embarque até: Hoje + <i>lead time</i> do produto + {{ dias_alem_lead }}</p>
           </th>
@@ -142,7 +162,7 @@
         <thead class="layout">
           <tr>
             <th colspan="99">
-              <h3>OPs – Pedidos (B)</h3>
+              <h3>OPs – Solicitações – Pedidos (B)</h3>
             </th>
           </tr>
         </thead>
