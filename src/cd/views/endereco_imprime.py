@@ -43,6 +43,11 @@ class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin,
 
 
     def verifica_usuario_impresso(self):
+        if self.request.user.is_anonymous:
+            self.context.update({
+                'mensagem': f"Usuário não identificado",
+            })
+            return False
         try:
             self.usuario_impresso = lotes.models.UsuarioImpresso.objects.get(
                 usuario=self.request.user, impresso=self.obj_impresso)
