@@ -28,7 +28,7 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
         super(ProduzirGradeEmpenho, self).__init__(*args, **kwargs)
         self.Form_class = ModeloForm2
         self.template_name = 'lotes/analise/produzir_grade_empenho.html'
-        self.title_name = 'A produzir, por grade, considerando empenho'
+        self.title_name = 'A produzir, por grade, empenho e carteira'
         self.get_args = ['modelo']
 
     def mount_context(self):
