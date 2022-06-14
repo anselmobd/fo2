@@ -130,18 +130,21 @@ def config_set_value(param_codigo, value, usuario=None):
     try:
         param = models.Parametro.objects.get(codigo=param_codigo)
     except models.Parametro.DoesNotExist:
+        print('models.Parametro.DoesNotExist')
         return False
 
     config = None
     try:
         config = models.Config.objects.get(parametro=param, usuario=usuario)
     except models.Config.DoesNotExist as e:
+        print('models.Config.DoesNotExist')
         pass
 
     if config is None:
         try:
             config = models.Config.objects.get(parametro=param, usuario=None)
         except models.Config.DoesNotExist as e:
+            print('models.Config.DoesNotExist 2')
             pass
 
     if config is None:
