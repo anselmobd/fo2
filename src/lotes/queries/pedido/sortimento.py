@@ -20,7 +20,7 @@ def sortimento(cursor, **kwargs):
 
     filtra_pedido = ''
     if pedido is not None:
-        filtra_pedido = 'AND i.PEDIDO_VENDA = {}'.format(pedido)
+        filtra_pedido = f"AND i.PEDIDO_VENDA = {pedido}"
 
     if tipo_sort == 'rc':
         sort_expression = "i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM"
@@ -35,43 +35,43 @@ def sortimento(cursor, **kwargs):
 
     filtro_modelo = ''
     if modelo is not None:
-        filtro_modelo = '''--
+        filtro_modelo = f"""--
             AND TRIM(LEADING '0' FROM
                      (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
                                      '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-                                     ))) = '{}' '''.format(modelo)
+                                     ))) = '{modelo}' """
 
     filtra_periodo = ''
     if periodo is not None:
         periodo_list = periodo.split(':')
         if periodo_list[0] != '':
-            filtra_periodo += '''
-                AND ped.DATA_ENTR_VENDA > CURRENT_DATE + {}
-            '''.format(periodo_list[0])
+            filtra_periodo += f"""--
+                AND ped.DATA_ENTR_VENDA > CURRENT_DATE + {periodo_list[0]}
+            """
         if periodo_list[1] != '':
-            filtra_periodo += '''
-                AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {}
-            '''.format(periodo_list[1])
+            filtra_periodo += f"""--
+                AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {periodo_list[1]}
+            """
 
     filtro_cancelado = ''
     if cancelado in ['n', 'a']:  # não cancelado ou ativo
-        filtro_cancelado = '''--
+        filtro_cancelado = """--
             AND ped.STATUS_PEDIDO <> 5 -- não cancelado
-        '''
+        """
     elif cancelado in ['c', 'i']:  # cancelado ou inativo
-        filtro_cancelado = '''--
+        filtro_cancelado = """--
             AND ped.STATUS_PEDIDO = 5 -- cancelado
-        '''
+        """
 
     filtro_faturado = ''
     if faturado == 'f':  # faturado
-        filtro_faturado = '''--
+        filtro_faturado = """--
             AND f.NUM_NOTA_FISCAL IS NOT NULL -- faturado
-        '''
+        """
     elif faturado == 'n':  # não faturado
-        filtro_faturado = '''--
+        filtro_faturado = """--
             AND f.NUM_NOTA_FISCAL IS NULL -- não faturado
-        '''
+        """
 
     filtro_faturavel = ''
     if faturavel == 'f':  # faturavel
@@ -114,63 +114,10 @@ def sortimento(cursor, **kwargs):
     grade = GradeQtd(cursor)
 
     # tamanhos
-    grade.col(
-        id='TAMANHO',
-        name='Tamanho',
-        **grade_args,
-        sql='''
-            SELECT DISTINCT
-              i.CD_IT_PE_SUBGRUPO TAMANHO
-            , t.ORDEM_TAMANHO
-            FROM PEDI_110 i -- item de pedido de venda
-            JOIN PEDI_100 ped -- pedido de venda
-              ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
-            LEFT JOIN FATU_050 f -- fatura
-              ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
-             AND f.SITUACAO_NFISC <> 2  -- cancelada
-             AND f.NUMERO_CAIXA_ECF = 0
-            LEFT JOIN FATU_050 fok -- fatura
-              ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
-             AND fok.SITUACAO_NFISC <> 2  -- cancelada
-             AND fok.NUMERO_CAIXA_ECF = 0
-            LEFT JOIN BASI_220 t -- tamanhos
-              ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
-            WHERE 1=1
-              {filtra_pedido} -- filtra_pedido
-              {filtro_modelo} -- filtro_modelo
-              {filtra_periodo} -- filtra_periodo
-              {filtro_cancelado} -- filtro_cancelado
-              {filtro_faturado} -- filtro_faturado
-              {filtro_faturavel} -- filtro_faturavel
-              {filtro_solicitado} -- filtro_solicitado
-            ORDER BY
-              t.ORDEM_TAMANHO
-        '''.format(
-            filtra_pedido=filtra_pedido,
-            filtro_modelo=filtro_modelo,
-            filtra_periodo=filtra_periodo,
-            filtro_cancelado=filtro_cancelado,
-            filtro_faturado=filtro_faturado,
-            filtro_faturavel=filtro_faturavel,
-            filtro_solicitado=filtro_solicitado,
-        )
-    )
-
-    # cores
-    sql = '''
-        SELECT
-          {sort_expression} SORTIMENTO
-    '''
-    if descr_sort:
-        sql += '''
-            , {sort_expression} || ' - ' ||
-              max( rtc.DESCRICAO_15 ) DESCR
-        '''
-    else:
-        sql += '''
-            , {sort_expression} DESCR
-        '''
-    sql += '''
+    sql=f"""
+        SELECT DISTINCT
+          i.CD_IT_PE_SUBGRUPO TAMANHO
+        , t.ORDEM_TAMANHO
         FROM PEDI_110 i -- item de pedido de venda
         JOIN PEDI_100 ped -- pedido de venda
           ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
@@ -182,16 +129,8 @@ def sortimento(cursor, **kwargs):
           ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND fok.SITUACAO_NFISC <> 2  -- cancelada
          AND fok.NUMERO_CAIXA_ECF = 0
-    '''
-    if descr_sort:
-        sql += '''
-            JOIN BASI_010 rtc -- item (ref+tam+cor)
-              on rtc.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
-             AND rtc.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
-             AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
-             AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
-        '''
-    sql += '''
+        LEFT JOIN BASI_220 t -- tamanhos
+          ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
         WHERE 1=1
           {filtra_pedido} -- filtra_pedido
           {filtro_modelo} -- filtro_modelo
@@ -199,21 +138,66 @@ def sortimento(cursor, **kwargs):
           {filtro_cancelado} -- filtro_cancelado
           {filtro_faturado} -- filtro_faturado
           {filtro_faturavel} -- filtro_faturavel
+          {filtro_solicitado} -- filtro_solicitado
+        ORDER BY
+          t.ORDEM_TAMANHO
+    """
+    grade.col(
+        id='TAMANHO',
+        name='Tamanho',
+        **grade_args,
+        sql=sql,
+    )
+
+    # cores
+    sql = f"""
+        SELECT
+          {sort_expression} SORTIMENTO
+    """
+    if descr_sort:
+        sql += f"""--
+            , {sort_expression} || ' - ' ||
+              max( rtc.DESCRICAO_15 ) DESCR
+        """
+    else:
+        sql += f"""--
+            , {sort_expression} DESCR
+        """
+    sql += """--
+        FROM PEDI_110 i -- item de pedido de venda
+        JOIN PEDI_100 ped -- pedido de venda
+          ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
+        LEFT JOIN FATU_050 f -- fatura
+          ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+         AND f.SITUACAO_NFISC <> 2  -- cancelada
+         AND f.NUMERO_CAIXA_ECF = 0
+        LEFT JOIN FATU_050 fok -- fatura
+          ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
+         AND fok.SITUACAO_NFISC <> 2  -- cancelada
+         AND fok.NUMERO_CAIXA_ECF = 0
+    """
+    if descr_sort:
+        sql += """--
+            JOIN BASI_010 rtc -- item (ref+tam+cor)
+              on rtc.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
+             AND rtc.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
+             AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
+             AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
+        """
+    sql += f"""--
+        WHERE 1=1
+          {filtra_pedido} -- filtra_pedido
+          {filtro_modelo} -- filtro_modelo
+          {filtra_periodo} -- filtra_periodo
+          {filtro_cancelado} -- filtro_cancelado
+          {filtro_faturado} -- filtro_faturado
+          {filtro_faturavel} -- filtro_faturavel
+          {filtro_solicitado} -- filtro_solicitado
         GROUP BY
           {sort_group} -- sort_group
         ORDER BY
           2
-        '''
-    sql = sql.format(
-        filtra_pedido=filtra_pedido,
-        filtro_modelo=filtro_modelo,
-        filtra_periodo=filtra_periodo,
-        filtro_cancelado=filtro_cancelado,
-        filtro_faturado=filtro_faturado,
-        filtro_faturavel=filtro_faturavel,
-        sort_expression=sort_expression,
-        sort_group=sort_group,
-    )
+        """
     grade.row(
         id='SORTIMENTO',
         facade='DESCR',
@@ -224,44 +208,37 @@ def sortimento(cursor, **kwargs):
     )
 
     # sortimento
+    sql=f"""
+        SELECT
+          {sort_expression} SORTIMENTO
+        , i.CD_IT_PE_SUBGRUPO TAMANHO
+        , sum(i.QTDE_PEDIDA) QUANTIDADE
+        FROM PEDI_110 i -- item de pedido de venda
+        JOIN PEDI_100 ped -- pedido de venda
+          ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
+        LEFT JOIN FATU_050 f -- fatura
+          ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+         AND f.SITUACAO_NFISC <> 2  -- cancelada
+         AND f.NUMERO_CAIXA_ECF = 0
+        LEFT JOIN FATU_050 fok -- fatura
+          ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
+         AND fok.SITUACAO_NFISC <> 2  -- cancelada
+         AND fok.NUMERO_CAIXA_ECF = 0
+        WHERE 1=1
+          {filtra_pedido} -- filtra_pedido
+          {filtro_modelo} -- filtro_modelo
+          {filtra_periodo} -- filtra_periodo
+          {filtro_cancelado} -- filtro_cancelado
+          {filtro_faturado} -- filtro_faturado
+          {filtro_faturavel} -- filtro_faturavel
+          {filtro_solicitado} -- filtro_solicitado
+        GROUP BY
+          {sort_group} -- sort_group
+        , i.CD_IT_PE_SUBGRUPO
+    """
     grade.value(
         id='QUANTIDADE',
-        sql='''
-            SELECT
-              {sort_expression} SORTIMENTO
-            , i.CD_IT_PE_SUBGRUPO TAMANHO
-            , sum(i.QTDE_PEDIDA) QUANTIDADE
-            FROM PEDI_110 i -- item de pedido de venda
-            JOIN PEDI_100 ped -- pedido de venda
-              ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
-            LEFT JOIN FATU_050 f -- fatura
-              ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
-             AND f.SITUACAO_NFISC <> 2  -- cancelada
-             AND f.NUMERO_CAIXA_ECF = 0
-            LEFT JOIN FATU_050 fok -- fatura
-              ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
-             AND fok.SITUACAO_NFISC <> 2  -- cancelada
-             AND fok.NUMERO_CAIXA_ECF = 0
-            WHERE 1=1
-              {filtra_pedido} -- filtra_pedido
-              {filtro_modelo} -- filtro_modelo
-              {filtra_periodo} -- filtra_periodo
-              {filtro_cancelado} -- filtro_cancelado
-              {filtro_faturado} -- filtro_faturado
-              {filtro_faturavel} -- filtro_faturavel
-            GROUP BY
-              {sort_group} -- sort_group
-            , i.CD_IT_PE_SUBGRUPO
-        '''.format(
-            filtra_pedido=filtra_pedido,
-            filtro_modelo=filtro_modelo,
-            filtra_periodo=filtra_periodo,
-            filtro_cancelado=filtro_cancelado,
-            filtro_faturado=filtro_faturado,
-            filtro_faturavel=filtro_faturavel,
-            sort_expression=sort_expression,
-            sort_group=sort_group,
-        )
+        sql=sql,
     )
 
     fields = grade.table_data['fields']
