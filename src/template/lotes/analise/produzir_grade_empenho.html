@@ -120,7 +120,8 @@
       <thead class="layout">
         <tr>
           <th colspan="99">
-            <h3>Solicitações</h3>
+            <h3>Empenhos</h3>
+            <p>Empenhos e solicitações com situação menor que 5</p>
           </th>
         </tr>
       </thead>
@@ -131,7 +132,7 @@
         <thead class="layout">
           <tr>
             <th colspan="99">
-              <h4>Modelo sem solicitações</h4>
+              <h4>Modelo sem empenhos</h4>
             </th>
           </tr>
         </thead>
@@ -141,7 +142,9 @@
         <tr>
           <th colspan="99">
             <h3>Carteira de pedidos</h3>
-            <p>Obs.: Pedidos com data de embarque até: Hoje + <i>lead time</i> do produto + {{ dias_alem_lead }}</p>
+            <p>Pedidos:<br />
+              - com data de embarque até: Hoje + <i>lead time</i> do produto + {{ dias_alem_lead }}<br />
+              - que não constam na tabela de empenhos/solicitação (qualquer situação)</p>
           </th>
         </tr>
       </thead>
@@ -162,7 +165,7 @@
         <thead class="layout">
           <tr>
             <th colspan="99">
-              <h3>OPs – Solicitações – Pedidos (B)</h3>
+              <h3>OPs – Empenhos – Pedidos (B)</h3>
             </th>
           </tr>
         </thead>
