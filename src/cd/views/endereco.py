@@ -19,7 +19,7 @@ from cd.queries.endereco import (
     add_endereco,
     query_endereco,
 )
-from cd.views.endereco_conteudo_importa import EnderecoImporta
+# from cd.views.endereco_conteudo_importa import EnderecoImporta
 
 
 class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
@@ -67,10 +67,10 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
 
         data = paginator_basic(data, 50, self.page)
 
-        if has_permission(self.request, 'cd.can_admin_pallet'):
-            view_aux = EnderecoImporta()
-            for row in data.object_list:
-                row['end_antigo'] = view_aux.end_novo_para_antigo(row['end'])
+        # if has_permission(self.request, 'cd.can_admin_pallet'):
+        #     view_aux = EnderecoImporta()
+        #     for row in data.object_list:
+        #         row['end_antigo'] = view_aux.end_novo_para_antigo(row['end'])
 
         if self.tipo in ('TO', 'IT', 'ET'):
             headers = ['Espaço']
@@ -81,9 +81,9 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
         headers += ["Endereço", "Rota", "Palete"]
         fields += ['end', 'rota', 'palete']
 
-        if has_permission(self.request, 'cd.can_admin_pallet'):
-            headers += ["Endereço antigo"]
-            fields += ['end_antigo']
+        # if has_permission(self.request, 'cd.can_admin_pallet'):
+        #     headers += ["Endereço antigo"]
+        #     fields += ['end_antigo']
 
         self.context.update({
             'headers': headers,
