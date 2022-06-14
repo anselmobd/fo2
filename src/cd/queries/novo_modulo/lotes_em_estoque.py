@@ -157,15 +157,15 @@ class SqlEmEstoque():
                 ( SELECT
                     MOD(( SELECT 
                             MAX(
-                              CASE WHEN l.CODIGO_ESTAGIO = 63 THEN 163
-                              ELSE l.CODIGO_ESTAGIO
+                              CASE WHEN l2.CODIGO_ESTAGIO = 63 THEN 163
+                              ELSE l2.CODIGO_ESTAGIO
                               END
                             )
-                          FROM pcpc_040 l
+                          FROM pcpc_040 l2
                           WHERE 1=1
-                            AND l.ORDEM_PRODUCAO = 32079
-                            AND l.ORDEM_CONFECCAO = 2281
-                            AND l.QTDE_DISPONIVEL_BAIXA > 0
+                            AND l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                            AND l2.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                            AND l2.QTDE_DISPONIVEL_BAIXA > 0
                         )
                     , 100
                     )
