@@ -86,7 +86,8 @@ class EnderecoImprime(PermissionRequiredMixin, O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
 
         self.inicial = self.inicial.upper()
-        self.final = self.final.upper()
+        # self.final = self.final.upper()
+        self.final = self.inicial.upper()
 
         self.data = query_endereco(cursor, 'TO')
 
@@ -98,21 +99,22 @@ class EnderecoImprime(PermissionRequiredMixin, O2BaseGetPostView):
             False
         ):
             self.context.update({
-                'mensagem': 'Endereço inicial não existe',
+                # 'mensagem': 'Endereço inicial não existe',
+                'mensagem': 'Endereço não existe',
             })
             return
 
-        if not next(
-            (
-                row for row in self.data
-                if row["end"] == self.final
-            ),
-            False
-        ):
-            self.context.update({
-                'mensagem': 'Endereço final não existe',
-            })
-            return
+        # if not next(
+        #     (
+        #         row for row in self.data
+        #         if row["end"] == self.final
+        #     ),
+        #     False
+        # ):
+        #     self.context.update({
+        #         'mensagem': 'Endereço final não existe',
+        #     })
+        #     return
 
         if self.print():
             self.context.update({
