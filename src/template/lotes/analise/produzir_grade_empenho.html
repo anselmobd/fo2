@@ -94,18 +94,6 @@
         {% include "layout/tbody_generic.html" with fields=gopa.fields data=gopa.data style=gopa.style only %}
       {% endif %}
 
-      {% if goppf %}
-        <thead class="layout">
-          <tr>
-            <th colspan="99">
-              <h3>Total em OPs em produção de pedidos faturados</h3>
-            </th>
-          </tr>
-        </thead>
-        {% include "layout/thead_generic.html" with data=goppf.headers style=goppf.style only %}
-        {% include "layout/tbody_generic.html" with fields=goppf.fields data=goppf.data style=goppf.style only %}
-      {% endif %}
-
       {% if conta_grade_op != 1 %}
         <thead class="layout">
           <tr>
