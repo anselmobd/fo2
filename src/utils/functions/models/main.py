@@ -28,9 +28,17 @@ def rows_to_key_dict(cursor, keys):
     else:
         fvalue = fdict
 
-    return {fkey(values, keys): fvalue(values, no_keys)
-            for values in [dict(zip(columns, row))
-                           for row in cursor]}
+    return {
+        fkey(values, keys): fvalue(values, no_keys)
+        for values in dictlist_zip_columns(cursor, columns)
+    }
+
+
+def dictlist_zip_columns(cursor, columns):
+    return [
+        dict(zip(columns, row))
+        for row in cursor
+    ]
 
 
 def custom_dictlist(cursor, name_case=None):
@@ -38,7 +46,7 @@ def custom_dictlist(cursor, name_case=None):
         columns = [i[0] for i in cursor.description]
     else:
         columns = [name_case(i[0]) for i in cursor.description]
-    return [dict(zip(columns, row)) for row in cursor]
+    return dictlist_zip_columns(cursor, columns)
 
 
 def dictlist(cursor):
@@ -53,7 +61,8 @@ def queryset_to_dict_list_lower(qs):
     result = []
     for obj in qs:
         result.append({
-            name.lower(): obj.__dict__[name] for name in obj.__dict__
+            name.lower(): obj.__dict__[name]
+            for name in obj.__dict__
             if name[0] != '_'
         })
     return result
