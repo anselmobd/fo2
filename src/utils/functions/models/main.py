@@ -59,7 +59,7 @@ def queryset_to_dict_list_lower(qs):
     return result
 
 
-def dict_list_to_lower(data):
+def dictlist_to_lower(data):
     data_lower = []
     for row in data:
         row_lower = {}

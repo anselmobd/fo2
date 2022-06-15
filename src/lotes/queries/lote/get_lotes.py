@@ -1,8 +1,7 @@
 from pprint import pprint
 
 from utils.functions.models import (
-    dict_list_to_lower,
-    dictlist,
+    dictlist_to_lower,
     dictlist,
 )
 from utils.functions.queries import debug_cursor_execute
@@ -111,7 +110,7 @@ def get_imprime_lotes(cursor, op='', tam='', cor='', order='',
     data = get_lotes(
         cursor, op=op, tam=tam, cor=cor, order=order,
         oc_ini=oc_ini, oc_fim=oc_fim, pula=pula, qtd_lotes=qtd_lotes)
-    data = dict_list_to_lower(data)
+    data = dictlist_to_lower(data)
     return data
 
 
