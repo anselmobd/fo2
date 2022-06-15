@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def ped_op(cursor, pedido):
@@ -49,4 +49,4 @@ def ped_op(cursor, pedido):
         , o.ORDEM_PRODUCAO
     """
     cursor.execute(sql, [pedido])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

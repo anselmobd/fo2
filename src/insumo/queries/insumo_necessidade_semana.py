@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def insumo_necessidade_semana(
@@ -171,4 +171,4 @@ def insumo_necessidade_semana(
     """
 
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

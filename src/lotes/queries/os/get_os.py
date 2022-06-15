@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def os_inform(cursor, os):
@@ -102,4 +102,4 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
         filtro_join=filtro_join,
     )
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

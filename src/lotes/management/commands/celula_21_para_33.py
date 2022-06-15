@@ -7,7 +7,7 @@ from django.utils import timezone
 from fo2.connections import db_cursor_so
 
 import logistica.models as models
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -43,7 +43,7 @@ class Command(BaseCommand):
                       )
             '''
             debug_cursor_execute(cursor, sql_get)
-            lotes_ori = rows_to_dict_list(cursor)
+            lotes_ori = dictlist(cursor)
             # self.stdout.write('len(lotes_ori) = {}'.format(len(lotes_ori)))
 
             # set CODIGO_FAMILIA
@@ -66,7 +66,7 @@ class Command(BaseCommand):
                      ori['ORDEM_CONFECCAO']])
 
             debug_cursor_execute(cursor, sql_get)
-            lotes_new = rows_to_dict_list(cursor)
+            lotes_new = dictlist(cursor)
 
             date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             for ori in lotes_ori:

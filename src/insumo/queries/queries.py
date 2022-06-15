@@ -1,7 +1,7 @@
 from pprint import pprint
 from operator import itemgetter
 
-from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.functions.models import dictlist, rows_to_dict_list_lower
 
 import produto.queries
 
@@ -22,7 +22,7 @@ def item_count_nivel(cursor, ref, nivel=None):
         """
         param.append(nivel)
     cursor.execute(sql, param)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def ref_inform(cursor, nivel, ref):
@@ -97,7 +97,7 @@ def ref_inform(cursor, nivel, ref):
              )
     """
     cursor.execute(sql, [nivel, ref])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def ref_cores(cursor, nivel, ref):
@@ -125,7 +125,7 @@ def ref_parametros(cursor, nivel, ref):
           AND p.GRUPO_ESTRUTURA = %s
     """
     cursor.execute(sql, [nivel, ref])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def ref_usado_em(cursor, nivel, ref):
@@ -175,7 +175,7 @@ def ref_usado_em(cursor, nivel, ref):
     """
     sql = sql.format(nivel, ref)
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def lista_insumo(cursor, busca, conta_estoque, tipo_conta_estoque):
@@ -225,7 +225,7 @@ def lista_insumo(cursor, busca, conta_estoque, tipo_conta_estoque):
         ) rr
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def necessidade(
@@ -559,7 +559,7 @@ def necessidade(
         filtro_insumos=filtro_insumos,
         quais_insumos=quais_insumos)
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def receber(cursor, insumo, conta_estoque, recebimento):
@@ -664,7 +664,7 @@ def receber(cursor, insumo, conta_estoque, recebimento):
         filtro_conta_estoque=filtro_conta_estoque,
         filtro_recebimento=filtro_recebimento)
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def estoque(cursor, insumo, conta_estoque):
@@ -714,7 +714,7 @@ def estoque(cursor, insumo, conta_estoque):
         filtro_insumo=filtro_insumo,
         filtro_conta_estoque=filtro_conta_estoque)
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def mapa_refs(cursor, insumo, conta_estoque, necessidade):
@@ -818,7 +818,7 @@ def mapa_refs(cursor, insumo, conta_estoque, necessidade):
         filtro_conta_estoque=filtro_conta_estoque,
         filtro_necessidade=filtro_necessidade)
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def mapa_refs_simples(cursor, insumo, conta_estoque):
@@ -866,7 +866,7 @@ def mapa_refs_simples(cursor, insumo, conta_estoque):
         , sg.TAMANHO_REF
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def insumo_necessidade_detalhe(
@@ -1021,7 +1021,7 @@ def insumo_necessidade_detalhe(
         tam=tam,
         semana=semana)
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def previsao(cursor, periodo=None, dtini=None, nsem=None):
@@ -1214,7 +1214,7 @@ def previsao(cursor, periodo=None, dtini=None, nsem=None):
         filtra_DATA_INI_PERIODO=filtra_DATA_INI_PERIODO,
         )
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def insumos_de_produtos_em_dual(
@@ -1324,7 +1324,7 @@ def insumos_de_produtos_em_dual(
         ordem_choice=ordem_choice,
         )
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def rolo_ref(cursor, barcode):
@@ -1340,7 +1340,7 @@ def rolo_ref(cursor, barcode):
         WHERE x.CODIGO_ROLO = %s
     """
     cursor.execute(sql, (barcode,))
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def insumo_previsoes_semana_insumo(

@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def ped_expedicao(
@@ -219,4 +219,4 @@ def ped_expedicao(
             ON p.PEDIDO_VENDA = s.PEDIDO_VENDA
         """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

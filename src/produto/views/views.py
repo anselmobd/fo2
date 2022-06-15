@@ -12,7 +12,7 @@ from fo2.connections import db_cursor_so
 from geral.dados.colecao_fluxos import dict_colecao_fluxos
 from geral.dados.fluxo_roteiros import get_roteiros_de_fluxo
 from utils.forms import FiltroForm
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 from utils.views import group_rowspan
 
@@ -49,7 +49,7 @@ def lista_item_n1_sem_preco_medio(request):
         , ptc.ITEM_ESTRUTURA
     '''
     debug_cursor_execute(cursor, sql)
-    data = rows_to_dict_list(cursor)
+    data = dictlist(cursor)
     if len(data) == 0:
         context.update({
             'mensagem':
@@ -73,7 +73,7 @@ def estatistica(request):
         WHERE p.NIVEL_ESTRUTURA <> 0
     '''
     debug_cursor_execute(cursor, sql)
-    data = rows_to_dict_list(cursor)
+    data = dictlist(cursor)
     row = data[0]
     context = {
         'quant': row['QUANT'],
@@ -217,7 +217,7 @@ def stat_niveis(request, nivel):
               p.REFERENCIA
         '''
         debug_cursor_execute(cursor, sql, [nivel[0]])
-        data = rows_to_dict_list(cursor)
+        data = dictlist(cursor)
         context = {
             'nivel': nivel,
             'headers': ('#', 'Referência', 'Descrição', 'Tamanhos', 'Cores'),

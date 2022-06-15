@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def posicao_periodo_oc(cursor, periodo, ordem_confeccao):
@@ -15,4 +15,4 @@ def posicao_periodo_oc(cursor, periodo, ordem_confeccao):
           AND p.PERIODO_PRODUCAO = %s
     '''
     cursor.execute(sql, [ordem_confeccao, periodo])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

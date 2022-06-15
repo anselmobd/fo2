@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def query_deposito(cursor, only=None, less=None):
@@ -45,4 +45,4 @@ def query_deposito(cursor, only=None, less=None):
           d.CODIGO_DEPOSITO
     '''
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

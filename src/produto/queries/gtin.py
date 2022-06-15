@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.db.utils import DatabaseError
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -63,7 +63,7 @@ def gtin(cursor, ref=None, tam=None, cor=None, gtin=None):
     """
 
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def set_gtin(cursor, niv, ref, tam, cor, gtin):
@@ -79,7 +79,7 @@ def set_gtin(cursor, niv, ref, tam, cor, gtin):
     """
     try:
         debug_cursor_execute(cursor, sql_select)
-        data = rows_to_dict_list(cursor)
+        data = dictlist(cursor)
         if len(data) != 1:
             return -1, 'Item não único'
         if data[0]['GTIN'] == gtin:
@@ -103,7 +103,7 @@ def set_gtin(cursor, niv, ref, tam, cor, gtin):
 
     try:
         debug_cursor_execute(cursor, sql_select)
-        data = rows_to_dict_list(cursor)
+        data = dictlist(cursor)
         if data[0]['GTIN'] != gtin:
             return -4, 'GTIN não atualizado'
     except DatabaseError as error:

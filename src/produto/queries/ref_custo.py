@@ -4,7 +4,7 @@ from django.core.cache import cache
 
 from utils.cache import entkeys
 from utils.functions import my_make_key_cache, fo2logger
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -104,7 +104,7 @@ def ref_custo(cursor, nivel, ref, tam, cor, alt):
           e.SEQUENCIA
     """
     debug_cursor_execute(cursor, sql)
-    result = rows_to_dict_list(cursor)
+    result = dictlist(cursor)
 
     cache.set(key_cache, result, timeout=entkeys._MINUTE * 5)
     fo2logger.info('calculated '+key_cache)

@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def insumo_recebimento_semana(
@@ -64,4 +64,4 @@ def insumo_recebimento_semana(
         filtra_DATA_PREV_ENTR=filtra_DATA_PREV_ENTR
     )
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

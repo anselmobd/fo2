@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import sql_where_none_if
 
 
@@ -151,4 +151,4 @@ def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
         , pp.PERIODO_PRODUCAO
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def reme_indu(
@@ -250,4 +250,4 @@ def reme_indu(
         detalhe_order=detalhe_order,
         )
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

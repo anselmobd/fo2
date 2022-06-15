@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def posicoes_lote(cursor, periodo, ordem_confeccao):
@@ -104,4 +104,4 @@ def posicoes_lote(cursor, periodo, ordem_confeccao):
         )
     '''
     cursor.execute(sql, [periodo, ordem_confeccao])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def op_conserto(cursor):
@@ -29,4 +29,4 @@ def op_conserto(cursor):
         , lote.ORDEM_PRODUCAO
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

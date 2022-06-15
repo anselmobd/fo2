@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -70,7 +70,7 @@ def combinacoes_cores(cursor, ref, alt):
           END
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def dict_combinacoes_cores(cursor, ref, alt):

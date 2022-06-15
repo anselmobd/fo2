@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import coalesce, sql_where, sql_where_none_if
 
 
@@ -100,4 +100,4 @@ def quant_estagio(
         , l.PROCONF_ITEM
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

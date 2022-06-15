@@ -1,6 +1,6 @@
 from django.core.cache import cache
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 from utils.functions import fo2logger, my_make_key_cache
 from utils.functions.queries import debug_cursor_execute
@@ -657,7 +657,7 @@ def busca_op(
     '''
     debug_cursor_execute(cursor, sql)
 
-    cached_result = rows_to_dict_list(cursor)
+    cached_result = dictlist(cursor)
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
     return cached_result

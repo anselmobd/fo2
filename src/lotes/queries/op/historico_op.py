@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def historico_op(cursor, op, oc=None, dia=None, usuario=None, descr=None):
@@ -36,4 +36,4 @@ def historico_op(cursor, op, oc=None, dia=None, usuario=None, descr=None):
       , h.data_ocorr
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

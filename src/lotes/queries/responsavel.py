@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.functions.models import dictlist, rows_to_dict_list_lower
 
 
 def estagios_os(cursor):
@@ -153,7 +153,7 @@ def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
         filtro_usuario=filtro_usuario,
     )
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def responsavel_direitos(cursor, estagio, usuario_num):
@@ -165,7 +165,7 @@ def responsavel_direitos(cursor, estagio, usuario_num):
           AND r.CODIGO_USUARIO = %s
         """
     cursor.execute(sql, (estagio, usuario_num))
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def responsavel_inclui_direitos(cursor, estagio, usuario_num, tipo_movimento):

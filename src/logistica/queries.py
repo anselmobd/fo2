@@ -1,6 +1,6 @@
 from django.db import connections
 
-from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.functions.models import dictlist, rows_to_dict_list_lower
 
 
 def get_nf_pela_chave(cursor, chave):
@@ -13,7 +13,7 @@ def get_nf_pela_chave(cursor, chave):
           AND f.NUMERO_CAIXA_ECF = 0
     """
     cursor.execute(sql, [chave])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def get_chave_pela_nf(cursor, nf):
@@ -26,4 +26,4 @@ def get_chave_pela_nf(cursor, nf):
           AND f.NUMERO_CAIXA_ECF = 0
     """
     cursor.execute(sql, [nf])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

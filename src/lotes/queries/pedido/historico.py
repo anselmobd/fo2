@@ -3,7 +3,7 @@ from pprint import pprint
 from django.conf import settings
 from django.db import connection
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def historico(pedido):
@@ -22,4 +22,4 @@ def historico(pedido):
           h.sequencia desc
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

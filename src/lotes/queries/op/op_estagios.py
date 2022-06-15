@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def op_estagios(cursor, op):
@@ -56,4 +56,4 @@ def op_estagios(cursor, op):
           l.SEQ_OPERACAO
     '''
     cursor.execute(sql, [op])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def op_perda(cursor, data_de, data_ate, detalhe):
@@ -58,4 +58,4 @@ def op_perda(cursor, data_de, data_ate, detalhe):
         , lote.ORDEM_PRODUCAO
     """
     cursor.execute(sql, [data_de, data_ate])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

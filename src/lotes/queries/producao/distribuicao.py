@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def distribuicao(cursor, estagio, data_de, data_ate, familia):
@@ -40,4 +40,4 @@ def distribuicao(cursor, estagio, data_de, data_ate, familia):
         , l.PROCONF_ITEM
     '''
     cursor.execute(sql, [estagio, data_de, data_ate, familia, familia])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

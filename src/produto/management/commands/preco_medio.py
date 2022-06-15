@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 import logistica.models as models
 
@@ -32,7 +32,7 @@ class Command(BaseCommand):
                   -- AND rownum = 1
             '''
             debug_cursor_execute(cursor, sql_get)
-            zeroed_ori = rows_to_dict_list(cursor)
+            zeroed_ori = dictlist(cursor)
             # self.stdout.write('len(zeroed_ori) = {}'.format(len(zeroed_ori)))
 
             # set PRECO_MEDIO
@@ -50,7 +50,7 @@ class Command(BaseCommand):
                 debug_cursor_execute(cursor, sql_set, [ori['REF'], ori['TAM'], ori['COR']])
 
             debug_cursor_execute(cursor, sql_get)
-            zeroed_new = rows_to_dict_list(cursor)
+            zeroed_new = dictlist(cursor)
 
             date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             for ori in zeroed_ori:

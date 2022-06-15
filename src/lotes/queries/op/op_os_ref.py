@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def op_os_ref(cursor, op):
@@ -61,4 +61,4 @@ def op_os_ref(cursor, op):
         , t.ORDEM_TAMANHO
     """
     cursor.execute(sql, [op])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

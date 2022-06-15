@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def posicao_historico(cursor, periodo, ordem_confeccao):
@@ -32,4 +32,4 @@ def posicao_historico(cursor, periodo, ordem_confeccao):
         , h.SEQUENCIA
     '''
     cursor.execute(sql, [periodo, ordem_confeccao])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

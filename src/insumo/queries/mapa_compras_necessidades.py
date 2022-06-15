@@ -11,7 +11,7 @@ from utils.functions import (
     fo2logger,
     my_make_key_cache,
 )
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 import produto.queries
 
@@ -317,7 +317,7 @@ def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
 
     cursor.execute(sql)
 
-    cached_result = rows_to_dict_list(cursor)
+    cached_result = dictlist(cursor)
     cache.set(key_cache, cached_result, timeout=entkeys._MINUTE * 3)
     fo2logger.info('calculated '+key_cache)
     p.prt('calculated')
@@ -638,7 +638,7 @@ def mapa_compras_necessidades(
 
     cursor.execute(sql)
 
-    cached_result = rows_to_dict_list(cursor)
+    cached_result = dictlist(cursor)
     cache.set(key_cache, cached_result, timeout=entkeys._MINUTE)
     fo2logger.info('calculated '+key_cache)
     return cached_result

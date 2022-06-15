@@ -23,7 +23,7 @@ from geral.models import Dispositivos, RoloBipado
 from utils.cache import entkeys
 from utils.functions import (fo2logger, max_not_None, min_not_None,
                              my_make_key_cache, segunda)
-from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.functions.models import dictlist, rows_to_dict_list_lower
 from utils.views import group_rowspan, totalize_grouped_data
 
 import systextil.models

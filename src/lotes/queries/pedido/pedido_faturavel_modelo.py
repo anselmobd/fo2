@@ -3,7 +3,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 from utils.functions import (
     cache_ttl,
@@ -228,7 +228,7 @@ def pedido_faturavel_modelo(
 
     cursor.execute(sql)
 
-    data = rows_to_dict_list(cursor)
+    data = dictlist(cursor)
 
     if group == "p":
         dp_dict = {}

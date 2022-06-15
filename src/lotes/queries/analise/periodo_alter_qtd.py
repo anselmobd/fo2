@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import sql_where_none_if
 
 
@@ -123,4 +123,4 @@ def periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
         , pp.DATA_ENTRADA_CORTE
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

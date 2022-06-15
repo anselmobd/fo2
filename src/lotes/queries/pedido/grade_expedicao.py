@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def grade_expedicao(
@@ -114,4 +114,4 @@ def grade_expedicao(
         , i.CD_IT_PE_ITEM
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def infadprod_por_pedido(cursor, pedido, empresa=1):
@@ -63,4 +63,4 @@ def infadprod_por_pedido(cursor, pedido, empresa=1):
         , i.CD_IT_PE_SUBGRUPO
     '''
     cursor.execute(sql, [pedido, empresa])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

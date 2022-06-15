@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def op_movi_estagios(cursor, op):
@@ -85,4 +85,4 @@ def op_movi_estagios(cursor, op):
         , uu.USUARIO
     '''
     cursor.execute(sql, [op])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

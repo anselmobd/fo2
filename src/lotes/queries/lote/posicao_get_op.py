@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def posicao_get_op(cursor, periodo, ordem_confeccao):
@@ -22,7 +22,7 @@ def posicao_get_op(cursor, periodo, ordem_confeccao):
           AND rownum = 1
     '''
     cursor.execute(sql, [periodo, ordem_confeccao])
-    data = rows_to_dict_list(cursor)
+    data = dictlist(cursor)
     if len(data) != 0:
         situacoes = {
             1: 'ORDEM CONF. GERADA',

@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def posicao_lote(cursor, periodo, ordem_confeccao):
@@ -29,7 +29,7 @@ def posicao_lote(cursor, periodo, ordem_confeccao):
         WHERE rownum = 1
     '''
     cursor.execute(sql, [periodo, ordem_confeccao])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def posicao_estagios(cursor, periodo, ordem_confeccao):
@@ -69,7 +69,7 @@ def posicao_estagios(cursor, periodo, ordem_confeccao):
         , d.SEQUENCIA
     '''
     cursor.execute(sql, [periodo, ordem_confeccao])
-    data = rows_to_dict_list(cursor)
+    data = dictlist(cursor)
     for row in data:
         if row['DT'] is None:
             row['DT'] = ''

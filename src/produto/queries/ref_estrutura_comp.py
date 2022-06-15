@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -128,4 +128,4 @@ def ref_estrutura_comp(cursor, ref, alt):
         , 7
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def ped_dep_qtd(cursor, pedido):
@@ -15,4 +15,4 @@ def ped_dep_qtd(cursor, pedido):
           i.CODIGO_DEPOSITO
     """
     cursor.execute(sql, [pedido])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

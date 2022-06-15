@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def posicao_so_estagios(cursor, periodo, ordem_confeccao):
@@ -31,4 +31,4 @@ def posicao_so_estagios(cursor, periodo, ordem_confeccao):
           l.SEQ_OPERACAO
     '''
     cursor.execute(sql, [periodo, ordem_confeccao])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

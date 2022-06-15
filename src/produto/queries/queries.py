@@ -5,7 +5,7 @@ from django.core.cache import cache
 
 from utils.cache import entkeys
 from utils.functions import my_make_key_cache, fo2logger
-from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.functions.models import dictlist, rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -171,7 +171,7 @@ def produtos_n1_basic(cursor, param):
             p.REFERENCIA
         '''
     debug_cursor_execute(cursor, sql)
-    data = rows_to_dict_list(cursor)
+    data = dictlist(cursor)
     return data
 
 
@@ -294,7 +294,7 @@ def nivel_ref_inform(cursor, nivel, ref, upper=True):
     """
     debug_cursor_execute(cursor, sql)
     if upper:
-        return rows_to_dict_list(cursor)
+        return dictlist(cursor)
     else:
         return rows_to_dict_list_lower(cursor)
 
@@ -320,7 +320,7 @@ def ref_utilizada_em(cursor, ref):
           AND ec.GRUPO_COMP = '{ref}'
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def ref_cores(cursor, ref):
@@ -340,7 +340,7 @@ def prod_cores(cursor, nivel, grupo):
           c.ITEM_ESTRUTURA
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def ref_tamanhos(cursor, ref):
@@ -365,7 +365,7 @@ def prod_tamanhos(cursor, nivel, grupo):
           tam.ORDEM_TAMANHO
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def ref_roteiros(cursor, ref):
@@ -409,7 +409,7 @@ def ref_roteiros(cursor, ref):
         , r.ITEM_ESTRUTURA
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def ref_1roteiro(cursor, ref, alternativa, roteiro, tamanho, cor):
@@ -439,7 +439,7 @@ def ref_1roteiro(cursor, ref, alternativa, roteiro, tamanho, cor):
           r.SEQ_OPERACAO
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def ref_estruturas(cursor, ref):
@@ -516,7 +516,7 @@ def nivel_ref_estruturas(cursor, nivel, ref):
         , ia.ITEM_ITEM
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def refs_de_modelo(cursor, modelo, tipo=None):
@@ -595,7 +595,7 @@ def modelo_inform(cursor, modelo, tipo=None):
           {filtra_tipo} -- filtra_tipo
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def busca_cliente_de_produto(cursor, cliente):
@@ -702,7 +702,7 @@ def estr_estagio_de_insumo(cursor):
         , e.GRUPO_COMP
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def get_roteiros_ref(cursor, ref):
@@ -726,7 +726,7 @@ def get_roteiros_ref(cursor, ref):
         , er.SEQ_OPERACAO
     """
     debug_cursor_execute(cursor, sql, [ref])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def mount_set_gargalo(roteiro, ref, tam, cor, estagio):
@@ -903,7 +903,7 @@ def get_refs(cursor):
           r.REFERENCIA
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def info_xml(cursor, ref=None):
@@ -957,7 +957,7 @@ def info_xml(cursor, ref=None):
         filtra_ref=filtra_ref,
     )
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def por_cliente(cursor, cliente=None):
@@ -995,7 +995,7 @@ def por_cliente(cursor, cliente=None):
         filtra_cliente=filtra_cliente,
     )
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def item_narrativa(cursor, nivel, ref, tam, cor):
@@ -1039,7 +1039,7 @@ def item_narrativa(cursor, nivel, ref, tam, cor):
           {filtra_cor} -- filtra_cor
     """
     debug_cursor_execute(cursor, sql)
-    result = rows_to_dict_list(cursor)
+    result = dictlist(cursor)
 
     cache.set(key_cache, result, timeout=entkeys._MINUTE * 5)
     fo2logger.info('calculated '+key_cache)

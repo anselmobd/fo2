@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 from utils.functions import my_make_key_cache, fo2logger
 
@@ -69,7 +69,7 @@ def totais_estagio_ops_18_prog(cursor):
     """
     cursor.execute(sql)
 
-    cached_result = rows_to_dict_list(cursor)
+    cached_result = dictlist(cursor)
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
     return cached_result

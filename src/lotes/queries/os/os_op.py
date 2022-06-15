@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def os_op(cursor, os):
@@ -31,4 +31,4 @@ def os_op(cursor, os):
         , ped.COD_PED_CLIENTE
     """
     cursor.execute(sql, [os])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

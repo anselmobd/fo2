@@ -49,10 +49,6 @@ def dictlist_lower(cursor):
     return custom_dictlist_(cursor, name_case=str.lower)
 
 
-def rows_to_dict_list(cursor):
-    return dictlist(cursor)
-
-
 def rows_to_dict_list_lower(cursor):
     return dictlist_lower(cursor)
 
@@ -138,7 +134,7 @@ class ExecSql(object):
         elif self.result_case == 'cursor':
             return self._cursor
         else:
-            return rows_to_dict_list(self._cursor)
+            return dictlist(self._cursor)
 
     @property
     def sql(self): pass

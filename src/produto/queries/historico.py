@@ -5,7 +5,7 @@ from django.db import connection
 
 from o2.queries import MountQuery, OQuery
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -90,4 +90,4 @@ def hist_narrativa(referencia):
         h.sequencia desc
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

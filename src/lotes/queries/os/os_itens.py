@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def os_itens(cursor, os):
@@ -66,4 +66,4 @@ def os_itens(cursor, os):
         , tam.ORDEM_TAMANHO
     """
     cursor.execute(sql, [os])
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)

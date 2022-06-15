@@ -3,7 +3,7 @@ from pprint import pprint
 from utils.functions.models import (
     dict_list_to_lower,
     dictlist,
-    rows_to_dict_list,
+    dictlist,
 )
 from utils.functions.queries import debug_cursor_execute
 
@@ -97,7 +97,7 @@ def op_lotes(cursor, op):
         , l.OC
     '''
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def os_lotes(cursor, os):
@@ -405,7 +405,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         {sql_pos_qtd_lotes} -- sql_pos_qtd_lotes
     '''
     cursor.execute(sql)
-    data = rows_to_dict_list(cursor)
+    data = dictlist(cursor)
     for i in range(0, pula):
         if len(data) != 0:
             del(data[0])

@@ -5,7 +5,7 @@ from pprint import pprint
 from django.db import connections
 from django.core.cache import cache
 
-from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.functions.models import dictlist, rows_to_dict_list_lower
 from utils.functions import dec_months, my_make_key_cache, fo2logger
 
 from lotes.functions.varias import modelo_de_ref
@@ -73,7 +73,7 @@ def get_modelo_dims(cursor, modelo=None, get=None):
           {order_get} -- order_get
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
 
 
 def get_vendas(

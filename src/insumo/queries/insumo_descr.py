@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
 
 
 def insumo_descr(cursor, nivel, ref, cor, tam):
@@ -88,4 +88,4 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
          AND i.REFERENCIA = ic.GRUPO_ESTRUTURA
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    return dictlist(cursor)
