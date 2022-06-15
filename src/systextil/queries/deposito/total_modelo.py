@@ -5,11 +5,7 @@ from django.core.cache import cache
 
 from utils.cache import entkeys
 from utils.functions import my_make_key_cache, fo2logger
-from utils.functions.models import (
-    GradeQtd,
-    rows_to_key_dict,
-    dictlist_lower,
-)
+from utils.functions.models import rows_to_key_dict
 from utils.functions.queries import sql_where, sql_where_none_if
 
 
