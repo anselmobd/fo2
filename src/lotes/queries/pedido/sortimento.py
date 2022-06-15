@@ -88,7 +88,7 @@ def sortimento(cursor, **kwargs):
                 ( SELECT
                     1
                   FROM pcpc_044 sl -- solicitação / lote 
-                  WHERE sl.PEDIDO_DESTINO = ped.PEDIDO_VENDA
+                  WHERE sl.PEDIDO_DESTINO = i.PEDIDO_VENDA
                     AND sl.SITUACAO <> 0
                 )
         """
@@ -98,7 +98,7 @@ def sortimento(cursor, **kwargs):
                 ( SELECT
                     1
                   FROM pcpc_044 sl -- solicitação / lote 
-                  WHERE sl.PEDIDO_DESTINO = ped.PEDIDO_VENDA
+                  WHERE sl.PEDIDO_DESTINO = i.PEDIDO_VENDA
                     AND sl.SITUACAO <> 0
                 )
         """
