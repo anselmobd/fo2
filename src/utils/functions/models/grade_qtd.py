@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models.models import *
+from utils.functions.models.main import *
 
 class GradeQtd(object):
     """docstring for GradeQtd."""
