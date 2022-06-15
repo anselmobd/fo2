@@ -1,7 +1,7 @@
 from pprint import pprint
 from typing import Iterable
 
-from utils.functions.models import dictlist
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -128,7 +128,7 @@ def get_solicitacoes(
           sl.SOLICITACAO {"DESC" if desc else ""}
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)
 
 
 def get_solicitacao(
@@ -229,7 +229,7 @@ def get_solicitacao(
         , sl.ORDEM_CONFECCAO
     """
     debug_cursor_execute(cursor, sql)
-    dados = dictlist(cursor)
+    dados = dictlist_lower(cursor)
 
     for row in dados:
         row['lote'] = '{}{:05}'.format(row['periodo'], row['ordem_confeccao'])

@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import dictlist
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -36,4 +36,4 @@ def query(cursor):
         , sl.ORDEM_CONFECCAO
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)

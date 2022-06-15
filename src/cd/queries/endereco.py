@@ -2,7 +2,7 @@ import operator
 import re
 from pprint import pprint
 
-from utils.functions.models import dictlist
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from cd.classes.endereco import EnderecoCd
@@ -74,7 +74,7 @@ def query_endereco(cursor, tipo='TO'):
     """
    
     debug_cursor_execute(cursor, sql)
-    data = dictlist(cursor)
+    data = dictlist_lower(cursor)
     
     data = data_details_from_end(data, 'end')
 
@@ -148,7 +148,7 @@ def lotes_em_local(cursor, local=None, bloco=None):
           lp.DATA_INCLUSAO DESC
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)
 
 
 def lotes_itens_em_local(cursor, local=None, bloco=None):
@@ -193,7 +193,7 @@ def lotes_itens_em_local(cursor, local=None, bloco=None):
           lp.DATA_INCLUSAO DESC
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)
 
 
 def lotes_em_versao_palete(cursor, palete, data_versao):
@@ -209,7 +209,7 @@ def lotes_em_versao_palete(cursor, palete, data_versao):
           lph.DATA_INCLUSAO DESC
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)
 
 
 def lotes_em_palete(cursor, palete):
@@ -229,7 +229,7 @@ def lotes_em_palete(cursor, palete):
         , lp.ORDEM_CONFECCAO
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)
 
 
 def add_lote_in_endereco(cursor, endereco, op, lote):
@@ -256,7 +256,7 @@ def local_de_lote(cursor, lote):
         WHERE lp.ORDEM_CONFECCAO = {lote}
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)
 
 
 def esvazia_palete(cursor, palete):
@@ -300,7 +300,7 @@ def get_palete(cursor, palete):
         WHERE p.COD_CONTAINER = '{palete}'
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)
 
 
 def get_endereco(cursor, endereco):
@@ -319,7 +319,7 @@ def get_endereco(cursor, endereco):
         WHERE e.COD_ENDERECO = '{endereco}'
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)
 
 
 def get_esvaziamentos_de_palete(cursor, palete):
@@ -332,4 +332,4 @@ def get_esvaziamentos_de_palete(cursor, palete):
           h.DATA_VERSAO DESC
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)

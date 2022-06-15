@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import dictlist
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -90,4 +90,4 @@ def busca_nf(cursor, ref=None, cor=None, modelo=None, empresa=None):
         , tam.ORDEM_TAMANHO
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)

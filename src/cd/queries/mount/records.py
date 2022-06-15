@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import dictlist
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from cd.queries.mount import query
@@ -51,7 +51,7 @@ class Records():
         sql = self.sql()
 
         debug_cursor_execute(self.cursor, sql)
-        data = dictlist(self.cursor)
+        data = dictlist_lower(self.cursor)
 
         self.query.apply_makes(data)
 

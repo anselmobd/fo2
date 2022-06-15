@@ -41,8 +41,8 @@ def custom_dictlist(cursor, name_case=None):
     return [dict(zip(columns, row)) for row in cursor]
 
 
-def dictlist(cursor, name_case=str.lower):
-    return custom_dictlist(cursor, name_case)
+def dictlist_lower(cursor):
+    return custom_dictlist(cursor, name_case=str.lower)
 
 
 def rows_to_dict_list(cursor):
@@ -50,7 +50,7 @@ def rows_to_dict_list(cursor):
 
 
 def rows_to_dict_list_lower(cursor):
-    return dictlist(cursor)
+    return dictlist_lower(cursor)
 
 
 def queryset_to_dict_list_lower(qs):

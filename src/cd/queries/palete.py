@@ -3,7 +3,7 @@ from pprint import pprint
 
 from systextil.queries.base import SMountQuery
 
-from utils.functions.models import dictlist
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from cd.classes.palete import Plt
@@ -116,4 +116,4 @@ def get_paletes(cursor):
           p.COD_CONTAINER
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)

@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import dictlist
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import only_digits
 
@@ -52,7 +52,7 @@ class LotesEmEstoque():
         sql = self.sql_em_stq.sql()
 
         debug_cursor_execute(self.cursor, sql)
-        dados = dictlist(self.cursor)
+        dados = dictlist_lower(self.cursor)
 
         if self.modelo:
             dados_modelo = []

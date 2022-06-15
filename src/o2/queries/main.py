@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.db import connection
 
-from utils.functions.models import dictlist
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -117,4 +117,4 @@ class OQuery():
 
     def debug_execute(self):
         debug_cursor_execute(self.cursor, self.sql)
-        return dictlist(self.cursor)
+        return dictlist_lower(self.cursor)

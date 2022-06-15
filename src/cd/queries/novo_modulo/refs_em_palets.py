@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import dictlist
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from lotes.functions.varias import modelo_de_ref
@@ -186,7 +186,7 @@ def query(
           {filtra_ref} -- filtra_ref
     """
     debug_cursor_execute(cursor, sql)
-    dados = dictlist(cursor)
+    dados = dictlist_lower(cursor)
 
     for row in dados:
         row['modelo'] = modelo_de_ref(row['ref'])
