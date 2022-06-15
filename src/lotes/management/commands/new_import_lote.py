@@ -8,7 +8,7 @@ from django.db.models import Max
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 import base.models
 import lotes.models
@@ -147,7 +147,7 @@ class Command(BaseCommand):
         """
         # self.my_println(sql)
         data = self.cursor_s.execute(sql)
-        return rows_to_dict_list_lower(data)
+        return dictlist_lower(data)
 
     def get_lotes_to_del(self):
         sql = f"""
@@ -167,7 +167,7 @@ class Command(BaseCommand):
             WHERE rownum <= {self.__MAX_TASKS}
         """
         data = self.cursor_s.execute(sql)
-        return rows_to_dict_list_lower(data)
+        return dictlist_lower(data)
 
     def none_value(self, vari, value):
         return value if vari is None else vari

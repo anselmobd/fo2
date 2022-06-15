@@ -2,7 +2,7 @@ from pprint import pprint
 
 from utils.functions.data import filtered_data_fields
 from utils.functions.digits import fo2_digit_with
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -83,7 +83,7 @@ def lista_solicita_lote(cursor, filtro=None, data_de=None, ref=None, data_ate=No
           s.update_at desc
     '''
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    dados = dictlist_lower(cursor)
 
     for row in dados:
         row['num'] = fo2_digit_with(row['id'])

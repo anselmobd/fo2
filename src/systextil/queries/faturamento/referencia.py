@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def referencias_vendidas(cursor):
@@ -23,4 +23,4 @@ def referencias_vendidas(cursor):
           AND inf.NIVEL_ESTRUTURA = 1
     '''
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

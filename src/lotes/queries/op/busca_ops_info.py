@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def busca_ops_info(cursor, ops):
@@ -23,4 +23,4 @@ def busca_ops_info(cursor, ops):
     )
 
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

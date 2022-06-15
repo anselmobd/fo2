@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def rodando_a_segundos(cursor, segundos):
@@ -30,7 +30,7 @@ def rodando_a_segundos(cursor, segundos):
         FROM demorados d
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def sessoes_travadoras(cursor):
@@ -61,7 +61,7 @@ def sessoes_travadoras(cursor):
           AND w.session_id = uw.sid
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def get_info_sessao(cursor, sessao_id):
@@ -81,7 +81,7 @@ def get_info_sessao(cursor, sessao_id):
           AND s.sid = {sessao_id}
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def do_kill_sessao(cursor, id_serial):

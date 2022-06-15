@@ -7,7 +7,7 @@ from django.utils import timezone
 from fo2.connections import db_cursor_so
 
 import logistica.models as models
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -37,7 +37,7 @@ class Command(BaseCommand):
                 WHERE rownum <= 100
             '''
             debug_cursor_execute(cursor, sql_get)
-            lotes = rows_to_dict_list_lower(cursor)
+            lotes = dictlist_lower(cursor)
             # self.stdout.write('len(lotes) = {}'.format(len(lotes)))
             # pprint(lotes)
 
@@ -59,7 +59,7 @@ class Command(BaseCommand):
                 # self.stdout.write(str([lote['periodo'], lote['oc']]))
                 self.stdout.write(str(lote))
                 debug_cursor_execute(cursor, sql_seq, [lote['periodo'], lote['oc']])
-                seqs = rows_to_dict_list_lower(cursor)
+                seqs = dictlist_lower(cursor)
                 # self.stdout.write('len(seqs) = {}'.format(len(seqs)))
                 # pprint(seqs)
 

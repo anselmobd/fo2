@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def caixas_op_3lotes(cursor, op):
@@ -195,7 +195,7 @@ def caixas_op_3lotes(cursor, op):
         , tb.PACOTE
     '''
     cursor.execute(sql, [op])
-    data = rows_to_dict_list_lower(cursor)
+    data = dictlist_lower(cursor)
 
     for row in data:
         row['oc1'] = row['lote1'] % 100000

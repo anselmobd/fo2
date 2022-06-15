@@ -1,6 +1,6 @@
 import datetime
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def estoque_na_data(
@@ -153,4 +153,4 @@ def estoque_na_data(
         filtro_cor=filtro_cor,
         )
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

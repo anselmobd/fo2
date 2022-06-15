@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def query(cursor, ano, mes=None, tipo='total', empresa=1, ref=None):
@@ -158,4 +158,4 @@ def query(cursor, ano, mes=None, tipo='total', empresa=1, ref=None):
               fe.DOCUMENTO
         """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions import my_make_key_cache, fo2logger
 
 
@@ -33,7 +33,7 @@ def pa_de_modelo(cursor, modelo=None):
     """
     cursor.execute(sql)
 
-    cached_result = rows_to_dict_list_lower(cursor)
+    cached_result = dictlist_lower(cursor)
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
     return cached_result

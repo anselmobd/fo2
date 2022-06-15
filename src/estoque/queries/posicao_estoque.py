@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def posicao_estoque(
@@ -196,4 +196,4 @@ def posicao_estoque(
         {order_by} -- order_by
     '''
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

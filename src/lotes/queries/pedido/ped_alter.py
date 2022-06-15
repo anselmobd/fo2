@@ -1,7 +1,7 @@
 import re
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 __all__=['altera_pedido', 'altera_pedido_itens']
@@ -84,7 +84,7 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None):
           {filtra_data} -- filtra_data
     """
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    dados = dictlist_lower(cursor)
 
     peds = {}
     for row in dados:
@@ -137,7 +137,7 @@ def pedido_matriz_de_pedido_filial(cursor, pedido_filial):
           AND pcc.COD_CANCELAMENTO = 0
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def inclui_pedido_compra_matriz_capa(cursor, pedido_filial):
@@ -325,4 +325,4 @@ def get_pedido_compra_matriz_itens(cursor, pedido_compra):
         WHERE NUM_PED_COMPRA = {pedido_compra}
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

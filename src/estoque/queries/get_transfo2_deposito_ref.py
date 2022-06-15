@@ -1,6 +1,6 @@
 import datetime
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def get_transfo2_deposito_ref(
@@ -72,4 +72,4 @@ def get_transfo2_deposito_ref(
         filtro_tipo=filtro_tipo,
     )
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

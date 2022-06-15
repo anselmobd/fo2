@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def item(cursor, nivel, ref, tam, cor):
@@ -31,4 +31,4 @@ def item(cursor, nivel, ref, tam, cor):
           AND c.ITEM_ESTRUTURA = '{cor}'
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

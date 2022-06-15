@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def referencias_com_op(cursor):
@@ -13,4 +13,4 @@ def referencias_com_op(cursor):
           op.REFERENCIA_PECA
     '''
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

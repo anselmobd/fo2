@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def get_preco_medio_niv_ref_cor_tam(cursor, niv, ref, cor, tam):
@@ -22,7 +22,7 @@ def get_preco_medio_niv_ref_cor_tam(cursor, niv, ref, cor, tam):
           AND rtc.ITEM_ESTRUTURA = '{cor}'
     '''
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def get_preco_medio_ref_cor_tam(cursor, ref, cor, tam):

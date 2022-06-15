@@ -1,7 +1,7 @@
 import datetime
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -33,7 +33,7 @@ def busca_ot(cursor, ot=None):
     '''
 
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    dados = dictlist_lower(cursor)
 
     tipo_ordem = {
         '1': '1-Ordem tingimento',

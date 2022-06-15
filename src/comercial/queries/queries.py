@@ -5,7 +5,7 @@ from pprint import pprint
 from django.db import connections
 from django.core.cache import cache
 
-from utils.functions.models import dictlist, rows_to_dict_list_lower
+from utils.functions.models import dictlist, dictlist_lower
 from utils.functions import dec_months, my_make_key_cache, fo2logger
 
 from lotes.functions.varias import modelo_de_ref
@@ -294,7 +294,7 @@ def get_vendas(
     """
     cursor.execute(sql)
 
-    cached_result = rows_to_dict_list_lower(cursor)
+    cached_result = dictlist_lower(cursor)
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
     return cached_result
@@ -634,7 +634,7 @@ def get_vendas_new(
     """
     cursor.execute(sql)
 
-    cached_result = rows_to_dict_list_lower(cursor)
+    cached_result = dictlist_lower(cursor)
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
     return cached_result
@@ -681,7 +681,7 @@ def get_tabela_preco(cursor, col=None, mes=None, seq=None, tipo=None, order=None
         {order_by} -- order_by
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def itens_tabela_preco(cursor, col, mes=None, seq=None):
@@ -700,7 +700,7 @@ def itens_tabela_preco(cursor, col, mes=None, seq=None):
           AND ti.TAB_SEQ_TAB = {seq}
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def modelos_tabela_preco(cursor, col, mes=None, seq=None):
@@ -749,4 +749,4 @@ def itens_tabela_preco_cor_tam(cursor, col, mes, seq):
           AND c.ITEM_ATIVO = 0
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

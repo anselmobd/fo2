@@ -1,6 +1,6 @@
 from django.db import connections
 
-from utils.functions.models import dictlist, rows_to_dict_list_lower
+from utils.functions.models import dictlist, dictlist_lower
 
 
 def get_nf_pela_chave(cursor, chave):

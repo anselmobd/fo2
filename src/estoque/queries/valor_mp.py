@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def valor_mp(
@@ -101,4 +101,4 @@ def valor_mp(
         filtro_deposito_compras=filtro_deposito_compras,
     )
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

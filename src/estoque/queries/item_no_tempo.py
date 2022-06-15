@@ -1,6 +1,6 @@
 import datetime
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def item_no_tempo(
@@ -125,4 +125,4 @@ def item_no_tempo(
           q.DATA DESC
     '''
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

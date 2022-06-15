@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist, rows_to_dict_list_lower
+from utils.functions.models import dictlist, dictlist_lower
 
 
 def estagios_os(cursor):
@@ -9,7 +9,7 @@ def estagios_os(cursor):
         WHERE ts.CODIGO_ESTAGIO <> 0
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):

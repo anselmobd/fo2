@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def aniversariantes(cursor, mes):
@@ -27,7 +27,7 @@ def aniversariantes(cursor, mes):
         , t.nome
     """
     cursor.execute(sql, [mes])
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def trabalhadores(cursor, codigo=None):
@@ -51,4 +51,4 @@ def trabalhadores(cursor, codigo=None):
           t.codigo
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

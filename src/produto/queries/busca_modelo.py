@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -47,4 +47,4 @@ def busca_modelo(cursor, descricao=None):
         filtro_descricao=filtro_descricao,
     )
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

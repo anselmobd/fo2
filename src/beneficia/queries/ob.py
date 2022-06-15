@@ -1,7 +1,7 @@
 import datetime
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import split_non_empty
 
@@ -133,7 +133,7 @@ def busca_ob(
     '''
 
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    dados = dictlist_lower(cursor)
 
     for row in dados:
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
@@ -176,7 +176,7 @@ def ob_estagios(cursor, ob=None):
     '''
 
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    dados = dictlist_lower(cursor)
 
     for row in dados:
         if row['dt_ini']:
@@ -225,7 +225,7 @@ def ob_tecidos(cursor, ob=None):
     '''
 
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    dados = dictlist_lower(cursor)
 
     return dados
 
@@ -253,6 +253,6 @@ def ob_destinos(cursor, ob=None):
     '''
 
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    dados = dictlist_lower(cursor)
 
     return dados

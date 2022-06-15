@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 SQL_TIPO_FAT_META = {
@@ -301,4 +301,4 @@ def faturamento_para_meta(
         {sql_order} -- order
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

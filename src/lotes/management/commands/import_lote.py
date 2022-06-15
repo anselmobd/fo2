@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from fo2.connections import db_cursor, db_cursor_so
 
 import lotes.models as models
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from lotes.queries.oracle import (
@@ -177,7 +177,7 @@ class Command(BaseCommand):
                  )
         '''
         debug_cursor_execute(cursor, sql)
-        return rows_to_dict_list_lower(cursor)
+        return dictlist_lower(cursor)
 
     def set_lote(self, lote, row):
         alter = False

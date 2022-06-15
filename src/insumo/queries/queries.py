@@ -1,7 +1,7 @@
 from pprint import pprint
 from operator import itemgetter
 
-from utils.functions.models import dictlist, rows_to_dict_list_lower
+from utils.functions.models import dictlist, dictlist_lower
 
 import produto.queries
 
@@ -1431,7 +1431,7 @@ def compras_periodo_insumo(cursor, nivel, ref, cor, tam):
           AND t.TAMANHO_REF = %s
     """
     cursor.execute(sql, [nivel, ref, cor, tam])
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def rolo_inform(
@@ -1553,4 +1553,4 @@ def rolo_inform(
         , ro.CODIGO_ROLO DESC
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

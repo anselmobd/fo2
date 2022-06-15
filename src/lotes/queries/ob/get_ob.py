@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def get_ob(cursor, os):
@@ -10,4 +10,4 @@ def get_ob(cursor, os):
         WHERE b.OBSERVACAO LIKE '{os}.%'
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

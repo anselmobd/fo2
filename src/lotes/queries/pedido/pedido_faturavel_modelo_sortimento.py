@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 from utils.functions import my_make_key_cache, fo2logger
 
@@ -142,7 +142,7 @@ def pedido_faturavel_modelo_sortimento(
         , pref.TAM
     """
     cursor.execute(sql)
-    result = rows_to_dict_list_lower(cursor)
+    result = dictlist_lower(cursor)
 
     headers = ['Cores / Tamanhos']
     fields = ['SORTIMENTO']

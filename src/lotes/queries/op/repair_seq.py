@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -27,7 +27,7 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
         , le.ROWID
     '''
     debug_cursor_execute(cursor, sql_seq, [periodo, oc])
-    seqs = rows_to_dict_list_lower(cursor)
+    seqs = dictlist_lower(cursor)
 
     sql_setseq = '''
         UPDATE pcpc_040 le

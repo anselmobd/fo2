@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def select_transacao_ajuste(
@@ -21,4 +21,4 @@ def select_transacao_ajuste(
         num_doc=num_doc,
     )
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

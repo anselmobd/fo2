@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def confronta_estoque_transacoes(
@@ -184,7 +184,7 @@ def confronta_estoque_transacoes(
         FROM filtro
     '''
     cursor.execute(sql)
-    data = rows_to_dict_list_lower(cursor)
+    data = dictlist_lower(cursor)
 
     exec_ok = True
     count = 0

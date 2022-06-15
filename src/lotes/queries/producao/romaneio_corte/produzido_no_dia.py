@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -148,7 +148,7 @@ def query(cursor, data=None):
         , ol.TAM_ORD
     '''
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    dados = dictlist_lower(cursor)
 
     if not dados:
         return
@@ -215,7 +215,7 @@ def query(cursor, data=None):
         , l.PROCONF_ITEM
     '''
     debug_cursor_execute(cursor, sql)
-    dados_op_tot = rows_to_dict_list_lower(cursor)
+    dados_op_tot = dictlist_lower(cursor)
 
     for row in dados_op_tot:
         row['item'] = '.'.join([

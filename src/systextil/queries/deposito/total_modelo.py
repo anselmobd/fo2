@@ -8,7 +8,7 @@ from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models import (
     GradeQtd,
     rows_to_key_dict,
-    rows_to_dict_list_lower,
+    dictlist_lower,
 )
 from utils.functions.queries import sql_where, sql_where_none_if
 

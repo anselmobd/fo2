@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
@@ -117,4 +117,4 @@ def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
         filtro_modelo=filtro_modelo,
     )
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

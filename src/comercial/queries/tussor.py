@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.conf import settings
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.data import connect_fdb
 
 
@@ -39,7 +39,7 @@ def busca_clientes(cnpj=None, all=None):
           c.C_CGC
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
 
 
 def ficha_cliente(cnpj):
@@ -117,4 +117,4 @@ def ficha_cliente(cnpj):
           d.D_DUPNUM
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 import logistica.models as models
 
@@ -49,7 +49,7 @@ class Command(BaseCommand):
             WHERE rownum <= 10
         '''
         cudebug_cursor_execute(cursor, sql_get)
-        ops = rows_to_dict_list_lower(cursor)
+        ops = dictlist_lower(cursor)
         # self.stdout.write('len(ops) = {}'.format(len(ops)))
         # self.stdout.write('op = {}'.format(ops[0]['op']))
         for opr in ops:
@@ -69,7 +69,7 @@ class Command(BaseCommand):
                 , le.ORDEM_CONFECCAO
             '''
             cursor.debug_cursor_execute(cursor, sql_get, [op])
-            lotes = rows_to_dict_list_lower(cursor)
+            lotes = dictlist_lower(cursor)
             self.stdout.write('len(lotes) = {}'.format(len(lotes)))
             # pprint(lotes)
 
@@ -99,7 +99,7 @@ class Command(BaseCommand):
             for lote in lotes:
                 # self.stdout.write(str([lote['periodo'], lote['oc']]))
                 debug_cursor_execute(cursor, sql_seq, [lote['periodo'], lote['oc']])
-                seqs = rows_to_dict_list_lower(cursor)
+                seqs = dictlist_lower(cursor)
                 # self.stdout.write('len(seqs) = {}'.format(len(seqs)))
                 # pprint(seqs)
                 if len(seqs) == 0:

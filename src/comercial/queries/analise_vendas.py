@@ -3,7 +3,7 @@ from datetime import date
 from pprint import pprint
 
 from utils.functions import dec_months
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.strings import join_non_empty
 
 import produto.queries
@@ -405,7 +405,7 @@ class AnaliseVendas():
     def data(self):
         if not self.result:
             self.cursor.execute(self.sql)
-            self.result = rows_to_dict_list_lower(self.cursor)
+            self.result = dictlist_lower(self.cursor)
             self.ajuste_fields(self.result)
         return self.result
 

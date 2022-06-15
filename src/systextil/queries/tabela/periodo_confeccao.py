@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -16,7 +16,7 @@ def query(cursor):
           p.PERIODO_PRODUCAO
     '''
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    dados = dictlist_lower(cursor)
     for row in dados:
         row['ini'] = row['ini'].date()
         row['fim'] = row['fim'].date()

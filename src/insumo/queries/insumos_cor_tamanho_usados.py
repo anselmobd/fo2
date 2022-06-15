@@ -1,7 +1,7 @@
 import re
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from insumo.queries.insumos_cor_tamanho import insumos_cor_tamanho as q_insumos_cor_tamanho
@@ -106,4 +106,4 @@ def insumos_cor_tamanho_usados(
         {filtra_qtd_itens} -- filtra_qtd_itens
     """
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

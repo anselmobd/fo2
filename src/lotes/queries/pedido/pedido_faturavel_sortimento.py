@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def pedido_faturavel_sortimento(
@@ -156,4 +156,4 @@ def pedido_faturavel_sortimento(
             FROM it_qtd ped
         """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)

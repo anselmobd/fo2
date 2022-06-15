@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.utils.text import slugify
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from lotes.queries.pedido.ped_alter import (
@@ -136,7 +136,7 @@ def query_base(cursor, data, cliente_slug=None):
         , l.PROCONF_SUBGRUPO
     """
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    dados = dictlist_lower(cursor)
 
     for row in dados:
         if not row['ped']:

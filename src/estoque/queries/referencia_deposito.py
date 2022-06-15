@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist_lower
 
 
 def referencia_deposito(cursor, modelo, todos=True, deposito='A00'):
@@ -105,4 +105,4 @@ def referencia_deposito(cursor, modelo, todos=True, deposito='A00'):
         filtro_todos=filtro_todos,
     )
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    return dictlist_lower(cursor)
