@@ -21,7 +21,7 @@ def query(cursor):
          AND l_63.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO -- joins
         WHERE l_63.CODIGO_ESTAGIO = 63 -- WHERE
           AND sl.ORDEM_CONFECCAO <> 0 
-          AND sl.GRUPO_DESTINO NOT IN ('0', '00000')
+          AND sl.GRUPO_DESTINO <> '0'
           AND sl.SITUACAO IN (1, 2, 3, 4)
           -- AND l_63.PROCONF_GRUPO like 'B0002'
         HAVING 
