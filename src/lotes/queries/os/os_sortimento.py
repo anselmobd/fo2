@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist, GradeQtd
+from utils.functions.models.grade_qtd import GradeQtd
 
 
 def os_sortimento(cursor, os):

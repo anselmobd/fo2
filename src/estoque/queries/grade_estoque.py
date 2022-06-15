@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist_lower, GradeQtd
+from utils.functions.models.grade_qtd import GradeQtd
 
 
 def grade_estoque(

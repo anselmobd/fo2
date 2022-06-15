@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import GradeQtd
+from utils.functions.models.grade_qtd import GradeQtd
 
 from cd.queries.functions import where_ende_disponivel
 
