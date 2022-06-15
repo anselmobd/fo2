@@ -1,1 +1,1 @@
-from .queries import *
+from .main import *
