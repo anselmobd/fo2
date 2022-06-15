@@ -33,7 +33,7 @@ def rows_to_key_dict(cursor, keys):
                            for row in cursor]}
 
 
-def custom_dictlist_(cursor, name_case=None):
+def custom_dictlist(cursor, name_case=None):
     if name_case is None:
         columns = [i[0] for i in cursor.description]
     else:
@@ -42,11 +42,11 @@ def custom_dictlist_(cursor, name_case=None):
 
 
 def dictlist(cursor):
-    return custom_dictlist_(cursor)
+    return custom_dictlist(cursor)
 
 
 def dictlist_lower(cursor):
-    return custom_dictlist_(cursor, name_case=str.lower)
+    return custom_dictlist(cursor, name_case=str.lower)
 
 
 def rows_to_dict_list_lower(cursor):
