@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import custom_dictlist
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -262,4 +262,4 @@ def reme_indu_nf(
         )
     cursor.execute(sql)
     debug_cursor_execute(cursor, sql)
-    return custom_dictlist(cursor)
+    return dictlist(cursor)

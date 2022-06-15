@@ -2,7 +2,7 @@ from pprint import pprint
 
 from utils.functions.models import (
     dict_list_to_lower,
-    custom_dictlist,
+    dictlist,
     rows_to_dict_list,
 )
 from utils.functions.queries import debug_cursor_execute
@@ -127,7 +127,7 @@ def get_per_oc(cursor, op):
         , l.ORDEM_CONFECCAO
     """
     debug_cursor_execute(cursor, sql)
-    return custom_dictlist(cursor)
+    return dictlist(cursor)
 
 
 def get_lotes(cursor, op='', os='', tam='', cor='', order='',
