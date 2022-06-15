@@ -3,7 +3,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 
 from utils.functions import (
     cache_ttl,

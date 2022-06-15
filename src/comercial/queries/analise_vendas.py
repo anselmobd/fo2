@@ -3,7 +3,7 @@ from datetime import date
 from pprint import pprint
 
 from utils.functions import dec_months
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.strings import join_non_empty
 
 import produto.queries

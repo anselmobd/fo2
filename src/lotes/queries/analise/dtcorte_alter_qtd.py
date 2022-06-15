@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import sql_where_none_if
 
 

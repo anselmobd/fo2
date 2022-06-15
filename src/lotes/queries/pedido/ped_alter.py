@@ -1,7 +1,7 @@
 import re
 from pprint import pprint
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 __all__=['altera_pedido', 'altera_pedido_itens']

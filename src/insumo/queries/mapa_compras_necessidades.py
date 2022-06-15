@@ -11,7 +11,7 @@ from utils.functions import (
     fo2logger,
     my_make_key_cache,
 )
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 
 import produto.queries
 

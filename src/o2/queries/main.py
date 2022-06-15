@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.db import connection
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 

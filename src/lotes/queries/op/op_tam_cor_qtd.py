@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 
 
 def op_tam_cor_qtd(cursor, op):

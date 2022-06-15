@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 
 
 def op_relacionamentos(cursor, op, ref=None):

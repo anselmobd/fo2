@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 
 
 def infadprod_por_pedido(cursor, pedido, empresa=1):

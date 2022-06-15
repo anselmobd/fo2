@@ -5,7 +5,7 @@ from pprint import pprint
 from django.db import connections
 from django.core.cache import cache
 
-from utils.functions.models import dictlist, dictlist_lower
+from utils.functions.models.dictlist import dictlist, dictlist_lower
 from utils.functions import dec_months, my_make_key_cache, fo2logger
 
 from lotes.functions.varias import modelo_de_ref

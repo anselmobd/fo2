@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 
 
 def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):

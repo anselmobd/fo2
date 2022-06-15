@@ -1,6 +1,6 @@
 import datetime
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 
 
 def get_transfo2_deposito_ref(

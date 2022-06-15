@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 
 
 def referencia_deposito(cursor, modelo, todos=True, deposito='A00'):

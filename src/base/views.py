@@ -12,7 +12,7 @@ from django.views import View
 
 from o2.views.base.custom import CustomView
 
-from utils.functions.models import queryset_to_dictlist_lower
+from utils.functions.models.dictlist import queryset_to_dictlist_lower
 from utils.functions.oracle import get_oracle_conn_err
 
 from base.pages_context import get_current_users_requisicao

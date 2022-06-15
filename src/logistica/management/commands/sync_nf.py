@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 import logistica.models as models

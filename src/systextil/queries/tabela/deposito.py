@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 
 
 def query_deposito(cursor, only=None, less=None):

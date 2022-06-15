@@ -8,7 +8,7 @@ from django.db.models import Max
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 
 import base.models
 import lotes.models

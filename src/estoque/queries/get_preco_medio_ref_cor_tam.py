@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 
 
 def get_preco_medio_niv_ref_cor_tam(cursor, niv, ref, cor, tam):

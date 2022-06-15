@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.utils.text import slugify
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from lotes.queries.pedido.ped_alter import (

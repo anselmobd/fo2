@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 
 
 def por_reduzida(cursor, plano, reduzida):

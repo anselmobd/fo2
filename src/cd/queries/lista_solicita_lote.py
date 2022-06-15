@@ -2,7 +2,7 @@ from pprint import pprint
 
 from utils.functions.data import filtered_data_fields
 from utils.functions.digits import fo2_digit_with
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 

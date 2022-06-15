@@ -1,7 +1,7 @@
 from pprint import pprint
 from operator import itemgetter
 
-from utils.functions.models import dictlist, dictlist_lower
+from utils.functions.models.dictlist import dictlist, dictlist_lower
 
 import produto.queries
 

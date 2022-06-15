@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 
 
 def ped_dep_qtd(cursor, pedido):

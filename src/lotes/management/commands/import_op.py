@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from fo2.connections import db_cursor_so
 
 import base.models
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 
 import lotes.models as models
 from lotes.queries.oracle import (

@@ -3,7 +3,7 @@ from pprint import pprint
 from django.conf import settings
 from django.db import connection
 
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 
 
 def historico(pedido):

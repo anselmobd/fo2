@@ -12,7 +12,7 @@ from fo2.connections import db_cursor_so
 from geral.dados.colecao_fluxos import dict_colecao_fluxos
 from geral.dados.fluxo_roteiros import get_roteiros_de_fluxo
 from utils.forms import FiltroForm
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
 from utils.views import group_rowspan
 

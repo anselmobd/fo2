@@ -1,6 +1,6 @@
 import datetime
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 
 
 def item_no_tempo(

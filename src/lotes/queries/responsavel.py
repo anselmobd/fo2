@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist, dictlist_lower
+from utils.functions.models.dictlist import dictlist, dictlist_lower
 
 
 def estagios_os(cursor):

@@ -3,7 +3,7 @@ from pprint import pprint
 
 from systextil.queries.base import SMountQuery
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from cd.classes.palete import Plt

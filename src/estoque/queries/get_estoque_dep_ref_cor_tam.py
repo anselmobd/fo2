@@ -1,4 +1,4 @@
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 
 
 def get_estoque_dep_niv_ref_cor_tam(cursor, deposito, niv, ref, cor, tam):

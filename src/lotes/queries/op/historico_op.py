@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 
 
 def historico_op(cursor, op, oc=None, dia=None, usuario=None, descr=None):

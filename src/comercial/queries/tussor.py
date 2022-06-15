@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.conf import settings
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.data import connect_fdb
 
 

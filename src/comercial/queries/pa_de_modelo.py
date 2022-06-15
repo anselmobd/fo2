@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions import my_make_key_cache, fo2logger
 
 

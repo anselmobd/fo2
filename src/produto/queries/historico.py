@@ -5,7 +5,7 @@ from django.db import connection
 
 from o2.queries import MountQuery, OQuery
 
-from utils.functions.models import dictlist
+from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 

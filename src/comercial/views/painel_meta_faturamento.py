@@ -7,7 +7,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from utils.decorators import CacheGet
-from utils.functions.models import queryset_to_dictlist_lower
+from utils.functions.models.dictlist import queryset_to_dictlist_lower
 from utils.views import totalize_data
 
 import lotes.queries.pedido as l_q_p

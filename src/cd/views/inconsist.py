@@ -6,7 +6,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.models import dictlist_lower
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 import lotes.models

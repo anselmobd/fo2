@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import (
+from utils.functions.models.dictlist import (
     dictlist_to_lower,
     dictlist,
 )
