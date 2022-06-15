@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import dictlist
+from utils.functions.models import custom_dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -32,4 +32,4 @@ def ped_nf(cursor, pedido, especiais=False, empresa=1):
           f.NUM_NOTA_FISCAL
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor, name_case=str.upper)
+    return custom_dictlist(cursor)
