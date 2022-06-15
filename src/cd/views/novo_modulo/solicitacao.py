@@ -10,7 +10,7 @@ from base.views import O2BaseGetView
 from utils.functions import untuple_keys_concat
 from utils.functions.dictlist.dictlist_to_grade import filter_dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
-from utils.functions.models import dict_list_to_dict
+from utils.functions.models import dictlist_indexed
 from utils.functions.strings import only_digits
 from utils.views import totalize_data
 
@@ -258,7 +258,7 @@ class Solicitacao(O2BaseGetView):
 
         pedidos_tuple = tuple(dict_pedidos.keys())
 
-        pedidos_info = dict_list_to_dict(
+        pedidos_info = dictlist_indexed(
             ped_inform(self.cursor, pedidos_tuple),
             'PEDIDO_VENDA',
         )

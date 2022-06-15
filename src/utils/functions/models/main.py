@@ -69,11 +69,11 @@ def dictlist_to_lower(data):
     return data_lower
 
 
-def dict_list_to_dict(data, key):
-    data_dict = {}
+def dictlist_indexed(data, key):
+    indexed = {}
     for row in data:
-        data_dict[row[key]] = row
-    return data_dict
+        indexed[row[key]] = row
+    return indexed
 
 
 def dict_def_options(dictionary, default, *args):
