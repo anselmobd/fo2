@@ -12,7 +12,7 @@ from django.views import View
 
 from o2.views.base.custom import CustomView
 
-from utils.functions.models import queryset_to_dict_list_lower
+from utils.functions.models import queryset_to_dictlist_lower
 from utils.functions.oracle import get_oracle_conn_err
 
 from base.pages_context import get_current_users_requisicao
@@ -136,7 +136,7 @@ class Usuarios(PermissionRequiredMixin, O2BaseGetView):
     def mount_context(self):
         queryset = get_current_users_requisicao()
 
-        data = queryset_to_dict_list_lower(
+        data = queryset_to_dictlist_lower(
             queryset.filter(ip_interno=True).order_by('nome'))
         self.context.update({
             'headers': ['Nome', 'Último login', 'Última ação'],
@@ -144,7 +144,7 @@ class Usuarios(PermissionRequiredMixin, O2BaseGetView):
             'data': data,
         })
 
-        r_data = queryset_to_dict_list_lower(
+        r_data = queryset_to_dictlist_lower(
             queryset.filter(ip_interno=False).order_by('nome'))
         self.context.update({
             'r_headers': ['Nome', 'Último login', 'Última ação'],

@@ -1,5 +1,5 @@
-from pprint import pprint
 import datetime
+from pprint import pprint
 
 from django.shortcuts import render
 from django.views import View
@@ -7,8 +7,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from utils.decorators import CacheGet
-from utils.functions import dias_mes_data
-from utils.functions.models import queryset_to_dict_list_lower
+from utils.functions.models import queryset_to_dictlist_lower
 from utils.views import totalize_data
 
 import lotes.queries.pedido as l_q_p
@@ -58,7 +57,7 @@ class PainelMetaFaturamento(View):
 
         pendencias = comercial.models.PendenciaFaturamento.objects.filter(
             mes__year=ano_atual, mes__month=mes_atual, ).order_by('ordem')
-        pends = queryset_to_dict_list_lower(pendencias)
+        pends = queryset_to_dictlist_lower(pendencias)
         if len(pends) != 0:
             for pend in pends:
                 pend['total'] = False

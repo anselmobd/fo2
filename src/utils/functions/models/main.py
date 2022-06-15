@@ -57,7 +57,7 @@ def dictlist_lower(cursor):
     return custom_dictlist(cursor, name_case=str.lower)
 
 
-def queryset_to_dict_list_lower(qs):
+def queryset_to_dictlist_lower(qs):
     result = []
     for obj in qs:
         result.append({
