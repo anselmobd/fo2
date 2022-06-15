@@ -1,6 +1,7 @@
 from pprint import pprint
 
-from utils.functions.models.main import *
+from utils.functions.models.main import custom_dictlist, dictlist
+from utils.functions.queries import debug_cursor_execute
 
 
 __all__ = ['DataSql']
@@ -16,11 +17,11 @@ class DataSql(object):
             self.sql = sql
 
     def execute(self, sql):
-        self._cursor.execute(sql, self.args)
+        debug_cursor_execute(self._cursor, sql, self.args)
         if self.case and self.case.startswith('l'):
-            return rows_to_dict_list_lower(self._cursor)
+            return dictlist(self._cursor)
         else:
-            return rows_to_dict_list(self._cursor)
+            return custom_dictlist(self._cursor)
 
     @property
     def sql(self): pass
