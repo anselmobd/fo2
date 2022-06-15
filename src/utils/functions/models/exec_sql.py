@@ -1,8 +1,11 @@
+__all__ = ['ExecSql']
+
 from pprint import pprint
 
-from django.db.models.base import ModelState
-
-from utils.functions.models.dictlist import *
+from utils.functions.models.dictlist import (
+    dictlist,
+    dictlist_lower,
+)
 
 
 class ExecSql(object):

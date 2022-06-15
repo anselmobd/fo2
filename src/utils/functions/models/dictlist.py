@@ -1,7 +1,3 @@
-from pprint import pprint
-
-from django.db.models.base import ModelState
-
 __all__ = [
     'rows_to_key_dict',
     'dictlist_zip_columns',
@@ -15,6 +11,10 @@ __all__ = [
     'dict_options',
     'record2dict',
 ]
+
+from pprint import pprint
+
+from django.db.models.base import ModelState
 
 
 def rows_to_key_dict(cursor, keys):

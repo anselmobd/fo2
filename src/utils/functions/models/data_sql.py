@@ -1,10 +1,9 @@
+__all__ = ['DataSql']
+
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist, dictlist_lower
 from utils.functions.queries import debug_cursor_execute
-
-
-__all__ = ['DataSql']
 
 
 class DataSql(object):

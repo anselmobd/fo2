@@ -1,10 +1,9 @@
+__all__ = ['GradeQtd']
+
 from pprint import pprint
 
 from utils.functions.models.data_sql import DataSql
 from utils.functions.models.dictlist import dict_def_options
-
-
-__all__ = ['GradeQtd']
 
 
 class GradeQtd(object):
