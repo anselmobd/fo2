@@ -33,13 +33,20 @@ def rows_to_key_dict(cursor, keys):
                            for row in cursor]}
 
 
-def dictlist(cursor, name_case=str.lower):
-    columns = [name_case(i[0]) for i in cursor.description]
+def custom_dictlist(cursor, name_case=None):
+    if name_case is None:
+        columns = [i[0] for i in cursor.description]
+    else:
+        columns = [name_case(i[0]) for i in cursor.description]
     return [dict(zip(columns, row)) for row in cursor]
 
 
+def dictlist(cursor, name_case=str.lower):
+    return custom_dictlist(cursor, name_case)
+
+
 def rows_to_dict_list(cursor):
-    return dictlist(cursor, name_case=lambda x: x)
+    return custom_dictlist(cursor)
 
 
 def rows_to_dict_list_lower(cursor):
