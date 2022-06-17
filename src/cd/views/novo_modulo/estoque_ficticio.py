@@ -25,21 +25,15 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
 
         self.table_defs = TableDefs(
             {
-                'palete rota modelo cor lote': [],
+                'palete lote': [],
                 'endereco': ['Endereço'],
                 'ref': ['Ref.'],
                 'tam': ['Tam.'],
                 'op': ['OP'],
-                'qtd_prog qtd_lote': ['Tam.Lote', 'r'],
-                'qtd_dbaixa': ['Qtd.Est.', 'r'],
-                'estagio': ['Estágio', 'c'],
+                'qtd_lote': ['Tam.Lote', 'r'],
                 'solicitacoes': ['Solicitações', 'c'],
-                'sol': ['Solicitação'],
                 'qtd_emp': ['Qtd.Empen.', 'r'],
                 'qtd_disp': ['Qtd.Disp.', 'r'],
-                'sit': ['Situação'],
-                'ped_dest': ['Ped.Destino'],
-                'ref_dest': ['Ref.Destino'],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
@@ -47,13 +41,15 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
 
     def get_lotes_em_estoque(self):
         dados = estoque_ficticio.query(self.cursor)
+        for row in dados:
+            row['qtd_disp'] = row['qtd_lote'] - row['qtd_emp']
         return dados
 
     def mount_lotes_em_estoque(self):
         totalize_data(
             self.lotes,
             {
-                'sum': ['qtd_dbaixa', 'qtd_emp', 'qtd_sol'],
+                'sum': ['qtd_lote', 'qtd_emp', 'qtd_disp'],
                 'descr': {'lote': 'Total geral:'},
                 'row_style':
                     "font-weight: bold;"
@@ -66,21 +62,21 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
 
         self.lotes = paginator_basic(self.lotes, self.lotes_por_pagina, self.page)
 
-        # for row in self.lotes.object_list:
-        #     if row['qtd_disp'] < 0:
-        #         row['qtd_disp|STYLE'] = 'color: red;'
+        for row in self.lotes.object_list:
+            if row['qtd_disp'] < 0:
+                row['qtd_disp|STYLE'] = 'color: red;'
 
         self.lotes.object_list.append(totalizador_lotes)
 
         self.context.update(self.table_defs.hfs_dict(
             'palete', 'endereco', 'rota',
             'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
-            'qtd_prog', 'qtd_dbaixa', 'estagio',
-            'solicitacoes', 'qtd_emp', 'qtd_sol',
+            'qtd_lote', 'solicitacoes', 'qtd_emp', 'qtd_disp',
         ))
         self.context.update({
             'safe': [
                 'op',
+                'lote',
             ],
             'data': self.lotes,
         })
