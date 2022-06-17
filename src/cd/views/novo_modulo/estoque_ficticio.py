@@ -40,7 +40,12 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
         )
 
     def get_lotes_em_estoque(self):
-        dados = estoque_ficticio.query(self.cursor)
+        dados = estoque_ficticio.query(
+            self.cursor,
+            ref=self.ref,
+            tam=self.tam,
+            cor=self.cor,
+        )
         for row in dados:
             row['qtd_disp'] = row['qtd_lote'] - row['qtd_emp']
         return dados
@@ -88,7 +93,7 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
             self.mount_lotes_em_estoque()
 
     def filter_inputs(self):
-        self.referencia = None if self.referencia == '' else self.referencia
+        self.ref = None if self.ref == '' else self.ref
         self.cor = None if self.cor == '' else self.cor
         self.tam = None if self.tam == '' else self.tam
 

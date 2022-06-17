@@ -14,7 +14,7 @@ from systextil.models import Colecao
 class NovoEstoqueFicticioForm(forms.Form):
     a = FormWidgetAttrs()
 
-    referencia = forms.CharField(
+    ref = forms.CharField(
         label='Referência',
         required=False,
         min_length=1,
@@ -61,8 +61,8 @@ class NovoEstoqueFicticioForm(forms.Form):
         self.request = kwargs.pop('request', None)
         super(NovoEstoqueFicticioForm, self).__init__(*args, **kwargs)
 
-    def clean_referencia(self):
-        cleaned = self.cleaned_data['referencia']
+    def clean_ref(self):
+        cleaned = self.cleaned_data['ref']
         if len(cleaned) == 0:
             cleaned = ''
         else:
@@ -76,7 +76,7 @@ class NovoEstoqueFicticioForm(forms.Form):
                 cleaned = cleaned.upper().zfill(5)
 
         data = self.data.copy()
-        data['referencia'] = cleaned
+        data['ref'] = cleaned
         self.data = data
         return cleaned
 

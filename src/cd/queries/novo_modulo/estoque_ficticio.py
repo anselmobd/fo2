@@ -4,7 +4,18 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def query(cursor):
+def query(
+    cursor,
+    ref=None,
+    tam=None,
+    cor=None,
+):
+    filter_ref = f"AND l.PROCONF_GRUPO = '{ref}'" if ref else ''
+
+    filter_tam = f"AND l.PROCONF_SUBGRUPO = '{tam}'" if tam else ''
+
+    filter_cor = f"AND l.PROCONF_ITEM = '{cor}'" if cor else ''
+
     sql = f"""
         WITH lotes_605763 AS
         ( SELECT DISTINCT
@@ -24,9 +35,9 @@ def query(cursor):
               OR l.CODIGO_ESTAGIO = 57
               OR l.CODIGO_ESTAGIO = 63
             )
-            AND l.PROCONF_GRUPO in ('0156M') -- filter_ref
-            AND l.PROCONF_SUBGRUPO = 'M' -- filter_cor
-            AND l.PROCONF_ITEM = '0000AJ' -- filter_cor
+            {filter_ref} -- filter_ref
+            {filter_tam} -- filter_tam
+            {filter_cor} -- filter_cor
         )
         , lotes_605763end AS 
         ( SELECT DISTINCT 
