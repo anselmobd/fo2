@@ -45,7 +45,7 @@ def query(
           , l.PER
           , l.OC
           , l.QTD_LOTE
-          , lp.COD_CONTAINER PALETE
+          , COALESCE(lp.COD_CONTAINER, '-') PALETE
           , l.REF
           , l.TAM
           , l.COR
@@ -69,7 +69,7 @@ def query(
         , l.REF
         , l.TAM
         , l.COR
-        , COALESCE(ec.COD_ENDERECO, '-') endereco
+        , COALESCE(ec.COD_ENDERECO, '-') ENDERECO
         , COALESCE(
             ( SELECT
                 LISTAGG(DISTINCT COALESCE(TO_CHAR(sl.SOLICITACAO), '#'), ', ')
@@ -80,7 +80,7 @@ def query(
                 AND sl.ORDEM_CONFECCAO = l.OC
             ),
           '-'
-          ) solicitacoes
+          ) SOLICITACOES
         , COALESCE(
             ( SELECT
                 SUM(sl.QTDE) qtd_sol
@@ -90,7 +90,7 @@ def query(
                 AND sl.ORDEM_CONFECCAO = l.OC
             ),
           0
-          ) qtd_emp
+          ) QTD_EMP
         FROM lotes_605763end l
         LEFT JOIN ENDR_015 ec -- endereço/container 
           ON ec.COD_CONTAINER = l.PALETE
