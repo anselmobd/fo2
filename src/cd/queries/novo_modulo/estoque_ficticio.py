@@ -32,13 +32,16 @@ def query(
           , l.PROCONF_SUBGRUPO TAM
           , l.PROCONF_ITEM COR
           FROM PCPC_040 l 
+          JOIN PCPC_020 op
+            ON op.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
           WHERE 1=1
-            AND l.QTDE_DISPONIVEL_BAIXA > 0
+            AND op.COD_CANCELAMENTO = 0
             AND (
               l.CODIGO_ESTAGIO = 60
               OR l.CODIGO_ESTAGIO = 57
               OR l.CODIGO_ESTAGIO = 63
             )
+            AND NOT ( l.QTDE_DISPONIVEL_BAIXA = 0 )
             {filter_ref} -- filter_ref
             {filter_tam} -- filter_tam
             {filter_cor} -- filter_cor
