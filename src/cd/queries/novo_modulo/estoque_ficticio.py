@@ -2,6 +2,7 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
+from utils.functions.strings import only_digits
 
 
 def query(
@@ -96,4 +97,13 @@ def query(
           ON ec.COD_CONTAINER = l.PALETE
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
+    dados = dictlist_lower(cursor)
+
+    for row in dados:
+        try:
+            ref_modelo = int(only_digits(row['ref']))
+        except ValueError:
+            ref_modelo = 0
+        row['modelo'] = ref_modelo
+
+    return dados
