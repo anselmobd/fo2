@@ -7,10 +7,13 @@ from utils.functions.strings import only_digits
 
 def query(
     cursor,
+    modelo=None,
     ref=None,
     tam=None,
     cor=None,
 ):
+    filter_modelo = f"AND l.REF LIKE '%{modelo}%'" if modelo else ''
+
     filter_ref = f"AND l.PROCONF_GRUPO = '{ref}'" if ref else ''
 
     filter_tam = f"AND l.PROCONF_SUBGRUPO = '{tam}'" if tam else ''
@@ -55,6 +58,7 @@ def query(
             ON lp.ORDEM_PRODUCAO = l.OP
           AND lp.ORDEM_CONFECCAO = l.PER * 100000 + l.OC
           WHERE 1=1
+            {filter_modelo} -- filter_modelo
             AND (
               l.EST <> 63
               OR lp.ORDEM_PRODUCAO IS NOT NULL
@@ -105,5 +109,12 @@ def query(
         except ValueError:
             ref_modelo = 0
         row['modelo'] = ref_modelo
+
+    if modelo:
+        dados = [
+            row
+            for row in dados
+            if row['modelo'] == modelo
+        ]
 
     return dados
