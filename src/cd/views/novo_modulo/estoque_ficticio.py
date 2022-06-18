@@ -9,7 +9,10 @@ from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
 from cd.forms.novo_estoque_ficticio import NovoEstoqueFicticioForm
-from cd.queries.novo_modulo import estoque_ficticio
+from cd.queries.novo_modulo import (
+    estoque_ficticio,
+    refs_de_modelos,
+)
 
 
 class NovoEstoqueFicticio(O2BaseGetPostView):
@@ -40,10 +43,21 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
         )
 
     def get_lotes_em_estoque(self):
+        referencias = tuple(
+            refs_de_modelos.to_set(self.cursor, self.modelo)
+            if self.modelo and not self.ref
+            else set()
+        )
+        if self.ref:
+            referencias = (self.ref, )
+        if self.modelo:
+            self.context.update({
+                'referencias': ", ".join(referencias),
+            })
+
         dados = estoque_ficticio.query(
             self.cursor,
-            modelo=self.modelo,
-            ref=self.ref,
+            ref=tuple(referencias),
             tam=self.tam,
             cor=self.cor,
         )
