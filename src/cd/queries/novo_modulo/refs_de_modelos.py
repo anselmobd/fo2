@@ -14,7 +14,7 @@ def to_set(cursor, modelo):
     ])
 
 def query(cursor, modelo, com_op=True):
-    filtra_com_op = f"""
+    filtra_com_op = f"""--
         AND EXISTS (
           SELECT 
             1

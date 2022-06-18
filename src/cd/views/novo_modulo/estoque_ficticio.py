@@ -1,4 +1,3 @@
-import operator
 from pprint import pprint
 
 from fo2.connections import db_cursor_so
