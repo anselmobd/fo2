@@ -5,16 +5,43 @@ from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import only_digits
 
 
+def condicao_valor(ref):
+    if len(ref.split()) == 2:
+        condicao = ref.split()[0]
+        ref = str(ref.split()[1])
+    else:
+        condicao = '='
+    return condicao, ref
+
+
 def query(
     cursor,
-    modelo=None,
     ref=None,
     tam=None,
     cor=None,
 ):
-    filter_modelo = f"AND l.REF LIKE '%{modelo}%'" if modelo else ''
 
-    filter_ref = f"AND l.PROCONF_GRUPO = '{ref}'" if ref else ''
+    filter_ref = ''
+    ref_conds = []
+    ref_in = []
+    if isinstance(ref, str):
+        ref = map(
+            str.strip,
+            ref.split(','),
+        )
+    if ref is not None:  # iterable
+        for r in ref:
+            condicao, valor = condicao_valor(r)
+            if condicao == '=':
+                ref_in.append(valor)
+            else:
+                ref_conds.append(f"l.PROCONF_GRUPO {condicao} '{valor}'")
+    if ref_in:
+        refs = ', '.join([f"'{r}'" for r in ref_in])
+        ref_conds.append(f"l.PROCONF_GRUPO in ({refs})")
+    if ref_conds:
+        filters_ref = " AND ".join(ref_conds)
+        filter_ref = f"AND {filters_ref}"
 
     filter_tam = f"AND l.PROCONF_SUBGRUPO = '{tam}'" if tam else ''
 
@@ -61,7 +88,6 @@ def query(
             ON lp.ORDEM_PRODUCAO = l.OP
           AND lp.ORDEM_CONFECCAO = l.PER * 100000 + l.OC
           WHERE 1=1
-            {filter_modelo} -- filter_modelo
             AND (
               l.EST <> 63
               OR lp.ORDEM_PRODUCAO IS NOT NULL
@@ -112,12 +138,5 @@ def query(
         except ValueError:
             ref_modelo = 0
         row['modelo'] = ref_modelo
-
-    if modelo:
-        dados = [
-            row
-            for row in dados
-            if row['modelo'] == modelo
-        ]
 
     return dados
