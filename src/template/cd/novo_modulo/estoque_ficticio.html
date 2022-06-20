@@ -27,8 +27,7 @@
     {% if data %}
       <p>Lista lotes nos estágio 60 e 57, ou endereçados no estágio 63.<br/>
         Tam.Lote = tamanho original do lote.<br/>
-        Considera todas as solicitações (independente de situação e incluindo fictícias)
-        </p>
+        Considera todos os empenhos (independente de situação e incluindo fictícias)</p>
       {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque_ficticio' only %}
         <table>
           {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
