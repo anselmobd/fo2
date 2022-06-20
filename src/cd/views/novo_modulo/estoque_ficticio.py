@@ -48,7 +48,7 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
             else set()
         )
         if self.ref:
-            if self.ref not in referencias:
+            if self.modelo and self.ref not in referencias:
                 return None
             referencias = (self.ref, )
         if self.modelo:
