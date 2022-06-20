@@ -41,7 +41,7 @@
   <li>Análises (Fictício)</li>
   <ul>
     <li><a href="{% url 'cd:novo_estoque_ficticio' %}">Estoque</a></li>
-    <!-- <li><a href="{% url 'cd:disponibilidade' %}">Disponibilidade</a></li> -->
+    <li><a href="{% url 'cd:disponibilidade_ficticio' %}">Disponibilidade</a></li>
   </ul>
 
   {% if request.user.is_authenticated and request.user.username == 'anselmo_sis' %}

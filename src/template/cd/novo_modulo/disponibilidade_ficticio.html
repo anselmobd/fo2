@@ -1,0 +1,114 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+    {% include "layout/paginator_stylesheet.css" %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'cd:disponibilidade_ficticio' %}" method="post" name="myForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca" onclick="o2SetPage1AndSubmit()"/>
+  </form>
+  {% if erro %}
+    <h4>{{ erro }}</h4>
+  {% endif %}
+  <br/>
+
+  {% if grades %}
+    {% include "layout/form_inputs_report.html" with form=form h=4 only %}
+    <h4>Encontrada{{qtd_referencias|pluralize}} {{qtd_referencias}} referência{{qtd_referencias|pluralize}} em {{qtd_modelos}} modelo{{qtd_modelos|pluralize}}</h4>
+    {% if dados.paginator.num_pages != 1 %}
+      <p>{{ modelos_por_pagina }} modelos por página</p>
+    {% endif %}
+    {% include "layout/paginator.html" with data=dados url_name='cd:disponibilidade_ficticio' only %}
+    <p>Modelos: {% for dado in dados %}{% if forloop.counter != 1 %}, {% endif %}{{ dado.value|safe }}{% endfor %}</p>
+    <p>Inventário = Lotes em paletes com quantidade no 63-CD.<br/>
+      Empenhado = Dos lotes do inventário, as reservas sem número de solicitação. Situação: 1(A confirmar), 2(Confirmado), 3(Programado) ou 4(Solicitado)<br/>
+      Solicitado = Dos lotes do inventário, as reservas com número de solicitação. Situação: 1(A confirmar), 2(Confirmado), 3(Programado) ou 4(Solicitado).<br/>
+      Disponível = Inventário - Empenhado - Solicitado</p>
+    {% for grade in grades %}
+      <div class="mod_{{ grade.refnum|safe }}">
+      {% if grade.modelo %}
+        <hr>
+        <h4 style="padding-left: 2em;">Modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.modelo %}">{{ grade.modelo|safe }}</a></b></h4>
+      {% endif %}
+      {% if grade.total_modelo %}
+        {% if grade.total_modelo == 'geral' %}
+          <hr>
+          <h4 style="padding-left: 8em;"><b>Total geral das grades acima</b></h4>
+        {% else %}
+          <h4 style="padding-left: 6em;">Total do modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.total_modelo %}">{{ grade.total_modelo|safe }}</a></b></h4>
+        {% endif %}
+      {% endif %}
+      {% if grade.ref %}
+        <h4 style="padding-left: 4em;">Referência: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
+      {% endif %}
+      <table class="layout">
+        <tr>
+          <td style="vertical-align: top;">
+            {% if grade.disponivel.total == grade.inventario.total %}
+              <h4>Disponível=Inventário</h4>
+            {% else %}
+              <h4>Disponível</h4>
+            {% endif %}
+            <table style="width: auto;">
+              {% include "layout/thead_generic.html" with data=grade.disponivel.headers style=grade.disponivel.style only %}
+              {% include "layout/tbody_generic.html" with fields=grade.disponivel.fields data=grade.disponivel.data group=grade.disponivel.group style=grade.disponivel.style only %}
+            </table>
+          </td>
+          {% if grade.solicitacoes.total %}
+            <td>&nbsp;</td>
+            <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+            <td style="vertical-align: top;">
+              <h4>Solicitado</h4>
+              <table style="width: auto;">
+                {% include "layout/thead_generic.html" with data=grade.solicitacoes.headers style=grade.solicitacoes.style only %}
+                {% include "layout/tbody_generic.html" with fields=grade.solicitacoes.fields data=grade.solicitacoes.data group=grade.solicitacoes.group style=grade.solicitacoes.style only %}
+              </table>
+            </td>
+          {% endif %}
+          {% if grade.empenhado.total %}
+            <td>&nbsp;</td>
+            <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+            <td style="vertical-align: top;">
+              <h4>Empenhado</h4>
+              <table style="width: auto;">
+                {% include "layout/thead_generic.html" with data=grade.empenhado.headers style=grade.empenhado.style only %}
+                {% include "layout/tbody_generic.html" with fields=grade.empenhado.fields data=grade.empenhado.data group=grade.empenhado.group style=grade.empenhado.style only %}
+              </table>
+            </td>
+          {% endif %}
+          {% if grade.inventario %}
+            {% if grade.solicitacoes.total != 0 or grade.empenhado.total != 0 %}
+              <td>&nbsp;</td>
+              <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+              <td style="vertical-align: top;">
+                <h4>Inventário</h4>
+                <table style="width: auto;">
+                  {% include "layout/thead_generic.html" with data=grade.inventario.headers style=grade.inventario.style only %}
+                  {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group style=grade.inventario.style only %}
+                </table>
+              </td>
+            {% endif %}
+          {% endif %}
+        </tr>
+      </table>
+      </div>
+    {% endfor %}
+    {% include "layout/paginator.html" with data=dados url_name='cd:disponibilidade_ficticio' only %}
+  {% endif %}
+
+{% endblock content %}
+
+{% block javascript %}
+  <script type="text/javascript">
+    {% include "layout/paginator_javascript.js" with form='myForm' field='page' only %}
+  </script>
+{% endblock %}
