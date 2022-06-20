@@ -19,15 +19,15 @@
   {% if erro %}
     <h4>{{ erro }}</h4>
   {% endif %}
+  <p>Lista lotes nos estágio 60 e 57, ou endereçados no estágio 63.<br/>
+    Considera como quantidade no lote o tamanho original do lote.<br/>
+    Considera todos os empenhos (independente de situação e incluindo fictícias).</p>
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=4 only %}
     {% if referencias %}
       <p>Referências do modelo {{request.POST.modelo}}: {{referencias}}</p>
     {% endif %}
     {% if data %}
-      <p>Lista lotes nos estágio 60 e 57, ou endereçados no estágio 63.<br/>
-        Tam.Lote = tamanho original do lote.<br/>
-        Considera todos os empenhos (independente de situação e incluindo fictícias)</p>
       {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque_ficticio' only %}
         <table>
           {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
