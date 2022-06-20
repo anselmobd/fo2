@@ -44,10 +44,12 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
     def get_lotes_em_estoque(self):
         referencias = tuple(
             refs_de_modelos.to_set(self.cursor, self.modelo)
-            if self.modelo and not self.ref
+            if self.modelo
             else set()
         )
         if self.ref:
+            if self.ref not in referencias:
+                return None
             referencias = (self.ref, )
         if self.modelo:
             self.context.update({
@@ -103,7 +105,7 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
     def mount_estoque(self):
         self.lotes = self.get_lotes_em_estoque()
 
-        if len(self.lotes) > 0:
+        if self.lotes and len(self.lotes) > 0:
             self.mount_lotes_em_estoque()
 
     def filter_inputs(self):
