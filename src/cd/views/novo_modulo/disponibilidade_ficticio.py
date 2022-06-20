@@ -131,6 +131,8 @@ class DisponibilidadeFicticio(PermissionRequiredMixin, O2BaseGetPostView):
             ref=tuple(filtra_ref),
             com_ordem_tam=True,
         )
+        for row in inventario:
+            row['qtd'] = row['qtd_lote']
         p.prt('inventario_')
 
         empenhado = copy.deepcopy(inventario)
