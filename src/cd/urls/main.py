@@ -196,9 +196,11 @@ urlpatterns = [
     re_path(r'^novo/solicitacao/(?P<solicitacao>[^/]+)$',
         solicitacao.Solicitacao.as_view(), name='novo_solicitacao'),
 
-    re_path(r'^novo/estoque/$', estoque.NovoEstoque.as_view(), name='novo_estoque'),
+    re_path(r'^novo/estoque/$',
+        estoque.NovoEstoque.as_view(), name='novo_estoque'),
 
-    re_path(r'^novo/estoque_ficticio/$', estoque_ficticio.NovoEstoqueFicticio.as_view(), name='novo_estoque_ficticio'),
+    re_path(r'^novo/estoque_ficticio/$',
+        estoque_ficticio.NovoEstoqueFicticio.as_view(), name='novo_estoque_ficticio'),
 
     re_path(r'^qtd_em_lote/$',
         qtd_em_lote.QtdEmLote.as_view(),
