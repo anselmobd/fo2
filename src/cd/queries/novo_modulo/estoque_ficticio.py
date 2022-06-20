@@ -19,6 +19,7 @@ def query(
     ref=None,
     tam=None,
     cor=None,
+    com_ordem_tam = False,
 ):
 
     filter_ref = ''
@@ -46,6 +47,15 @@ def query(
     filter_tam = f"AND l.PROCONF_SUBGRUPO = '{tam}'" if tam else ''
 
     filter_cor = f"AND l.PROCONF_ITEM = '{cor}'" if cor else ''
+
+    join_ordem_tam = ''
+    field_ordem_tam = ''
+    if com_ordem_tam:
+        field_ordem_tam = ", COALESCE(tam.ORDEM_TAMANHO, 0) ordem_tam"
+        join_ordem_tam = """--
+            LEFT JOIN BASI_220 tam -- cadastro de tamanhos
+              ON tam.TAMANHO_REF = l.TAM 
+        """
 
     sql = f"""
         WITH lotes_605763 AS
@@ -125,7 +135,9 @@ def query(
             ),
           0
           ) QTD_EMP
+        {field_ordem_tam} -- field_ordem_tam
         FROM lotes_605763end l
+        {join_ordem_tam} -- join_ordem_tam
         LEFT JOIN ENDR_015 ec -- endereço/container 
           ON ec.COD_CONTAINER = l.PALETE
     """
