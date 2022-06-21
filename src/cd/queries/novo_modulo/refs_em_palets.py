@@ -87,6 +87,24 @@ def query(
             'qtd_emp',
             'qtd_sol',
         ),
+        'detalhe': (
+            'ref',
+            'ordem_tam',
+            'tam',
+            'op',
+            'oc',
+            'per',
+            'estagio',
+            'cor',
+            'qtd_prog',
+            'qtd',
+            'solicitacoes',
+            'qtd_emp',
+            'qtd_sol',
+            'palete',
+            'endereco',
+            'rota',
+        ),
     }
     if not isinstance(fields, (tuple, list)):
         fields = fields_tuple[fields]
@@ -100,8 +118,36 @@ def query(
         'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
         'oc': "l.ORDEM_CONFECCAO",
         'per': "l.PERIODO_PRODUCAO",
+        'estagio': "COALESCE(l.CODIGO_ESTAGIO, 999)",
         'cor': "l.PROCONF_ITEM",
         'qtd': "l.QTDE_DISPONIVEL_BAIXA",
+        'palete': """--
+            CASE
+              WHEN lp.COD_CONTAINER IS NOT NULL
+               AND lp.COD_CONTAINER <> '0'
+              THEN lp.COD_CONTAINER
+              ELSE '-'
+            END
+        """,
+        'rota': "COALESCE(e.ROTA, '-')",
+        'endereco': "COALESCE(ec.COD_ENDERECO, '-')",
+        'qtd_prog': "l.QTDE_PECAS_PROG",
+        'solicitacoes': """--
+            COALESCE(
+                ( SELECT
+                    LISTAGG(DISTINCT COALESCE(TO_CHAR(sl.SOLICITACAO), '#'), ', ')
+                    WITHIN GROUP (ORDER BY sl.SOLICITACAO) colicitacoes
+                FROM pcpc_044 sl -- solicitação / lote 
+                WHERE 1=1
+                    AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                    AND sl.ORDEM_CONFECCAO <> 0 
+                    AND sl.GRUPO_DESTINO <> '0'
+                    AND sl.SITUACAO IN (1, 2, 3, 4)
+                ),
+            '-'
+            )
+        """,
         'qtd_emp': """--
             COALESCE(
                 ( SELECT
@@ -182,6 +228,10 @@ def query(
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
          AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+        LEFT JOIN ENDR_015 ec -- endereço/container 
+          ON ec.COD_CONTAINER = lp.COD_CONTAINER
+        LEFT JOIN ENDR_013 e -- endereço
+          ON e.COD_ENDERECO = ec.COD_ENDERECO
         {joins_statements} -- joins_statements
         WHERE 1=1
           {filtra_lote} -- filtra_lote
