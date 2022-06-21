@@ -20,7 +20,6 @@ from utils.functions.dictlist import (
 )
 
 from cd.forms.disponibilidade import DisponibilidadeForm
-from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 from cd.queries.novo_modulo import refs_em_palets
 
 
