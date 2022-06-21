@@ -187,6 +187,21 @@ def query(
             AND l.CODIGO_ESTAGIO <> 63
             AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
+    elif selecao_lotes == '60':
+        filtra_selecao_lotes = """--
+            AND l.CODIGO_ESTAGIO = 60
+            AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
+    elif selecao_lotes == '57':
+        filtra_selecao_lotes = """--
+            AND l.CODIGO_ESTAGIO = 57
+            AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
+    elif selecao_lotes == '605763':
+        filtra_selecao_lotes = """--
+            AND l.CODIGO_ESTAGIO in (60, 57, 63)
+            AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
     elif selecao_lotes == 'qq':
         filtra_selecao_lotes = """--
             AND l.QTDE_DISPONIVEL_BAIXA > 0
