@@ -123,7 +123,6 @@ class DisponibilidadeFicticio(PermissionRequiredMixin, O2BaseGetPostView):
             self.cursor,
             fields='all',
             ref=filtra_ref,
-            com_qtd_63=True,
         )
         p.prt('inventario')
         inventario = estoque_ficticio.query(

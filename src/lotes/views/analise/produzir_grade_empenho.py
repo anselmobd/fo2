@@ -140,7 +140,6 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
             cursor,
             fields='all',
             ref=filtra_ref,
-            com_qtd_63=True,
         )
 
         for row in empenhado:

@@ -120,7 +120,6 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             self.cursor,
             fields='all',
             ref=filtra_ref,
-            com_qtd_63=True,
         )
         p.prt('inventario')
 
@@ -128,7 +127,6 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         #     self.cursor,
         #     fields='emp',
         #     ref=filtra_ref,
-        #     com_qtd_63=True,
         # )
         empenhado = copy.deepcopy(inventario)
         for row in empenhado:
@@ -139,7 +137,6 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         #     self.cursor,
         #     fields='sol',
         #     ref=filtra_ref,
-        #     com_qtd_63=True,
         # )
         solicitado = copy.deepcopy(inventario)
         for row in solicitado:
