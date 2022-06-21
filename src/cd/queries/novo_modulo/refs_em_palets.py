@@ -134,13 +134,9 @@ def query(
         AND l.PROCONF_ITEM = '{cor}'
     """ if cor else ''
 
-    filter_tam = f"""--
+    filtra_tam = f"""--
         AND l.PROCONF_SUBGRUPO = '{tam}'
     """ if tam else ''
-
-    filter_op = f"""--
-        AND l.ORDEM_PRODUCAO = '{op}'
-    """ if op else ''
 
     filtra_colecao = ''
     if colecao:
@@ -148,6 +144,10 @@ def query(
             AND r.COLECAO = '{colecao}'
         """
         joins.add('1r')
+
+    filtra_op = f"""--
+        AND l.ORDEM_PRODUCAO = '{op}'
+    """ if op else ''
 
     if selecao_lotes == '63':
         filtra_selecao_lotes = """--
@@ -324,9 +324,9 @@ def query(
         {joins_statements} -- joins_statements
         WHERE 1=1
           {filtra_selecao_lotes} -- filtra_selecao_lotes
-          {filter_op} -- filter_op
+          {filtra_op} -- filtra_op
           {filtra_cor} -- filtra_cor
-          {filter_tam} -- filter_tam
+          {filtra_tam} -- filtra_tam
           {filtra_colecao} -- filtra_colecao
           {filtra_ref} -- filtra_ref
     """
