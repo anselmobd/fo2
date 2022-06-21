@@ -15,7 +15,7 @@ def query(
     ref=None,
     colecao=None,
     modelo=None,
-    com_qtd_63=True,
+    sele_lotes='63',
 ):
     joins = set()
 
@@ -36,12 +36,15 @@ def query(
         """
         joins.add('r')
 
-    filtra_lote = """--
-        AND l.CODIGO_ESTAGIO = 63
-        AND l.QTDE_DISPONIVEL_BAIXA > 0
-    """ if com_qtd_63 else """--
-        AND l.SEQUENCIA_ESTAGIO = 1
-    """
+    if sele_lotes == '63':
+        filtra_lote = """--
+            AND l.CODIGO_ESTAGIO = 63
+            AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
+    else:
+        filtra_lote = """--
+            AND l.SEQUENCIA_ESTAGIO = 1
+        """
 
     fields_tuple = {
         'ref': ('ref', ),
