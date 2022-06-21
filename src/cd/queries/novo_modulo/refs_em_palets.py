@@ -126,7 +126,7 @@ def query(
         filtra_colecao = f"""
             AND r.COLECAO = '{colecao}'
         """
-        joins.add('r')
+        joins.add('1r')
 
     if sele_lotes == '63':
         filtra_lote = """--
@@ -244,9 +244,9 @@ def query(
     }
 
     field_join = {
-        'ordem_tam': 'tam',
-        'endereco': 'ec',
-        'rota': 'e',
+        'ordem_tam': '1tam',
+        'endereco': '1ec',
+        'rota': '2e',
     }
 
     fields_statements_list = []
@@ -266,29 +266,30 @@ def query(
     fields_statements = "\n, ".join(fields_statements_list)
 
     join_statement = {
-        'r': """--
+        '1r': """--
             JOIN BASI_030 r -- referencia
               ON r.NIVEL_ESTRUTURA = 1
              AND r.REFERENCIA = l.PROCONF_GRUPO 
         """,
-        'tam': """--
+        '1tam': """--
             LEFT JOIN BASI_220 tam -- cadastro de tamanhos
               ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO 
         """,
-        'ec': """--
+        '1ec': """--
             LEFT JOIN ENDR_015 ec -- endereço/container 
               ON ec.COD_CONTAINER = lp.COD_CONTAINER
         """,
-        'e': """--
+        '2e': """--
             LEFT JOIN ENDR_013 e -- endereço
               ON e.COD_ENDERECO = ec.COD_ENDERECO
         """,
     }
 
-    joins_statements = "\n".join(
+    joins_list = list(joins)
+    joins_statements = "".join(
         [
             join_statement[join]
-            for join in joins
+            for join in sorted(joins_list)
         ]
     )
 
