@@ -89,6 +89,7 @@ def query(
     per=None,
     oc=None,
     modelo=None,
+    endereco=None,
     selecao_lotes='63',
 ):
     """
@@ -168,6 +169,13 @@ def query(
     filtra_oc = f"""--
         AND l.ORDEM_CONFECCAO = '{oc}'
     """ if oc else ''
+
+    filtra_endereco = ''
+    if endereco:
+        filtra_endereco = f"""--
+            AND ec.COD_ENDERECO = '{endereco}'
+        """
+        joins.add('1ec')
 
     if selecao_lotes == '63':
         filtra_selecao_lotes = """--
@@ -347,10 +355,11 @@ def query(
           {filtra_op} -- filtra_op
           {filtra_per} -- filtra_per
           {filtra_oc} -- filtra_oc
+          {filtra_ref} -- filtra_ref
           {filtra_cor} -- filtra_cor
           {filtra_tam} -- filtra_tam
           {filtra_colecao} -- filtra_colecao
-          {filtra_ref} -- filtra_ref
+          {filtra_endereco} -- filtra_endereco
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
