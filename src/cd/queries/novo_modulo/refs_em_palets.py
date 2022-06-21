@@ -83,6 +83,7 @@ def query(
     cor=None,
     tam=None,
     colecao=None,
+    op=None,
     modelo=None,
     sele_lotes='63',
 ):
@@ -108,6 +109,8 @@ def query(
         tamanho de referência
     colecao: filtra no BD por coleção
         código de coleção de referência
+    op: filtra no BD por op
+        OP de lote
     modelo: filtra LOCALMENTE por modelo
         modelo de referência
     sele_lotes: filtra no BD lotes
@@ -134,6 +137,10 @@ def query(
     filter_tam = f"""--
         AND l.PROCONF_SUBGRUPO = '{tam}'
     """ if tam else ''
+
+    filter_op = f"""--
+        AND l.ORDEM_PRODUCAO = '{op}'
+    """ if op else ''
 
     filtra_colecao = ''
     if colecao:
@@ -317,6 +324,7 @@ def query(
         {joins_statements} -- joins_statements
         WHERE 1=1
           {filtra_lote} -- filtra_lote
+          {filter_op} -- filter_op
           {filtra_cor} -- filtra_cor
           {filter_tam} -- filter_tam
           {filtra_colecao} -- filtra_colecao
