@@ -11,6 +11,7 @@ from utils.views import totalize_data
 from cd.forms.novo_estoque import NovoEstoqueForm
 from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 from cd.queries.mount.records import Records
+from cd.queries.novo_modulo import refs_em_palets
 
 
 class NovoEstoque(O2BaseGetPostView):
@@ -86,6 +87,18 @@ class NovoEstoque(O2BaseGetPostView):
             row['qtd_disp'] = row['qtd_dbaixa'] - row['qtd_emp'] - row['qtd_sol']
         return dados
 
+    def get_lotes_como_disponibilidade(self):
+        self.lotes = refs_em_palets.query(
+            self.cursor,
+            fields='detalhe',
+            ref=self.referencia,
+            com_qtd_63=True,
+        )
+        for row in self.lotes:
+            row['qtd_dbaixa'] = row['qtd']
+            row['qtd_disp'] = row['qtd_dbaixa'] - row['qtd_emp'] - row['qtd_sol']
+
+
     def mount_lotes_em_estoque(self):
 
         if self.order:
@@ -131,7 +144,12 @@ class NovoEstoque(O2BaseGetPostView):
         })
 
     def mount_estoque(self):
-        self.lotes = self.get_lotes_em_estoque()
+        if self.rotina == 'default':
+            self.lotes = self.get_lotes_em_estoque()
+        elif self.rotina == 'disponibilidade':
+            self.lotes = self.get_lotes_como_disponibilidade()
+        else:
+            self.lotes = []
 
         if len(self.lotes) > 0:
             self.mount_lotes_em_estoque()

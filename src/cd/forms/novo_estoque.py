@@ -130,16 +130,16 @@ class NovoEstoqueForm(forms.Form):
         initial='el',
     )
 
-    # CHOICES = [
-    #     ('-', "Não filtra"),
-    #     ('s', "Endereçado"),
-    #     ('n', "Não endereçado"),
-    # ]
-    # enderecado = forms.ChoiceField(
-    #     label='No CD',
-    #     choices=CHOICES,
-    #     initial=' ',
-    # )
+    CHOICES = [
+        ('default', "(padrão) class LotesEmEstoque"),
+        ('disponibilidade', "refs_em_palets query"),
+        # ('estagios', "outros estágios"),
+    ]
+    rotina = forms.ChoiceField(
+        label='(teste de desenvolvimento) Rotina',
+        choices=CHOICES,
+        initial='qq',
+    )
 
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
