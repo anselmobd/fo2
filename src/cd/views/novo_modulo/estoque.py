@@ -108,7 +108,10 @@ class NovoEstoque(O2BaseGetPostView):
             paletezados=self.paletezados,
         )
         for row in dados:
-            if row['estagio'] != row['est_sol']:
+            if (
+                self.selecao_lotes != 'lotefim_emp1234'
+                and row['estagio'] != row['est_sol']
+            ):
                 row['solicitacoes'] = '-'
                 row['qtd_emp'] = 0
                 row['qtd_sol'] = 0

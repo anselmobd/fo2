@@ -110,12 +110,13 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
-        ('qq', "Qualquer estágio"),
-        ('63', "Estágio 63"),
-        ('n63', "Estágio não 63"),
-        ('60', "Estágio 60"),
-        ('57', "Estágio 57"),
-        ('605763', "Estágios 60, 57 e 63"),
+        ('63', "* Com quantidade no estágio 63"),
+        ('qq', "Com quantidade em qualquer estágio"),
+        ('605763', "Com quantidade nos estágios 60, 57 e 63"),
+        ('n63', "Com quantidade em estágio diferente de 63"),
+        ('60', "Com quantidade no estágio 60"),
+        ('57', "Com quantidade no estágio 57"),
+        ('lotefim_emp1234', "Lote finalizado com empenho não finalizado"),
     ]
     selecao_lotes = forms.ChoiceField(
         label='Seleção de lotes',
