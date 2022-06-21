@@ -128,6 +128,7 @@ class NovoEstoque(O2BaseGetPostView):
             elif self.order == 'mod':
                 self.lotes.sort(key=operator.itemgetter('modelo', 'ref', 'ordem_tam', 'cor', 'op', 'lote'))
 
+        len_lotes = len(self.lotes)
         totalize_data(
             self.lotes,
             {
@@ -162,6 +163,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'modelo',
             ],
             'data': self.lotes,
+            'len_lotes': len_lotes,
         })
 
     def mount_estoque(self):

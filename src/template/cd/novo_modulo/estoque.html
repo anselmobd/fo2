@@ -25,6 +25,7 @@
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=4 only %}
     {% if data %}
+      <h4>{{len_lotes}} lote{{len_lotes|pluralize}} encontrado{{len_lotes|pluralize}}</h4>
       {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque' only %}
         <table>
           {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
