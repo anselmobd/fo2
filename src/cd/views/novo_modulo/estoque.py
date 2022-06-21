@@ -97,6 +97,7 @@ class NovoEstoque(O2BaseGetPostView):
             self.cursor,
             fields='detalhe',
             ref=self.referencia,
+            sele_lotes=self.sele_lotes,
         )
         for row in dados:
             if row['estagio'] != row['est_sol']:

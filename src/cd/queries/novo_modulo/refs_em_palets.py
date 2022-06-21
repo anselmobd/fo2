@@ -17,6 +17,12 @@ def query(
     modelo=None,
     sele_lotes='63',
 ):
+    """
+    sele_lotes
+        63 = todos os lotes endereçados e com quantidade no estágio 63
+        n63 = todos os lotes endereçados e com quantidade não no estágio 63
+        qq = todos os lotes endereçados e com quantidade em qq estágio
+    """
     joins = set()
 
     if ref:
@@ -39,6 +45,15 @@ def query(
     if sele_lotes == '63':
         filtra_lote = """--
             AND l.CODIGO_ESTAGIO = 63
+            AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
+    elif sele_lotes == 'n63':
+        filtra_lote = """--
+            AND l.CODIGO_ESTAGIO <> 63
+            AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
+    elif sele_lotes == 'qq':
+        filtra_lote = """--
             AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
     else:
