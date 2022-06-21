@@ -8,6 +8,73 @@ from lotes.functions.varias import (
     modelo_de_ref,
 )
 
+__all__ = ['query']
+
+
+fields_tuple = {
+    'ref': ('ref', ),
+    'inv': (
+        'op',
+        'per',
+        'oc',
+        'ref',
+        'ordem_tam',
+        'tam',
+        'cor',
+        'qtd',
+    ),
+    'emp': (
+        'op',
+        'per',
+        'oc',
+        'ref',
+        'ordem_tam',
+        'tam',
+        'cor',
+        'qtd_emp qtd',
+    ),
+    'sol': (
+        'op',
+        'per',
+        'oc',
+        'ref',
+        'ordem_tam',
+        'tam',
+        'cor',
+        'qtd_sol qtd',
+    ),
+    'all': (
+        'op',
+        'per',
+        'oc',
+        'ref',
+        'ordem_tam',
+        'tam',
+        'cor',
+        'qtd',
+        'qtd_emp',
+        'qtd_sol',
+    ),
+    'detalhe': (
+        'op',
+        'per',
+        'oc',
+        'ref',
+        'ordem_tam',
+        'tam',
+        'cor',
+        'qtd',
+        'qtd_emp',
+        'qtd_sol',
+        'qtd_prog',
+        'estagio',
+        'est_sol',
+        'solicitacoes',
+        'palete',
+        'endereco',
+        'rota',
+    ),
+}
 
 def query(
     cursor,
@@ -80,70 +147,6 @@ def query(
             AND l.SEQUENCIA_ESTAGIO = 1
         """
 
-    fields_tuple = {
-        'ref': ('ref', ),
-        'inv': (
-            'op',
-            'per',
-            'oc',
-            'ref',
-            'ordem_tam',
-            'tam',
-            'cor',
-            'qtd',
-        ),
-        'emp': (
-            'op',
-            'per',
-            'oc',
-            'ref',
-            'ordem_tam',
-            'tam',
-            'cor',
-            'qtd_emp qtd',
-        ),
-        'sol': (
-            'op',
-            'per',
-            'oc',
-            'ref',
-            'ordem_tam',
-            'tam',
-            'cor',
-            'qtd_sol qtd',
-        ),
-        'all': (
-            'op',
-            'per',
-            'oc',
-            'ref',
-            'ordem_tam',
-            'tam',
-            'cor',
-            'qtd',
-            'qtd_emp',
-            'qtd_sol',
-        ),
-        'detalhe': (
-            'op',
-            'per',
-            'oc',
-            'ref',
-            'ordem_tam',
-            'tam',
-            'cor',
-            'qtd',
-            'qtd_emp',
-            'qtd_sol',
-            'qtd_prog',
-            'estagio',
-            'est_sol',
-            'solicitacoes',
-            'palete',
-            'endereco',
-            'rota',
-        ),
-    }
     if not isinstance(fields, (tuple, list)):
         fields = fields_tuple[fields]
 
