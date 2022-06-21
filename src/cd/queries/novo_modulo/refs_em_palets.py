@@ -80,6 +80,7 @@ def query(
     cursor,
     fields='ref',
     ref=None,
+    cor=None,
     colecao=None,
     modelo=None,
     sele_lotes='63',
@@ -100,6 +101,8 @@ def query(
                    de solicitações e endereçamento
     ref: filtra no BD por referência
         uma referência ou um list (ou tuple) de referências
+    cor: filtra no BD por cor
+        cor de referência
     colecao: filtra no BD por coleção
         código de coleção de referência
     modelo: filtra LOCALMENTE por modelo
@@ -120,6 +123,10 @@ def query(
         """
     else:
         filtra_ref = ''
+
+    filtra_cor = f"""--
+        AND l.PROCONF_ITEM = '{cor}'
+    """ if cor else ''
 
     filtra_colecao = ''
     if colecao:
@@ -303,6 +310,7 @@ def query(
         {joins_statements} -- joins_statements
         WHERE 1=1
           {filtra_lote} -- filtra_lote
+          {filtra_cor} -- filtra_cor
           {filtra_colecao} -- filtra_colecao
           {filtra_ref} -- filtra_ref
     """
