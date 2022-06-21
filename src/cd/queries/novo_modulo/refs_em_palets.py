@@ -3,7 +3,10 @@ from pprint import pprint
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
-from lotes.functions.varias import modelo_de_ref
+from lotes.functions.varias import (
+    lote_de_periodo_oc,
+    modelo_de_ref,
+)
 
 
 def query(
@@ -190,6 +193,8 @@ def query(
 
     for row in dados:
         row['modelo'] = modelo_de_ref(row['ref'])
+        if {'per', 'oc'}.issubset(fields):
+            row['lote'] = lote_de_periodo_oc(row['per'], row['oc'])
 
     if modelo:
         return [
