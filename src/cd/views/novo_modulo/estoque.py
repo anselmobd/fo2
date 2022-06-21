@@ -88,15 +88,20 @@ class NovoEstoque(O2BaseGetPostView):
         return dados
 
     def get_lotes_como_disponibilidade(self):
-        self.lotes = refs_em_palets.query(
+        dados = refs_em_palets.query(
             self.cursor,
             fields='detalhe',
             ref=self.referencia,
-            com_qtd_63=True,
+            com_qtd_63=False,
         )
-        for row in self.lotes:
+        for row in dados:
+            if row['estagio'] != row['est_sol']:
+                row['solicitacoes'] = '-'
+                row['qtd_emp'] = 0
+                row['qtd_sol'] = 0
             row['qtd_dbaixa'] = row['qtd']
             row['qtd_disp'] = row['qtd_dbaixa'] - row['qtd_emp'] - row['qtd_sol']
+        return dados
 
 
     def mount_lotes_em_estoque(self):

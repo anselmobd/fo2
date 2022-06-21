@@ -98,6 +98,7 @@ def query(
             'cor',
             'qtd_prog',
             'qtd',
+            'est_sol',
             'solicitacoes',
             'qtd_emp',
             'qtd_sol',
@@ -132,6 +133,26 @@ def query(
         'rota': "COALESCE(e.ROTA, '-')",
         'endereco': "COALESCE(ec.COD_ENDERECO, '-')",
         'qtd_prog': "l.QTDE_PECAS_PROG",
+        'est_sol': """
+            ( SELECT
+                MOD(
+                  ( SELECT 
+                      MAX(
+                        CASE WHEN l2.CODIGO_ESTAGIO = 63 THEN 163
+                        ELSE l2.CODIGO_ESTAGIO
+                        END
+                      )
+                    FROM pcpc_040 l2
+                    WHERE 1=1
+                      AND l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                      AND l2.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                      AND l2.QTDE_DISPONIVEL_BAIXA > 0
+                  )
+                , 100
+                )
+              FROM dual
+            )
+        """,
         'solicitacoes': """--
             COALESCE(
                 ( SELECT
