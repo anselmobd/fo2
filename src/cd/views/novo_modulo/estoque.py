@@ -125,6 +125,7 @@ class NovoEstoque(O2BaseGetPostView):
         self.context.update({
             'safe': [
                 'op',
+                'modelo',
             ],
             'data': self.lotes,
         })
