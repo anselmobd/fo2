@@ -161,6 +161,7 @@ class NovoEstoque(O2BaseGetPostView):
         })
 
     def mount_estoque(self):
+        self.rotina = 'disponibilidade'
         if self.rotina == 'default':
             self.lotes = self.get_lotes_em_estoque()
         elif self.rotina == 'disponibilidade':
