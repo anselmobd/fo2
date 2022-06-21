@@ -90,6 +90,7 @@ def query(
     oc=None,
     modelo=None,
     endereco=None,
+    paletezados='s',
     selecao_lotes='63',
 ):
     """
@@ -206,9 +207,28 @@ def query(
         filtra_selecao_lotes = """--
             AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
-    else:
-        filtra_selecao_lotes = """--
-            AND l.SEQUENCIA_ESTAGIO = 1
+
+    filtra_paletezados = ''
+    if paletezados == 's':
+        filtra_paletezados = """--
+            AND lp.COD_CONTAINER IS NOT NULL
+            AND lp.COD_CONTAINER <> '0'
+        """
+    elif paletezados == '63':
+        filtra_paletezados = """--
+            AND (
+              ( lp.COD_CONTAINER IS NOT NULL
+                AND lp.COD_CONTAINER <> '0'
+              )
+              OR l.CODIGO_ESTAGIO <> 63 
+            )
+        """
+    elif paletezados == 'n':
+        filtra_paletezados = """--
+            AND (
+              lp.COD_CONTAINER IS NULL
+              OR lp.COD_CONTAINER = '0'
+            )
         """
 
     if not isinstance(fields, (tuple, list)):
@@ -360,10 +380,10 @@ def query(
     sql = f"""
         SELECT DISTINCT
           {fields_statements} -- fields_statements
-        FROM ENDR_014 lp
-        JOIN PCPC_040 l
-          ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
-         AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+        FROM PCPC_040 l
+        LEFT JOIN ENDR_014 lp
+          ON lp.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+         AND lp.ORDEM_CONFECCAO = (l.PERIODO_PRODUCAO * 100000) + l.ORDEM_CONFECCAO
         {joins_statements} -- joins_statements
         WHERE 1=1
           {filtra_selecao_lotes} -- filtra_selecao_lotes
@@ -375,6 +395,7 @@ def query(
           {filtra_tam} -- filtra_tam
           {filtra_colecao} -- filtra_colecao
           {filtra_endereco} -- filtra_endereco
+          {filtra_paletezados} -- filtra_paletezados
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)

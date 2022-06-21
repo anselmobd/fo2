@@ -124,6 +124,17 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
+        ('s', "* Exige palete"),
+        ('63', "Exige palete apenas no 63"),
+        ('n', "Exige não ter palete"),
+        ('t', "Não filtra"),
+    ]
+    paletezados = forms.ChoiceField(
+        choices=CHOICES,
+        initial='s',
+    )
+
+    CHOICES = [
         ('el', "Endereço, lote"),
         ('mod', "Modelo, referência"),
     ]
