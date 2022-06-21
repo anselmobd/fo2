@@ -244,7 +244,9 @@ def query(
     }
 
     field_join = {
-        'ordem_tam': "tam",
+        'ordem_tam': 'tam',
+        'endereco': 'ec',
+        'rota': 'e',
     }
 
     fields_statements_list = []
@@ -273,6 +275,14 @@ def query(
             LEFT JOIN BASI_220 tam -- cadastro de tamanhos
               ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO 
         """,
+        'ec': """--
+            LEFT JOIN ENDR_015 ec -- endereço/container 
+              ON ec.COD_CONTAINER = lp.COD_CONTAINER
+        """,
+        'e': """--
+            LEFT JOIN ENDR_013 e -- endereço
+              ON e.COD_ENDERECO = ec.COD_ENDERECO
+        """,
     }
 
     joins_statements = "\n".join(
@@ -289,10 +299,6 @@ def query(
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
          AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
-        LEFT JOIN ENDR_015 ec -- endereço/container 
-          ON ec.COD_CONTAINER = lp.COD_CONTAINER
-        LEFT JOIN ENDR_013 e -- endereço
-          ON e.COD_ENDERECO = ec.COD_ENDERECO
         {joins_statements} -- joins_statements
         WHERE 1=1
           {filtra_lote} -- filtra_lote
