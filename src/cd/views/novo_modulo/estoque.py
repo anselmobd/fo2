@@ -56,7 +56,7 @@ class NovoEstoque(O2BaseGetPostView):
         }
         lotes_em_estoque = LotesEmEstoque(
             self.cursor,
-            tipo=tipo[self.sele_lotes],
+            tipo=tipo[self.selecao_lotes],
             lote=self.lote,
             ref=self.referencia,
             cor=self.cor,
@@ -96,7 +96,7 @@ class NovoEstoque(O2BaseGetPostView):
         dados = refs_em_palets.query(
             self.cursor,
             fields='detalhe',
-            sele_lotes=self.sele_lotes,
+            selecao_lotes=self.selecao_lotes,
             modelo=self.modelo,
             ref=self.referencia,
             cor=self.cor,

@@ -114,7 +114,7 @@ class NovoEstoqueForm(forms.Form):
         ('63', "Estágio 63"),
         ('n63', "Estágio não 63"),
     ]
-    sele_lotes = forms.ChoiceField(
+    selecao_lotes = forms.ChoiceField(
         label='Seleção de lotes',
         choices=CHOICES,
         initial='qq',

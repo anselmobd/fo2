@@ -85,7 +85,7 @@ def query(
     colecao=None,
     op=None,
     modelo=None,
-    sele_lotes='63',
+    selecao_lotes='63',
 ):
     """
     cursor: cursor de acesso ao BD
@@ -113,7 +113,7 @@ def query(
         OP de lote
     modelo: filtra LOCALMENTE por modelo
         modelo de referência
-    sele_lotes: filtra no BD lotes
+    selecao_lotes: filtra no BD lotes
         63 = todos os lotes endereçados e com quantidade no estágio 63
         n63 = todos os lotes endereçados e com quantidade não no estágio 63
         qq = todos os lotes endereçados e com quantidade em qq estágio
@@ -149,22 +149,22 @@ def query(
         """
         joins.add('1r')
 
-    if sele_lotes == '63':
-        filtra_lote = """--
+    if selecao_lotes == '63':
+        filtra_selecao_lotes = """--
             AND l.CODIGO_ESTAGIO = 63
             AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
-    elif sele_lotes == 'n63':
-        filtra_lote = """--
+    elif selecao_lotes == 'n63':
+        filtra_selecao_lotes = """--
             AND l.CODIGO_ESTAGIO <> 63
             AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
-    elif sele_lotes == 'qq':
-        filtra_lote = """--
+    elif selecao_lotes == 'qq':
+        filtra_selecao_lotes = """--
             AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
     else:
-        filtra_lote = """--
+        filtra_selecao_lotes = """--
             AND l.SEQUENCIA_ESTAGIO = 1
         """
 
@@ -323,7 +323,7 @@ def query(
          AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
         {joins_statements} -- joins_statements
         WHERE 1=1
-          {filtra_lote} -- filtra_lote
+          {filtra_selecao_lotes} -- filtra_selecao_lotes
           {filter_op} -- filter_op
           {filtra_cor} -- filtra_cor
           {filter_tam} -- filter_tam
