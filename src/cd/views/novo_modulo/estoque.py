@@ -96,9 +96,10 @@ class NovoEstoque(O2BaseGetPostView):
         dados = refs_em_palets.query(
             self.cursor,
             fields='detalhe',
-            ref=self.referencia,
             sele_lotes=self.sele_lotes,
             modelo=self.modelo,
+            ref=self.referencia,
+            cor=self.cor,
         )
         for row in dados:
             if row['estagio'] != row['est_sol']:
