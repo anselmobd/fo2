@@ -6,6 +6,7 @@ from utils.functions.queries import debug_cursor_execute
 from lotes.functions.varias import (
     lote_de_periodo_oc,
     modelo_de_ref,
+    periodo_oc,
 )
 
 __all__ = ['query']
@@ -84,6 +85,9 @@ def query(
     tam=None,
     colecao=None,
     op=None,
+    lote=None,
+    per=None,
+    oc=None,
     modelo=None,
     selecao_lotes='63',
 ):
@@ -111,6 +115,11 @@ def query(
         código de coleção de referência
     op: filtra no BD por op
         OP de lote
+    lote: filtra no BD por lote
+    per: filtra no BD por período
+        período de lote
+    oc: filtra no BD por OC
+        ordem de confecção de lote
     modelo: filtra LOCALMENTE por modelo
         modelo de referência
     selecao_lotes: filtra no BD lotes
@@ -148,6 +157,17 @@ def query(
     filtra_op = f"""--
         AND l.ORDEM_PRODUCAO = '{op}'
     """ if op else ''
+
+    if lote:
+         per, oc = periodo_oc(lote)
+
+    filtra_per = f"""--
+        AND l.PERIODO_PRODUCAO = '{per}'
+    """ if per else ''
+
+    filtra_oc = f"""--
+        AND l.ORDEM_CONFECCAO = '{oc}'
+    """ if oc else ''
 
     if selecao_lotes == '63':
         filtra_selecao_lotes = """--
@@ -325,6 +345,8 @@ def query(
         WHERE 1=1
           {filtra_selecao_lotes} -- filtra_selecao_lotes
           {filtra_op} -- filtra_op
+          {filtra_per} -- filtra_per
+          {filtra_oc} -- filtra_oc
           {filtra_cor} -- filtra_cor
           {filtra_tam} -- filtra_tam
           {filtra_colecao} -- filtra_colecao
