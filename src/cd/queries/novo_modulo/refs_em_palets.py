@@ -18,7 +18,26 @@ def query(
     sele_lotes='63',
 ):
     """
-    sele_lotes
+    cursor: cursor de acesso ao BD
+    fields: define os campos a serem buscados
+        lista de campos (list ou tuple); ou
+        'ref': busca apenas referências
+        'inv': dados suficientes para grade de inventário
+        'emp': dados suficientes para grade de empenhos (empenhos
+               sem número de solicitação)
+        'sol': dados suficientes para grade de solicitações (empenhos
+               com número de solicitação)
+        'all': dados suficientes para grades de inventário, empenhos 
+               e solicitações (empenhos com e sem número de solicitação)
+        'detalhe': igual a 'all' mais informações sobre estágio, números 
+                   de solicitações e endereçamento
+    ref: filtra no BD por referência
+        uma referência ou um list (ou tuple) de referências
+    colecao: filtra no BD por coleção
+        código de coleção de referência
+    modelo: filtra LOCALMENTE por modelo
+        modelo de referência
+    sele_lotes: filtra no BD lotes
         63 = todos os lotes endereçados e com quantidade no estágio 63
         n63 = todos os lotes endereçados e com quantidade não no estágio 63
         qq = todos os lotes endereçados e com quantidade em qq estágio
