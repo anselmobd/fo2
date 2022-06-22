@@ -10,7 +10,7 @@ from utils.views import totalize_data
 from cd.forms.novo_estoque_ficticio import NovoEstoqueFicticioForm
 from cd.queries.novo_modulo import (
     estoque_ficticio,
-    refs_de_modelos,
+    refs_de_modelo,
 )
 
 
@@ -43,7 +43,7 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
 
     def get_lotes_em_estoque(self):
         referencias = tuple(
-            refs_de_modelos.to_set(self.cursor, self.modelo)
+            refs_de_modelo.to_set(self.cursor, self.modelo)
             if self.modelo
             else set()
         )

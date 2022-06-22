@@ -20,10 +20,9 @@ from utils.functions.dictlist import (
 )
 
 from cd.forms.disponibilidade_ficticio import DisponibilidadeFicticioForm
-from cd.queries.novo_modulo import refs_em_palets
 from cd.queries.novo_modulo import (
     estoque_ficticio,
-    refs_de_modelos,
+    refs_em_palets,
 )
 
 
