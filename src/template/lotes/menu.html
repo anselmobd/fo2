@@ -19,6 +19,7 @@
       <li><a href="{% url 'producao:expedicao' %}">Expedição</a></li>
       <li><a href="{% url 'producao:pedido_faturavel_modelo' %}">Pedido faturável por modelo</a></li>
       <li><a href="{% url 'producao:pedido_historico' %}">Histórico</a></li>
+      <li><a href="{% url 'producao:analise_grade_pedidos' %}">Grade de pedidos a embarcar</a></li>
     </ul>
     <li><a href="{% url 'producao:respons' %}">Responsável por estágio</a></li>
     <li><a href="{% url 'producao:distribuicao' %}">Distribuição Tecelagem</a></li>
@@ -62,7 +63,6 @@
           <li><a href="{% url 'producao:analise_grade_produzir' %}">Depósitos (Modelo+Refs)</a></li>
         </ul>
       </ul>
-      <li><a href="{% url 'producao:analise_grade_pedidos' %}">Grade de pedidos a embarcar</a></li>
     </ul>
     <br />
   {% endif %}
