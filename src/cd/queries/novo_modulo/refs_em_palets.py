@@ -90,7 +90,7 @@ def query(
     oc=None,
     modelo=None,
     endereco=None,
-    paletezados='s',
+    paletizados='s',
     selecao_lotes='63',
 ):
     """
@@ -266,14 +266,14 @@ def query(
             )
         """
 
-    filtra_paletezados = ''
-    if paletezados == 's':
-        filtra_paletezados = """--
+    filtra_paletizados = ''
+    if paletizados == 's':
+        filtra_paletizados = """--
             AND lp.COD_CONTAINER IS NOT NULL
             AND lp.COD_CONTAINER <> '0'
         """
-    elif paletezados == '63':
-        filtra_paletezados = """--
+    elif paletizados == '63':
+        filtra_paletizados = """--
             AND (
               ( lp.COD_CONTAINER IS NOT NULL
                 AND lp.COD_CONTAINER <> '0'
@@ -281,8 +281,8 @@ def query(
               OR l.CODIGO_ESTAGIO <> 63 
             )
         """
-    elif paletezados == 'n':
-        filtra_paletezados = """--
+    elif paletizados == 'n':
+        filtra_paletizados = """--
             AND (
               lp.COD_CONTAINER IS NULL
               OR lp.COD_CONTAINER = '0'
@@ -463,7 +463,7 @@ def query(
           {filtra_tam} -- filtra_tam
           {filtra_colecao} -- filtra_colecao
           {filtra_endereco} -- filtra_endereco
-          {filtra_paletezados} -- filtra_paletezados
+          {filtra_paletizados} -- filtra_paletizados
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)

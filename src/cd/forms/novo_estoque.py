@@ -132,7 +132,7 @@ class NovoEstoqueForm(forms.Form):
         ('n', "Exige não ter palete"),
         ('t', "Não filtra"),
     ]
-    paletezados = forms.ChoiceField(
+    paletizados = forms.ChoiceField(
         choices=CHOICES,
         initial='s',
     )

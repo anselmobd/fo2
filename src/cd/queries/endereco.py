@@ -112,7 +112,7 @@ def add_endereco(cursor, endereco):
 
 
 def lotes_em_local(cursor, local=None, bloco=None):
-    """Lista lotes paletezados"""
+    """Lista lotes paletizados"""
 
     filtro = f"""--
         AND ( ec.COD_ENDERECO = '{local}'
@@ -152,7 +152,7 @@ def lotes_em_local(cursor, local=None, bloco=None):
 
 
 def lotes_itens_em_local(cursor, local=None, bloco=None):
-    """Lista lotes paletezados com suas quantidades"""
+    """Lista lotes paletizados com suas quantidades"""
 
     filtro = f"""--
         AND ( ec.COD_ENDERECO = '{local}'
