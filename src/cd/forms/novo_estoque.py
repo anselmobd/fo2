@@ -110,6 +110,17 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
+        ('63', "* Com estágio 63"),
+        ('n63', "Sem estágio 63"),
+        ('t', "Não filtra"),
+    ]
+    selecao_ops = forms.ChoiceField(
+        label='Seleção de OPs',
+        choices=CHOICES,
+        initial='qq',
+    )
+
+    CHOICES = [
         ('63', "* Com quantidade no estágio 63"),
         ('qq', "Com quantidade em qualquer estágio"),
         ('n63', "Com quantidade em estágio diferente de 63"),
@@ -123,7 +134,7 @@ class NovoEstoqueForm(forms.Form):
     selecao_lotes = forms.ChoiceField(
         label='Seleção de lotes',
         choices=CHOICES,
-        initial='qq',
+        initial='63',
     )
 
     CHOICES = [
@@ -138,7 +149,7 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
-        ('pagb', 'PA/PG/PB'),
+        ('pagb', '* PA/PG/PB'),
         ('pgb', 'PG/PB'),
         ('pa', 'PA'),
         ('pg', 'PG'),

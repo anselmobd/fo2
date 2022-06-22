@@ -94,6 +94,7 @@ def query(
     endereco=None,
     tipo_prod=None,
     paletizados='s',
+    selecao_ops='63',
     selecao_lotes='63',
 ):
     """
@@ -225,6 +226,27 @@ def query(
         filtra_tipo_prod = "AND l.PROCONF_GRUPO like 'B%'"
     elif tipo_prod == 'md':
         filtra_tipo_prod = "AND l.PROCONF_GRUPO >= 'C0000'"
+
+    if selecao_ops == '63':
+        filtra_selecao_ops = """--
+            AND EXISTS (
+              SELECT
+                1
+              FROM pcpc_040 l2 -- lote 
+              WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                AND l2.CODIGO_ESTAGIO = 63
+            )
+        """
+    elif selecao_ops == 'n63':
+        filtra_selecao_ops = """--
+            AND NOT EXISTS (
+              SELECT
+                1
+              FROM pcpc_040 l2 -- lote 
+              WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                AND l2.CODIGO_ESTAGIO = 63
+            )
+        """
 
     if selecao_lotes == '63':
         filtra_selecao_lotes = """--
@@ -497,6 +519,7 @@ def query(
         {joins_statements} -- joins_statements
         WHERE 1=1
           AND op.COD_CANCELAMENTO = 0
+          {filtra_selecao_ops} -- filtra_selecao_ops
           {filtra_selecao_lotes} -- filtra_selecao_lotes
           {filtra_op} -- filtra_op
           {filtra_per} -- filtra_per
