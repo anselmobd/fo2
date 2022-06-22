@@ -35,7 +35,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'qtd_prog qtd_lote': ['Tam.Lote', 'r'],
                 'qtd_dbaixa': ['Qtd.Est.', 'r'],
                 'estagio': ['Estágio', 'c'],
-                'solicitacoes': ['Solicitações', 'c'],
+                'solicitacoes': ['Empenhos', 'c'],
                 'sol': ['Solicitação'],
                 'qtd_emp': ['Qtd.Empen.', 'r'],
                 'qtd_sol': ['Qtd.Solic.', 'r'],
