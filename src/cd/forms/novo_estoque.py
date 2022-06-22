@@ -138,14 +138,20 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
-        ('el', "Endereço, lote"),
-        ('mod', "Modelo, referência"),
+        ('pagb', 'PA/PG/PB'),
+        ('pgb', 'PG/PB'),
+        ('pa', 'PA'),
+        ('pg', 'PG'),
+        ('pb', 'PB'),
+        ('md', 'MD'),
+        ('todos', 'Todos'),
     ]
-    order = forms.ChoiceField(
-        label='Ordenação',
+    tipo_prod = forms.ChoiceField(
+        label='Tipo de produto',
         choices=CHOICES,
-        initial='el',
+        initial='pagb',
     )
+
 
     # CHOICES = [
     #     ('default', "(padrão) class LotesEmEstoque"),
@@ -157,6 +163,16 @@ class NovoEstoqueForm(forms.Form):
     #     choices=CHOICES,
     #     initial='qq',
     # )
+
+    CHOICES = [
+        ('el', "Endereço, lote"),
+        ('mod', "Modelo, referência"),
+    ]
+    order = forms.ChoiceField(
+        label='Ordenação',
+        choices=CHOICES,
+        initial='el',
+    )
 
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())

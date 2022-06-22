@@ -92,6 +92,7 @@ def query(
     oc=None,
     modelo=None,
     endereco=None,
+    tipo_prod=None,
     paletizados='s',
     selecao_lotes='63',
 ):
@@ -127,6 +128,17 @@ def query(
     modelo: filtra no DB por referências de modelo com OP
             e LOCALMENTE por modelo
         modelo de referência
+    endereco: filtra no BD por endereço do lote no CD
+        endereço do lote
+    tipo_prod: filtra no DB por tipo de produto de acordo com características
+               da referência
+        pagb: PA/PG/PB
+        pgb: PG/PB
+        pa: PA
+        pg: PG
+        pb: PB
+        md: MD
+        todos: Todos os tipos
     selecao_lotes: filtra no BD lotes
         63 = lotes endereçados e com quantidade no estágio 63
         qq = lotes endereçados e com quantidade em qq estágio
@@ -145,7 +157,7 @@ def query(
     refs_ref = set()
     if ref:
         if isinstance(ref, (tuple, list)):
-            refs_ref = ref.copy()
+            refs_ref = set(ref)
         else:
             refs_ref = {ref, }
 
@@ -198,6 +210,21 @@ def query(
             AND ec.COD_ENDERECO = '{endereco}'
         """
         joins.add('1ec')
+
+    filtra_tipo_prod = ''
+    if tipo_prod == 'pagb':
+        filtra_tipo_prod = "AND l.PROCONF_GRUPO < 'C0000'"
+    elif tipo_prod == 'pgb':
+        filtra_tipo_prod = \
+            "AND (l.PROCONF_GRUPO like 'A%' OR l.PROCONF_GRUPO like 'B%')"
+    elif tipo_prod == 'pa':
+        filtra_tipo_prod = "AND l.PROCONF_GRUPO < 'A0000'"
+    elif tipo_prod == 'pg':
+        filtra_tipo_prod = "AND l.PROCONF_GRUPO like 'A%'"
+    elif tipo_prod == 'pb':
+        filtra_tipo_prod = "AND l.PROCONF_GRUPO like 'B%'"
+    elif tipo_prod == 'md':
+        filtra_tipo_prod = "AND l.PROCONF_GRUPO >= 'C0000'"
 
     if selecao_lotes == '63':
         filtra_selecao_lotes = """--
@@ -470,7 +497,6 @@ def query(
         {joins_statements} -- joins_statements
         WHERE 1=1
           AND op.COD_CANCELAMENTO = 0
-          -- AND l.PROCONF_GRUPO < 'C0000'
           {filtra_selecao_lotes} -- filtra_selecao_lotes
           {filtra_op} -- filtra_op
           {filtra_per} -- filtra_per
@@ -480,6 +506,7 @@ def query(
           {filtra_tam} -- filtra_tam
           {filtra_colecao} -- filtra_colecao
           {filtra_endereco} -- filtra_endereco
+          {filtra_tipo_prod} -- filtra_tipo_prod
           {filtra_paletizados} -- filtra_paletizados
     """
     debug_cursor_execute(cursor, sql)
