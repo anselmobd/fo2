@@ -110,6 +110,21 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
+        ('pagb', '* PA/PG/PB'),
+        ('pgb', 'PG/PB'),
+        ('pa', 'PA'),
+        ('pg', 'PG'),
+        ('pb', 'PB'),
+        ('md', 'MD'),
+        ('todos', 'Todos'),
+    ]
+    tipo_prod = forms.ChoiceField(
+        label='Tipo de produto',
+        choices=CHOICES,
+        initial='pagb',
+    )
+
+    CHOICES = [
         ('63', "* Com estágio 63"),
         ('n63', "Sem estágio 63"),
         ('t', "Não filtra"),
@@ -146,22 +161,6 @@ class NovoEstoqueForm(forms.Form):
         choices=CHOICES,
         initial='s',
     )
-
-    CHOICES = [
-        ('pagb', '* PA/PG/PB'),
-        ('pgb', 'PG/PB'),
-        ('pa', 'PA'),
-        ('pg', 'PG'),
-        ('pb', 'PB'),
-        ('md', 'MD'),
-        ('todos', 'Todos'),
-    ]
-    tipo_prod = forms.ChoiceField(
-        label='Tipo de produto',
-        choices=CHOICES,
-        initial='pagb',
-    )
-
 
     # CHOICES = [
     #     ('default', "(padrão) class LotesEmEstoque"),
