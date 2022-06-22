@@ -3,11 +3,13 @@ from pprint import pprint
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
+from cd.queries.novo_modulo import refs_de_modelo
 from lotes.functions.varias import (
     lote_de_periodo_oc,
     modelo_de_ref,
     periodo_oc,
 )
+from lotes.functions.varias import modelo_de_ref
 
 __all__ = ['query']
 
@@ -122,7 +124,8 @@ def query(
         período de lote
     oc: filtra no BD por OC
         ordem de confecção de lote
-    modelo: filtra LOCALMENTE por modelo
+    modelo: filtra no DB por referências de modelo com OP
+            e LOCALMENTE por modelo
         modelo de referência
     selecao_lotes: filtra no BD lotes
         63 = lotes endereçados e com quantidade no estágio 63
@@ -135,15 +138,29 @@ def query(
     """
     joins = set()
 
+    refs_modelo = set()
+    if modelo:
+        refs_modelo = refs_de_modelo.to_set(cursor, modelo)
+
+    refs_ref = set()
     if ref:
-        if not isinstance(ref, (tuple, list)):
-            ref = (ref, )
-        ref_virgulas = ', '.join([f"'{r}'" for r in ref])
+        if isinstance(ref, (tuple, list)):
+            refs_ref = ref.copy()
+        else:
+            refs_ref = {ref, }
+
+    if modelo and ref:
+        refs = refs_ref & refs_modelo
+    else:
+        refs = refs_ref | refs_modelo
+
+    
+    filtra_ref = 'AND 1=2' if modelo or ref else ''
+    if refs:
+        ref_virgulas = ', '.join([f"'{r}'" for r in list(refs)])
         filtra_ref = f"""--
             AND l.PROCONF_GRUPO in ({ref_virgulas})
         """
-    else:
-        filtra_ref = ''
 
     filtra_cor = f"""--
         AND l.PROCONF_ITEM = '{cor}'
