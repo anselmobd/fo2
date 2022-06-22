@@ -11,13 +11,13 @@ from utils.views import totalize_data
 
 import produto.queries
 
-import lotes.forms as forms
 import lotes.models
 import lotes.queries as queries
+from lotes.forms import PedidoFaturavelModeloForm
 
 
 class PedidoFaturavelModelo(View):
-    Form_class = forms.BuscaPedidoForm
+    Form_class = PedidoFaturavelModeloForm
     template_name = 'lotes/pedido_faturavel_modelo.html'
     title_name = 'Pedido faturável por modelo'
 

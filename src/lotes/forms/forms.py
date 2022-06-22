@@ -554,7 +554,7 @@ class BuscaOpForm(forms.Form):
         return cor
 
 
-class BuscaPedidoForm(forms.Form):
+class PedidoFaturavelModeloForm(forms.Form):
     modelo = forms.CharField(
         label='Modelo', max_length=5, min_length=1, required=False,
         widget=forms.TextInput(attrs={'type': 'number',
@@ -596,7 +596,7 @@ class BuscaPedidoForm(forms.Form):
     def clean(self):
         if self.errors:
             return
-        clean_form = super(BuscaPedidoForm, self).clean()
+        clean_form = super(PedidoFaturavelModeloForm, self).clean()
         if not any(
             clean_form.get(x, '')
             for x in (
