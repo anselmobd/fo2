@@ -35,7 +35,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'qtd_prog qtd_lote': ['Tam.Lote', 'r'],
                 'qtd_dbaixa': ['Qtd.Est.', 'r'],
                 'estagio': ['Estágio', 'c'],
-                'solicitacoes': ['Empenhos', 'c'],
+                'solicitacoes': ['Solicitações', 'c'],
                 'sol': ['Solicitação'],
                 'qtd_emp': ['Qtd.Empen.', 'r'],
                 'qtd_sol': ['Qtd.Solic.', 'r'],
@@ -154,7 +154,7 @@ class NovoEstoque(O2BaseGetPostView):
             'palete', 'endereco', 'rota',
             'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
             'qtd_prog', 'qtd_dbaixa', 'estagio',
-            'solicitacoes', 'qtd_emp', 'qtd_sol', 'qtd_disp',
+            'solicitacoes', 'qtd_sol', 'qtd_emp', 'qtd_disp',
         ))
         self.context.update({
             'safe': [
