@@ -218,8 +218,7 @@ def query(
               SELECT
                 1
               FROM pcpc_040 l2 -- lote 
-              WHERE 1=1
-                AND l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+              WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND l2.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
                 AND l2.QTDE_DISPONIVEL_BAIXA > 0
             )
@@ -227,8 +226,28 @@ def query(
               SELECT
                 1
               FROM pcpc_044 sl -- solicitação / lote 
-              WHERE 1=1
-                AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+              WHERE sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                AND sl.GRUPO_DESTINO <> '0'
+                AND sl.SITUACAO IN (1, 2, 3, 4)
+            )
+        """
+    elif selecao_lotes == 'lote63fim_emp1234':
+        filtra_selecao_lotes = """--
+            AND l.CODIGO_ESTAGIO = 63
+            AND NOT EXISTS (
+              SELECT
+                1
+              FROM pcpc_040 l2 -- lote 
+              WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                AND l2.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                AND l2.QTDE_DISPONIVEL_BAIXA > 0
+            )
+            AND EXISTS (
+              SELECT
+                1
+              FROM pcpc_044 sl -- solicitação / lote 
+              WHERE sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
                 AND sl.GRUPO_DESTINO <> '0'
                 AND sl.SITUACAO IN (1, 2, 3, 4)
@@ -270,7 +289,13 @@ def query(
         'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
         'oc': "l.ORDEM_CONFECCAO",
         'per': "l.PERIODO_PRODUCAO",
-        'estagio': "COALESCE(l.CODIGO_ESTAGIO, 999)",
+        'estagio': """
+            CASE
+              WHEN l.QTDE_DISPONIVEL_BAIXA = 0
+              THEN 0
+              ELSE l.CODIGO_ESTAGIO
+            END
+        """,
         'cor': "l.PROCONF_ITEM",
         'qtd': "l.QTDE_DISPONIVEL_BAIXA",
         'palete': """--
@@ -408,11 +433,15 @@ def query(
         SELECT DISTINCT
           {fields_statements} -- fields_statements
         FROM PCPC_040 l
+        JOIN PCPC_020 op
+          ON op.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         LEFT JOIN ENDR_014 lp
           ON lp.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
          AND lp.ORDEM_CONFECCAO = (l.PERIODO_PRODUCAO * 100000) + l.ORDEM_CONFECCAO
         {joins_statements} -- joins_statements
         WHERE 1=1
+          AND op.COD_CANCELAMENTO = 0
+          -- AND l.PROCONF_GRUPO < 'C0000'
           {filtra_selecao_lotes} -- filtra_selecao_lotes
           {filtra_op} -- filtra_op
           {filtra_per} -- filtra_per
