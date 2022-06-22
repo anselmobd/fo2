@@ -125,21 +125,10 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
             }
             gzerada = og.update_gzerada(gzerada, gopa)
 
-
-        referencias = refs_em_palets.query(
-            cursor,
-            modelo=modelo,
-        )
-
-        filtra_ref = [
-            row['ref']
-            for row in referencias
-        ]
-
         empenhado = refs_em_palets.query(
             cursor,
             fields='all',
-            ref=filtra_ref,
+            modelo=modelo,
         )
 
         for row in empenhado:
