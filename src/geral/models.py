@@ -252,6 +252,9 @@ class UsuarioPopAssunto(models.Model):
         PopAssunto, on_delete=models.PROTECT,
         verbose_name='assunto de POP')
 
+    def __str__(self):
+        return f"{self.usuario} - {self.assunto}"
+
     class Meta:
         db_table = "fo2_ger_usr_pop_assunto"
         verbose_name = "usuário de assunto de POP"
