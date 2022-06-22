@@ -116,6 +116,7 @@ class NovoEstoqueForm(forms.Form):
         ('605763', "Com quantidade nos estágios 60, 57 e 63"),
         ('60', "Com quantidade no estágio 60"),
         ('57', "Com quantidade no estágio 57"),
+        ('lotefim', "Lote finalizado"),
         ('lotefim_emp1234', "Lote finalizado com empenho não finalizado"),
         ('lote63fim_emp1234', "Lote com estágio 63, finalizado e com empenho não finalizado"),
     ]
