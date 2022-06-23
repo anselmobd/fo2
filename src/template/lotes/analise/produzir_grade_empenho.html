@@ -92,26 +92,11 @@
         </thead>
         {% include "layout/thead_generic.html" with data=gopa.headers style=gopa.style only %}
         {% include "layout/tbody_generic.html" with fields=gopa.fields data=gopa.data style=gopa.style only %}
-      {% endif %}
-
-      {% if conta_grade_op != 1 %}
+      {% else %}
         <thead class="layout">
           <tr>
             <th colspan="99">
-              <h3>Total disponível em OPs</h3>
-            </th>
-          </tr>
-        </thead>
-      {% endif %}
-      {% if conta_grade_op > 1 %}
-        {% include "layout/thead_generic.html" with data=gop.headers style=gop.style only %}
-        {% include "layout/tbody_generic.html" with fields=gop.fields data=gop.data style=gop.style only %}
-      {% endif %}
-      {% if conta_grade_op == 0 %}
-        <thead class="layout">
-          <tr>
-            <th colspan="99">
-              <h4>Modelo sem disponibilidade em OPs</h4>
+              <h4>Modelo sem OPs em produção</h4>
             </th>
           </tr>
         </thead>
@@ -120,8 +105,8 @@
       <thead class="layout">
         <tr>
           <th colspan="99">
-            <h3>Inventário - CD</h3>
-            <p>Inventário = Lotes em paletes com quantidade no 63-CD</p>
+            <h3>Inventário (CD)</h3>
+            <p>Inventário = Lotes em paletes com quantidade no 63(CD)</p>
           </th>
         </tr>
       </thead>
@@ -132,7 +117,7 @@
         <thead class="layout">
           <tr>
             <th colspan="99">
-              <h4>Modelo quantidades em inventário</h4>
+              <h4>Modelo sem quantidades em inventário</h4>
             </th>
           </tr>
         </thead>

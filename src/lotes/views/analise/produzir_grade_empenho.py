@@ -238,19 +238,6 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
                 'gped': gped,
             })
 
-        gop = None
-        total_op = 0
-        conta_grade_op = 0
-        if gopa is not None:
-            conta_grade_op = 1
-            gop = gopa
-            total_op = total_opa
-
-        self.context.update({
-            'gop': gop,
-            'conta_grade_op': conta_grade_op,
-        })
-
         gm = None
         if meta.meta_estoque != 0 or meta.meta_giro != 0:
             if meta.meta_estoque == 0:
@@ -265,13 +252,13 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
             })
 
         gopp1 = None
-        if total_op != 0 or total_ped != 0:
+        if total_opa != 0 or total_ped != 0:
             if total_ped == 0:
-                gopp1 = gop
-            elif total_op == 0:
+                gopp1 = gopa
+            elif total_opa == 0:
                 gopp1 = og.subtrai_grades(gzerada, gped)
             else:
-                gopp1 = og.subtrai_grades(gop, gped)
+                gopp1 = og.subtrai_grades(gopa, gped)
 
         gopp2 = None
         if gopp1 or total_sol != 0:
