@@ -94,7 +94,7 @@ def query(
     endereco=None,
     tipo_prod=None,
     situacao_empenho='t',
-    paletizados='s',
+    paletizado='s',
     selecao_ops='63',
     selecao_lotes='63',
 ):
@@ -141,6 +141,11 @@ def query(
         pb: PB
         md: MD
         todos: Todos os tipos
+    paletizado: filtra no DB pelo palete
+        s: Exige palete
+        63: Exige palete apenas no 63
+        n: Exige não ter palete
+        t: Não filtra
     selecao_lotes: filtra no BD lotes
         63 = lotes endereçados e com quantidade no estágio 63
         qq = lotes endereçados e com quantidade em qq estágio
@@ -305,14 +310,14 @@ def query(
             )
         """
 
-    filtra_paletizados = ''
-    if paletizados == 's':
-        filtra_paletizados = """--
+    filtra_paletizado = ''
+    if paletizado == 's':
+        filtra_paletizado = """--
             AND lp.COD_CONTAINER IS NOT NULL
             AND lp.COD_CONTAINER <> '0'
         """
-    elif paletizados == '63':
-        filtra_paletizados = """--
+    elif paletizado == '63':
+        filtra_paletizado = """--
             AND (
               ( lp.COD_CONTAINER IS NOT NULL
                 AND lp.COD_CONTAINER <> '0'
@@ -320,8 +325,8 @@ def query(
               OR l.CODIGO_ESTAGIO <> 63 
             )
         """
-    elif paletizados == 'n':
-        filtra_paletizados = """--
+    elif paletizado == 'n':
+        filtra_paletizado = """--
             AND (
               lp.COD_CONTAINER IS NULL
               OR lp.COD_CONTAINER = '0'
@@ -504,7 +509,7 @@ def query(
           {filtra_colecao} -- filtra_colecao
           {filtra_endereco} -- filtra_endereco
           {filtra_tipo_prod} -- filtra_tipo_prod
-          {filtra_paletizados} -- filtra_paletizados
+          {filtra_paletizado} -- filtra_paletizado
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
