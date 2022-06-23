@@ -93,6 +93,7 @@ def query(
     modelo=None,
     endereco=None,
     tipo_prod=None,
+    situacao_empenho='t',
     paletizados='s',
     selecao_ops='63',
     selecao_lotes='63',
@@ -311,6 +312,20 @@ def query(
             )
         """
 
+    filtra_situacao_empenho = ''
+    if situacao_empenho == 'esnf':
+        filtra_situacao_empenho = """--
+            AND EXISTS (
+              SELECT
+                1
+              FROM pcpc_044 sl -- solicitação / lote 
+              WHERE sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                AND sl.GRUPO_DESTINO <> '0'
+                AND sl.SITUACAO IN (1, 2, 3, 4)
+            )
+        """
+
     filtra_paletizados = ''
     if paletizados == 's':
         filtra_paletizados = """--
@@ -498,6 +513,7 @@ def query(
         {joins_statements} -- joins_statements
         WHERE 1=1
           AND op.COD_CANCELAMENTO = 0
+          {filtra_situacao_empenho} -- filtra_situacao_empenho
           {filtra_selecao_ops} -- filtra_selecao_ops
           {filtra_selecao_lotes} -- filtra_selecao_lotes
           {filtra_op} -- filtra_op

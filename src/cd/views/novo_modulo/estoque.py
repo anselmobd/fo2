@@ -107,6 +107,7 @@ class NovoEstoque(O2BaseGetPostView):
             tipo_prod=self.tipo_prod,
             selecao_ops=self.selecao_ops,
             selecao_lotes=self.selecao_lotes,
+            situacao_empenho=self.situacao_empenho,
             paletizados=self.paletizados,
         )
         for row in dados:

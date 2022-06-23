@@ -152,6 +152,16 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
+        ('t', "* Não filtra"),
+        ('esnf', "Empenhado ou solicitado não finalizado"),
+    ]
+    situacao_empenho = forms.ChoiceField(
+        label='Situação de empenho',
+        choices=CHOICES,
+        initial='t',
+    )
+
+    CHOICES = [
         ('s', "* Exige palete"),
         ('63', "Exige palete apenas no 63"),
         ('n', "Exige não ter palete"),
