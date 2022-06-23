@@ -172,6 +172,7 @@ def query(
         esnf: Empenhado ou solicitado não finalizado
         enf: Empenhado não finalizado
         snf: Solicitado não finalizado
+        esf: Empenhado/solicitado finalizado
     selecao_ops: filtra no BD OPs
         63: Com estágio 63 (CD)
         n63: Sem estágio 63 (CD)
@@ -337,6 +338,18 @@ def query(
                 AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
                 AND sl.GRUPO_DESTINO <> '0'
                 AND sl.SITUACAO IN (1, 2, 3, 4)
+            )
+        """
+    elif situacao_empenho == 'esf':
+        filtra_situacao_empenho = """--
+            AND EXISTS (
+              SELECT
+                1
+              FROM pcpc_044 sl -- solicitação / lote 
+              WHERE sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                AND sl.GRUPO_DESTINO <> '0'
+                AND sl.SITUACAO = 5
             )
         """
     elif situacao_empenho == 'enf':

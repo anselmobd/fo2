@@ -155,6 +155,7 @@ class NovoEstoqueForm(forms.Form):
         ('esnf', "Empenhado ou solicitado não finalizado"),
         ('enf', "Empenhado não finalizado"),
         ('snf', "Solicitado não finalizado"),
+        ('esf', "Empenhado/solicitado finalizado"),
     ]
     situacao_empenho = forms.ChoiceField(
         label='Situação de empenho',
