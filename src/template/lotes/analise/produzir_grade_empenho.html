@@ -120,8 +120,29 @@
       <thead class="layout">
         <tr>
           <th colspan="99">
+            <h3>Inventário - CD</h3>
+            <p>Inventário = Lotes em paletes com quantidade no 63-CD</p>
+          </th>
+        </tr>
+      </thead>
+      {% if ginv %}
+        {% include "layout/thead_generic.html" with data=ginv.headers style=ginv.style only %}
+        {% include "layout/tbody_generic.html" with fields=ginv.fields data=ginv.data style=ginv.style only %}
+      {% else %}
+        <thead class="layout">
+          <tr>
+            <th colspan="99">
+              <h4>Modelo quantidades em inventário</h4>
+            </th>
+          </tr>
+        </thead>
+      {% endif %}
+
+      <thead class="layout">
+        <tr>
+          <th colspan="99">
             <h3>Empenhos</h3>
-            <p>Empenhos e solicitações com situação menor que 5</p>
+            <p>Empenhos e solicitações sobre Inventário com situação 1, 2, 3 ou 4</p>
           </th>
         </tr>
       </thead>

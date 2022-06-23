@@ -131,6 +131,26 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
             modelo=modelo,
         )
 
+        grade_inventario = dictlist_to_grade_qtd(
+            empenhado,
+            field_linha='cor',
+            field_coluna='tam',
+            facade_coluna='Tamanho',
+            field_ordem_coluna='ordem_tam',
+            field_quantidade='qtd',
+        )
+        total_inv = grade_inventario['total']
+
+        ginv = None
+        if total_inv != 0:
+            ginv = {
+                'headers': grade_inventario['headers'],
+                'fields': grade_inventario['fields'],
+                'data': grade_inventario['data'],
+                'style': grade_inventario['style'],
+            }
+            gzerada = og.update_gzerada(gzerada, ginv)
+
         for row in empenhado:
             row['qtd'] = row['qtd_emp'] + row['qtd_sol']
 
@@ -198,6 +218,12 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
             gopa = og.soma_grades(gzerada, gopa)
             self.context.update({
                 'gopa': gopa,
+            })
+
+        if ginv is not None:
+            ginv = og.soma_grades(gzerada, ginv)
+            self.context.update({
+                'ginv': ginv,
             })
 
         if gsol is not None:
