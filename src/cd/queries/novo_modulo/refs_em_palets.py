@@ -528,7 +528,7 @@ def query(
                     AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
                     -- AND sl.ORDEM_CONFECCAO <> 0 
                     AND sl.GRUPO_DESTINO <> '0'
-                    AND sl.SITUACAO - 5
+                    AND sl.SITUACAO = 5
                 ),
                 0
             )
