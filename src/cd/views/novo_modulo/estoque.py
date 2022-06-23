@@ -151,12 +151,13 @@ class NovoEstoque(O2BaseGetPostView):
 
         self.lotes.object_list.append(totalizador_lotes)
 
-        self.context.update(self.table_defs.hfs_dict(
+        fields = [
             'palete', 'endereco', 'rota',
             'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
             'qtd_prog', 'qtd_dbaixa', 'estagio',
             'solicitacoes', 'qtd_sol', 'qtd_emp', 'qtd_disp',
-        ))
+        ]
+        self.context.update(self.table_defs.hfs_dict(*fields))
         self.context.update({
             'safe': [
                 'op',
