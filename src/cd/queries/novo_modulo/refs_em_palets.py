@@ -77,6 +77,27 @@ fields_tuple = {
         'endereco',
         'rota',
     ),
+    'detalhe+fin': (
+        'op',
+        'per',
+        'oc',
+        'ref',
+        'ordem_tam',
+        'tam',
+        'cor',
+        'qtd',
+        'qtd_emp',
+        'qtd_sol',
+        'qtd_prog',
+        'estagio',
+        'est_sol',
+        'solicitacoes',
+        'palete',
+        'endereco',
+        'rota',
+        'sol_fin',
+        'qtd_fin',
+    ),
 }
 
 def query(
@@ -429,9 +450,25 @@ def query(
                 WHERE 1=1
                     AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                     AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
-                    AND sl.ORDEM_CONFECCAO <> 0 
+                    -- AND sl.ORDEM_CONFECCAO <> 0 
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO IN (1, 2, 3, 4)
+                ),
+            '-'
+            )
+        """,
+        'sol_fin': """--
+            COALESCE(
+                ( SELECT
+                    LISTAGG(DISTINCT COALESCE(TO_CHAR(sl.SOLICITACAO), '#'), ', ')
+                    WITHIN GROUP (ORDER BY sl.SOLICITACAO) colicitacoes
+                FROM pcpc_044 sl -- solicitação / lote 
+                WHERE 1=1
+                    AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                    -- AND sl.ORDEM_CONFECCAO <> 0 
+                    AND sl.GRUPO_DESTINO <> '0'
+                    AND sl.SITUACAO = 5
                 ),
             '-'
             )
@@ -444,7 +481,7 @@ def query(
                   WHERE 1=1
                     AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                     AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
-                    AND sl.ORDEM_CONFECCAO <> 0 
+                    -- AND sl.ORDEM_CONFECCAO <> 0 
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO IN (1, 2, 3, 4)
                     AND sl.SOLICITACAO IS NULL
@@ -460,10 +497,25 @@ def query(
                   WHERE 1=1
                     AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                     AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
-                    AND sl.ORDEM_CONFECCAO <> 0 
+                    -- AND sl.ORDEM_CONFECCAO <> 0 
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO IN (1, 2, 3, 4)
                     AND sl.SOLICITACAO IS NOT NULL
+                ),
+                0
+            )
+        """,
+        'qtd_fin': """--
+            COALESCE(
+                ( SELECT
+                    SUM(sl.QTDE) qtd_fin
+                  FROM pcpc_044 sl -- solicitação / lote 
+                  WHERE 1=1
+                    AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                    -- AND sl.ORDEM_CONFECCAO <> 0 
+                    AND sl.GRUPO_DESTINO <> '0'
+                    AND sl.SITUACAO - 5
                 ),
                 0
             )
