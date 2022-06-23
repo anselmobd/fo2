@@ -148,7 +148,7 @@ def query(
         n63 = lotes endereçados e com quantidade não no estágio 63
         60 = lotes endereçados e com quantidade no estágio 60
         57 = lotes endereçados e com quantidade no estágio 57
-        lotefim_emp1234 = lotes finalizados com empenho não finalizado
+        lotefim = lotes finalizados
     """
     joins = set()
 
@@ -288,27 +288,6 @@ def query(
               WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND l2.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
                 AND l2.QTDE_DISPONIVEL_BAIXA > 0
-            )
-        """
-    elif selecao_lotes == 'lotefim_emp1234':
-        filtra_selecao_lotes = """--
-            AND l.SEQUENCIA_ESTAGIO = 1
-            AND NOT EXISTS (
-              SELECT
-                1
-              FROM pcpc_040 l2 -- lote 
-              WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                AND l2.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
-                AND l2.QTDE_DISPONIVEL_BAIXA > 0
-            )
-            AND EXISTS (
-              SELECT
-                1
-              FROM pcpc_044 sl -- solicitação / lote 
-              WHERE sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                AND sl.GRUPO_DESTINO <> '0'
-                AND sl.SITUACAO IN (1, 2, 3, 4)
             )
         """
 
