@@ -146,6 +146,10 @@ def query(
         63: Exige palete apenas no 63
         n: Exige não ter palete
         t: Não filtra
+    selecao_ops: filtra no BD OPs
+        63: Com estágio 63 (CD)
+        n63: Sem estágio 63 (CD)
+        t: Não filtra
     selecao_lotes: filtra no BD lotes
         63 = lotes endereçados e com quantidade no estágio 63
         qq = lotes endereçados e com quantidade em qq estágio
