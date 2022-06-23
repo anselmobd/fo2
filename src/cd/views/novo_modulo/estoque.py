@@ -9,8 +9,6 @@ from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
 from cd.forms.novo_estoque import NovoEstoqueForm
-from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
-from cd.queries.mount.records import Records
 from cd.queries.novo_modulo import refs_em_palets
 
 
@@ -49,50 +47,6 @@ class NovoEstoque(O2BaseGetPostView):
             ['header', '+style'],
             style = {'_': 'text-align'},
         )
-
-    def get_lotes_em_estoque(self):
-        tipo = {
-            'qq': 'iq',
-            '63': 'i',
-            'n63': 'in',
-        }
-        lotes_em_estoque = LotesEmEstoque(
-            self.cursor,
-            tipo=tipo[self.selecao_lotes],
-            lote=self.lote,
-            ref=self.referencia,
-            cor=self.cor,
-            tam=self.tam,
-            colecao=self.colecao,
-            modelo=self.modelo,
-            endereco=self.endereco,
-            op=self.op,
-            fields_tuple=(
-                'tam',
-                'ordem_tam',
-                'cor',
-                'op',
-                'lote',
-                'qtd_prog',
-                'qtd_dbaixa',
-                'palete',
-                'endereco',
-                'rota',
-                'estagio',
-                'est_sol',
-                'solicitacoes',
-                'qtd_sol',
-                'qtd_emp',
-            ),
-        )
-        dados = lotes_em_estoque.dados()
-        for row in dados:
-            if row['estagio'] != row['est_sol']:
-                row['solicitacoes'] = '-'
-                row['qtd_emp'] = 0
-                row['qtd_sol'] = 0
-            row['qtd_disp'] = row['qtd_dbaixa'] - row['qtd_emp'] - row['qtd_sol']
-        return dados
 
     def get_lotes_como_disponibilidade(self):
         if self.situacao_empenho == 'esf':
@@ -180,13 +134,7 @@ class NovoEstoque(O2BaseGetPostView):
         })
 
     def mount_estoque(self):
-        self.rotina = 'disponibilidade'
-        if self.rotina == 'default':
-            self.lotes = self.get_lotes_em_estoque()
-        elif self.rotina == 'disponibilidade':
-            self.lotes = self.get_lotes_como_disponibilidade()
-        else:
-            self.lotes = []
+        self.lotes = self.get_lotes_como_disponibilidade()
 
         if len(self.lotes) > 0:
             self.mount_lotes_em_estoque()

@@ -174,17 +174,6 @@ class NovoEstoqueForm(forms.Form):
         initial='s',
     )
 
-    # CHOICES = [
-    #     ('default', "(padrão) class LotesEmEstoque"),
-    #     ('disponibilidade', "refs_em_palets query"),
-    #     # ('estagios', "outros estágios"),
-    # ]
-    # rotina = forms.ChoiceField(
-    #     label='(teste de desenvolvimento) Rotina',
-    #     choices=CHOICES,
-    #     initial='qq',
-    # )
-
     CHOICES = [
         ('el', "Endereço, lote"),
         ('mod', "Modelo, referência"),
