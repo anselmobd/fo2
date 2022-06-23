@@ -36,10 +36,12 @@ class NovoEstoque(O2BaseGetPostView):
                 'qtd_dbaixa': ['Qtd.Est.', 'r'],
                 'estagio': ['Estágio', 'c'],
                 'solicitacoes': ['Solicitações', 'c'],
+                'sol_fin': ['Solicit.Fin.', 'c'],
                 'sol': ['Solicitação'],
                 'qtd_emp': ['Qtd.Empen.', 'r'],
                 'qtd_sol': ['Qtd.Solic.', 'r'],
                 'qtd_disp': ['Qtd.Disp.', 'r'],
+                'qtd_fin': ['Qtd.Fin.', 'r'],
                 'sit': ['Situação'],
                 'ped_dest': ['Ped.Destino'],
                 'ref_dest': ['Ref.Destino'],
@@ -93,9 +95,13 @@ class NovoEstoque(O2BaseGetPostView):
         return dados
 
     def get_lotes_como_disponibilidade(self):
+        if self.situacao_empenho == 'esf':
+            fields = 'detalhe+fin'
+        else:
+            fields = 'detalhe'
         dados = refs_em_palets.query(
             self.cursor,
-            fields='detalhe',
+            fields=fields,
             modelo=self.modelo,
             ref=self.referencia,
             cor=self.cor,
@@ -129,10 +135,13 @@ class NovoEstoque(O2BaseGetPostView):
                 self.lotes.sort(key=operator.itemgetter('modelo', 'ref', 'ordem_tam', 'cor', 'op', 'lote'))
 
         len_lotes = len(self.lotes)
+        sum_fields = ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'qtd_disp']
+        if self.situacao_empenho == 'esf':
+            sum_fields.append('qtd_fin')
         totalize_data(
             self.lotes,
             {
-                'sum': ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'qtd_disp'],
+                'sum': sum_fields,
                 'descr': {'lote': 'Total geral:'},
                 'row_style':
                     "font-weight: bold;"
@@ -157,6 +166,9 @@ class NovoEstoque(O2BaseGetPostView):
             'qtd_prog', 'qtd_dbaixa', 'estagio',
             'solicitacoes', 'qtd_sol', 'qtd_emp', 'qtd_disp',
         ]
+        if self.situacao_empenho == 'esf':
+            fields.append('sol_fin')
+            fields.append('qtd_fin')
         self.context.update(self.table_defs.hfs_dict(*fields))
         self.context.update({
             'safe': [
