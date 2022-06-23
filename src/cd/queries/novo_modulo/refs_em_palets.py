@@ -148,7 +148,7 @@ def query(
         n63 = lotes endereçados e com quantidade não no estágio 63
         60 = lotes endereçados e com quantidade no estágio 60
         57 = lotes endereçados e com quantidade no estágio 57
-        lotefim = lotes finalizados
+        fin = lotes finalizados
     """
     joins = set()
 
@@ -278,7 +278,7 @@ def query(
         filtra_selecao_lotes = """--
             AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
-    elif selecao_lotes == 'lotefim':
+    elif selecao_lotes == 'fin':
         filtra_selecao_lotes = """--
             AND l.SEQUENCIA_ESTAGIO = 1
             AND NOT EXISTS (

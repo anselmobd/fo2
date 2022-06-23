@@ -142,7 +142,7 @@ class NovoEstoqueForm(forms.Form):
         ('605763', "Com quantidade nos estágios 60, 57 e 63"),
         ('60', "Com quantidade no estágio 60"),
         ('57', "Com quantidade no estágio 57"),
-        ('lotefim', "Lote finalizado"),
+        ('fin', "Lote finalizado"),
     ]
     selecao_lotes = forms.ChoiceField(
         label='Seleção de lotes',
