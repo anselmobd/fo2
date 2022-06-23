@@ -191,6 +191,72 @@ class NovoEstoque(O2BaseGetPostView):
         if len(self.lotes) > 0:
             self.mount_lotes_em_estoque()
 
+    def get_records_data(self):
+        records = Records(
+            self.cursor,
+            filters={
+                'lp.lote': self.lote,
+                'lp.op': self.op,
+                'op.ref': self.referencia,
+                'l_ref.cor': self.cor,
+                'l_ref.tam': self.tam,
+            },
+            fields=(
+                'lp.palete',
+                'op.ref',
+                'l_ref.cor',
+                'l_ref.tam',
+                'lp.op',
+                'lp.lote',
+                'l_ref.qtd_lote',
+                'sl.sol',
+                'sl.qtd qtd_sol',
+                'sl.sit',
+                'sl.ped_dest',
+                'sl.ref_dest',
+            )
+        )
+        dados = records.data()[:100]
+        dados.sort(key=operator.itemgetter('lote', 'ref', 'tam', 'cor'))
+        return dados
+
+    def mount_records_data(self):
+        totalize_data(
+            self.rec_data,
+            {
+                'sum': ['qtd_sol'],
+                'descr': {'sol': 'Total:'}
+            }
+        )
+        self.context.update(self.table_defs.hfs_dict(
+            'palete', 'ref', 'cor', 'tam',
+            'op', 'lote', 'qtd_lote',
+            'sol', 'qtd_sol', 'sit', 'ped_dest', 'ref_dest',
+            sufixo='r_'
+        ))
+        self.context.update({
+            'r_data': self.rec_data,
+        })
+
+    def mount_estoque_test(self):
+        if any([
+            self.lote,
+            self.op,
+            self.referencia,
+            self.cor,
+            self.tam,
+        ]):
+
+            self.rec_data = self.get_records_data()
+
+            if len(self.rec_data) > 0:
+                self.mount_records_data()
+
+        # records = Records(
+        #     self.cursor,
+        # )
+        # pprint(records.data()[:10])
+
     def filter_inputs(self):
         self.lote = None if self.lote == '' else self.lote
         self.op = None if self.op == '' else self.op
@@ -213,3 +279,5 @@ class NovoEstoque(O2BaseGetPostView):
         self.filter_inputs()
 
         self.mount_estoque()
+
+        # self.mount_estoque_test()
