@@ -153,6 +153,8 @@ class NovoEstoqueForm(forms.Form):
     CHOICES = [
         ('t', "* Não filtra"),
         ('esnf', "Empenhado ou solicitado não finalizado"),
+        ('enf', "Empenhado não finalizado"),
+        ('snf', "Solicitado não finalizado"),
     ]
     situacao_empenho = forms.ChoiceField(
         label='Situação de empenho',
