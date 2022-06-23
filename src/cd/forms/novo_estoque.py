@@ -125,8 +125,8 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
-        ('63', "* Com estágio 63"),
-        ('n63', "Sem estágio 63"),
+        ('63', "* Com estágio 63 (CD)"),
+        ('n63', "Sem estágio 63 (CD)"),
         ('t', "Não filtra"),
     ]
     selecao_ops = forms.ChoiceField(
@@ -136,12 +136,12 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
-        ('63', "* Com quantidade no estágio 63"),
+        ('63', "* Com quantidade no estágio 63 (CD)"),
         ('qq', "Com quantidade em qualquer estágio"),
-        ('n63', "Com quantidade em estágio diferente de 63"),
-        ('605763', "Com quantidade nos estágios 60, 57 e 63"),
-        ('60', "Com quantidade no estágio 60"),
-        ('57', "Com quantidade no estágio 57"),
+        ('n63', "Com quantidade em estágio diferente de 63 (CD)"),
+        ('605763', "Com quantidade nos estágios 60, 57 e 63 (EMBALAGEM, ARMAZENA e CD)"),
+        ('60', "Com quantidade no estágio 60 (EMBALAGEM)"),
+        ('57', "Com quantidade no estágio 57 (ARMAZENA)"),
         ('fin', "Lote finalizado"),
     ]
     selecao_lotes = forms.ChoiceField(
