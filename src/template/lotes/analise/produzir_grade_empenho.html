@@ -82,26 +82,6 @@
         {% include "layout/tbody_generic.html" with fields=gm.fields data=gm.data style=gm.style only %}
       {% endif %}
 
-      {% if gopa %}
-        <thead class="layout">
-          <tr>
-            <th colspan="99">
-              <h3>Total em OPs em produção</h3>
-            </th>
-          </tr>
-        </thead>
-        {% include "layout/thead_generic.html" with data=gopa.headers style=gopa.style only %}
-        {% include "layout/tbody_generic.html" with fields=gopa.fields data=gopa.data style=gopa.style only %}
-      {% else %}
-        <thead class="layout">
-          <tr>
-            <th colspan="99">
-              <h4>Modelo sem OPs em produção</h4>
-            </th>
-          </tr>
-        </thead>
-      {% endif %}
-
       <thead class="layout">
         <tr>
           <th colspan="99">
@@ -118,6 +98,38 @@
           <tr>
             <th colspan="99">
               <h4>Modelo sem quantidades em inventário</h4>
+            </th>
+          </tr>
+        </thead>
+      {% endif %}
+
+      {% if gopa_ncd %}
+        <thead class="layout">
+          <tr>
+            <th colspan="99">
+              <h3>Total em OPs em produção fora do Inventário (CD)</h3>
+            </th>
+          </tr>
+        </thead>
+        {% include "layout/thead_generic.html" with data=gopa_ncd.headers style=gopa_ncd.style only %}
+        {% include "layout/tbody_generic.html" with fields=gopa_ncd.fields data=gopa_ncd.data style=gopa_ncd.style only %}
+      {% endif %}
+
+      {% if gopa %}
+        <thead class="layout">
+          <tr>
+            <th colspan="99">
+              <h3>Total em OPs em produção</h3>
+            </th>
+          </tr>
+        </thead>
+        {% include "layout/thead_generic.html" with data=gopa.headers style=gopa.style only %}
+        {% include "layout/tbody_generic.html" with fields=gopa.fields data=gopa.data style=gopa.style only %}
+      {% else %}
+        <thead class="layout">
+          <tr>
+            <th colspan="99">
+              <h4>Modelo sem OPs em produção</h4>
             </th>
           </tr>
         </thead>

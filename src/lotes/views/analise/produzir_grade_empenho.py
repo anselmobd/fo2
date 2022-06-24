@@ -250,6 +250,13 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
             self.context.update({
                 'gm': gm,
             })
+        
+        gopa_ncd = None
+        if total_inv != 0 and total_opa != total_inv:
+            gopa_ncd = og.subtrai_grades(gopa, ginv)
+            self.context.update({
+                'gopa_ncd': gopa_ncd,
+            })
 
         gopp1 = None
         if total_opa != 0 or total_ped != 0:
