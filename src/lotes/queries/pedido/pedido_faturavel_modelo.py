@@ -3,13 +3,13 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.functions.models.dictlist import dictlist
-
 from utils.functions import (
     cache_ttl,
     fo2logger,
     my_make_key_cache,
 )
+from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import debug_cursor_execute
 
 
 def pedido_faturavel_modelo(
@@ -237,8 +237,7 @@ def pedido_faturavel_modelo(
         , pref.REF
     """
 
-    cursor.execute(sql)
-
+    debug_cursor_execute(cursor, sql)
     data = dictlist(cursor)
 
     if group == "p":
