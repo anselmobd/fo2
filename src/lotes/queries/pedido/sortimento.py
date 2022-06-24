@@ -16,6 +16,7 @@ def sortimento(cursor, **kwargs):
     faturado = argdef('faturado', 't')  # default todos os pedidos
     faturavel = argdef('faturavel', 't')  # default todos os pedidos
     solicitado = argdef('solicitado', 't')  # default todos os pedidos
+    pedido_liberado = argdef('pedido_liberado', 't')  # default todos os pedidos
     total = argdef('total', None)
 
     filtra_pedido = ''
@@ -103,6 +104,12 @@ def sortimento(cursor, **kwargs):
                 )
         """
 
+    filtro_pedido_liberado = ''
+    if pedido_liberado == 's':  # pedido_liberado
+        filtro_pedido_liberado = """--
+            AND ped.SITUACAO_VENDA = 0
+        """
+
     grade_args = {}
     if total is not None:
         grade_args = {
@@ -139,6 +146,7 @@ def sortimento(cursor, **kwargs):
           {filtro_faturado} -- filtro_faturado
           {filtro_faturavel} -- filtro_faturavel
           {filtro_solicitado} -- filtro_solicitado
+          {filtro_pedido_liberado} -- filtro_pedido_liberado
         ORDER BY
           t.ORDEM_TAMANHO
     """
@@ -193,6 +201,7 @@ def sortimento(cursor, **kwargs):
           {filtro_faturado} -- filtro_faturado
           {filtro_faturavel} -- filtro_faturavel
           {filtro_solicitado} -- filtro_solicitado
+          {filtro_pedido_liberado} -- filtro_pedido_liberado
         GROUP BY
           {sort_group} -- sort_group
         ORDER BY
@@ -232,6 +241,7 @@ def sortimento(cursor, **kwargs):
           {filtro_faturado} -- filtro_faturado
           {filtro_faturavel} -- filtro_faturavel
           {filtro_solicitado} -- filtro_solicitado
+          {filtro_pedido_liberado} -- filtro_pedido_liberado
         GROUP BY
           {sort_group} -- sort_group
         , i.CD_IT_PE_SUBGRUPO
