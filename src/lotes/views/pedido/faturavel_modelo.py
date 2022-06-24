@@ -8,6 +8,7 @@ from fo2.connections import db_cursor_so
 
 from geral.functions import config_get_value
 from utils.views import totalize_data
+from utils.views import group_rowspan, totalize_grouped_data
 
 import produto.queries
 
@@ -80,30 +81,47 @@ class PedidoFaturavelModelo(View):
                 row['DATA'] = ''
             else:
                 row['DATA'] = row['DATA'].date()
+            if row['TEM_SOLIC'] == 1:
+                row['TEM_SOLIC'] = 'Sim'
+            else:
+                row['TEM_SOLIC'] = 'Não'
 
-        totalize_data(data, {
+        group = ['TEM_SOLIC']
+        totalize_grouped_data(data, {
+            'group': group,
             'sum': ['QTD_AFAT'],
-            'descr': {'REF': 'Total:'}})
+            'count': [],
+            'descr': {'REF': 'Total:'},
+            'flags': ['NO_TOT_1'],
+            'global_sum': ['QTD_AFAT'],
+            'global_descr': {'REF': 'Total geral:'},
+            'row_style': 'font-weight: bold;',
+        })
+        group_rowspan(data, group)
+
+        # totalize_data(data, {
+        #     'sum': ['QTD_AFAT'],
+        #     'descr': {'REF': 'Total:'}})
 
         if tot_qtd_fat == 0:
-            headers = ['Nº do pedido', 'Data de embarque', 'Cliente',
+            headers = ['Tem Solicitação', 'Nº do pedido', 'Data de embarque', 'Cliente',
                        'Referência', 'Quant. pedida', 'Faturamento']
-            fields = ['PEDIDO', 'DATA', 'CLIENTE',
+            fields = ['TEM_SOLIC', 'PEDIDO', 'DATA', 'CLIENTE',
                       'REF', 'QTD_AFAT', 'FAT']
             style = {
-                5: 'text-align: right;',
+                6: 'text-align: right;',
             }
         else:
-            headers = ['Nº do pedido', 'Data de embarque', 'Cliente',
+            headers = ['Tem Solicitação', 'Nº do pedido', 'Data de embarque', 'Cliente',
                        'Referência', 'Quant. pedida', 'Quant. faturada',
                        'Quant. a faturar', 'Faturamento']
-            fields = ['PEDIDO', 'DATA', 'CLIENTE',
+            fields = ['TEM_SOLIC', 'PEDIDO', 'DATA', 'CLIENTE',
                       'REF', 'QTD', 'QTD_FAT',
                       'QTD_AFAT', 'FAT']
             style = {
-                5: 'text-align: right;',
                 6: 'text-align: right;',
                 7: 'text-align: right;',
+                8: 'text-align: right;',
             }
 
         context.update({
@@ -111,6 +129,7 @@ class PedidoFaturavelModelo(View):
             'headers': headers,
             'fields': fields,
             'data': data,
+            'group': group,
             'style': style,
         })
 
@@ -132,10 +151,35 @@ class PedidoFaturavelModelo(View):
                 totalize_data(data_pos, {
                     'sum': ['QTD_AFAT'],
                     'count': [],
-                    'descr': {'REF': 'Total:'}})
+                    'descr': {'REF': 'Total:'},
+                    'row_style': 'font-weight: bold;',
+                })
 
+                if tot_qtd_fat == 0:
+                    headers_pos = ['Nº do pedido', 'Data de embarque', 'Cliente',
+                            'Referência', 'Quant. pedida', 'Faturamento']
+                    fields_pos = ['PEDIDO', 'DATA', 'CLIENTE',
+                            'REF', 'QTD_AFAT', 'FAT']
+                    style_pos = {
+                        5: 'text-align: right;',
+                    }
+                else:
+                    headers_pos = ['Nº do pedido', 'Data de embarque', 'Cliente',
+                            'Referência', 'Quant. pedida', 'Quant. faturada',
+                            'Quant. a faturar', 'Faturamento']
+                    fields_pos = ['PEDIDO', 'DATA', 'CLIENTE',
+                            'REF', 'QTD', 'QTD_FAT',
+                            'QTD_AFAT', 'FAT']
+                    style_pos = {
+                        5: 'text-align: right;',
+                        6: 'text-align: right;',
+                        7: 'text-align: right;',
+                    }
                 context.update({
+                    'headers_pos': headers_pos,
+                    'fields_pos': fields_pos,
                     'data_pos': data_pos,
+                    'style_pos': style_pos,
                 })
 
         return context

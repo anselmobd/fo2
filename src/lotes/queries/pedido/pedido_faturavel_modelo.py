@@ -99,6 +99,16 @@ def pedido_faturavel_modelo(
     sql = f"""
         SELECT
           pref.PEDIDO
+        , CASE WHEN EXISTS
+            ( SELECT
+                1
+              FROM pcpc_044 sl -- solicitação / lote 
+              WHERE sl.PEDIDO_DESTINO = pref.PEDIDO
+                AND sl.SITUACAO <> 0
+            )
+          THEN 1 -- tem solicitação
+          ELSE 2 -- não tem solicitação
+          END TEM_SOLIC
         , pref.NIVEL
         , pref.REF
         , pref.FAT
@@ -220,7 +230,8 @@ def pedido_faturavel_modelo(
          AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE pref.QTD > pref.QTD_FAT
         ORDER BY
-          ped.DATA_ENTR_VENDA
+          2
+        , ped.DATA_ENTR_VENDA
         , pref.PEDIDO
         , pref.NIVEL
         , pref.REF
