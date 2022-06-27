@@ -107,7 +107,7 @@ def pedido_faturavel_modelo(
                 AND sl.SITUACAO <> 0
             )
           , 0 
-          ) SOLIC_SIT
+          ) EMP_SIT
         , pref.NIVEL
         , pref.REF
         , pref.FAT

@@ -81,10 +81,10 @@ class PedidoFaturavelModelo(View):
                 row['DATA'] = ''
             else:
                 row['DATA'] = row['DATA'].date()
-            if row['SOLIC_SIT'] == 0:
-                row['SOLIC_SIT'] = 'Sem Solic.'
+            if row['EMP_SIT'] == 0:
+                row['EMP_SIT'] = 'Sem Emp.'
 
-        group = ['SOLIC_SIT']
+        group = ['EMP_SIT']
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QTD_AFAT'],
@@ -102,18 +102,18 @@ class PedidoFaturavelModelo(View):
         #     'descr': {'REF': 'Total:'}})
 
         if tot_qtd_fat == 0:
-            headers = ['Situação de Solic.', 'Nº do pedido', 'Data de embarque', 'Cliente',
+            headers = ['Sit. Min. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
                        'Referência', 'Quant. pedida', 'Faturamento']
-            fields = ['SOLIC_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
+            fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
                       'REF', 'QTD_AFAT', 'FAT']
             style = {
                 6: 'text-align: right;',
             }
         else:
-            headers = ['Situação de Solic.', 'Nº do pedido', 'Data de embarque', 'Cliente',
+            headers = ['Sit. Min. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
                        'Referência', 'Quant. pedida', 'Quant. faturada',
                        'Quant. a faturar', 'Faturamento']
-            fields = ['SOLIC_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
+            fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
                       'REF', 'QTD', 'QTD_FAT',
                       'QTD_AFAT', 'FAT']
             style = {
