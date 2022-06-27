@@ -14,7 +14,12 @@
 
 {% block content %}
   {% if data %}
-    <h4>Solicitação: {{solicitacao}}</h4>
+    {% if sem_numero %}
+      <h4>Solicitação: {{solicitacao}}</h4>
+    {% else %}
+      {% url 'cd:novo_solicitacao' solicitacao as link_solicitacao %}
+      <h4>Solicitação: {% include "layout/link.html" with link=link_solicitacao text=solicitacao only %}</h4>
+    {% endif %}
     {% if pedido %}
       <h4>Pedido destino: {{pedido}}</h4>
     {% endif %}
