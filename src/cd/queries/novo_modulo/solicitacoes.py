@@ -203,7 +203,16 @@ def get_solicitacao(
          AND l_filtro.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
          AND l_filtro.CODIGO_ESTAGIO = 63
         LEFT JOIN PCPC_040 lest
-          ON lest.QTDE_EM_PRODUCAO_PACOTE > 0
+          -- ON lest.QTDE_EM_PRODUCAO_PACOTE > 0
+          ON lest.SEQUENCIA_ESTAGIO = (
+            SELECT
+              MIN(lest2.SEQUENCIA_ESTAGIO)
+            FROM PCPC_040 lest2
+            WHERE 1=1
+              AND lest2.QTDE_EM_PRODUCAO_PACOTE > 0
+              AND lest2.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
+              AND lest2.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
+          )
          AND lest.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
          AND lest.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
         LEFT JOIN PCPC_040 l
