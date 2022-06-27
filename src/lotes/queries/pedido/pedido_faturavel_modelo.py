@@ -104,10 +104,14 @@ def pedido_faturavel_modelo(
                 MIN(sl.SITUACAO)
               FROM pcpc_044 sl -- solicitação / lote 
               WHERE sl.PEDIDO_DESTINO = pref.PEDIDO
+                AND sl.ORDEM_CONFECCAO <> 0 
+                AND sl.GRUPO_DESTINO <> '0'
                 AND sl.SITUACAO <> 0
             )
           , 0 
           ) EMP_SIT
+        , pref.QTD_SOL
+        , pref.QTD_EMP
         , pref.NIVEL
         , pref.REF
         , pref.FAT
@@ -122,6 +126,32 @@ def pedido_faturavel_modelo(
           , pqs.NIVEL
           , pqs.REF
           , pqs.FAT
+          , SUM(COALESCE(
+              ( SELECT
+                  SUM(sl.QTDE)
+                FROM pcpc_044 sl -- solicitação / lote 
+                WHERE sl.PEDIDO_DESTINO = pqs.PEDIDO
+                  AND sl.ORDEM_CONFECCAO <> 0 
+                  AND sl.GRUPO_DESTINO = pqs.REF
+                  AND sl.SUB_DESTINO = pqs.TAM
+                  AND sl.COR_DESTINO = pqs.COR
+                  AND sl.SITUACAO = 5
+              )
+            , 0 
+            )) QTD_SOL
+          , SUM(COALESCE(
+              ( SELECT
+                  SUM(sl.QTDE)
+                FROM pcpc_044 sl -- solicitação / lote 
+                WHERE sl.PEDIDO_DESTINO = pqs.PEDIDO
+                  AND sl.ORDEM_CONFECCAO <> 0 
+                  AND sl.GRUPO_DESTINO = pqs.REF
+                  AND sl.SUB_DESTINO = pqs.TAM
+                  AND sl.COR_DESTINO = pqs.COR
+                  AND sl.SITUACAO IN (1, 2, 3, 4)
+              )
+            , 0 
+            )) QTD_EMP
           , sum(pqs.QTD) QTD
           , sum(pqs.PRECO) PRECO
           , sum(pqs.QTD_FAT) QTD_FAT
