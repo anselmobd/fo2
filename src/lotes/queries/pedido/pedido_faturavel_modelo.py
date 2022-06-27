@@ -99,16 +99,15 @@ def pedido_faturavel_modelo(
     sql = f"""
         SELECT
           pref.PEDIDO
-        , CASE WHEN EXISTS
+        , COALESCE(
             ( SELECT
-                1
+                MIN(sl.SITUACAO)
               FROM pcpc_044 sl -- solicitação / lote 
               WHERE sl.PEDIDO_DESTINO = pref.PEDIDO
                 AND sl.SITUACAO <> 0
             )
-          THEN 1 -- tem solicitação
-          ELSE 2 -- não tem solicitação
-          END TEM_SOLIC
+          , 0 
+          ) SOLIC_SIT
         , pref.NIVEL
         , pref.REF
         , pref.FAT
