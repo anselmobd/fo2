@@ -79,31 +79,29 @@ class Solicitacoes(O2BaseGetPostView):
             if row['solicitacao']:
                 if row['solicitacao'] == 'Totais:':
                     continue
-                row['solicitacao|LINK'] = reverse(
-                    'cd:novo_solicitacao',
-                    args=[row['solicitacao']]
-                )
+                args = [row['solicitacao']]
             else:
                 row['solicitacao'] = '#'
-                get_filtro = []
-                if self.pedido_destino:
-                    get_filtro.append(
-                        f"pedido={self.pedido_destino}"
-                    )
-                if self.lote:
-                    get_filtro.append(
-                        f"lote={self.lote}"
-                    )
-                if self.op:
-                    get_filtro.append(
-                        f"op={self.op}"
-                    )
-                url_filtro = '&'.join(get_filtro)
-                if url_filtro:
-                    row['solicitacao|LINK'] = reverse(
-                        'cd:novo_solicitacao',
-                        args=['sn']
-                    )+f"?{url_filtro}"
+                args = ['sn']
+            get_filtro = []
+            if self.pedido_destino:
+                get_filtro.append(
+                    f"pedido={self.pedido_destino}"
+                )
+            if self.lote:
+                get_filtro.append(
+                    f"lote={self.lote}"
+                )
+            if self.op:
+                get_filtro.append(
+                    f"op={self.op}"
+                )
+            url_filtro = '&'.join(get_filtro)
+            if url_filtro:
+                row['solicitacao|LINK'] = reverse(
+                    'cd:novo_solicitacao',
+                    args=args
+                )+f"?{url_filtro}"
             row['solicitacao|TARGET'] = '_blank'
             row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
 
