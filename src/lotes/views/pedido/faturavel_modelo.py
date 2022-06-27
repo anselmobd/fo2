@@ -87,11 +87,11 @@ class PedidoFaturavelModelo(View):
         group = ['EMP_SIT']
         totalize_grouped_data(data, {
             'group': group,
-            'sum': ['QTD_AFAT'],
+            'sum': ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL'],
             'count': [],
             'descr': {'REF': 'Total:'},
             'flags': ['NO_TOT_1'],
-            'global_sum': ['QTD_AFAT'],
+            'global_sum': ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL'],
             'global_descr': {'REF': 'Total geral:'},
             'row_style': 'font-weight: bold;',
         })
@@ -103,23 +103,27 @@ class PedidoFaturavelModelo(View):
 
         if tot_qtd_fat == 0:
             headers = ['Sit. Min. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
-                       'Referência', 'Quant. pedida', 'Faturamento']
+                       'Referência', 'Quant. Emp', 'Quant. Sol.', 'Quant. pedida', 'Faturamento']
             fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
-                      'REF', 'QTD_AFAT', 'FAT']
+                      'REF', 'QTD_EMP', 'QTD_SOL', 'QTD_AFAT', 'FAT']
             style = {
                 6: 'text-align: right;',
+                7: 'text-align: right;',
+                8: 'text-align: right;',
             }
         else:
             headers = ['Sit. Min. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
-                       'Referência', 'Quant. pedida', 'Quant. faturada',
+                       'Referência', 'Quant. Emp', 'Quant. Sol.', 'Quant. pedida', 'Quant. faturada',
                        'Quant. a faturar', 'Faturamento']
             fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
-                      'REF', 'QTD', 'QTD_FAT',
+                      'REF', 'QTD_EMP', 'QTD_SOL', 'QTD', 'QTD_FAT',
                       'QTD_AFAT', 'FAT']
             style = {
                 6: 'text-align: right;',
                 7: 'text-align: right;',
                 8: 'text-align: right;',
+                9: 'text-align: right;',
+                10: 'text-align: right;',
             }
 
         context.update({
