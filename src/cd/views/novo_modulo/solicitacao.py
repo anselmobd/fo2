@@ -28,22 +28,28 @@ class Solicitacao(O2BaseGetView):
         self.get_args2context = True
 
     def monta_dados_solicitados(self):
-        if self.sem_numero:
-            if (
-                self.context['pedido']
-                or self.context['op']
-                or self.context['lote']
-            ):
-                self.dados_solicitados = get_solicitacao(
-                    self.cursor,
-                    pedido_destino=self.context['pedido'],
-                    op=self.context['op'],
-                    lote=self.context['lote'],
-                )
+        if (
+            self.context['pedido']
+            or self.context['op']
+            or self.context['lote']
+        ):
+            if self.sem_numero:
+                solicitacao = None
             else:
-                self.dados_solicitados = []
+                solicitacao = self.context['solicitacao']
+            self.dados_solicitados = get_solicitacao(
+                self.cursor,
+                solicitacao=solicitacao,
+                pedido_destino=self.context['pedido'],
+                op=self.context['op'],
+                lote=self.context['lote'],
+            )
         else:
-            self.dados_solicitados = get_solicitacao(self.cursor, self.context['solicitacao'])
+            if self.sem_numero:
+                self.dados_solicitados = []
+            else:
+                self.dados_solicitados = get_solicitacao(
+                    self.cursor, self.context['solicitacao'])
 
         self.dados_enderecados = copy.deepcopy(self.dados_solicitados)
         self.dados_enderecados.sort(
@@ -420,11 +426,10 @@ class Solicitacao(O2BaseGetView):
         self.sem_numero = self.context['solicitacao'] == 'sn'
         if self.sem_numero:
             self.context['solicitacao'] = '# (sem número)'
-            self.context['pedido'] = self.request.GET.get('pedido', None)
-            self.context['op'] = self.request.GET.get('op', None)
-            self.context['lote'] = self.request.GET.get('lote', None)
-        else:
-            self.context['pedido'] = None
+        self.context['sem_numero'] = self.sem_numero
+        self.context['pedido'] = self.request.GET.get('pedido', None)
+        self.context['op'] = self.request.GET.get('op', None)
+        self.context['lote'] = self.request.GET.get('lote', None)
 
         self.monta_dados_solicitados()
 
