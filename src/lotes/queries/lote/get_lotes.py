@@ -403,7 +403,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         {sql_order} -- sql_order
         {sql_pos_qtd_lotes} -- sql_pos_qtd_lotes
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     data = dictlist(cursor)
     for i in range(0, pula):
         if len(data) != 0:
