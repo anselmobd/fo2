@@ -10,7 +10,7 @@ from utils.views import totalize_data
 
 import contabil.forms as forms
 import contabil.queries as queries
-
+from contabil.functions.nf import nf_situacao_descr
 
 class NotaFiscal(View):
     Form_class = forms.NotaFiscalForm
@@ -29,10 +29,8 @@ class NotaFiscal(View):
             })
         else:
             for row in data:
-                if row['SITUACAO'] == 1:
-                    row['SITUACAO'] = 'Ativa'
-                else:
-                    row['SITUACAO'] = 'Cancelada'
+                row['SITUACAO'] = nf_situacao_descr(
+                    row['SITUACAO'], row['COD_STATUS'])
                 if row['NF_DEVOLUCAO'] is None:
                     row['NF_DEVOLUCAO'] = '-'
                 else:
