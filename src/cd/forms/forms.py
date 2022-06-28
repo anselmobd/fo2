@@ -789,6 +789,21 @@ class GradeEstoqueTotaisForm(forms.Form):
         self.data = data
         return cleaned
 
+
+class SolicitacaoForm(forms.Form):
+    solicitacao = forms.CharField(
+        label='Solicitação',
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 6,
+                'type': 'number',
+                'autofocus': 'autofocus',
+            },
+        ),
+    )
+
+
 class SolicitacoesForm(forms.Form):
     solicitacao = forms.CharField(
         label='Solicitação',
