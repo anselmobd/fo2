@@ -6,6 +6,8 @@ from utils.functions.models.dictlist import (
 )
 from utils.functions.queries import debug_cursor_execute
 
+__all__ = ['os_lotes', 'get_imprime_lotes', 'get_lotes']
+
 
 def os_lotes(cursor, os):
     # Lotes ordenados por OS + referência + estágio
