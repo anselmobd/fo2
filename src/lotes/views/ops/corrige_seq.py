@@ -9,6 +9,7 @@ from base.views import O2BaseGetPostView
 import lotes.forms as forms
 import lotes.queries.lote
 import lotes.queries.op
+from lotes.queries.lote import get_per_oc
 
 
 class CorrigeSequenciamento(PermissionRequiredMixin, O2BaseGetPostView):
@@ -28,7 +29,7 @@ class CorrigeSequenciamento(PermissionRequiredMixin, O2BaseGetPostView):
 
         cursor = db_cursor_so(self.request)
 
-        data = lotes.queries.lote.get_per_oc(cursor, self.op)
+        data = get_per_oc.query(cursor, self.op)
         if len(data) == 0:
             self.context.update({
                 'msg_erro': 'Sem lotes',

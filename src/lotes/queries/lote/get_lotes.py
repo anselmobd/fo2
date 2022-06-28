@@ -22,21 +22,6 @@ def get_imprime_lotes(cursor, op='', tam='', cor='', order='',
     return data
 
 
-def get_per_oc(cursor, op):
-    sql = f"""
-        SELECT DISTINCT 
-          l.PERIODO_PRODUCAO PERIODO
-        , l.ORDEM_CONFECCAO OC
-        FROM PCPC_040 l
-        WHERE l.ORDEM_PRODUCAO = {op}
-        ORDER BY 
-          l.PERIODO_PRODUCAO
-        , l.ORDEM_CONFECCAO
-    """
-    debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
-
-
 def get_lotes(cursor, op='', os='', tam='', cor='', order='',
               oc_ini='', oc_fim='', pula=None, qtd_lotes=None, oc=''):
     # Lotes
