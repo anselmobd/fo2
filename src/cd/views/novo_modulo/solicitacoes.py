@@ -98,10 +98,11 @@ class Solicitacoes(O2BaseGetPostView):
                 )
             url_filtro = '&'.join(get_filtro)
             if url_filtro:
-                row['solicitacao|LINK'] = reverse(
-                    'cd:novo_solicitacao',
-                    args=args
-                )+f"?{url_filtro}"
+                url_filtro = f"?{url_filtro}"
+            row['solicitacao|LINK'] = reverse(
+                'cd:novo_solicitacao',
+                args=args
+            ) + url_filtro
             row['solicitacao|TARGET'] = '_blank'
             row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
 
