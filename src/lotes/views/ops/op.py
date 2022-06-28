@@ -13,6 +13,7 @@ import lotes.forms as forms
 import lotes.queries.lote
 import lotes.queries.op
 import lotes.queries.os
+from lotes.queries.lote import op_lotes
 
 
 class Op(View):
@@ -36,7 +37,7 @@ class Op(View):
         else:
 
             # Lotes ordenados por OS + referência + estágio
-            data = lotes.queries.lote.op_lotes(cursor, op)
+            data = op_lotes.query(cursor, op)
             p.prt('op_lotes')
 
             for row in data:
