@@ -15,6 +15,7 @@ import lotes.forms as forms
 import lotes.queries.lote
 import lotes.queries.op
 import lotes.queries.os
+from lotes.queries.lote import get_lotes
 
 
 class ComponentesDeOp(View):
@@ -309,7 +310,7 @@ class ListaLotes(View):
     def mount_context(self, cursor, op):
         context = {'op': op}
 
-        data = lotes.queries.lote.get_lotes(cursor, op=op, order='o')
+        data = get_lotes.get_lotes(cursor, op=op, order='o')
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem lotes',

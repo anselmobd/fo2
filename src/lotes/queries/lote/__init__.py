@@ -1,5 +1,4 @@
 from .existe_lote import *
-from .get_lotes import *
 from .posicao_get_item import *
 from .posicao_get_op import *
 from .posicao_historico import *

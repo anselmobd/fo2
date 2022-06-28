@@ -15,6 +15,7 @@ import lotes.models as models
 import lotes.queries as queries
 import lotes.queries.lote
 from lotes.forms import LoteForm
+from lotes.queries.lote import get_lotes
 
 
 class Posicao(View):
@@ -58,7 +59,7 @@ class Posicao(View):
                 'o_link': link,
             })
 
-        nlote_data = queries.lote.get_lotes(
+        nlote_data = get_lotes.get_lotes(
             cursor, op=op_data[0]['OP'], oc=oc_data[0]['OC'], order='o')
         nloted = nlote_data[0]
         context.update({
