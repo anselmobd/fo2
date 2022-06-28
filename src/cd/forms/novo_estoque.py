@@ -184,6 +184,14 @@ class NovoEstoqueForm(forms.Form):
         initial='el',
     )
 
+    CHOICES_PAGINADOR = [
+        ('s', 'Sim'),
+        ('n', 'Não'),
+    ]
+    usa_paginador = forms.ChoiceField(
+        label='Utiliza paginador',
+        choices=CHOICES_PAGINADOR, initial='s')
+
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 

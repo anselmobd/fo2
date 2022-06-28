@@ -150,8 +150,8 @@ class NovoEstoque(O2BaseGetPostView):
         self.order = None if self.order == '-' else self.order
         self.colecao = None if self.colecao == '' else self.colecao
 
-        # if self.usa_paginador == 'n':
-        #     self.lotes_por_pagina = 99999
+        if self.usa_paginador == 'n':
+            self.lotes_por_pagina = 999999
 
         self.oc = self.lote[4:] if self.lote else None
 
