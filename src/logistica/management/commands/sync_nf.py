@@ -227,9 +227,16 @@ class Command(BaseCommand):
                         'msg', nf_fo2.msg_status, row_st['MSG_STATUS'])
                     nf_fo2.msg_status = row_st['MSG_STATUS']
 
+                    calc_sit = (
+                        (
+                            row_st['SITUACAO'] == 1
+                            and row_st['COD_STATUS'] == 100
+                        )
+                        or row_st['SITUACAO'] == 4
+                    )
                     self.print_diff(
-                        'sit', nf_fo2.ativa, (row_st['SITUACAO'] == 1))
-                    nf_fo2.ativa = (row_st['SITUACAO'] == 1)
+                        'sit', nf_fo2.ativa, calc_sit)
+                    nf_fo2.ativa = calc_sit
 
                     self.print_diff(
                         'natu_venda', nf_fo2.natu_venda, natu_venda)
