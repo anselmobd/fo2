@@ -113,11 +113,11 @@ class Rolo(View):
             'aria-hidden="true"></span>'
         )
         context.update({
-            'headers': ('Rolo', 'Entrada', 'Nível', 'Referência',
+            'headers': ('Rolo', 'Fornecedor', 'Entrada', 'Nível', 'Referência',
                         'Cor', 'Tamanho', (title_sit, ),
                         'Reservado', 'OP', 'Usuário',
                         'Alocado', 'OP', 'Confirmado', 'Usuário'),
-            'fields': ('rolo', 'dt_entr', 'nivel', 'ref',
+            'fields': ('rolo', 'forn_cnpj', 'dt_entr', 'nivel', 'ref',
                        'cor', 'tam', 'sit',
                        'dt_reserva', 'op', 'u_reserva',
                        'conf', 'op_aloc', 'dh_conf', 'u_conf'),
