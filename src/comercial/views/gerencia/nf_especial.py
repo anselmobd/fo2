@@ -89,7 +89,7 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
             'nf': self.nf,
         })
 
-        data = nf_inform_.nf_inform(self.cursor, self.nf, especiais=True)
+        data = nf_inform_.query(self.cursor, self.nf, especiais=True)
         if len(data) == 0:
             self.context.update({
                 'msg_erro': 'Nota fiscal não encontrada',

@@ -30,7 +30,7 @@ class NotaFiscal(O2BaseGetPostView):
             'titulo': self.title_name,
         }
 
-        data = nf_inform_.nf_inform(
+        data = nf_inform_.query(
             cursor, self.nf, especiais=True, empresa=self.empresa)
         if len(data) == 0:
             self.context.update({
