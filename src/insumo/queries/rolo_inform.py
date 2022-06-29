@@ -116,5 +116,5 @@ def query(
     debug_cursor_execute(cursor, sql)
     data = dictlist_lower(cursor)
     for row in data:
-        row['forn_cnpj'] = format_cnpj(row)
+        row['forn_cnpj'] = format_cnpj(row) if row['cnpj9'] else '-'
     return data
