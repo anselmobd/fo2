@@ -1,6 +1,7 @@
 from pprint import pprint
 
-from utils.functions.models.dictlist import dictlist
+from utils.functions.format import format_cnpj
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 __all__ = ['query']
@@ -84,9 +85,9 @@ def query(
         , rc.USUARIO u_conf
         , ro.NOTA_FISCAL_ENT nf
         , ro.SERI_FISCAL_ENT nf_ser
-        , ro.FORNECEDOR_CGC9 forn9
-        , ro.FORNECEDOR_CGC4 forn4
-        , ro.FORNECEDOR_CGC2 forn2
+        , ro.FORNECEDOR_CGC9 cnpj9
+        , ro.FORNECEDOR_CGC4 cnpj4
+        , ro.FORNECEDOR_CGC2 cnpj2
         , f.NOME_FORNECEDOR forn
         FROM PCPT_020 ro -- cadastro de rolos
         LEFT JOIN TMRP_141 re -- reserva de rolo para OP
@@ -113,4 +114,7 @@ def query(
         , ro.CODIGO_ROLO DESC
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    data = dictlist_lower(cursor)
+    for row in data:
+        row['forn_cnpj'] = format_cnpj(row)
+    return data
