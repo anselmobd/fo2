@@ -82,8 +82,8 @@ urlpatterns = [
         views.MapaSemanal.as_view(),
         name='mapa_semanal__get'),
 
-    re_path(r'^rolo/$', views.Rolo.as_view(), name='rolo'),
-    re_path(r'^rolo/(?P<rolo>[29]?\.?.{5})/$', views.Rolo.as_view(),
+    re_path(r'^rolo/$', views.Rolos.as_view(), name='rolo'),
+    re_path(r'^rolo/(?P<rolo>[29]?\.?.{5})/$', views.Rolos.as_view(),
         name='rolo__get'),
 
     re_path(r'^mapa_compras_semana/$', views.MapaComprasSemana.as_view(),

@@ -11,10 +11,10 @@ import insumo.queries
 from insumo.queries import rolo_inform
 
 
-class Rolo(View):
+class Rolos(View):
     Form_class = insumo.forms.RoloForm
     template_name = 'insumo/rolo.html'
-    title_name = 'Rolo'
+    title_name = 'Rolos'
 
     def mount_context(
             self, cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf, page):
@@ -114,18 +114,18 @@ class Rolo(View):
         )
         context.update({
             'headers': (
-                'Rolo', (f"Fornecedor{balloon}", ),
-                'Entrada', 'Nível', 'Referência',
-                'Cor', 'Tamanho', (f"Situação{balloon}", ),
-                'Reservado', 'OP', 'Usuário',
-                'Alocado', 'OP', 'Confirmado', 'Usuário'
+                "Rolo", (f"Fornecedor{balloon}", ), "NF",
+                "Entrada", "Nível", "Referência",
+                "Cor", "Tamanho", (f"Situação{balloon}", ),
+                "Reservado", "OP", "Usuário",
+                "Alocado", "OP", "Confirmado", "Usuário",
             ),
             'fields': (
-                'rolo', 'forn_cnpj',
+                'rolo', 'forn_cnpj', 'nf',
                 'dt_entr', 'nivel', 'ref',
                 'cor', 'tam', 'sit',
                 'dt_reserva', 'op', 'u_reserva',
-                'conf', 'op_aloc', 'dh_conf', 'u_conf'
+                'conf', 'op_aloc', 'dh_conf', 'u_conf',
             ),
             'data': data,
         })
