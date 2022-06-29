@@ -1532,11 +1532,21 @@ def rolo_inform(
         , rc.ORDEM_PRODUCAO op_aloc
         , rc.DATA_HORA_CONF dh_conf
         , rc.USUARIO u_conf
+        , ro.NOTA_FISCAL_ENT nf
+        , ro.SERI_FISCAL_ENT nf_ser
+        , ro.FORNECEDOR_CGC9 forn9
+        , ro.FORNECEDOR_CGC4 forn4
+        , ro.FORNECEDOR_CGC2 forn2
+        , f.NOME_FORNECEDOR forn
         FROM PCPT_020 ro -- cadastro de rolos
         LEFT JOIN TMRP_141 re -- reserva de rolo para OP
           ON re.CODIGO_ROLO = ro.CODIGO_ROLO
         LEFT JOIN PCPT_025 rc
           ON rc.CODIGO_ROLO = ro.CODIGO_ROLO
+        LEFT JOIN SUPR_010 f -- fornecedor
+          ON f.FORNECEDOR9 = ro.FORNECEDOR_CGC9
+         AND f.FORNECEDOR4 = ro.FORNECEDOR_CGC4
+         AND f.FORNECEDOR2 = ro.FORNECEDOR_CGC2
         WHERE 1=1
           {filtro_rolo} -- filtro_rolo
           {filtro_sit} -- filtro_sit
