@@ -11,7 +11,7 @@ from utils.views import totalize_data
 
 import contabil.forms as forms
 import contabil.queries as queries
-from contabil.queries import nf_inform_
+from contabil.queries import nf_inform
 from contabil.functions.nf import nf_situacao_descr
 
 class NotaFiscal(O2BaseGetPostView):
@@ -30,7 +30,7 @@ class NotaFiscal(O2BaseGetPostView):
             'titulo': self.title_name,
         }
 
-        data = nf_inform_.query(
+        data = nf_inform.query(
             cursor, self.nf, especiais=True, empresa=self.empresa)
         if len(data) == 0:
             self.context.update({
