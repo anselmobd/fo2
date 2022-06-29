@@ -8,6 +8,7 @@ from fo2.connections import db_cursor_so
 
 import insumo.forms
 import insumo.queries
+from insumo.queries import rolo_inform
 
 
 class Rolo(View):
@@ -65,7 +66,7 @@ class Rolo(View):
             'paginas_vizinhas': 5,
         }
 
-        data = insumo.queries.rolo_inform(
+        data = rolo_inform.query(
             cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf)
 
         quant_rolos = len(data)
