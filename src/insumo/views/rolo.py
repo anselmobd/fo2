@@ -91,6 +91,7 @@ class Rolo(View):
         for row in data:
             row['dt_entr'] = row['dt_entr'].date()
             row['sit|HOVER'] = rolo_estoque_dict[row['sit']]
+            row['forn_cnpj|HOVER'] = row['forn']
             if row['op'] == None:
                 row['op'] = '-'
                 row['dt_reserva'] = '-'
@@ -106,21 +107,26 @@ class Rolo(View):
                 row['u_conf'] = '-'
                 row['dh_conf'] = '-'
 
-        title_sit = (
-            'Situação<span '
-            'style="font-size: 50%;vertical-align: super;" '
+        balloon = (
+            '<span style="font-size: 50%;vertical-align: super;" '
             'class="glyphicon glyphicon-comment" '
             'aria-hidden="true"></span>'
         )
         context.update({
-            'headers': ('Rolo', 'Fornecedor', 'Entrada', 'Nível', 'Referência',
-                        'Cor', 'Tamanho', (title_sit, ),
-                        'Reservado', 'OP', 'Usuário',
-                        'Alocado', 'OP', 'Confirmado', 'Usuário'),
-            'fields': ('rolo', 'forn_cnpj', 'dt_entr', 'nivel', 'ref',
-                       'cor', 'tam', 'sit',
-                       'dt_reserva', 'op', 'u_reserva',
-                       'conf', 'op_aloc', 'dh_conf', 'u_conf'),
+            'headers': (
+                'Rolo', (f"Fornecedor{balloon}", ),
+                'Entrada', 'Nível', 'Referência',
+                'Cor', 'Tamanho', (f"Situação{balloon}", ),
+                'Reservado', 'OP', 'Usuário',
+                'Alocado', 'OP', 'Confirmado', 'Usuário'
+            ),
+            'fields': (
+                'rolo', 'forn_cnpj',
+                'dt_entr', 'nivel', 'ref',
+                'cor', 'tam', 'sit',
+                'dt_reserva', 'op', 'u_reserva',
+                'conf', 'op_aloc', 'dh_conf', 'u_conf'
+            ),
             'data': data,
         })
 
