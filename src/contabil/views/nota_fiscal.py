@@ -6,26 +6,34 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from base.views import O2BaseGetPostView
 from utils.views import totalize_data
 
 import contabil.forms as forms
 import contabil.queries as queries
 from contabil.functions.nf import nf_situacao_descr
 
-class NotaFiscal(View):
-    Form_class = forms.NotaFiscalForm
-    template_name = 'contabil/nota_fiscal.html'
-    title_name = 'Nota fiscal'
+class NotaFiscal(O2BaseGetPostView):
 
-    def mount_context(self, cursor, nf, empresa):
-        context = {'nf': nf}
+    def __init__(self, *args, **kwargs):
+        super(NotaFiscal, self).__init__(*args, **kwargs)
+        self.Form_class = forms.NotaFiscalForm
+        self.template_name = 'contabil/nota_fiscal.html'
+        self.title_name = "Nota fiscal"
+        self.get_args = ['nf', 'empresa']
+        self.cleaned_data2self = True
 
-        # informações gerais
+    def mount_context(self):
+        cursor = db_cursor_so(self.request)
+        self.context = {
+            'titulo': self.title_name,
+        }
+
         data = queries.nf_inform(
-            cursor, nf, especiais=True, empresa=empresa)
+            cursor, self.nf, especiais=True, empresa=self.empresa)
         if len(data) == 0:
-            context.update({
-                'msg_erro': 'Nota fiscal não encontrada',
+            self.context.update({
+                'msg_erro': "Nota fiscal não encontrada",
             })
         else:
             for row in data:
@@ -34,17 +42,26 @@ class NotaFiscal(View):
                 if row['NF_DEVOLUCAO'] is None:
                     row['NF_DEVOLUCAO'] = '-'
                 else:
-                    row['SITUACAO'] += '/Devolvida'
-            context.update({
-                'headers': ('Cliente', 'Data NFe', 'Situação', 'Valor',
-                            'NF Devolução'),
-                'fields': ('CLIENTE', 'DATA', 'SITUACAO', 'VALOR',
-                           'NF_DEVOLUCAO'),
+                    row['SITUACAO'] = f"{row['SITUACAO']}/Devolvida"
+            self.context.update({
+                'headers': [
+                    "Cliente",
+                    "Data NFe",
+                    "Situação",
+                    "Valor",
+                    "NF Devolução",
+                ],
+                'fields': [
+                    'cliente',
+                    'data',
+                    'situacao',
+                    'valor',
+                    'nf_devolucao',
+                ],
                 'data': data,
             })
 
-            # itens
-            i_data = queries.nf_itens(cursor, nf, especiais=True, empresa=empresa)
+            i_data = queries.nf_itens(cursor, self.nf, especiais=True, empresa=self.empresa)
             max_digits = 0
             for row in i_data:
                 if row['PEDIDO_VENDA'] == 0:
@@ -59,7 +76,7 @@ class NotaFiscal(View):
 
             totalize_data(i_data, {
                 'sum': ['QTDE_ITEM_FATUR', 'VALOR_CONTABIL'],
-                'descr': {'NARRATIVA': 'Totais:'},
+                'descr': {'NARRATIVA': "Totais:"},
                 'row_style': 'font-weight: bold;',
             })
 
@@ -68,17 +85,31 @@ class NotaFiscal(View):
                 row['VALOR_UNITARIO|DECIMALS'] = 2
                 row['VALOR_CONTABIL|DECIMALS'] = 2
 
-            context.update({
-                'i_headers': ['Seq.', 'Nível',
-                              'Referência', 'Tamanho',
-                              'Cor', 'Descrição', 'Quantidade',
-                              'Valor unitário', 'Valor total',
-                              'Pedido de venda'],
-                'i_fields': ['SEQ_ITEM_NFISC', 'NIVEL_ESTRUTURA',
-                             'GRUPO_ESTRUTURA', 'SUBGRU_ESTRUTURA',
-                             'ITEM_ESTRUTURA', 'NARRATIVA', 'QTDE_ITEM_FATUR',
-                             'VALOR_UNITARIO', 'VALOR_CONTABIL',
-                             'PEDIDO_VENDA'],
+            self.context.update({
+                'i_headers': [
+                    "Seq.",
+                    "Nível",
+                    "Referência",
+                    "Tamanho",
+                    "Cor",
+                    "Descrição",
+                    "Quantidade",
+                    "Valor unitário",
+                    "Valor total",
+                    "Pedido de venda",
+                ],
+                'i_fields': [
+                    'SEQ_ITEM_NFISC',
+                    'NIVEL_ESTRUTURA',
+                    'GRUPO_ESTRUTURA',
+                    'SUBGRU_ESTRUTURA',
+                    'ITEM_ESTRUTURA',
+                    'NARRATIVA',
+                    'QTDE_ITEM_FATUR',
+                    'VALOR_UNITARIO',
+                    'VALOR_CONTABIL',
+                    'PEDIDO_VENDA',
+                ],
                 'i_data': i_data,
                 'i_style': {
                     7: 'text-align: right;',
@@ -87,32 +118,3 @@ class NotaFiscal(View):
                     10: 'text-align: right;',
                 },
             })
-
-        return context
-
-    def get(self, request, *args, **kwargs):
-        if 'nf' in kwargs:
-            return self.post(request, *args, **kwargs)
-        else:
-            context = {'titulo': self.title_name}
-            form = self.Form_class()
-            context['form'] = form
-            return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
-        form.data = form.data.copy()
-        if 'nf' in kwargs:
-            form.data['nf'] = kwargs['nf']
-            if 'empresa' in kwargs:
-                form.data['empresa'] = kwargs['empresa']
-            else:
-                form.data['empresa'] = 1
-        if form.is_valid():
-            nf = form.cleaned_data['nf']
-            empresa = form.cleaned_data['empresa']
-            cursor = db_cursor_so(request)
-            context.update(self.mount_context(cursor, nf, empresa))
-        context['form'] = form
-        return render(request, self.template_name, context)
