@@ -11,35 +11,25 @@ def query(
         reserva_de=None, reserva_ate=None, est_res=None,
         est_aloc=None, est_conf=None):
 
-    filtro_rolo = ''
-    if rolo is not None and rolo != '':
-      filtro_rolo = f"""--
-          AND ro.CODIGO_ROLO = {rolo}
-      """
+    filtro_rolo = f"""--
+        AND ro.CODIGO_ROLO = {rolo}
+    """ if rolo else ''
 
-    filtro_sit = ''
-    if sit is not None and sit != '':
-      filtro_sit = f"""--
-          AND ro.ROLO_ESTOQUE = {sit}
-      """
+    filtro_sit = f"""--
+        AND ro.ROLO_ESTOQUE = {sit}
+    """ if sit else ''
 
-    filtro_ref = ''
-    if ref is not None and ref != '':
-      filtro_ref = f"""--
-          AND ro.PANOACAB_GRUPO = '{ref}'
-      """
+    filtro_ref = f"""--
+        AND ro.PANOACAB_GRUPO = '{ref}'
+    """ if ref else ''
 
-    filtro_cor = ''
-    if cor is not None and cor != '':
-      filtro_cor = f"""--
-          AND ro.PANOACAB_ITEM = '{cor}'
-      """
+    filtro_cor = f"""--
+        AND ro.PANOACAB_ITEM = '{cor}'
+    """ if cor else ''
 
-    filtro_op = ''
-    if op is not None and op != '':
-      filtro_op = f"""--
-          AND re.ORDEM_PRODUCAO = '{op}'
-      """
+    filtro_op = f"""--
+        AND re.ORDEM_PRODUCAO = '{op}'
+    """ if op else ''
 
     filtro_reserva_de = ''
     if reserva_de:
@@ -56,36 +46,24 @@ def query(
         """
 
     filtro_est_res = ''
-    if est_res is not None:
-      if est_res == 'S':
-        filtro_est_res = """--
-            AND re.ORDEM_PRODUCAO IS NOT NULL
-        """
-      elif est_res == 'N':
-        filtro_est_res = """--
-            AND re.ORDEM_PRODUCAO IS NULL
+    if est_res:
+        null_res = "NOT" if est_res == 'S' else ''
+        filtro_est_res = f"""--
+            AND re.ORDEM_PRODUCAO IS {null_res} NULL
         """
 
     filtro_est_aloc = ''
-    if est_aloc is not None:
-      if est_aloc == 'S':
-        filtro_est_aloc = """--
-            AND rc.ROLO_CONFIRMADO IS NOT NULL
-        """
-      elif est_aloc == 'N':
-        filtro_est_aloc = """--
-            AND rc.ROLO_CONFIRMADO IS NULL
+    if est_aloc:
+        null_aloc = "NOT" if est_aloc == 'S' else ''
+        filtro_est_aloc = f"""--
+            AND rc.ROLO_CONFIRMADO IS {null_aloc} NULL
         """
 
     filtro_est_conf = ''
-    if est_conf is not None:
-      if est_conf == 'S':
-        filtro_est_conf = """--
-            AND rc.DATA_HORA_CONF IS NOT NULL
-        """
-      elif est_conf == 'N':
-        filtro_est_conf = """--
-            AND rc.DATA_HORA_CONF IS NULL
+    if est_conf:
+        null_conf = "NOT" if est_conf == 'S' else ''
+        filtro_est_conf = f"""--
+            AND rc.DATA_HORA_CONF IS {null_conf} NULL
         """
 
     sql = f"""
