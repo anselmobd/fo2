@@ -11,6 +11,7 @@ from utils.views import totalize_data
 
 import contabil.forms as forms
 import contabil.queries as queries
+from contabil.queries import nf_inform_
 from contabil.functions.nf import nf_situacao_descr
 
 class NotaFiscal(O2BaseGetPostView):
@@ -29,7 +30,7 @@ class NotaFiscal(O2BaseGetPostView):
             'titulo': self.title_name,
         }
 
-        data = queries.nf_inform(
+        data = nf_inform_.nf_inform(
             cursor, self.nf, especiais=True, empresa=self.empresa)
         if len(data) == 0:
             self.context.update({
@@ -37,12 +38,12 @@ class NotaFiscal(O2BaseGetPostView):
             })
         else:
             for row in data:
-                row['SITUACAO'] = nf_situacao_descr(
-                    row['SITUACAO'], row['COD_STATUS'])
-                if row['NF_DEVOLUCAO'] is None:
-                    row['NF_DEVOLUCAO'] = '-'
+                row['situacao'] = nf_situacao_descr(
+                    row['situacao'], row['cod_status'])
+                if row['nf_devolucao'] is None:
+                    row['nf_devolucao'] = '-'
                 else:
-                    row['SITUACAO'] = f"{row['SITUACAO']}/Devolvida"
+                    row['situacao'] = f"{row['situacao']}/Devolvida"
             self.context.update({
                 'headers': [
                     "Cliente",
