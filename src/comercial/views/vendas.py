@@ -166,7 +166,7 @@ class Vendas(O2BaseGetPostView):
         if self.infor == 'nf':
             for row in data:
                 row['nf|LINK'] = reverse(
-                    'contabil:nota_fiscal__get', args=[row['nf']])
+                    'contabil:nota_fiscal__get2', args=[1, row['nf']])
 
         if data:
             totalize_data(data, {
