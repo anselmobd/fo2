@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models.dictlist import dictlist
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -38,4 +38,4 @@ def nf_inform(cursor, nf, especiais=False, empresa=1):
           {filtra_especial} -- filtra_especial
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)

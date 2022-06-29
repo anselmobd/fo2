@@ -96,7 +96,7 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
             })
             return
 
-        especial = data[0]['ESPECIAL'] == 1
+        especial = data[0]['especial'] == 1
         self.context.update({
             'especial': especial,
         })
