@@ -1,12 +1,20 @@
 from pprint import pprint
 
 
-def format_cnpj(cnpj9, cnpj4=None, cnpj2=None, tamanho=14):
+def format_cnpj(row, cnpj4=None, cnpj2=None, tamanho=14):
     try:
-        if isinstance(cnpj9, dict):
-            cnpj4 = cnpj9[[k for k in cnpj9 if "CNPJ" in k.upper() and "4" in k][0]]
-            cnpj2 = cnpj9[[k for k in cnpj9 if "CNPJ" in k.upper() and "2" in k][0]]
-            cnpj9 = cnpj9[[k for k in cnpj9 if "CNPJ" in k.upper() and "9" in k][0]]
+        if isinstance(row, dict):
+            for k in row:
+                ku = k.upper()
+                if "CNPJ" in ku or "CGC" in ku:
+                    if "4" in k:
+                        cnpj4 = row[k]
+                    elif "2" in k:
+                        cnpj2 = row[k]
+                    elif "9" in k:
+                        cnpj9 = row[k]
+        else:
+            cnpj9 = row
         if isinstance(cnpj9, str):
             cnpj9 = int(cnpj9)
         if cnpj4:
