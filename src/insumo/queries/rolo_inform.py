@@ -1,6 +1,9 @@
 from pprint import pprint
 
-from utils.functions.models.dictlist import dictlist, dictlist_lower
+from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import debug_cursor_execute
+
+__all__ = ['query']
 
 
 def query(
@@ -55,33 +58,33 @@ def query(
     filtro_est_res = ''
     if est_res is not None:
       if est_res == 'S':
-        filtro_est_res = f"""--
+        filtro_est_res = """--
             AND re.ORDEM_PRODUCAO IS NOT NULL
         """
       elif est_res == 'N':
-        filtro_est_res = f"""--
+        filtro_est_res = """--
             AND re.ORDEM_PRODUCAO IS NULL
         """
 
     filtro_est_aloc = ''
     if est_aloc is not None:
       if est_aloc == 'S':
-        filtro_est_aloc = f"""--
+        filtro_est_aloc = """--
             AND rc.ROLO_CONFIRMADO IS NOT NULL
         """
       elif est_aloc == 'N':
-        filtro_est_aloc = f"""--
+        filtro_est_aloc = """--
             AND rc.ROLO_CONFIRMADO IS NULL
         """
 
     filtro_est_conf = ''
     if est_conf is not None:
       if est_conf == 'S':
-        filtro_est_conf = f"""--
+        filtro_est_conf = """--
             AND rc.DATA_HORA_CONF IS NOT NULL
         """
       elif est_conf == 'N':
-        filtro_est_conf = f"""--
+        filtro_est_conf = """--
             AND rc.DATA_HORA_CONF IS NULL
         """
 
@@ -131,5 +134,5 @@ def query(
           ro.DATA_ENTRADA DESC
         , ro.CODIGO_ROLO DESC
     """
-    cursor.execute(sql)
-    return dictlist_lower(cursor)
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
