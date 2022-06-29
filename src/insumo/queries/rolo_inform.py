@@ -83,7 +83,7 @@ def query(
         , rc.ORDEM_PRODUCAO op_aloc
         , rc.DATA_HORA_CONF dh_conf
         , rc.USUARIO u_conf
-        , ro.NOTA_FISCAL_ENT nf
+        , ro.NOTA_FISCAL_ENT nf_num
         , ro.SERI_FISCAL_ENT nf_ser
         , ro.FORNECEDOR_CGC9 cnpj9
         , ro.FORNECEDOR_CGC4 cnpj4
@@ -117,4 +117,5 @@ def query(
     data = dictlist_lower(cursor)
     for row in data:
         row['forn_cnpj'] = format_cnpj(row) if row['cnpj9'] else '-'
+        row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else '-'
     return data
