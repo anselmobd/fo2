@@ -47,6 +47,8 @@ def query(
         , cnfe.SERIE nf_ser
         , cnfe.NATOPER_NAT_OPER nat_op
         , cnfe.NATOPER_EST_OPER nat_uf
+        , cnfe.QTDE_ITENS 
+        , cnfe.VALOR_ITENS 
         , nat.COD_NATUREZA nat_cod
         , nat.OPERACAO_FISCAL nat_of
         , nat.DESCR_NAT_OPER nat_descr
