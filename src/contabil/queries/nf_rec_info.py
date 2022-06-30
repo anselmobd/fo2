@@ -11,6 +11,9 @@ def query(
     cursor,
     empresa=None,
     nf=None,
+    ref=None,
+    tam=None,
+    cor=None,
 ):
     filtra_nf = f"""--
         AND cnfe.DOCUMENTO = {nf}
@@ -18,6 +21,15 @@ def query(
     filtra_empresa = f"""--
         AND cnfe.LOCAL_ENTREGA = {empresa} -- empresa 1: matriz
     """ if empresa else ''
+    filtra_ref = f"""--
+        AND infe.CODITEM_GRUPO = {ref}
+    """ if ref else ''
+    filtra_tam = f"""--
+        AND infe.CODITEM_SUBGRUPO = {tam}
+    """ if tam else ''
+    filtra_cor = f"""--
+        AND infe.CODITEM_ITEM = {cor}
+    """ if cor else ''
 
     sql = f"""
         SELECT DISTINCT  
@@ -64,6 +76,9 @@ def query(
         WHERE 1=1
           {filtra_empresa} -- filtra_empresa
           {filtra_nf} -- filtra_nf
+          {filtra_ref} -- filtra_ref
+          {filtra_tam} -- filtra_tam
+          {filtra_cor} -- filtra_cor
           AND cnfe.SITUACAO_ENTRADA = 4 -- 4 = nota fornecedor
           AND cnfe.DATA_TRANSACAO >= DATE '2022-06-01'
           AND infe.CODITEM_NIVEL99 = 2
