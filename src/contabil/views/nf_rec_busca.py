@@ -28,6 +28,8 @@ class BuscaNFRecebida(O2BaseGetPostView):
             'cfop': ["CFOP", 'c'],
             'tran_est': [(f"Tran.est.{balloon}", ), 'c'],
             'hist_cont': [(f"Hist.cont.{balloon}", ), 'c'],
+            'qtde_itens': ["Quant. itens", 'r'],
+            'valor_itens': ["Valor", 'r'],
         },
         ['header', '+style'],
         style = {'_': 'text-align'},
