@@ -6,9 +6,16 @@ from o2.forms.widget_attrs import FormWidgetAttrs
 
 from utils.functions.strings import is_only_digits
 
+from systextil.models.base import Empresa
+
 
 class BuscaNFRecebidaForm(forms.Form):
     a = FormWidgetAttrs()
+
+    empresa = forms.ChoiceField(
+        required=True,
+        initial=None
+    )
 
     ref = forms.CharField(
         label='Referência',
@@ -49,6 +56,19 @@ class BuscaNFRecebidaForm(forms.Form):
             }
         )
     )
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.get('request', None)
+        super(BuscaNFRecebidaForm, self).__init__(*args, **kwargs)
+
+        CHOICES = []
+        empresas = Empresa.objects.all().order_by('codigo_empresa')
+        for empresa in empresas:
+            CHOICES.append((
+                empresa.codigo_empresa,
+                f"{empresa.codigo_empresa}-{empresa.nome_fantasia}",
+            ))
+        self.fields['empresa'].choices = CHOICES
 
     def clean_ref(self):
         cleaned = self.cleaned_data['ref']
