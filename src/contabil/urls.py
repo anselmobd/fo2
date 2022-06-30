@@ -32,6 +32,11 @@ urlpatterns = [
         nf_recebida.NFRecebida.as_view(),
         name='nf_recebida__get',
     ),
+    path(
+        'nf_recebida/<int:empresa>/<int:nf>/<int:cnpj>/',
+        nf_recebida.NFRecebida.as_view(),
+        name='nf_recebida__get3',
+    ),
 
     re_path(r'^infadprod/(?P<pedido>.+)?/?$',
         views.InfAdProd.as_view(), name='infadprod'),

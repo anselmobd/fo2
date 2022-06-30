@@ -55,7 +55,7 @@ class NFRecebida(O2BaseGetPostView):
         self.Form_class = contabil.forms.nf_rec.NFRecebidaForm
         self.template_name = 'contabil/nf_recebida.html'
         self.title_name = "Nota fiscal recebida"
-        self.get_args = ['nf', 'empresa']
+        self.get_args = ['nf', 'empresa', 'cnpj']
         self.cleaned_data2self = True
 
     def mount_context(self):
