@@ -27,13 +27,22 @@ class NFRecebida(O2BaseGetPostView):
         self.get_args = ['nf', 'empresa']
         self.cleaned_data2self = True
 
-        self.data_defs = TableDefs(
+        self.capa_defs = TableDefs(
             {
                 'dt': ["Data"],
                 'forn_cnpj_nome': ["Fornecedor"],
                 'nat_uf': ["UF"],
             },
             ['header'],
+        )
+
+        self.itens_defs = TableDefs(
+            {
+                'item': ["Item"],
+                'qtd': ["Quantidade", 'r'],
+            },
+            ['header', '+style'],
+            style = {'_': 'text-align'},
         )
 
     def mount_context(self):
@@ -47,31 +56,18 @@ class NFRecebida(O2BaseGetPostView):
             })
             return
 
-        self.context.update(self.data_defs.hfs_dict())
-        self.context.update({
-            'data': data,
-        })
+        self.context.update(self.capa_defs.hfs_dict())
+        self.context['data'] = data
 
         i_data = nf_rec_itens.query(cursor, self.nf, self.empresa)
+        if len(i_data) == 0:
+            return
 
-        if i_data:
-            totalize_data(i_data, {
-                'sum': ['qtd'],
-                'descr': {'ref': "Total:"},
-                'row_style': 'font-weight: bold;',
-            })
-
-        self.context.update({
-            'i_headers': [
-                "Item",
-                "Quantidade",
-            ],
-            'i_fields': [
-                'item',
-                'qtd',
-            ],
-            'i_data': i_data,
-            'i_style': {
-                2: 'text-align: right;',
-            },
+        totalize_data(i_data, {
+            'sum': ['qtd'],
+            'descr': {'ref': "Total:"},
+            'row_style': 'font-weight: bold;',
         })
+
+        self.context['itens'] = self.itens_defs.hfs_dict()
+        self.context['itens']['data'] = i_data
