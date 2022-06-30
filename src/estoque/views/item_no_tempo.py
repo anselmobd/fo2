@@ -173,7 +173,9 @@ class ItemNoTempo(View):
 
             if tipo_doc == 'nfs':
                 row['doc|LINK'] = reverse(
-                    'contabil:nota_fiscal__get2', args=[1, row['doc']])
+                    'contabil:nota_fiscal__get',
+                    args=[1, row['doc']]
+                )
             elif tipo_doc == 'op':
                 row['doc|LINK'] = reverse(
                     'producao:op__get', args=[row['doc']])

@@ -44,7 +44,7 @@ class BuscaNF(O2BaseGetPostView):
             row['pedido|GLYPHICON'] = '_'
 
             row['nf|LINK'] = reverse(
-                'contabil:nota_fiscal__get2',
+                'contabil:nota_fiscal__get',
                 args=[row['codigo_empresa'], row['nf']],
             )
             row['nf|GLYPHICON'] = '_'

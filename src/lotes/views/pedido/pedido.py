@@ -179,7 +179,7 @@ class Pedido(View):
         nf_data = queries.pedido.ped_nf(cursor, pedido, especiais=True, empresa=empresa)
         for row in nf_data:
             row['NF|LINK'] = reverse(
-                'contabil:nota_fiscal__get2',
+                'contabil:nota_fiscal__get',
                 args=[row['CODIGO_EMPRESA'], row['NF']],
             )
             if row['SITUACAO'] == 1:

@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import re_path, path
 
 from . import views
 
@@ -15,9 +15,16 @@ urlpatterns = [
     re_path(r'^infadprod/(?P<pedido>.+)?/?$',
         views.InfAdProd.as_view(), name='infadprod'),
 
-    re_path(r'^nota_fiscal/$', views.NotaFiscal.as_view(), name='nota_fiscal'),
-    re_path(r'^nota_fiscal/(?P<empresa>\d+)/(?P<nf>\d+)/$', views.NotaFiscal.as_view(),
-        name='nota_fiscal__get2'),
+    path(
+        'nota_fiscal/',
+        views.NotaFiscal.as_view(),
+        name='nota_fiscal',
+    ),
+    path(
+        'nota_fiscal/<int:empresa>/<int:nf>/',
+        views.NotaFiscal.as_view(),
+        name='nota_fiscal__get',
+    ),
 
     re_path(r'^remeindu/$', views.RemessaIndustr.as_view(), name='remeindu'),
 
