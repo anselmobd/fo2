@@ -10,7 +10,7 @@ from base.views import O2BaseGetPostView
 from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
-import contabil.forms.nf
+import contabil.forms.nf_rec
 from contabil.queries import (
     nf_rec_info,
     nf_rec_itens,
@@ -52,7 +52,7 @@ class NFRecebida(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(NFRecebida, self).__init__(*args, **kwargs)
-        self.Form_class = contabil.forms.nf.NotaFiscalForm
+        self.Form_class = contabil.forms.nf_rec.NFRecebidaForm
         self.template_name = 'contabil/nf_recebida.html'
         self.title_name = "Nota fiscal recebida"
         self.get_args = ['nf', 'empresa']
