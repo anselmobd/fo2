@@ -12,7 +12,7 @@ from insumo.queries import rolo_inform
 
 
 class Rolos(View):
-    Form_class = insumo.forms.RoloForm
+    Form_class = insumo.forms.RolosForm
     template_name = 'insumo/rolo.html'
     title_name = 'Rolos'
 

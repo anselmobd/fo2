@@ -3,7 +3,7 @@ from pprint import pprint
 from django import forms
 
 
-class RoloForm(forms.Form):
+class RolosForm(forms.Form):
     rolo = forms.CharField(
         label='Rolo', max_length=7, required=False,
         widget=forms.TextInput(attrs={'type': 'number',
@@ -87,7 +87,7 @@ class RoloForm(forms.Form):
         return cor
 
     def clean(self):
-        clean_form = super(RoloForm, self).clean()
+        clean_form = super(RolosForm, self).clean()
 
         if not any(
             clean_form.get(x, '')
