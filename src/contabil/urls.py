@@ -1,7 +1,10 @@
 from django.urls import re_path, path
 
 from . import views
-from contabil.views import nf_recebida
+from contabil.views import (
+    nf_rec_busca,
+    nf_recebida,
+)
 
 
 app_name = 'contabil'
@@ -12,6 +15,12 @@ urlpatterns = [
         name='busca_nf'),
 
     re_path(r'^converte/$', views.Converte.as_view(), name='converte'),
+
+    path(
+        'nf_rec_busca/',
+        nf_rec_busca.BuscaNFRecebida.as_view(),
+        name='nf_rec_busca',
+    ),
 
     path(
         'nf_recebida/',
