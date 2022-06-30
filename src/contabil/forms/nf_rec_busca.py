@@ -18,6 +18,7 @@ class BuscaNFRecebidaForm(forms.Form):
     )
 
     CHOICES = [
+        ('', "-- Não filtra --"),
         ('0', "0-Nota Calculada"),
         ('1', "1-Nota Emitida"),
         ('2', "2-Nota Cancelada"),
@@ -27,6 +28,7 @@ class BuscaNFRecebidaForm(forms.Form):
     ]
     sit_entr = forms.ChoiceField(
         label='Situação da entrada',
+        required=False,
         choices=CHOICES,
         initial='4'
     )
