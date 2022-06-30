@@ -20,7 +20,7 @@ def query(
         AND cnfe.DOCUMENTO = {nf}
     """ if nf else ''
     filtra_empresa = f"""--
-        AND cnfe.LOCAL_ENTREGA = {empresa} -- empresa 1: matriz
+        AND cnfe.LOCAL_ENTREGA = {empresa}
     """ if empresa else ''
     filtra_niv = f"""--
         AND infe.CODITEM_NIVEL99 = '{niv}'
@@ -56,11 +56,6 @@ def query(
         , trest.DESCRICAO tran_descr
         , cnfe.HISTORICO_CONT hist_cont
         , histc.HISTORICO_CONTAB hist_descr
-        --, infe.CODITEM_NIVEL99 niv
-        --, infe.CODITEM_GRUPO ref
-        --, infe.CODITEM_SUBGRUPO tam
-        --, infe.CODITEM_ITEM cor
-        --, infe.QUANTIDADE qtd
         FROM OBRF_010 cnfe -- capa de nota de entrada
         LEFT JOIN OBRF_015 infe -- item de nota de entrada
           ON infe.CAPA_ENT_FORCLI9 = cnfe.CGC_CLI_FOR_9
