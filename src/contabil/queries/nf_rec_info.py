@@ -7,10 +7,20 @@ from utils.functions.queries import debug_cursor_execute
 __all__ = ['query']
 
 
+situacao_entrada = {
+    0: "Nota Calculada",
+    1: "Nota Emitida",
+    2: "Nota Cancelada",
+    3: "Nota Incompleta",
+    4: "Nota de Fornecedor",
+    5: "Nota Incompleta",
+}
+
 def query(
     cursor,
     empresa=None,
     nf=None,
+    sit_entr=None,
     dt_de=None,
     dt_ate=None,
     niv=None,
@@ -24,6 +34,9 @@ def query(
     filtra_nf = f"""--
         AND cnfe.DOCUMENTO = {nf}
     """ if nf else ''
+    filtra_sit_entr = f"""--
+        AND cnfe.SITUACAO_ENTRADA = {sit_entr}
+    """ if sit_entr else ''
     filtra_dt_de = f"""--
         AND cnfe.DATA_TRANSACAO >= DATE '{dt_de}'
     """ if dt_de else ''
@@ -58,7 +71,8 @@ def query(
         , cnfe.NATOPER_NAT_OPER nat_op
         , cnfe.NATOPER_EST_OPER nat_uf
         , cnfe.QTDE_ITENS 
-        , cnfe.VALOR_ITENS 
+        , cnfe.VALOR_ITENS
+        , cnfe.SITUACAO_ENTRADA sit_entr
         , nat.COD_NATUREZA nat_cod
         , nat.OPERACAO_FISCAL nat_of
         , nat.DESCR_NAT_OPER nat_descr
@@ -87,13 +101,13 @@ def query(
         WHERE 1=1
           {filtra_empresa} -- filtra_empresa
           {filtra_nf} -- filtra_nf
+          {filtra_sit_entr} -- filtra_sit_entr
           {filtra_dt_de} -- filtra_dt_de
           {filtra_dt_ate} -- filtra_dt_ate
           {filtra_niv} -- filtra_niv
           {filtra_ref} -- filtra_ref
           {filtra_tam} -- filtra_tam
           {filtra_cor} -- filtra_cor
-          AND cnfe.SITUACAO_ENTRADA = 4 -- 4 = nota fornecedor
         ORDER BY 
           cnfe.DATA_TRANSACAO
         , cnfe.CGC_CLI_FOR_9
@@ -112,4 +126,5 @@ def query(
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else '-'
         row['nat'] = f"{row['nat_op']}-{row['nat_uf']}"
         row['cfop'] = f"{row['nat_cod']}{row['nat_of']}"
+        row['sit_entr_descr'] = situacao_entrada[row['sit_entr']]
     return data

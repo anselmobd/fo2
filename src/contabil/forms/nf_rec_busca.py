@@ -17,6 +17,20 @@ class BuscaNFRecebidaForm(forms.Form):
         initial=None
     )
 
+    CHOICES = [
+        ('0', "0-Nota Calculada"),
+        ('1', "1-Nota Emitida"),
+        ('2', "2-Nota Cancelada"),
+        ('3', "3-Nota Incompleta"),
+        ('4', "4-Nota de Fornecedor"),
+        ('5', "5-Nota Incompleta"),
+    ]
+    sit_entr = forms.ChoiceField(
+        label='Situação da entrada',
+        choices=CHOICES,
+        initial='4'
+    )
+
     dt_de = forms.DateField(
         label='Data recebimento: De',
         required=False,

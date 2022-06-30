@@ -34,6 +34,7 @@ class BuscaNFRecebida(O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(BuscaNFRecebida, self).__init__(*args, **kwargs)
         self.Form_class = BuscaNFRecebidaForm
+        self.form_class_has_initial = True
         self.template_name = 'contabil/nf_rec_busca.html'
         self.title_name = "Busca NF recebida"
         self.cleaned_data2self = True
@@ -44,6 +45,7 @@ class BuscaNFRecebida(O2BaseGetPostView):
         data = nf_rec_info.query(
             cursor,
             empresa=self.empresa,
+            sit_entr=self.sit_entr,
             dt_de=self.dt_de,
             dt_ate=self.dt_ate,
             niv=self.niv,
