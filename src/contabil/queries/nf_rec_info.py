@@ -96,4 +96,6 @@ def query(
         row['forn_cnpj'] = format_cnpj(row) if row['forn_cnpj9'] else '-'
         row['forn_cnpj_nome'] = f"{row['forn_cnpj']} {row['forn_nome']}"
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else '-'
+        row['nat'] = f"{row['nat_op']}-{row['nat_uf']}"
+        row['cfop'] = f"{row['nat_cod']}{row['nat_of']}"
     return data
