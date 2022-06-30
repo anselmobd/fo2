@@ -24,8 +24,11 @@ class NFRecebida(O2BaseGetPostView):
             'dt': ["Data"],
             'forn_cnpj_nome': ["Fornecedor"],
             'nat_uf': ["UF"],
+            'qtde_itens': ["Quant. itens", 'r'],
+            'valor_itens': ["Valor", 'r'],
         },
-        ['header'],
+        ['header', '+style'],
+        style = {'_': 'text-align'},
     )
     itens_defs = TableDefs(
         {
