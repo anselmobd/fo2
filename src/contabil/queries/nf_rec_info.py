@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from utils.functions.format import format_cnpj
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
@@ -10,13 +11,13 @@ def query(cursor, nf, empresa):
     sql = f"""
         SELECT DISTINCT  
           cnfe.DATA_TRANSACAO dt
-        , cnfe.CGC_CLI_FOR_9 cnpj9
-        , cnfe.CGC_CLI_FOR_4 cnpj4
-        , cnfe.CGC_CLI_FOR_2 cnpj2
-        , COALESCE(forn.NOME_FANTASIA, forn.NOME_FORNECEDOR) nome
+        , cnfe.CGC_CLI_FOR_9 forn_cnpj9
+        , cnfe.CGC_CLI_FOR_4 forn_cnpj4
+        , cnfe.CGC_CLI_FOR_2 forn_cnpj2
+        , COALESCE(forn.NOME_FANTASIA, forn.NOME_FORNECEDOR) forn_nome
         , cnfe.LOCAL_ENTREGA empr
-        , cnfe.DOCUMENTO NF
-        , cnfe.SERIE
+        , cnfe.DOCUMENTO nf_num
+        , cnfe.SERIE nf_ser
         , cnfe.NATOPER_NAT_OPER nat_op
         , cnfe.NATOPER_EST_OPER nat_uf
         , nat.COD_NATUREZA nat_cod
@@ -63,4 +64,10 @@ def query(cursor, nf, empresa):
         , cnfe.SERIE
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
+    data = dictlist_lower(cursor)
+    for row in data:
+        row['dt'] = row['dt'].date()
+        row['forn_cnpj'] = format_cnpj(row) if row['forn_cnpj9'] else '-'
+        row['forn_cnpj_nome'] = f"{row['forn_cnpj']} {row['forn_nome']}"
+        row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else '-'
+    return data
