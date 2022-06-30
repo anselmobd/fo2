@@ -45,32 +45,33 @@ class NFRecebida(O2BaseGetPostView):
             self.context.update({
                 'msg_erro': "Nota fiscal recebida não encontrada",
             })
-        else:
-            self.context.update(self.data_defs.hfs_dict())
-            self.context.update({
-                'data': data,
+            return
+
+        self.context.update(self.data_defs.hfs_dict())
+        self.context.update({
+            'data': data,
+        })
+
+        i_data = nf_rec_itens.query(cursor, self.nf, self.empresa)
+
+        if i_data:
+            totalize_data(i_data, {
+                'sum': ['qtd'],
+                'descr': {'ref': "Total:"},
+                'row_style': 'font-weight: bold;',
             })
 
-            i_data = nf_rec_itens.query(cursor, self.nf, self.empresa)
-
-            if i_data:
-                totalize_data(i_data, {
-                    'sum': ['qtd'],
-                    'descr': {'ref': "Total:"},
-                    'row_style': 'font-weight: bold;',
-                })
-
-            self.context.update({
-                'i_headers': [
-                    "Item",
-                    "Quantidade",
-                ],
-                'i_fields': [
-                    'item',
-                    'qtd',
-                ],
-                'i_data': i_data,
-                'i_style': {
-                    2: 'text-align: right;',
-                },
-            })
+        self.context.update({
+            'i_headers': [
+                "Item",
+                "Quantidade",
+            ],
+            'i_fields': [
+                'item',
+                'qtd',
+            ],
+            'i_data': i_data,
+            'i_style': {
+                2: 'text-align: right;',
+            },
+        })
