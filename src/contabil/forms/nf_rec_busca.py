@@ -116,8 +116,8 @@ class BuscaNFRecebidaForm(forms.Form):
             cleaned = ''
         else:
             if (
-                len(cleaned) > 1 and 
-                cleaned[0].isalpha() and 
+                len(cleaned) > 1 and
+                cleaned[0].isalpha() and
                 is_only_digits(cleaned[1:])
             ):
                 cleaned = cleaned[0].upper() + cleaned[1:].upper().zfill(4)
