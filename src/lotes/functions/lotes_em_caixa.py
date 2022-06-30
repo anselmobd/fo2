@@ -3,6 +3,7 @@ from pprint import pprint
 from django.urls import reverse
 
 import lotes.queries
+from lotes.queries.lote import get_lotes
 
 
 def lotes_em_caixa(view_obj, cursor, op):
@@ -34,7 +35,7 @@ def lotes_em_caixa(view_obj, cursor, op):
     })
 
     # Lotes order 'r' = referência + cor + tamanho + OC
-    data = lotes.queries.lote.get_imprime_lotes(cursor, op=op, order='r')
+    data = get_lotes.get_imprime_lotes(cursor, op=op, order='r')
     if len(data) == 0:
         view_obj.context.update({
             'msg_erro': 'Lotes não encontrados',
