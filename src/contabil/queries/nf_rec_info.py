@@ -7,7 +7,18 @@ from utils.functions.queries import debug_cursor_execute
 __all__ = ['query']
 
 
-def query(cursor, nf, empresa):       
+def query(
+    cursor,
+    empresa=None,
+    nf=None,
+):
+    filtra_nf = f"""--
+        AND cnfe.DOCUMENTO = {nf}
+    """ if nf else ''
+    filtra_empresa = f"""--
+        AND cnfe.LOCAL_ENTREGA = {empresa} -- empresa 1: matriz
+    """ if empresa else ''
+
     sql = f"""
         SELECT DISTINCT  
           cnfe.DATA_TRANSACAO dt
@@ -51,8 +62,8 @@ def query(cursor, nf, empresa):
         LEFT JOIN CONT_010 histc -- histórico contabil
           ON histc.CODIGO_HISTORICO = cnfe.HISTORICO_CONT
         WHERE 1=1
-          AND cnfe.LOCAL_ENTREGA = {empresa} -- empresa 1: matriz
-          AND cnfe.DOCUMENTO = {nf}
+          {filtra_empresa} -- filtra_empresa
+          {filtra_nf} -- filtra_nf
           AND cnfe.SITUACAO_ENTRADA = 4 -- 4 = nota fornecedor
           AND cnfe.DATA_TRANSACAO >= DATE '2022-06-01'
           AND infe.CODITEM_NIVEL99 = 2
