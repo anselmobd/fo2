@@ -1,8 +1,6 @@
 from pprint import pprint
 
-from django.shortcuts import render
 from django.urls import reverse
-from django.views import View
 
 from fo2.connections import db_cursor_so
 
@@ -11,11 +9,8 @@ from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
 import contabil.forms.nf_rec_busca
-from contabil.queries import (
-    nf_rec_info,
-    nf_rec_itens,
-)
-from contabil.functions.nf import nf_situacao_descr
+from contabil.queries import nf_rec_info
+
 
 class BuscaNFRecebida(O2BaseGetPostView):
 
@@ -49,6 +44,7 @@ class BuscaNFRecebida(O2BaseGetPostView):
         data = nf_rec_info.query(
             cursor,
             empresa=self.empresa,
+            niv=self.niv,
             ref=self.ref,
             tam=self.tam,
             cor=self.cor,

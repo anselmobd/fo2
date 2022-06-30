@@ -17,6 +17,19 @@ class BuscaNFRecebidaForm(forms.Form):
         initial=None
     )
 
+    niv = forms.IntegerField(
+        label='Nível',
+        min_value=1,
+        max_value=9,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 1,
+                **a.number,
+            }
+        )
+    )
+
     ref = forms.CharField(
         label='Referência',
         required=False,
