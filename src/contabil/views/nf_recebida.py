@@ -7,6 +7,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
 import contabil.forms.nf
@@ -14,7 +15,7 @@ from contabil.queries import (
     nf_rec_info,
     nf_rec_itens,
 )
-from contabil.functions.nf import nf_situacao_descr
+
 
 class NFRecebida(O2BaseGetPostView):
 
@@ -26,6 +27,15 @@ class NFRecebida(O2BaseGetPostView):
         self.get_args = ['nf', 'empresa']
         self.cleaned_data2self = True
 
+        self.data_defs = TableDefs(
+            {
+                'dt': ["Data"],
+                'forn_cnpj_nome': ["Fornecedor"],
+                'nat_uf': ["UF"],
+            },
+            ['header'],
+        )
+
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
@@ -36,17 +46,8 @@ class NFRecebida(O2BaseGetPostView):
                 'msg_erro': "Nota fiscal recebida não encontrada",
             })
         else:
+            self.context.update(self.data_defs.hfs_dict())
             self.context.update({
-                'headers': [
-                    "Data",
-                    "Fornecedor",
-                    "UF",
-                ],
-                'fields': [
-                    'dt',
-                    'forn_cnpj_nome',
-                    'nat_uf',
-                ],
                 'data': data,
             })
 
