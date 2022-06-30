@@ -31,4 +31,7 @@ def query(cursor, nf, empresa):
         , infe.CODITEM_ITEM
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
+    data = dictlist_lower(cursor)
+    for row in data:
+        row['item'] = f"{row['niv']}.{row['ref']}.{row['tam']}.{row['cor']}"
+    return data
