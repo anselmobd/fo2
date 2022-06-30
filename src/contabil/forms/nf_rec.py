@@ -15,13 +15,6 @@ class NFRecebidaForm(forms.Form):
         initial=None,
     )
 
-    cnpj = forms.CharField(
-        label="CNPJ",
-        help_text="(completo ou início)",
-        required=False,
-        widget=forms.TextInput()
-    )
-
     nf = forms.CharField(
         label='Nota fiscal',
         widget=forms.TextInput(
@@ -30,6 +23,13 @@ class NFRecebidaForm(forms.Form):
                 **a.autofocus,
             }
         )
+    )
+
+    cnpj = forms.CharField(
+        label="CNPJ",
+        help_text="(só dígitos; completo ou início)",
+        required=False,
+        widget=forms.TextInput()
     )
 
     def __init__(self, *args, **kwargs):
