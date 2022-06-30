@@ -19,7 +19,7 @@ class NFRecebidaForm(forms.Form):
         label='Nota fiscal',
         widget=forms.TextInput(
             attrs={
-                **a.number,
+                **a.string,
                 **a.autofocus,
             }
         )
@@ -29,7 +29,11 @@ class NFRecebidaForm(forms.Form):
         label="CNPJ",
         help_text="(só dígitos; completo ou início)",
         required=False,
-        widget=forms.TextInput()
+        widget=forms.TextInput(
+            attrs={
+                **a.string,
+            }
+        )
     )
 
     def __init__(self, *args, **kwargs):
