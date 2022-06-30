@@ -13,19 +13,21 @@ from contabil.queries import nf_rec_info
 
 class BuscaNFRecebida(O2BaseGetPostView):
 
+    balloon = (
+        '<span style="font-size: 50%;vertical-align: super;" '
+        'class="glyphicon glyphicon-comment" '
+        'aria-hidden="true"></span>'
+    )
     table_defs = TableDefs(
         {
-            'dt_trans': ['Dt.recebimento'],
-            'dt_emi': ['Dt.emissão'],
-            'nf': ['NF'],
-            'forn_cnpj_nome': ['Fornecedor'],
-            'nat': ['Nat.Op.'],
-            'cfop': ['CFOP', 'c'],
-            # 'nat_descr': ['nat_descr'],
-            'tran_est': ['Tran.est.', 'c'],
-            # 'tran_descr': ['tran_descr'],
-            'hist_cont': ['Hist.cont.', 'c'],
-            # 'hist_descr': ['hist_descr'],
+            'dt_trans': ["Dt.recebimento"],
+            'dt_emi': ["Dt.emissão"],
+            'nf': ["NF"],
+            'forn_cnpj_nome': ["Fornecedor"],
+            'nat': [(f"Nat.Op.{balloon}", )],
+            'cfop': ["CFOP", 'c'],
+            'tran_est': [(f"Tran.est.{balloon}", ), 'c'],
+            'hist_cont': [(f"Hist.cont.{balloon}", ), 'c'],
         },
         ['header', '+style'],
         style = {'_': 'text-align'},
@@ -63,6 +65,9 @@ class BuscaNFRecebida(O2BaseGetPostView):
                 'contabil:nf_recebida__get',
                 args=[row['empr'], row['nf_num']],
             )
+            row['nat|HOVER'] = row['nat_descr']
+            row['tran_est|HOVER'] = row['tran_descr']
+            row['hist_cont|HOVER'] = row['hist_descr']
 
         self.context.update(self.table_defs.hfs_dict())
         self.context['data'] = data
