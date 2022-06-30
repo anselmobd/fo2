@@ -10,8 +10,10 @@ from base.views import O2BaseGetPostView
 from utils.views import totalize_data
 
 import contabil.forms as forms
-import contabil.queries as queries
-from contabil.queries import nf_rec_info
+from contabil.queries import (
+    nf_rec_info,
+    nf_rec_itens,
+)
 from contabil.functions.nf import nf_situacao_descr
 
 class NFRecebida(O2BaseGetPostView):
@@ -77,61 +79,32 @@ class NFRecebida(O2BaseGetPostView):
                 'data': data,
             })
 
-            i_data = queries.nf_itens(cursor, self.nf, especiais=True, empresa=self.empresa)
-            max_digits = 0
-            for row in i_data:
-                if row['PEDIDO_VENDA'] == 0:
-                    row['PEDIDO_VENDA'] = '-'
-                else:
-                    row['PEDIDO_VENDA|LINK'] = reverse(
-                        'producao:pedido__get', args=[row['PEDIDO_VENDA']])
-                num_digits = str(row['QTDE_ITEM_FATUR'])[::-1].find('.')
-                max_digits = max(max_digits, num_digits)
-                row['VALOR_UNITARIO'] = \
-                    row['VALOR_CONTABIL'] / row['QTDE_ITEM_FATUR']
+            i_data = nf_rec_itens.query(cursor, self.nf, self.empresa)
 
             if i_data:
                 totalize_data(i_data, {
-                    'sum': ['QTDE_ITEM_FATUR', 'VALOR_CONTABIL'],
-                    'descr': {'NARRATIVA': "Totais:"},
+                    'sum': ['qtd'],
+                    'descr': {'ref': "Total:"},
                     'row_style': 'font-weight: bold;',
                 })
 
-            for row in i_data:
-                row['QTDE_ITEM_FATUR|DECIMALS'] = max_digits
-                row['VALOR_UNITARIO|DECIMALS'] = 2
-                row['VALOR_CONTABIL|DECIMALS'] = 2
-
             self.context.update({
                 'i_headers': [
-                    "Seq.",
                     "Nível",
-                    "Referência",
-                    "Tamanho",
-                    "Cor",
-                    "Descrição",
-                    "Quantidade",
-                    "Valor unitário",
-                    "Valor total",
-                    "Pedido de venda",
+                    "ref",
+                    "tam",
+                    "cor",
+                    "qtd",
                 ],
                 'i_fields': [
-                    'SEQ_ITEM_NFISC',
-                    'NIVEL_ESTRUTURA',
-                    'GRUPO_ESTRUTURA',
-                    'SUBGRU_ESTRUTURA',
-                    'ITEM_ESTRUTURA',
-                    'NARRATIVA',
-                    'QTDE_ITEM_FATUR',
-                    'VALOR_UNITARIO',
-                    'VALOR_CONTABIL',
-                    'PEDIDO_VENDA',
+                    'niv',
+                    'ref',
+                    'tam',
+                    'cor',
+                    'qtd',
                 ],
                 'i_data': i_data,
                 'i_style': {
-                    7: 'text-align: right;',
-                    8: 'text-align: right;',
-                    9: 'text-align: right;',
-                    10: 'text-align: right;',
+                    5: 'text-align: right;',
                 },
             })
