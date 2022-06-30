@@ -21,7 +21,8 @@ class NFRecebida(O2BaseGetPostView):
 
     capa_defs = TableDefs(
         {
-            'dt': ["Data"],
+            'dt_trans': ['Dt.recebimento'],
+            'dt_emi': ['Dt.emissão'],
             'forn_cnpj_nome': ["Fornecedor"],
             'nat_uf': ["UF"],
             'qtde_itens': ["Quant. itens", 'r'],
