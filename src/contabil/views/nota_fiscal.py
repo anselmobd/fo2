@@ -1,8 +1,6 @@
 from pprint import pprint
 
-from django.shortcuts import render
 from django.urls import reverse
-from django.views import View
 
 from fo2.connections import db_cursor_so
 
@@ -15,6 +13,7 @@ from contabil.queries import (
     nf_itens,
 )
 from contabil.functions.nf import nf_situacao_descr
+
 
 class NotaFiscal(O2BaseGetPostView):
 
