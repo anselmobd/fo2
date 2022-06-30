@@ -3,6 +3,8 @@ from pprint import pprint
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
+__all__ = ['query']
+
 
 def query(cursor, nf, especiais=False, empresa=1):
     filtra_especial = "" if especiais else "AND i.NR_CAIXA = 0"
