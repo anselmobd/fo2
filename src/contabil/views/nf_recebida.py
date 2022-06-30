@@ -34,6 +34,8 @@ class NFRecebida(O2BaseGetPostView):
         {
             'item': ["Item"],
             'qtd': ["Quantidade", 'r'],
+            'preco': ["Preço", 'r'],
+            'valor': ["Valor", 'r'],
         },
         ['header', '+style'],
         style = {'_': 'text-align'},
@@ -66,7 +68,7 @@ class NFRecebida(O2BaseGetPostView):
             return
 
         totalize_data(i_data, {
-            'sum': ['qtd'],
+            'sum': ['valor'],
             'descr': {'ref': "Total:"},
             'row_style': 'font-weight: bold;',
         })

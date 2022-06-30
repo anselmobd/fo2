@@ -14,6 +14,8 @@ def query(cursor, nf, empresa):
         , infe.CODITEM_SUBGRUPO tam
         , infe.CODITEM_ITEM cor
         , infe.QUANTIDADE qtd
+        , infe.VALOR_UNITARIO preco
+        , infe.VALOR_TOTAL valor
         FROM OBRF_010 cnfe -- capa de nota de entrada
         LEFT JOIN OBRF_015 infe -- item de nota de entrada
           ON infe.CAPA_ENT_FORCLI9 = cnfe.CGC_CLI_FOR_9
