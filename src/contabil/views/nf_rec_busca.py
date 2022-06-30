@@ -58,6 +58,13 @@ class BuscaNFRecebida(O2BaseGetPostView):
             })
             return
 
+        for row in data:
+            row['nf|TARGET'] = '_blank'
+            row['nf|LINK'] = reverse(
+                'contabil:nf_recebida__get',
+                args=[1, row['nf_num']],
+            )
+
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
             'data': data,
