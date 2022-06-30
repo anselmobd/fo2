@@ -56,7 +56,7 @@ class NFRecebida(O2BaseGetPostView):
         self.Form_class = contabil.forms.nf_rec.NFRecebidaForm
         self.template_name = 'contabil/nf_recebida.html'
         self.title_name = "Nota fiscal recebida"
-        self.get_args = ['nf', 'empresa', 'cnpj']
+        self.get_args = ['empresa', 'nf', 'nf_ser', 'cnpj']
         self.cleaned_data2self = True
 
     def mount_context(self):
@@ -65,8 +65,9 @@ class NFRecebida(O2BaseGetPostView):
         data = nf_rec_info.query(
             cursor,
             empresa=self.empresa,
-            cnpj=self.cnpj,
             nf=self.nf,
+            nf_ser=self.nf_ser,
+            cnpj=self.cnpj,
         )
         if len(data) == 0:
             self.context.update({
@@ -78,7 +79,12 @@ class NFRecebida(O2BaseGetPostView):
             row['nf|TARGET'] = '_blank'
             row['nf|LINK'] = reverse(
                 'contabil:nf_recebida__get',
-                args=[row['empr'], row['nf_num'], row['forn_cnpj_num']],
+                args=[
+                    row['empr'],
+                    row['nf_num'],
+                    row['nf_ser'],
+                    row['forn_cnpj_num']
+                ],
             )
             row['nat|HOVER'] = row['nat_descr']
             row['tran_est|HOVER'] = row['tran_descr']

@@ -28,7 +28,7 @@ urlpatterns = [
         name='nf_recebida',
     ),
     path(
-        'nf_recebida/<int:empresa>/<int:nf>/<int:cnpj>/',
+        'nf_recebida/<int:empresa>/<int:nf>/<int:nf_ser>/<int:cnpj>/',
         nf_recebida.NFRecebida.as_view(),
         name='nf_recebida__get',
     ),

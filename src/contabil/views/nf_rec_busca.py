@@ -65,7 +65,12 @@ class BuscaNFRecebida(O2BaseGetPostView):
             row['nf|TARGET'] = '_blank'
             row['nf|LINK'] = reverse(
                 'contabil:nf_recebida__get',
-                args=[row['empr'], row['nf_num'], row['forn_cnpj_num']],
+                args=[
+                    row['empr'],
+                    row['nf_num'],
+                    row['nf_ser'],
+                    row['forn_cnpj_num']
+                ],
             )
             row['nat|HOVER'] = row['nat_descr']
             row['tran_est|HOVER'] = row['tran_descr']
