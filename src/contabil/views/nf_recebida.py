@@ -81,6 +81,9 @@ class NFRecebida(O2BaseGetPostView):
         self.context.update(self.capa_defs.hfs_dict())
         self.context['data'] = data
 
+        if len(data) > 1:
+            return
+
         i_data = nf_rec_itens.query(cursor, self.nf, self.empresa)
         if len(i_data) == 0:
             return
