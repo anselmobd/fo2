@@ -25,6 +25,16 @@ class NFRecebidaForm(forms.Form):
         )
     )
 
+    nf_ser = forms.CharField(
+        label='Série da NF',
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                **a.number,
+            }
+        )
+    )
+
     cnpj = forms.CharField(
         label="CNPJ",
         help_text="(só dígitos; completo ou início)",
