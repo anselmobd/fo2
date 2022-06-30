@@ -19,6 +19,23 @@ from contabil.queries import (
 
 class NFRecebida(O2BaseGetPostView):
 
+    capa_defs = TableDefs(
+        {
+            'dt': ["Data"],
+            'forn_cnpj_nome': ["Fornecedor"],
+            'nat_uf': ["UF"],
+        },
+        ['header'],
+    )
+    itens_defs = TableDefs(
+        {
+            'item': ["Item"],
+            'qtd': ["Quantidade", 'r'],
+        },
+        ['header', '+style'],
+        style = {'_': 'text-align'},
+    )
+
     def __init__(self, *args, **kwargs):
         super(NFRecebida, self).__init__(*args, **kwargs)
         self.Form_class = contabil.forms.nf.NotaFiscalForm
@@ -26,24 +43,6 @@ class NFRecebida(O2BaseGetPostView):
         self.title_name = "Nota fiscal recebida"
         self.get_args = ['nf', 'empresa']
         self.cleaned_data2self = True
-
-        self.capa_defs = TableDefs(
-            {
-                'dt': ["Data"],
-                'forn_cnpj_nome': ["Fornecedor"],
-                'nat_uf': ["UF"],
-            },
-            ['header'],
-        )
-
-        self.itens_defs = TableDefs(
-            {
-                'item': ["Item"],
-                'qtd': ["Quantidade", 'r'],
-            },
-            ['header', '+style'],
-            style = {'_': 'text-align'},
-        )
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
