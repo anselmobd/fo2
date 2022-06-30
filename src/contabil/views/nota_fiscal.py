@@ -10,8 +10,10 @@ from base.views import O2BaseGetPostView
 from utils.views import totalize_data
 
 import contabil.forms as forms
-import contabil.queries as queries
-from contabil.queries import nf_inform
+from contabil.queries import (
+    nf_inform,
+    nf_itens,
+)
 from contabil.functions.nf import nf_situacao_descr
 
 class NotaFiscal(O2BaseGetPostView):
@@ -62,7 +64,7 @@ class NotaFiscal(O2BaseGetPostView):
                 'data': data,
             })
 
-            i_data = queries.nf_itens(cursor, self.nf, especiais=True, empresa=self.empresa)
+            i_data = nf_itens.query(cursor, self.nf, especiais=True, empresa=self.empresa)
             max_digits = 0
             for row in i_data:
                 if row['pedido_venda'] == 0:
