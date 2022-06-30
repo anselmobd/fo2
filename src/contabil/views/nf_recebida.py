@@ -28,9 +28,6 @@ class NFRecebida(O2BaseGetPostView):
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
-        self.context = {
-            'titulo': self.title_name,
-        }
 
         data = nf_rec_info.query(
             cursor, self.nf, self.empresa)
