@@ -32,8 +32,9 @@ class NFRecebida(O2BaseGetPostView):
             'forn_cnpj_nome': ["Fornecedor"],
             'nat': [(f"Nat.Op.{balloon}", )],
             'cfop': ["CFOP", 'c'],
-            'tran_est': [(f"Tran.est.{balloon}", ), 'c'],
-            'hist_cont': [(f"Hist.cont.{balloon}", ), 'c'],
+            'tran_est': [(f"Tran. est.{balloon}", ), 'c'],
+            'hist_cont': [(f"Hist. cont.{balloon}", ), 'c'],
+            'sit_entr': [(f"Sit. entr.{balloon}", ), 'c'],
             'qtde_itens': ["Quant. itens", 'r'],
             'valor_itens': ["Valor", 'r'],
         },
@@ -89,6 +90,7 @@ class NFRecebida(O2BaseGetPostView):
             row['nat|HOVER'] = row['nat_descr']
             row['tran_est|HOVER'] = row['tran_descr']
             row['hist_cont|HOVER'] = row['hist_descr']
+            row['sit_entr|HOVER'] = row['sit_entr_descr']
 
         self.context.update(self.capa_defs.hfs_dict())
         self.context['data'] = data
