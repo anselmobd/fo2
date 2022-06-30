@@ -11,7 +11,7 @@ from utils.views import totalize_data
 
 import contabil.forms as forms
 import contabil.queries as queries
-from contabil.queries import nf_inform
+from contabil.queries import nf_rec_info
 from contabil.functions.nf import nf_situacao_descr
 
 class NFRecebida(O2BaseGetPostView):
@@ -30,34 +30,49 @@ class NFRecebida(O2BaseGetPostView):
             'titulo': self.title_name,
         }
 
-        data = nf_inform.query(
-            cursor, self.nf, especiais=True, empresa=self.empresa)
+        data = nf_rec_info.query(
+            cursor, self.nf, self.empresa)
         if len(data) == 0:
             self.context.update({
-                'msg_erro': "Nota fiscal não encontrada",
+                'msg_erro': "Nota fiscal recebida não encontrada",
             })
         else:
-            for row in data:
-                row['situacao'] = nf_situacao_descr(
-                    row['situacao'], row['cod_status'])
-                if row['nf_devolucao'] is None:
-                    row['nf_devolucao'] = '-'
-                else:
-                    row['situacao'] = f"{row['situacao']}/Devolvida"
             self.context.update({
                 'headers': [
-                    "Cliente",
-                    "Data NFe",
-                    "Situação",
-                    "Valor",
-                    "NF Devolução",
+                    "Data",
+                    "cnpj9",
+                    "cnpj4",
+                    "cnpj2",
+                    "nome",
+                    "NF",
+                    "SERIE",
+                    "nat_op",
+                    "nat_uf",
+                    'nat_cod',
+                    'nat_of',
+                    "nat_descr",
+                    "tran_est",
+                    "tran_descr",
+                    "hist_cont",
+                    "hist_descr",
                 ],
                 'fields': [
-                    'cliente',
-                    'data',
-                    'situacao',
-                    'valor',
-                    'nf_devolucao',
+                    'dt',
+                    'cnpj9',
+                    'cnpj4',
+                    'cnpj2',
+                    'nome',
+                    'nf',
+                    'serie',
+                    'nat_op',
+                    'nat_uf',
+                    'nat_cod',
+                    'nat_of',
+                    'nat_descr',
+                    'tran_est',
+                    'tran_descr',
+                    'hist_cont',
+                    'hist_descr',
                 ],
                 'data': data,
             })
@@ -75,11 +90,12 @@ class NFRecebida(O2BaseGetPostView):
                 row['VALOR_UNITARIO'] = \
                     row['VALOR_CONTABIL'] / row['QTDE_ITEM_FATUR']
 
-            totalize_data(i_data, {
-                'sum': ['QTDE_ITEM_FATUR', 'VALOR_CONTABIL'],
-                'descr': {'NARRATIVA': "Totais:"},
-                'row_style': 'font-weight: bold;',
-            })
+            if i_data:
+                totalize_data(i_data, {
+                    'sum': ['QTDE_ITEM_FATUR', 'VALOR_CONTABIL'],
+                    'descr': {'NARRATIVA': "Totais:"},
+                    'row_style': 'font-weight: bold;',
+                })
 
             for row in i_data:
                 row['QTDE_ITEM_FATUR|DECIMALS'] = max_digits
