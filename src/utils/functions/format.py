@@ -1,8 +1,10 @@
 from pprint import pprint
 
 
-def format_cnpj(row, cnpj4=None, cnpj2=None, tamanho=14):
+def format_cnpj(row, cnpj4=None, cnpj2=None, tamanho=14, sep=True):
     try:
+        barra = "/" if sep else ''
+        menos = "-" if sep else ''
         if isinstance(row, dict):
             for k in row:
                 ku = k.upper()
@@ -25,16 +27,16 @@ def format_cnpj(row, cnpj4=None, cnpj2=None, tamanho=14):
                 cnpj2 = int(cnpj2)
         if cnpj4 and cnpj2:
             if tamanho == 14:
-                return f"{cnpj9:08d}/{cnpj4:04d}-{cnpj2:02d}"
+                return f"{cnpj9:08d}{barra}{cnpj4:04d}{menos}{cnpj2:02d}"
             else:
-                return f"{cnpj9:09d}/{cnpj4:04d}-{cnpj2:02d}"
+                return f"{cnpj9:09d}{barra}{cnpj4:04d}{menos}{cnpj2:02d}"
         else:
             if tamanho == 14:
                 cnpj = f"{cnpj9:014d}"
-                return f"{cnpj[:8]}/{cnpj[8:12]}-{cnpj[12:14]}"
+                return f"{cnpj[:8]}{barra}{cnpj[8:12]}{menos}{cnpj[12:14]}"
             else:
                 cnpj = f"{cnpj9:015d}"
-                return f"{cnpj[:9]}/{cnpj[9:13]}-{cnpj[13:15]}"
+                return f"{cnpj[:9]}{barra}{cnpj[9:13]}{menos}{cnpj[13:15]}"
     except Exception:
         return ""
 
