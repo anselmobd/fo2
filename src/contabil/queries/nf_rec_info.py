@@ -19,6 +19,7 @@ situacao_entrada = {
 def query(
     cursor,
     empresa=None,
+    cnpj=None,
     nf=None,
     sit_entr=None,
     dt_de=None,
@@ -31,6 +32,15 @@ def query(
     filtra_empresa = f"""--
         AND cnfe.LOCAL_ENTREGA = {empresa}
     """ if empresa else ''
+    filtra_cnpj9 = f"""--
+        AND cnfe.CGC_CLI_FOR_9 = {cnpj[:8]}
+    """ if cnpj and len(cnpj) >= 8 else ''
+    filtra_cnpj4 = f"""--
+        AND cnfe.CGC_CLI_FOR_4 = {cnpj[8:12]}
+    """ if cnpj and len(cnpj) >= 12 else ''
+    filtra_cnpj2 = f"""--
+        AND cnfe.CGC_CLI_FOR_2 = {cnpj[12:14]}
+    """ if cnpj and len(cnpj) >= 14 else ''
     filtra_nf = f"""--
         AND cnfe.DOCUMENTO = {nf}
     """ if nf else ''
@@ -100,6 +110,9 @@ def query(
           ON histc.CODIGO_HISTORICO = cnfe.HISTORICO_CONT
         WHERE 1=1
           {filtra_empresa} -- filtra_empresa
+          {filtra_cnpj9} -- filtra_cnpj9
+          {filtra_cnpj4} -- filtra_cnpj4
+          {filtra_cnpj2} -- filtra_cnpj2
           {filtra_nf} -- filtra_nf
           {filtra_sit_entr} -- filtra_sit_entr
           {filtra_dt_de} -- filtra_dt_de

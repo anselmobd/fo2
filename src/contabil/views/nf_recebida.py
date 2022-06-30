@@ -62,7 +62,11 @@ class NFRecebida(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
 
         data = nf_rec_info.query(
-            cursor, empresa=self.empresa, nf=self.nf)
+            cursor,
+            empresa=self.empresa,
+            cnpj=self.cnpj,
+            nf=self.nf,
+        )
         if len(data) == 0:
             self.context.update({
                 'msg_erro': "Nota fiscal recebida não encontrada",
