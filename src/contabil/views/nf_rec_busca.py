@@ -15,7 +15,8 @@ class BuscaNFRecebida(O2BaseGetPostView):
 
     table_defs = TableDefs(
         {
-            'dt': ['Data'],
+            'dt_trans': ['Dt.recebimento'],
+            'dt_emi': ['Dt.emissão'],
             'nf': ['NF'],
             'forn_cnpj_nome': ['Fornecedor'],
             'nat': ['Nat.Op.'],
