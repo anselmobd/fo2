@@ -31,16 +31,13 @@ class BuscaNFRecebida(O2BaseGetPostView):
                 'dt': ['Data'],
                 'nf': ['NF'],
                 'forn_cnpj_nome': ['Fornecedor'],
-                'nat_uf': ['UF'],
-                'nat_op': ['nat_op'],
-                'nat_uf': ['nat_uf'],
-                'nat_cod': ['nat_cod'],
-                'nat_of': ['nat_of'],
-                'nat_descr': ['nat_descr'],
-                'tran_est': ['tran_est'],
-                'tran_descr': ['tran_descr'],
-                'hist_cont': ['hist_cont'],
-                'hist_descr': ['hist_descr'],
+                'nat': ['Nat.Op.'],
+                'cfop': ['CFOP', 'c'],
+                # 'nat_descr': ['nat_descr'],
+                'tran_est': ['Tran.est.', 'c'],
+                # 'tran_descr': ['tran_descr'],
+                'hist_cont': ['Hist.cont.', 'c'],
+                # 'hist_descr': ['hist_descr'],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
@@ -60,6 +57,7 @@ class BuscaNFRecebida(O2BaseGetPostView):
                 'msg_erro': "Nota fiscal recebida não encontrada",
             })
             return
+
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
             'data': data,
