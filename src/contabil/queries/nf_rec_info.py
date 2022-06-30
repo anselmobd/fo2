@@ -134,6 +134,7 @@ def query(
         row['dt_trans'] = row['dt_trans'].date()
         row['dt_dig'] = row['dt_dig'].date()
         row['dt_emi'] = row['dt_emi'].date()
+        row['forn_cnpj_num'] = format_cnpj(row, sep=False) if row['forn_cnpj9'] else ''
         row['forn_cnpj'] = format_cnpj(row) if row['forn_cnpj9'] else '-'
         row['forn_cnpj_nome'] = f"{row['forn_cnpj']} {row['forn_nome']}"
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else '-'
