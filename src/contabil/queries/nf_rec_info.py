@@ -21,6 +21,7 @@ def query(
     empresa=None,
     cnpj=None,
     nf=None,
+    nf_ser=None,
     sit_entr=None,
     dt_de=None,
     dt_ate=None,
@@ -44,6 +45,9 @@ def query(
     filtra_nf = f"""--
         AND cnfe.DOCUMENTO = {nf}
     """ if nf else ''
+    filtra_nf_ser = f"""--
+        AND cnfe.SERIE = {nf_ser}
+    """ if nf_ser else ''
     filtra_sit_entr = f"""--
         AND cnfe.SITUACAO_ENTRADA = {sit_entr}
     """ if sit_entr else ''
@@ -114,6 +118,7 @@ def query(
           {filtra_cnpj4} -- filtra_cnpj4
           {filtra_cnpj2} -- filtra_cnpj2
           {filtra_nf} -- filtra_nf
+          {filtra_nf_ser} -- filtra_nf_ser
           {filtra_sit_entr} -- filtra_sit_entr
           {filtra_dt_de} -- filtra_dt_de
           {filtra_dt_ate} -- filtra_dt_ate
