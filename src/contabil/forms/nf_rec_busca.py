@@ -17,6 +17,19 @@ class BuscaNFRecebidaForm(forms.Form):
         initial=None
     )
 
+    dt_de = forms.DateField(
+        label='Data recebimento: De',
+        required=False,
+        widget=forms.DateInput(
+            attrs={'type': 'date'})
+    )
+
+    dt_ate = forms.DateField(
+        label='Até', required=False,
+        widget=forms.DateInput(
+            attrs={'type': 'date'})
+    )
+
     niv = forms.IntegerField(
         label='Nível',
         min_value=1,

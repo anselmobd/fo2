@@ -44,6 +44,8 @@ class BuscaNFRecebida(O2BaseGetPostView):
         data = nf_rec_info.query(
             cursor,
             empresa=self.empresa,
+            dt_de=self.dt_de,
+            dt_ate=self.dt_ate,
             niv=self.niv,
             ref=self.ref,
             tam=self.tam,

@@ -11,17 +11,25 @@ def query(
     cursor,
     empresa=None,
     nf=None,
+    dt_de=None,
+    dt_ate=None,
     niv=None,
     ref=None,
     tam=None,
     cor=None,
 ):
-    filtra_nf = f"""--
-        AND cnfe.DOCUMENTO = {nf}
-    """ if nf else ''
     filtra_empresa = f"""--
         AND cnfe.LOCAL_ENTREGA = {empresa}
     """ if empresa else ''
+    filtra_nf = f"""--
+        AND cnfe.DOCUMENTO = {nf}
+    """ if nf else ''
+    filtra_dt_de = f"""--
+        AND cnfe.DATA_TRANSACAO >= DATE '{dt_de}'
+    """ if dt_de else ''
+    filtra_dt_ate = f"""--
+        AND cnfe.DATA_TRANSACAO <= DATE '{dt_ate}'
+    """ if dt_ate else ''
     filtra_niv = f"""--
         AND infe.CODITEM_NIVEL99 = '{niv}'
     """ if niv else ''
@@ -79,12 +87,13 @@ def query(
         WHERE 1=1
           {filtra_empresa} -- filtra_empresa
           {filtra_nf} -- filtra_nf
+          {filtra_dt_de} -- filtra_dt_de
+          {filtra_dt_ate} -- filtra_dt_ate
           {filtra_niv} -- filtra_niv
           {filtra_ref} -- filtra_ref
           {filtra_tam} -- filtra_tam
           {filtra_cor} -- filtra_cor
           AND cnfe.SITUACAO_ENTRADA = 4 -- 4 = nota fornecedor
-          AND cnfe.DATA_TRANSACAO >= DATE '2022-06-01'
         ORDER BY 
           cnfe.DATA_TRANSACAO
         , cnfe.CGC_CLI_FOR_9
