@@ -28,6 +28,7 @@ class NFRecebida(O2BaseGetPostView):
         {
             'dt_trans': ['Dt.recebimento'],
             'dt_emi': ['Dt.emissão'],
+            'nf': ["NF"],
             'forn_cnpj_nome': ["Fornecedor"],
             'nat': [(f"Nat.Op.{balloon}", )],
             'cfop': ["CFOP", 'c'],
@@ -74,6 +75,11 @@ class NFRecebida(O2BaseGetPostView):
             return
 
         for row in data:
+            row['nf|TARGET'] = '_blank'
+            row['nf|LINK'] = reverse(
+                'contabil:nf_recebida__get',
+                args=[row['empr'], row['nf_num'], row['forn_cnpj_num']],
+            )
             row['nat|HOVER'] = row['nat_descr']
             row['tran_est|HOVER'] = row['tran_descr']
             row['hist_cont|HOVER'] = row['hist_descr']
