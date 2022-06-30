@@ -11,6 +11,7 @@ def query(
     cursor,
     empresa=None,
     nf=None,
+    niv=None,
     ref=None,
     tam=None,
     cor=None,
@@ -21,6 +22,9 @@ def query(
     filtra_empresa = f"""--
         AND cnfe.LOCAL_ENTREGA = {empresa} -- empresa 1: matriz
     """ if empresa else ''
+    filtra_niv = f"""--
+        AND infe.CODITEM_NIVEL99 = '{niv}'
+    """ if niv else ''
     filtra_ref = f"""--
         AND infe.CODITEM_GRUPO = '{ref}'
     """ if ref else ''
@@ -76,12 +80,12 @@ def query(
         WHERE 1=1
           {filtra_empresa} -- filtra_empresa
           {filtra_nf} -- filtra_nf
+          {filtra_niv} -- filtra_niv
           {filtra_ref} -- filtra_ref
           {filtra_tam} -- filtra_tam
           {filtra_cor} -- filtra_cor
           AND cnfe.SITUACAO_ENTRADA = 4 -- 4 = nota fornecedor
           AND cnfe.DATA_TRANSACAO >= DATE '2022-06-01'
-          AND infe.CODITEM_NIVEL99 = 2
         ORDER BY 
           cnfe.DATA_TRANSACAO
         , cnfe.CGC_CLI_FOR_9
