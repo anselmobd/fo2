@@ -65,26 +65,26 @@ class NotaFiscal(O2BaseGetPostView):
             i_data = queries.nf_itens(cursor, self.nf, especiais=True, empresa=self.empresa)
             max_digits = 0
             for row in i_data:
-                if row['PEDIDO_VENDA'] == 0:
-                    row['PEDIDO_VENDA'] = '-'
+                if row['pedido_venda'] == 0:
+                    row['pedido_venda'] = '-'
                 else:
-                    row['PEDIDO_VENDA|LINK'] = reverse(
-                        'producao:pedido__get', args=[row['PEDIDO_VENDA']])
-                num_digits = str(row['QTDE_ITEM_FATUR'])[::-1].find('.')
+                    row['pedido_venda|LINK'] = reverse(
+                        'producao:pedido__get', args=[row['pedido_venda']])
+                num_digits = str(row['qtde_item_fatur'])[::-1].find('.')
                 max_digits = max(max_digits, num_digits)
-                row['VALOR_UNITARIO'] = \
-                    row['VALOR_CONTABIL'] / row['QTDE_ITEM_FATUR']
+                row['valor_unitario'] = \
+                    row['valor_contabil'] / row['qtde_item_fatur']
 
             totalize_data(i_data, {
-                'sum': ['QTDE_ITEM_FATUR', 'VALOR_CONTABIL'],
-                'descr': {'NARRATIVA': "Totais:"},
+                'sum': ['qtde_item_fatur', 'valor_contabil'],
+                'descr': {'narrativa': "Totais:"},
                 'row_style': 'font-weight: bold;',
             })
 
             for row in i_data:
-                row['QTDE_ITEM_FATUR|DECIMALS'] = max_digits
-                row['VALOR_UNITARIO|DECIMALS'] = 2
-                row['VALOR_CONTABIL|DECIMALS'] = 2
+                row['qtde_item_fatur|DECIMALS'] = max_digits
+                row['valor_unitario|DECIMALS'] = 2
+                row['valor_contabil|DECIMALS'] = 2
 
             self.context.update({
                 'i_headers': [
@@ -100,16 +100,16 @@ class NotaFiscal(O2BaseGetPostView):
                     "Pedido de venda",
                 ],
                 'i_fields': [
-                    'SEQ_ITEM_NFISC',
-                    'NIVEL_ESTRUTURA',
-                    'GRUPO_ESTRUTURA',
-                    'SUBGRU_ESTRUTURA',
-                    'ITEM_ESTRUTURA',
-                    'NARRATIVA',
-                    'QTDE_ITEM_FATUR',
-                    'VALOR_UNITARIO',
-                    'VALOR_CONTABIL',
-                    'PEDIDO_VENDA',
+                    'seq_item_nfisc',
+                    'nivel_estrutura',
+                    'grupo_estrutura',
+                    'subgru_estrutura',
+                    'item_estrutura',
+                    'narrativa',
+                    'qtde_item_fatur',
+                    'valor_unitario',
+                    'valor_contabil',
+                    'pedido_venda',
                 ],
                 'i_data': i_data,
                 'i_style': {

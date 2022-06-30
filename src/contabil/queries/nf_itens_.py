@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models.dictlist import dictlist
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -36,4 +36,4 @@ def nf_itens(cursor, nf, especiais=False, empresa=1):
           i.SEQ_ITEM_NFISC
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return dictlist_lower(cursor)
