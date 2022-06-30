@@ -19,12 +19,20 @@ from contabil.queries import (
 
 class NFRecebida(O2BaseGetPostView):
 
+    balloon = (
+        '<span style="font-size: 50%;vertical-align: super;" '
+        'class="glyphicon glyphicon-comment" '
+        'aria-hidden="true"></span>'
+    )
     capa_defs = TableDefs(
         {
             'dt_trans': ['Dt.recebimento'],
             'dt_emi': ['Dt.emissão'],
             'forn_cnpj_nome': ["Fornecedor"],
-            'nat_uf': ["UF"],
+            'nat': [(f"Nat.Op.{balloon}", )],
+            'cfop': ["CFOP", 'c'],
+            'tran_est': [(f"Tran.est.{balloon}", ), 'c'],
+            'hist_cont': [(f"Hist.cont.{balloon}", ), 'c'],
             'qtde_itens': ["Quant. itens", 'r'],
             'valor_itens': ["Valor", 'r'],
         },
@@ -60,6 +68,11 @@ class NFRecebida(O2BaseGetPostView):
                 'msg_erro': "Nota fiscal recebida não encontrada",
             })
             return
+
+        for row in data:
+            row['nat|HOVER'] = row['nat_descr']
+            row['tran_est|HOVER'] = row['tran_descr']
+            row['hist_cont|HOVER'] = row['hist_descr']
 
         self.context.update(self.capa_defs.hfs_dict())
         self.context['data'] = data
