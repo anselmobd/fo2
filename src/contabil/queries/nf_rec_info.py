@@ -37,7 +37,9 @@ def query(
 
     sql = f"""
         SELECT DISTINCT  
-          cnfe.DATA_TRANSACAO dt
+          cnfe.DATA_TRANSACAO dt_trans
+        , cnfe.DATA_DIGITACAO dt_dig
+        , cnfe.DATA_EMISSAO dt_emi
         , cnfe.CGC_CLI_FOR_9 forn_cnpj9
         , cnfe.CGC_CLI_FOR_4 forn_cnpj4
         , cnfe.CGC_CLI_FOR_2 forn_cnpj2
@@ -93,7 +95,9 @@ def query(
     debug_cursor_execute(cursor, sql)
     data = dictlist_lower(cursor)
     for row in data:
-        row['dt'] = row['dt'].date()
+        row['dt_trans'] = row['dt_trans'].date()
+        row['dt_dig'] = row['dt_dig'].date()
+        row['dt_emi'] = row['dt_emi'].date()
         row['forn_cnpj'] = format_cnpj(row) if row['forn_cnpj9'] else '-'
         row['forn_cnpj_nome'] = f"{row['forn_cnpj']} {row['forn_nome']}"
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else '-'
