@@ -9,7 +9,7 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetPostView
 from utils.views import totalize_data
 
-import contabil.forms as forms
+import contabil.forms.nf
 from contabil.queries import (
     nf_rec_info,
     nf_rec_itens,
@@ -20,7 +20,7 @@ class BuscaNFRecebida(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(BuscaNFRecebida, self).__init__(*args, **kwargs)
-        self.Form_class = forms.NotaFiscalForm
+        self.Form_class = contabil.forms.nf.NotaFiscalForm
         self.template_name = 'contabil/nf_rec_busca.html'
         self.title_name = "Busca NF recebida"
         self.get_args = ['nf', 'empresa']
