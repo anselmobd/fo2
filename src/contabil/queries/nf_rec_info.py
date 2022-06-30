@@ -22,13 +22,13 @@ def query(
         AND cnfe.LOCAL_ENTREGA = {empresa} -- empresa 1: matriz
     """ if empresa else ''
     filtra_ref = f"""--
-        AND infe.CODITEM_GRUPO = {ref}
+        AND infe.CODITEM_GRUPO = '{ref}'
     """ if ref else ''
     filtra_tam = f"""--
-        AND infe.CODITEM_SUBGRUPO = {tam}
+        AND infe.CODITEM_SUBGRUPO = '{tam}'
     """ if tam else ''
     filtra_cor = f"""--
-        AND infe.CODITEM_ITEM = {cor}
+        AND infe.CODITEM_ITEM = '{cor}'
     """ if cor else ''
 
     sql = f"""
