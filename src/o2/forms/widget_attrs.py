@@ -7,6 +7,10 @@ class FormWidgetAttrs():
         'type': 'number;',
         }
 
+    string = {
+        'type': 'string;',
+        }
+
     string_upper = {
         'type': 'string',
         'style': 'text-transform:uppercase;',
