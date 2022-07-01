@@ -7,8 +7,8 @@ from lotes.views import (
     prepara_pedido_compra_matriz,
 )
 from lotes.views.corte import (
+    envio_insumo,
     romaneio_corte,
-    envia_insumo,
 )
 from lotes.views.ops import seq_erro
 from lotes.views.analise import produzir_grade_empenho
@@ -200,8 +200,8 @@ urlpatterns = [
     re_path(r'^romaneio_corte/$',
         romaneio_corte.RomaneioCorte.as_view(), name='romaneio_corte'),
 
-    re_path(r'^envia_insumo/$',
-        envia_insumo.EnviaInsumo.as_view(), name='envia_insumo'),
+    re_path(r'^envio_insumo/$',
+        envio_insumo.EnvioInsumo.as_view(), name='envio_insumo'),
 
     re_path(r'^ajax/prepara_pedido_corte/(?P<data>[^/]+)/(?P<cliente>[^/]+)/(?P<pedido>[^/]+)/$',
         prepara_pedido_corte.PreparaPedidoCorte.as_view(), name='prepara_pedido_corte'),

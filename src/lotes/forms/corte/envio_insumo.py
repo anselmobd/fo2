@@ -3,7 +3,7 @@ from pprint import pprint
 from django import forms
 
 
-class EnviaInsumoForm(forms.Form):
+class EnvioInsumoForm(forms.Form):
     dt_de = forms.DateField(
         label='Data emissão: De',
         required=False,

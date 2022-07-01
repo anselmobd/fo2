@@ -7,11 +7,11 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetPostView
 from utils.table_defs import TableDefs
 
-from lotes.forms.corte.envia_insumo import EnviaInsumoForm
+from lotes.forms.corte.envio_insumo import EnvioInsumoForm
 from lotes.queries.corte import relaciona_nfs
 
 
-class EnviaInsumo(O2BaseGetPostView):
+class EnvioInsumo(O2BaseGetPostView):
 
     table_defs = TableDefs(
         {
@@ -24,10 +24,10 @@ class EnviaInsumo(O2BaseGetPostView):
     )
 
     def __init__(self, *args, **kwargs):
-        super(EnviaInsumo, self).__init__(*args, **kwargs)
-        self.Form_class = EnviaInsumoForm
+        super(EnvioInsumo, self).__init__(*args, **kwargs)
+        self.Form_class = EnvioInsumoForm
         self.form_class_has_initial = True
-        self.template_name = 'lotes/corte/envia_insumo.html'
+        self.template_name = 'lotes/corte/envio_insumo.html'
         self.title_name = "Envio de insumos"
         self.cleaned_data2self = True
 
