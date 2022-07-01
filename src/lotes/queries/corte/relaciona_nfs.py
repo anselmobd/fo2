@@ -1,18 +1,12 @@
 from pprint import pprint
 
-from utils.functions.format import format_cnpj
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
-__all__ = ['verifica_novos_relacionamentos', 'lista_relacionamentos']
+__all__ = ['query']
 
 
-def verifica_novos_relacionamentos(cursor):
-    pprint('verifica_novos_relacionamentos')
-    pass
-
-
-def lista_relacionamentos(
+def query(
     cursor,
     dt_de=None,
     dt_ate=None,

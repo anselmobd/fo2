@@ -8,7 +8,10 @@ from base.views import O2BaseGetPostView
 from utils.table_defs import TableDefs
 
 from lotes.forms.corte.envio_insumo import EnvioInsumoForm
-from lotes.queries.corte import relaciona_nfs
+from lotes.queries.corte import (
+    relaciona_nfs,
+    relacionamentos,
+)
 
 
 class EnvioInsumo(O2BaseGetPostView):
@@ -34,9 +37,9 @@ class EnvioInsumo(O2BaseGetPostView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
-        relaciona_nfs.verifica_novos_relacionamentos(cursor)
+        relacionamentos.verifica_novos(cursor)
         
-        data = relaciona_nfs.lista_relacionamentos(
+        data = relaciona_nfs.query(
             cursor,
             dt_de=self.dt_de,
             dt_ate=self.dt_ate,
