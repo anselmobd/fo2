@@ -25,7 +25,7 @@ class RomaneioCorte(O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(RomaneioCorte, self).__init__(*args, **kwargs)
         self.Form_class = RomaneioCorteForm
-        self.template_name = 'lotes/romaneio_corte.html'
+        self.template_name = 'lotes/corte/romaneio_corte.html'
         self.title_name = 'Romaneio da filial corte'
         self.cleaned_data2self = True
         self.get_args2context = True

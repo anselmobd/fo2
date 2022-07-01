@@ -5,11 +5,9 @@ from lotes.views import (
     por_celula,
     prepara_pedido_corte,
     prepara_pedido_compra_matriz,
-    romaneio_corte,
 )
-from lotes.views.ops import (
-    seq_erro,
-)
+from lotes.views.corte import romaneio_corte
+from lotes.views.ops import seq_erro
 from lotes.views.analise import produzir_grade_empenho
 
 
