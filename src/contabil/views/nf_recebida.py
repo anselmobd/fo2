@@ -98,7 +98,13 @@ class NFRecebida(O2BaseGetPostView):
         if len(data) > 1:
             return
 
-        i_data = nf_rec_itens.query(cursor, self.nf, self.empresa)
+        i_data = nf_rec_itens.query(
+            cursor,
+            empresa=self.empresa,
+            nf=self.nf,
+            nf_ser=self.nf_ser,
+            cnpj=self.cnpj,
+        )
         if len(i_data) == 0:
             return
 
