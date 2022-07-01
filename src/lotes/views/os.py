@@ -9,10 +9,9 @@ from fo2.connections import db_cursor_so
 from utils.views import group_rowspan
 
 from lotes.forms import OsForm
-import lotes.models as models
 import lotes.queries.lote
 import lotes.queries.os
-
+from lotes.queries.lote import get_lotes
 
 class Os(View):
     Form_class = OsForm
@@ -128,7 +127,7 @@ class Os(View):
         })
 
         # Lotes ordenados por OS + referência + estágio
-        l_data = lotes.queries.lote.os_lotes(cursor, os)
+        l_data = get_lotes.os_lotes(cursor, os)
         if len(l_data) != 0:
             l_link = ('LOTE')
             for row in l_data:
