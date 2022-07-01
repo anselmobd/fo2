@@ -34,6 +34,7 @@ def insumo_recebimento_semana(
           ON r.NIVEL_ESTRUTURA = x.ITEM_100_NIVEL99
          AND r.REFERENCIA = x.ITEM_100_GRUPO
         WHERE 1=1
+          AND pc.COD_CANCELAMENTO = 0
           AND x.ITEM_100_NIVEL99 = {nivel}
           AND x.ITEM_100_GRUPO = '{ref}'
           AND x.ITEM_100_SUBGRUPO = '{tam}'
