@@ -36,6 +36,7 @@ def query(cursor,
         , infe.CODITEM_GRUPO ref
         , infe.CODITEM_SUBGRUPO tam
         , infe.CODITEM_ITEM cor
+        , i.NARRATIVA item_descr
         , infe.QUANTIDADE qtd
         , infe.VALOR_UNITARIO preco
         , infe.VALOR_TOTAL valor
@@ -46,6 +47,11 @@ def query(cursor,
          AND infe.CAPA_ENT_FORCLI2 = cnfe.CGC_CLI_FOR_2
          AND infe.CAPA_ENT_NRDOC = cnfe.DOCUMENTO
          AND infe.CAPA_ENT_SERIE = cnfe.SERIE
+        LEFT JOIN BASI_010 i -- item
+          ON i.NIVEL_ESTRUTURA = infe.CODITEM_NIVEL99
+         AND i.GRUPO_ESTRUTURA = infe.CODITEM_GRUPO
+         AND i.SUBGRU_ESTRUTURA = infe.CODITEM_SUBGRUPO
+         AND i.ITEM_ESTRUTURA = infe.CODITEM_ITEM
         WHERE 1=1
           {filtra_empresa} -- filtra_empresa
           {filtra_cnpj9} -- filtra_cnpj9
