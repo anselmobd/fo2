@@ -44,6 +44,7 @@ class NFRecebida(O2BaseGetPostView):
     itens_defs = TableDefs(
         {
             'item': ["Item"],
+            'item_descr': ["Descrição"],
             'qtd': ["Quantidade", 'r'],
             'preco': ["Preço", 'r'],
             'valor': ["Valor", 'r'],
