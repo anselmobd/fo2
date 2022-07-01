@@ -6,7 +6,30 @@ from utils.functions.queries import debug_cursor_execute
 __all__ = ['query']
 
 
-def query(cursor, nf, empresa):       
+def query(cursor,
+    empresa=None,
+    cnpj=None,
+    nf=None,
+    nf_ser=None,
+):       
+    filtra_empresa = f"""--
+        AND cnfe.LOCAL_ENTREGA = {empresa}
+    """ if empresa else ''
+    filtra_cnpj9 = f"""--
+        AND cnfe.CGC_CLI_FOR_9 = {cnpj[:8]}
+    """ if cnpj and len(cnpj) >= 8 else ''
+    filtra_cnpj4 = f"""--
+        AND cnfe.CGC_CLI_FOR_4 = {cnpj[8:12]}
+    """ if cnpj and len(cnpj) >= 12 else ''
+    filtra_cnpj2 = f"""--
+        AND cnfe.CGC_CLI_FOR_2 = {cnpj[12:14]}
+    """ if cnpj and len(cnpj) >= 14 else ''
+    filtra_nf = f"""--
+        AND cnfe.DOCUMENTO = {nf}
+    """ if nf else ''
+    filtra_nf_ser = f"""--
+        AND cnfe.SERIE = {nf_ser}
+    """ if nf_ser else ''
     sql = f"""
         SELECT DISTINCT  
           infe.CODITEM_NIVEL99 niv
@@ -24,8 +47,12 @@ def query(cursor, nf, empresa):
          AND infe.CAPA_ENT_NRDOC = cnfe.DOCUMENTO
          AND infe.CAPA_ENT_SERIE = cnfe.SERIE
         WHERE 1=1
-          AND cnfe.LOCAL_ENTREGA = {empresa} -- empresa 1: matriz
-          AND cnfe.DOCUMENTO = {nf}
+          {filtra_empresa} -- filtra_empresa
+          {filtra_cnpj9} -- filtra_cnpj9
+          {filtra_cnpj4} -- filtra_cnpj4
+          {filtra_cnpj2} -- filtra_cnpj2
+          {filtra_nf} -- filtra_nf
+          {filtra_nf_ser} -- filtra_nf_ser
         ORDER BY 
           infe.CODITEM_NIVEL99
         , infe.CODITEM_GRUPO
