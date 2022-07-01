@@ -41,7 +41,7 @@ class BuscaNFRecebida(O2BaseGetPostView):
         self.Form_class = BuscaNFRecebidaForm
         self.form_class_has_initial = True
         self.template_name = 'contabil/nf_rec_busca.html'
-        self.title_name = "Busca NF recebida"
+        self.title_name = "Busca NF entrada"
         self.cleaned_data2self = True
 
     def mount_context(self):
