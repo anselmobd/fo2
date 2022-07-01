@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import debug_cursor_execute
 
 
 def insumo_recebimento_semana(
@@ -63,5 +64,5 @@ def insumo_recebimento_semana(
         tam=tam,
         filtra_DATA_PREV_ENTR=filtra_DATA_PREV_ENTR
     )
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
