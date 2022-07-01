@@ -89,10 +89,10 @@ class PedidoFaturavelModelo(View):
             'group': group,
             'sum': ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL'],
             'count': [],
-            'descr': {'REF': 'Total:'},
+            'descr': {'PEDIDO': 'Total:'},
             'flags': ['NO_TOT_1'],
             'global_sum': ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL'],
-            'global_descr': {'REF': 'Total geral:'},
+            'global_descr': {'EMP_SIT': 'Total geral:'},
             'row_style': 'font-weight: bold;',
         })
         group_rowspan(data, group)
