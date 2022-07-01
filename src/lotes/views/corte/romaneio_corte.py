@@ -12,7 +12,7 @@ from geral.functions import has_permission
 from utils.functions import untuple_keys_concat
 from utils.views import totalize_grouped_data, group_rowspan
 
-from lotes.forms.romaneio_corte import RomaneioCorteForm
+from lotes.forms.corte.romaneio_corte import RomaneioCorteForm
 from lotes.queries.producao.romaneio_corte import (
     pedidos_gerados,
     producao_ops_finalizadas,
