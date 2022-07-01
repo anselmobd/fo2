@@ -25,7 +25,7 @@ def insumo_recebimento_semana(
                 ELSE 0 END
             , 0)
           ) QTD_A_RECEBER
-        , LISTAGG(pc.PEDIDO_COMPRA, ', ')
+        , LISTAGG(DISTINCT pc.PEDIDO_COMPRA, ', ')
           WITHIN GROUP (ORDER BY pc.PEDIDO_COMPRA) PEDIDO
         FROM SUPR_100 x -- item de pedido de compra
         JOIN SUPR_090 pc -- pedido de compra
