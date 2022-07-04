@@ -37,7 +37,14 @@
         {% endif %}
       </div>
       <div id="recebimentos" class="tab-pane fade">
-        <h4>Recebimentos na matriz</h4>
+        {% if rec_data %}
+          <table>
+            {% include "layout/thead_generic.html" with data=rec_data.headers safe=rec_data.safe style=rec_data.style thclass='sticky' only %}
+            {% include "layout/tbody_generic.html" with fields=rec_data.fields data=rec_data.data safe=rec_data.safe style=rec_data.style only %}
+          </table>
+        {% else %}
+          <h4>Nenhum recebimento na matriz</h4>
+        {% endif %}
       </div>
     </div>
   {% endif %}

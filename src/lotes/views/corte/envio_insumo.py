@@ -10,13 +10,14 @@ from utils.table_defs import TableDefs
 from lotes.forms.corte.envio_insumo import EnvioInsumoForm
 from lotes.queries.corte import (
     nfs_de_envio,
+    nfs_de_forn,
     relacionamentos,
 )
 
 
 class EnvioInsumo(O2BaseGetPostView):
 
-    table_defs = TableDefs(
+    env_defs = TableDefs(
         {
             'dt_emi': ["Dt.emissão"],
             'nf': ["NF"],
@@ -25,6 +26,19 @@ class EnvioInsumo(O2BaseGetPostView):
             'nfe_nf': ["NF Forn."],
             'nfe_dt_emi': ["Dt.emissão"],
             'nfe_valor': ["Valor", 'r'],
+        },
+        ['header', '+style'],
+        style = {'_': 'text-align'},
+    )
+
+    rec_defs = TableDefs(
+        {
+            'dt_emi': ["Dt.emissão"],
+            'cnpj': ["CNPJ Forn."],
+            'nf': ["NF"],
+            'valor': ["Valor", 'r'],
+            'nf': ["NF"],
+            'nf_envia': ["NF de envio"],
         },
         ['header', '+style'],
         style = {'_': 'text-align'},
@@ -48,9 +62,6 @@ class EnvioInsumo(O2BaseGetPostView):
             dt_de=self.dt_de,
             dt_ate=self.dt_ate,
         )
-        if len(env_data) == 0:
-            self.context['msg_erro'] = "Não encontrada NF de envio"
-            return
 
         for row in env_data:
             row['nf|TARGET'] = '_blank'
@@ -73,6 +84,35 @@ class EnvioInsumo(O2BaseGetPostView):
                     ],
                 )
 
-
-        self.context['env_data'] = self.table_defs.hfs_dict()
+        self.context['env_data'] = self.env_defs.hfs_dict()
         self.context['env_data']['data'] = env_data
+
+        rec_data = nfs_de_forn.query(
+            cursor,
+            dt_de=self.dt_de,
+            dt_ate=self.dt_ate,
+        )
+
+        for row in rec_data:
+            row['nf|TARGET'] = '_blank'
+            row['nf|LINK'] = reverse(
+                'contabil:nf_recebida__get',
+                args=[
+                    row['empr'],
+                    row['nf_num'],
+                    row['nf_ser'],
+                    row['cnpj_num']
+                ],
+            )
+            if row['nf_envia'] != '-':
+                row['nf_envia|TARGET'] = '_blank'
+                row['nf_envia|LINK'] = reverse(
+                    'contabil:nota_fiscal__get',
+                    args=[
+                        row['empr'],
+                        row['nf_envia'],
+                    ]
+                )
+
+        self.context['rec_data'] = self.rec_defs.hfs_dict()
+        self.context['rec_data']['data'] = rec_data
