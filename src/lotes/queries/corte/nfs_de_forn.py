@@ -76,6 +76,7 @@ def query(
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else "-"
         if row['nf_envia'] == 0:
             row['nf_envia'] = "-"
+        if row['nf_env_valor'] is None:
             row['nf_env_valor'] = "-"
             row['nf_env_dt_emi'] = "-"
         else:

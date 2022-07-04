@@ -122,7 +122,7 @@ class EnvioInsumo(O2BaseGetPostView):
                     row['cnpj_num']
                 ],
             )
-            if row['nf_envia'] != '-':
+            if row['nf_env_valor'] != '-':
                 row['nf_envia|TARGET'] = '_blank'
                 row['nf_envia|LINK'] = reverse(
                     'contabil:nota_fiscal__get',
