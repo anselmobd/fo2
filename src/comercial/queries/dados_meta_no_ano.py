@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.core.cache import cache
+
 from utils.decorators import caching_function
 from utils.functions import dias_mes_data
 
@@ -10,12 +12,22 @@ import comercial.queries
 import comercial.queries.devolucao_para_meta
 
 
-@caching_function(
-    key_cache_fields=['hoje'], 
-    minutes_key_variation=10, 
-    version_key_variation=1,
-    caching_params=True,
-)
+def dados_meta_no_ano_control(cursor, hoje, cached=True):
+    key_cache = 'dados_meta_no_ano_control'
+    if cached:
+        return cache.get(key_cache)
+    else:
+        result = dados_meta_no_ano(cursor, hoje)
+        cache.set(key_cache, result, timeout=None)
+        return result
+
+
+# @caching_function(
+#     key_cache_fields=['hoje'], 
+#     minutes_key_variation=10, 
+#     version_key_variation=1,
+#     caching_params=True,
+# )
 def dados_meta_no_ano(cursor, hoje):
     ano_atual = hoje.year
     mes_atual = hoje.month
