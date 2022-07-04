@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
@@ -8,10 +10,11 @@ from lotes.forms.corte.informa_nf_envio import InformaNfEnvioForm
 from contabil.queries import set_nf_envia
 
 
-class InformaNfEnvio(O2BaseGetPostView):
+class InformaNfEnvio(PermissionRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(InformaNfEnvio, self).__init__(*args, **kwargs)
+        self.permission_required = 'lotes.informa_nf_envio_matriz_filial'
         self.Form_class = InformaNfEnvioForm
         self.template_name = 'lotes/corte/informa_nf_envio.html'
         self.title_name = "Informa NF de envio"

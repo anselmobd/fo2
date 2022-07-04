@@ -5,6 +5,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from geral.functions import has_permission
 from utils.table_defs import TableDefs
 
 from lotes.forms.corte.envio_insumo import EnvioInsumoForm
@@ -32,6 +33,21 @@ class EnvioInsumo(O2BaseGetPostView):
     )
 
     rec_defs = TableDefs(
+        {
+            'dt_emi': ["Dt.emissão", 'c'],
+            'forn_nome': ["Fornecedor"],
+            'nf': ["NF", 'c'],
+            'valor': ["Valor", 'r'],
+            'nf': ["NF", 'c'],
+            'nf_envia': ["NF de envio", 'c'],
+            'nf_env_dt_emi': ["Dt.emissão", 'c'],
+            'nf_env_valor': ["Valor", 'r'],
+        },
+        ['header', '+style'],
+        style = {'_': 'text-align'},
+    )
+
+    edit_rec_defs = TableDefs(
         {
             'dt_emi': ["Dt.emissão", 'c'],
             'forn_nome': ["Fornecedor"],
@@ -135,6 +151,10 @@ class EnvioInsumo(O2BaseGetPostView):
                     row['valor|STYLE'] = 'color: red;'
                     row['nf_env_valor|STYLE'] = 'color: red;'
 
-        self.context['rec_data'] = self.rec_defs.hfs_dict()
+        if has_permission(self.request, 'lotes.informa_nf_envio_matriz_filial'):
+            self.context['rec_data'] = self.edit_rec_defs.hfs_dict()
+        else:
+            self.context['rec_data'] = self.rec_defs.hfs_dict()
+
         self.context['rec_data']['safe'] = ['editar']
         self.context['rec_data']['data'] = rec_data
