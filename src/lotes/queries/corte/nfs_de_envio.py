@@ -49,8 +49,6 @@ def query(
         WHERE 1=1
           {filtra_dt_de} -- filtra_dt_de
           {filtra_dt_ate} -- filtra_dt_ate
-          -- AND mf.DES_MENSAG_12 NOT LIKE 'Transf. Matriz-Filial da NF%'
-          -- AND cnfe.DOCUMENTO IS NULL
           {filtra_relacionado} -- filtra_relacionado
           AND cnf.CODIGO_EMPRESA = 1
           AND cnf.NATOP_NF_NAT_OPER = 301

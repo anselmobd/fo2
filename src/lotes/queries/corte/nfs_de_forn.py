@@ -24,14 +24,15 @@ def query(
     """ if relacionado is not None else ''
     sql = f"""
         SELECT DISTINCT  
-          cnfe.CGC_CLI_FOR_9 cnpj9
+          cnfe.LOCAL_ENTREGA empr
+        , cnfe.CGC_CLI_FOR_9 cnpj9
         , cnfe.CGC_CLI_FOR_4 cnpj4
         , cnfe.CGC_CLI_FOR_2 cnpj2
         , cnfe.DOCUMENTO nf_num
         , cnfe.SERIE nf_ser
         , cnfe.VALOR_ITENS valor
         , cnfe.DATA_EMISSAO dt_emi
-        , cnfe.TUSSOR_ENVIA_NF
+        , cnfe.TUSSOR_ENVIA_NF nf_envia
         FROM OBRF_010 cnfe -- capa de nota de entrada
         LEFT JOIN OBRF_015 infe -- item de nota de entrada
           ON infe.CAPA_ENT_FORCLI9 = cnfe.CGC_CLI_FOR_9
@@ -61,4 +62,6 @@ def query(
         row['cnpj_num'] = format_cnpj(row, sep=False)
         row['dt_emi'] = row['dt_emi'].date()
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else "-"
+        if row['nf_envia'] == 0:
+            row['nf_envia'] = '-'
     return data
