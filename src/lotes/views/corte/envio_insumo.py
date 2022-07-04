@@ -9,7 +9,7 @@ from utils.table_defs import TableDefs
 
 from lotes.forms.corte.envio_insumo import EnvioInsumoForm
 from lotes.queries.corte import (
-    relaciona_nfs,
+    nfs_de_envio,
     relacionamentos,
 )
 
@@ -39,7 +39,7 @@ class EnvioInsumo(O2BaseGetPostView):
 
         relacionamentos.verifica_novos(cursor)
         
-        data = relaciona_nfs.query(
+        data = nfs_de_envio.query(
             cursor,
             dt_de=self.dt_de,
             dt_ate=self.dt_ate,
