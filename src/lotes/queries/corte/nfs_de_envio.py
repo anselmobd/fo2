@@ -81,6 +81,7 @@ def query(
         else:
             row['nfe_cnpj'] = "-"
             row['nfe_cnpj_num'] = "-"
+            row['forn_nome'] = "-"
             row['nfe_nf'] = "-"
             row['nfe_dt_emi'] = "-"
             row['nfe_valor'] = "-"
