@@ -33,7 +33,12 @@ def query(
         , cnfe.VALOR_ITENS valor
         , cnfe.DATA_EMISSAO dt_emi
         , cnfe.TUSSOR_ENVIA_NF nf_envia
+        , cnf.VALOR_ITENS_NFIS nf_env_valor
         FROM OBRF_010 cnfe -- capa de nota de entrada
+        LEFT JOIN FATU_050 cnf -- capa faturamento de envio
+          ON cnf.CODIGO_EMPRESA = cnfe.LOCAL_ENTREGA
+         AND cnf.NUM_NOTA_FISCAL = cnfe.TUSSOR_ENVIA_NF
+         AND cnf.SERIE_NOTA_FISC = 1
         LEFT JOIN OBRF_015 infe -- item de nota de entrada
           ON infe.CAPA_ENT_FORCLI9 = cnfe.CGC_CLI_FOR_9
          AND infe.CAPA_ENT_FORCLI4 = cnfe.CGC_CLI_FOR_4
@@ -64,4 +69,5 @@ def query(
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else "-"
         if row['nf_envia'] == 0:
             row['nf_envia'] = '-'
+            row['nf_env_valor'] = '-'
     return data
