@@ -43,6 +43,7 @@ class EnvioInsumo(O2BaseGetPostView):
             cursor,
             dt_de=self.dt_de,
             dt_ate=self.dt_ate,
+            relacionado=False,
         )
         if len(data) == 0:
             self.context['msg_erro'] = "Não encontrada NF de envio"
