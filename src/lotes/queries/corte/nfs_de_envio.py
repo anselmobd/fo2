@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from utils.functions.format import format_cnpj
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
@@ -27,6 +28,13 @@ def query(
         , cnf.SERIE_NOTA_FISC nf_ser
         , cnf.VALOR_ITENS_NFIS valor
         , cnf.DATA_EMISSAO dt_emi
+        , cnfe.CGC_CLI_FOR_9 nfe_cnpj9
+        , cnfe.CGC_CLI_FOR_4 nfe_cnpj4
+        , cnfe.CGC_CLI_FOR_2 nfe_cnpj2
+        , cnfe.DOCUMENTO nfe_num
+        , cnfe.SERIE nfe_ser
+        , cnfe.VALOR_ITENS nfe_valor
+        , cnfe.DATA_EMISSAO nfe_dt_emi
         FROM FATU_050 cnf -- capa faturamento
         LEFT JOIN OBRF_010 cnfe -- capa de nota de entrada
           ON cnfe.LOCAL_ENTREGA = cnf.CODIGO_EMPRESA
@@ -58,5 +66,15 @@ def query(
     data = dictlist_lower(cursor)
     for row in data:
         row['dt_emi'] = row['dt_emi'].date()
-        row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else '-'
+        row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else "-"
+
+        if row['nfe_num']:
+            row['nfe_cnpj_num'] = format_cnpj(row)
+            row['nfe_nf'] = f"{row['nfe_num']}-{row['nfe_ser']}"
+            row['nfe_dt_emi'] = row['nfe_dt_emi'].date()
+        else:
+            row['nfe_cnpj_num'] = "-"
+            row['nfe_nf'] = "-"
+            row['nfe_dt_emi'] = "-"
+            row['nfe_valor'] = "-"
     return data
