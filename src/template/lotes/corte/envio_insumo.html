@@ -20,11 +20,25 @@
   {% if msg_erro %}
     <h3>{{ msg_erro }}</h3>
   {% endif %}
-  {% if env_data %}
-    <h4>Envios para a filial</h4>
-    <table>
-      {% include "layout/thead_generic.html" with data=env_data.headers safe=env_data.safe style=env_data.style thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=env_data.fields data=env_data.data safe=env_data.safe style=env_data.style only %}
-    </table>
+  {% if request.POST %}
+    <ul class="nav nav-tabs" id="myTab">
+      <li class="active"><a data-toggle="tab" href="#envios">Envios para a filial</a></li>
+      <li><a data-toggle="tab" href="#recebimentos">Recebimentos na matriz</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="envios" class="tab-pane fade in active">
+        {% if env_data %}
+          <table>
+            {% include "layout/thead_generic.html" with data=env_data.headers safe=env_data.safe style=env_data.style thclass='sticky' only %}
+            {% include "layout/tbody_generic.html" with fields=env_data.fields data=env_data.data safe=env_data.safe style=env_data.style only %}
+          </table>
+        {% else %}
+          <h4>Nenhum envio para a filial</h4>
+        {% endif %}
+      </div>
+      <div id="recebimentos" class="tab-pane fade">
+        <h4>Recebimentos na matriz</h4>
+      </div>
+    </div>
   {% endif %}
 {% endblock %}
