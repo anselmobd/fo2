@@ -15,11 +15,13 @@ import comercial.queries.devolucao_para_meta
 def dados_meta_no_ano_control(cursor, hoje, cached=True):
     key_cache = 'dados_meta_no_ano_control'
     if cached:
-        return cache.get(key_cache)
+        result = cache.get(key_cache)
+        if result is None:
+            result = dados_meta_no_ano_control(cursor, hoje, cached=False)
     else:
         result = dados_meta_no_ano(cursor, hoje)
         cache.set(key_cache, result, timeout=None)
-        return result
+    return result
 
 
 # @caching_function(
