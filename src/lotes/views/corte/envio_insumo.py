@@ -39,6 +39,7 @@ class EnvioInsumo(O2BaseGetPostView):
             'valor': ["Valor", 'r'],
             'nf': ["NF"],
             'nf_envia': ["NF de envio"],
+            'nf_env_valor': ["Valor", 'r'],
         },
         ['header', '+style'],
         style = {'_': 'text-align'},
@@ -83,6 +84,9 @@ class EnvioInsumo(O2BaseGetPostView):
                         row['nfe_cnpj_num']
                     ],
                 )
+                if row['nfe_valor'] != row['valor']:
+                    row['valor|STYLE'] = 'color: red;'
+                    row['nfe_valor|STYLE'] = 'color: red;'
 
         self.context['env_data'] = self.env_defs.hfs_dict()
         self.context['env_data']['data'] = env_data
@@ -113,6 +117,9 @@ class EnvioInsumo(O2BaseGetPostView):
                         row['nf_envia'],
                     ]
                 )
+                if row['nf_env_valor'] != row['valor']:
+                    row['valor|STYLE'] = 'color: red;'
+                    row['nf_env_valor|STYLE'] = 'color: red;'
 
         self.context['rec_data'] = self.rec_defs.hfs_dict()
         self.context['rec_data']['data'] = rec_data
