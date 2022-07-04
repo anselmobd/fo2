@@ -46,6 +46,9 @@ def query(
           AND cnf.CODIGO_EMPRESA = 1
           AND cnf.NATOP_NF_NAT_OPER = 301
           AND cnf.NATOP_NF_EST_OPER = 'RJ'
+          AND cnf.CGC_9 = 7681643
+          AND cnf.CGC_4 = 2
+          AND cnf.CGC_2 = 78
           AND cnf.DATA_EMISSAO > DATE '2022-03-18'
           AND inf.NIVEL_ESTRUTURA = 2
         ORDER BY
