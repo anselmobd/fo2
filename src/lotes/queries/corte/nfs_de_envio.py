@@ -24,7 +24,8 @@ def query(
     """ if relacionado is not None else ''
     sql = f"""
         SELECT DISTINCT
-          cnf.NUM_NOTA_FISCAL nf_num
+          cnf.CODIGO_EMPRESA empr
+        , cnf.NUM_NOTA_FISCAL nf_num
         , cnf.SERIE_NOTA_FISC nf_ser
         , cnf.VALOR_ITENS_NFIS valor
         , cnf.DATA_EMISSAO dt_emi
@@ -69,10 +70,12 @@ def query(
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else "-"
 
         if row['nfe_num']:
-            row['nfe_cnpj_num'] = format_cnpj(row)
+            row['nfe_cnpj'] = format_cnpj(row)
+            row['nfe_cnpj_num'] = format_cnpj(row, sep=False)
             row['nfe_nf'] = f"{row['nfe_num']}-{row['nfe_ser']}"
             row['nfe_dt_emi'] = row['nfe_dt_emi'].date()
         else:
+            row['nfe_cnpj'] = "-"
             row['nfe_cnpj_num'] = "-"
             row['nfe_nf'] = "-"
             row['nfe_dt_emi'] = "-"
