@@ -4,14 +4,20 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'producao:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block content %}
-  <form action="{% url 'producao:informa_nf_envio' %}" method="post">
+  <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
   </form>
-  {% if msg_erro %}
-    <h3>{{ msg_erro }}</h3>
+  <h4>Empresa: {{ empresa }}</h4>
+  <h4>NF: {{ nf }}</h4>
+  <h4>Série NF: {{ nf_ser }}</h4>
+  <h4>CNPJ fornecedor: {{ cnpj }}</h4>
+  {% if request.POST %}
+    {% if msg_erro %}
+      <h3>{{ msg_erro }}</h3>
     {% else %}
-    <h3>OK!</h3>
+      <h3>OK!</h3>
+    {% endif %}
   {% endif %}
 {% endblock %}

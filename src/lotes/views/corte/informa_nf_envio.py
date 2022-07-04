@@ -22,14 +22,17 @@ class InformaNfEnvio(O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(InformaNfEnvio, self).__init__(*args, **kwargs)
         self.Form_class = InformaNfEnvioForm
-        self.template_name = 'contabil/nf_recebida.html'
+        self.template_name = 'lotes/corte/informa_nf_envio.html'
         self.title_name = "Informa NF de envio"
         self.get_args = ['empresa', 'nf', 'nf_ser', 'cnpj']
+        self.get_args2context = True
+        self.get_args2form = False
         self.cleaned_data2self = True
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
+        
         # data = nf_rec_info.query(
         #     cursor,
         #     empresa=self.empresa,
