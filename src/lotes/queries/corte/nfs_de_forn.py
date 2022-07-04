@@ -14,10 +14,10 @@ def query(
     relacionado=None,
 ):
     filtra_dt_de = f"""--
-        AND cnfe.DATA_TRANSACAO >= DATE '{dt_de}'
+        AND cnfe.DATA_EMISSAO >= DATE '{dt_de}'
     """ if dt_de else ''
     filtra_dt_ate = f"""--
-        AND cnfe.DATA_TRANSACAO <= DATE '{dt_ate}'
+        AND cnfe.DATA_EMISSAO <= DATE '{dt_ate}'
     """ if dt_ate else ''
     filtra_relacionado = f"""--
         AND cnfe.TUSSOR_ENVIA_NF {'<>' if relacionado else '='} 0
@@ -34,6 +34,7 @@ def query(
         , cnfe.DATA_EMISSAO dt_emi
         , cnfe.TUSSOR_ENVIA_NF nf_envia
         , cnf.VALOR_ITENS_NFIS nf_env_valor
+        , cnf.DATA_EMISSAO nf_env_dt_emi
         FROM OBRF_010 cnfe -- capa de nota de entrada
         LEFT JOIN FATU_050 cnf -- capa faturamento de envio
           ON cnf.CODIGO_EMPRESA = cnfe.LOCAL_ENTREGA
@@ -68,6 +69,9 @@ def query(
         row['dt_emi'] = row['dt_emi'].date()
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else "-"
         if row['nf_envia'] == 0:
-            row['nf_envia'] = '-'
-            row['nf_env_valor'] = '-'
+            row['nf_envia'] = "-"
+            row['nf_env_valor'] = "-"
+            row['nf_env_dt_emi'] = "-"
+        else:
+            row['nf_env_dt_emi'] = row['nf_env_dt_emi'].date()
     return data

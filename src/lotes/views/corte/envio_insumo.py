@@ -39,6 +39,7 @@ class EnvioInsumo(O2BaseGetPostView):
             'valor': ["Valor", 'r'],
             'nf': ["NF"],
             'nf_envia': ["NF de envio"],
+            'nf_env_dt_emi': ["Dt.emissão"],
             'nf_env_valor': ["Valor", 'r'],
         },
         ['header', '+style'],
