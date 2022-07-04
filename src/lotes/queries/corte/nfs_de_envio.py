@@ -52,6 +52,7 @@ def query(
          AND inf.CH_IT_NF_NUM_NFIS = cnf.NUM_NOTA_FISCAL
          AND inf.CH_IT_NF_SER_NFIS = cnf.SERIE_NOTA_FISC
         WHERE 1=1
+          AND cnf.COD_CANC_NFISC = 0 -- não cancelada
           {filtra_dt_de} -- filtra_dt_de
           {filtra_dt_ate} -- filtra_dt_ate
           {filtra_relacionado} -- filtra_relacionado
