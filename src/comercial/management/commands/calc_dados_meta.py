@@ -37,11 +37,14 @@ class Command(BaseCommand):
             cursor = db_cursor_so()
             hoje = datetime.date.today()
 
-            cg = CacheGet()
-            msg_erro, meses, total = cg.get_result(
-                comercial.queries.dados_meta_no_ano(cursor, hoje)
-            )
+            # cg = CacheGet()
+            # msg_erro, meses, total = cg.get_result(
+            #     comercial.queries.dados_meta_no_ano(cursor, hoje)
+            # )
             # self.my_pprintln(cg.params)
+
+            msg_erro, meses, _ = comercial.queries.dados_meta_no_ano_control(
+                cursor, hoje, cached=False)
 
             if msg_erro:
                 self.my_println(msg_erro)
