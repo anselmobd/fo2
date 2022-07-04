@@ -19,12 +19,12 @@ class EnvioInsumo(O2BaseGetPostView):
 
     env_defs = TableDefs(
         {
-            'dt_emi': ["Dt.emissão"],
-            'nf': ["NF"],
+            'dt_emi': ["Dt.emissão", 'c'],
+            'nf': ["NF", 'c'],
             'valor': ["Valor", 'r'],
             'forn_nome': ["Fornecedor"],
-            'nfe_nf': ["NF Forn."],
-            'nfe_dt_emi': ["Dt.emissão"],
+            'nfe_nf': ["NF Forn.", 'c'],
+            'nfe_dt_emi': ["Dt.emissão", 'c'],
             'nfe_valor': ["Valor", 'r'],
         },
         ['header', '+style'],
@@ -33,13 +33,13 @@ class EnvioInsumo(O2BaseGetPostView):
 
     rec_defs = TableDefs(
         {
-            'dt_emi': ["Dt.emissão"],
+            'dt_emi': ["Dt.emissão", 'c'],
             'forn_nome': ["Fornecedor"],
-            'nf': ["NF"],
+            'nf': ["NF", 'c'],
             'valor': ["Valor", 'r'],
-            'nf': ["NF"],
-            'nf_envia': ["NF de envio"],
-            'nf_env_dt_emi': ["Dt.emissão"],
+            'nf': ["NF", 'c'],
+            'nf_envia': ["NF de envio", 'c'],
+            'nf_env_dt_emi': ["Dt.emissão", 'c'],
             'nf_env_valor': ["Valor", 'r'],
         },
         ['header', '+style'],
