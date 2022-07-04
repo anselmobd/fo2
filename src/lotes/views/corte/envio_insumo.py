@@ -21,6 +21,10 @@ class EnvioInsumo(O2BaseGetPostView):
             'dt_emi': ["Dt.emissão"],
             'nf': ["NF"],
             'valor': ["Valor", 'r'],
+            'nfe_cnpj_num': ["CNPJ Forn."],
+            'nfe_nf': ["NF Forn."],
+            'nfe_dt_emi': ["Dt.emissão"],
+            'nfe_valor': ["Valor", 'r'],
         },
         ['header', '+style'],
         style = {'_': 'text-align'},
@@ -43,7 +47,7 @@ class EnvioInsumo(O2BaseGetPostView):
             cursor,
             dt_de=self.dt_de,
             dt_ate=self.dt_ate,
-            relacionado=False,
+            # relacionado=False,
         )
         if len(data) == 0:
             self.context['msg_erro'] = "Não encontrada NF de envio"

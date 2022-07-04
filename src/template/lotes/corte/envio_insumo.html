@@ -21,7 +21,7 @@
     <h3>{{ msg_erro }}</h3>
   {% endif %}
   {% if data %}
-    <h4>Envios não relacionados com NF recebida de fornecedor</h4>
+    <h4>Envios para a filial</h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe style=style only %}
