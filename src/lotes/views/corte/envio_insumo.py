@@ -41,6 +41,7 @@ class EnvioInsumo(O2BaseGetPostView):
             'nf_envia': ["NF de envio", 'c'],
             'nf_env_dt_emi': ["Dt.emissão", 'c'],
             'nf_env_valor': ["Valor", 'r'],
+            'editar': ["Editar", 'c'],
         },
         ['header', '+style'],
         style = {'_': 'text-align'},
@@ -99,6 +100,18 @@ class EnvioInsumo(O2BaseGetPostView):
         )
 
         for row in rec_data:
+            editar_link = reverse(
+                'producao:informa_nf_envio',
+                args=[
+                    row['empr'],
+                    row['nf_num'],
+                    row['nf_ser'],
+                    row['cnpj_num']
+                ],
+            )
+            row['editar'] = f"""
+              <a title="Editar" target="_blank" href="{editar_link}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+            """
             row['nf|TARGET'] = '_blank'
             row['nf|LINK'] = reverse(
                 'contabil:nf_recebida__get',
@@ -123,4 +136,5 @@ class EnvioInsumo(O2BaseGetPostView):
                     row['nf_env_valor|STYLE'] = 'color: red;'
 
         self.context['rec_data'] = self.rec_defs.hfs_dict()
+        self.context['rec_data']['safe'] = ['editar']
         self.context['rec_data']['data'] = rec_data
