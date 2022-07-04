@@ -36,10 +36,15 @@ def query(
         , cnfe.SERIE nfe_ser
         , cnfe.VALOR_ITENS nfe_valor
         , cnfe.DATA_EMISSAO nfe_dt_emi
+        , COALESCE(forn.NOME_FANTASIA, forn.NOME_FORNECEDOR) forn_nome
         FROM FATU_050 cnf -- capa faturamento
         LEFT JOIN OBRF_010 cnfe -- capa de nota de entrada
           ON cnfe.LOCAL_ENTREGA = cnf.CODIGO_EMPRESA
          AND cnfe.TUSSOR_ENVIA_NF = cnf.NUM_NOTA_FISCAL
+        LEFT JOIN SUPR_010 forn -- fornecedor
+          ON forn.FORNECEDOR9 = cnfe.CGC_CLI_FOR_9
+         AND forn.FORNECEDOR4 = cnfe.CGC_CLI_FOR_4
+         AND forn.FORNECEDOR2 = cnfe.CGC_CLI_FOR_2
         JOIN FATU_052 mf -- mensagem faturamento
           ON mf.NUM_NOTA = cnf.NUM_NOTA_FISCAL
         JOIN FATU_060 inf
@@ -70,6 +75,7 @@ def query(
         if row['nfe_num']:
             row['nfe_cnpj'] = format_cnpj(row)
             row['nfe_cnpj_num'] = format_cnpj(row, sep=False)
+            row['forn_nome'] = f"{row['nfe_cnpj']} {row['forn_nome']}"
             row['nfe_nf'] = f"{row['nfe_num']}-{row['nfe_ser']}"
             row['nfe_dt_emi'] = row['nfe_dt_emi'].date()
         else:

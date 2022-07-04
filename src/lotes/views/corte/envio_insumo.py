@@ -22,7 +22,7 @@ class EnvioInsumo(O2BaseGetPostView):
             'dt_emi': ["Dt.emissão"],
             'nf': ["NF"],
             'valor': ["Valor", 'r'],
-            'nfe_cnpj': ["CNPJ Forn."],
+            'forn_nome': ["Fornecedor"],
             'nfe_nf': ["NF Forn."],
             'nfe_dt_emi': ["Dt.emissão"],
             'nfe_valor': ["Valor", 'r'],
@@ -34,7 +34,7 @@ class EnvioInsumo(O2BaseGetPostView):
     rec_defs = TableDefs(
         {
             'dt_emi': ["Dt.emissão"],
-            'cnpj': ["CNPJ Forn."],
+            'forn_nome': ["Fornecedor"],
             'nf': ["NF"],
             'valor': ["Valor", 'r'],
             'nf': ["NF"],
