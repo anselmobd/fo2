@@ -14,10 +14,6 @@
   <h4>Série NF: {{ nf_ser }}</h4>
   <h4>CNPJ fornecedor: {{ cnpj }}</h4>
   {% if request.POST %}
-    {% if msg_erro %}
-      <h3>{{ msg_erro }}</h3>
-    {% else %}
-      <h3>OK!</h3>
-    {% endif %}
+    <h3>{{ msg }}</h3>
   {% endif %}
 {% endblock %}

@@ -1,20 +1,11 @@
 from pprint import pprint
 
-from django.shortcuts import render
-from django.urls import reverse
-from django.views import View
-
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
-from utils.table_defs import TableDefs
-from utils.views import totalize_data
 
 from lotes.forms.corte.informa_nf_envio import InformaNfEnvioForm
-from contabil.queries import (
-    nf_rec_info,
-    nf_rec_itens,
-)
+from contabil.queries import set_nf_envia
 
 
 class InformaNfEnvio(O2BaseGetPostView):
@@ -31,17 +22,15 @@ class InformaNfEnvio(O2BaseGetPostView):
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
-
         
-        # data = nf_rec_info.query(
-        #     cursor,
-        #     empresa=self.empresa,
-        #     nf=self.nf,
-        #     nf_ser=self.nf_ser,
-        #     cnpj=self.cnpj,
-        # )
-        # if len(data) == 0:
-        #     self.context.update({
-        #         'msg_erro': "Nota fiscal recebida não encontrada",
-        #     })
-        #     return
+        ok = set_nf_envia.update(
+            cursor,
+            empresa=self.context['empresa'],
+            nf=self.context['nf'],
+            nf_ser=self.context['nf_ser'],
+            cnpj=self.context['cnpj'],
+            nf_env=self.nf_env,
+        )
+        self.context.update({
+            'msg': f"Nf de envio gravada como '{self.nf_env}'" if ok else "Erro ao gravar FN de envio",
+        })
