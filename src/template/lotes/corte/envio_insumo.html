@@ -20,11 +20,11 @@
   {% if msg_erro %}
     <h3>{{ msg_erro }}</h3>
   {% endif %}
-  {% if data %}
+  {% if env_data %}
     <h4>Envios para a filial</h4>
     <table>
-      {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe style=style only %}
+      {% include "layout/thead_generic.html" with data=env_data.headers safe=env_data.safe style=env_data.style thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=env_data.fields data=env_data.data safe=env_data.safe style=env_data.style only %}
     </table>
   {% endif %}
 {% endblock %}

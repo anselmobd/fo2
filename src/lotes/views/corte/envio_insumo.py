@@ -43,15 +43,15 @@ class EnvioInsumo(O2BaseGetPostView):
 
         relacionamentos.verifica_novos(cursor)
         
-        data = nfs_de_envio.query(
+        env_data = nfs_de_envio.query(
             cursor,
             dt_de=self.dt_de,
             dt_ate=self.dt_ate,
             # relacionado=False,
         )
-        if len(data) == 0:
+        if len(env_data) == 0:
             self.context['msg_erro'] = "Não encontrada NF de envio"
             return
 
-        self.context.update(self.table_defs.hfs_dict())
-        self.context['data'] = data
+        self.context['env_data'] = self.table_defs.hfs_dict()
+        self.context['env_data']['data'] = env_data
