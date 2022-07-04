@@ -21,7 +21,7 @@ class EnvioInsumo(O2BaseGetPostView):
             'dt_emi': ["Dt.emissão"],
             'nf': ["NF"],
             'valor': ["Valor", 'r'],
-            'nfe_cnpj_num': ["CNPJ Forn."],
+            'nfe_cnpj': ["CNPJ Forn."],
             'nfe_nf': ["NF Forn."],
             'nfe_dt_emi': ["Dt.emissão"],
             'nfe_valor': ["Valor", 'r'],
@@ -47,11 +47,32 @@ class EnvioInsumo(O2BaseGetPostView):
             cursor,
             dt_de=self.dt_de,
             dt_ate=self.dt_ate,
-            # relacionado=False,
         )
         if len(env_data) == 0:
             self.context['msg_erro'] = "Não encontrada NF de envio"
             return
+
+        for row in env_data:
+            row['nf|TARGET'] = '_blank'
+            row['nf|LINK'] = reverse(
+                'contabil:nota_fiscal__get',
+                args=[
+                    row['empr'],
+                    row['nf_num'],
+                ]
+            )
+            if row['nfe_nf'] != "-":
+                row['nfe_nf|TARGET'] = '_blank'
+                row['nfe_nf|LINK'] = reverse(
+                    'contabil:nf_recebida__get',
+                    args=[
+                        row['empr'],
+                        row['nfe_num'],
+                        row['nfe_ser'],
+                        row['nfe_cnpj_num']
+                    ],
+                )
+
 
         self.context['env_data'] = self.table_defs.hfs_dict()
         self.context['env_data']['data'] = env_data
