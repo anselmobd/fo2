@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import re_path, path
 
 from . import views
 from lotes.views import (
@@ -8,6 +8,7 @@ from lotes.views import (
 )
 from lotes.views.corte import (
     envio_insumo,
+    informa_nf_envio,
     romaneio_corte,
 )
 from lotes.views.ops import seq_erro
@@ -202,6 +203,12 @@ urlpatterns = [
 
     re_path(r'^envio_insumo/$',
         envio_insumo.EnvioInsumo.as_view(), name='envio_insumo'),
+
+    path(
+        'informa_nf_envio/<int:empresa>/<int:nf>/<int:nf_ser>/<str:cnpj>/',
+        informa_nf_envio.InformaNfEnvio.as_view(),
+        name='informa_nf_envio',
+    ),
 
     re_path(r'^ajax/prepara_pedido_corte/(?P<data>[^/]+)/(?P<cliente>[^/]+)/(?P<pedido>[^/]+)/$',
         prepara_pedido_corte.PreparaPedidoCorte.as_view(), name='prepara_pedido_corte'),

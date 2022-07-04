@@ -1,0 +1,17 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'producao:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block content %}
+  <form action="{% url 'producao:informa_nf_envio' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+  </form>
+  {% if msg_erro %}
+    <h3>{{ msg_erro }}</h3>
+    {% else %}
+    <h3>OK!</h3>
+  {% endif %}
+{% endblock %}
