@@ -92,7 +92,7 @@ def query(
         FROM PCPT_020 ro -- cadastro de rolos
         LEFT JOIN TMRP_141 re -- reserva de rolo para OP
           ON re.CODIGO_ROLO = ro.CODIGO_ROLO
-        LEFT JOIN PCPT_025 rc
+        LEFT JOIN PCPT_025 rc -- alocação de rolo para OP
           ON rc.CODIGO_ROLO = ro.CODIGO_ROLO
         LEFT JOIN SUPR_010 f -- fornecedor
           ON f.FORNECEDOR9 = ro.FORNECEDOR_CGC9
