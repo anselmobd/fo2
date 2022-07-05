@@ -167,11 +167,11 @@ class Pedido(View):
             'o_headers': ('Stuação', 'OP', 'Tipo',
                             'Referência', 'OP principal', 'Quantidade',
                             'Data Digitação', 'Data Corte',
-                            'Tem est. 15?', 'NF filial'),
+                            'Tem est. 15?', 'Qtd.rolos', 'NF filial'),
             'o_fields': ('SITUACAO', 'ORDEM_PRODUCAO', 'TIPO',
                             'REFERENCIA_PECA', 'ORDEM_PRINCIPAL', 'QTD',
                             'DT_DIGITACAO', 'DT_CORTE',
-                            'TEM_15', 'NF_FILIAL'),
+                            'TEM_15', 'QTD_ROLOS_ALOC', 'NF_FILIAL'),
             'o_data': o_data,
         })
 
