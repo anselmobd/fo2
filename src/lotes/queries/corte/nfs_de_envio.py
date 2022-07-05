@@ -36,6 +36,7 @@ def query(
         , cnfe.SERIE nfe_ser
         , cnfe.VALOR_ITENS nfe_valor
         , cnfe.DATA_EMISSAO nfe_dt_emi
+        , cnfe.DATA_DIGITACAO nfe_dt_dig
         , COALESCE(forn.NOME_FANTASIA, forn.NOME_FORNECEDOR) forn_nome
         FROM FATU_050 cnf -- capa faturamento
         LEFT JOIN OBRF_010 cnfe -- capa de nota de entrada
@@ -79,11 +80,13 @@ def query(
             row['forn_nome'] = f"{row['nfe_cnpj']} {row['forn_nome']}"
             row['nfe_nf'] = f"{row['nfe_num']}-{row['nfe_ser']}"
             row['nfe_dt_emi'] = row['nfe_dt_emi'].date()
+            row['nfe_dt_dig'] = row['nfe_dt_dig'].date()
         else:
             row['nfe_cnpj'] = "-"
             row['nfe_cnpj_num'] = "-"
             row['forn_nome'] = "-"
             row['nfe_nf'] = "-"
             row['nfe_dt_emi'] = "-"
+            row['nfe_dt_dig'] = "-"
             row['nfe_valor'] = "-"
     return data
