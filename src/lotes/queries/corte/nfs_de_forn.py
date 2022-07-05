@@ -32,6 +32,7 @@ def query(
         , cnfe.SERIE nf_ser
         , cnfe.VALOR_ITENS valor
         , cnfe.DATA_EMISSAO dt_emi
+        , cnfe.DATA_DIGITACAO dt_dig
         , cnfe.TUSSOR_ENVIA_NF nf_envia
         , COALESCE(forn.NOME_FANTASIA, forn.NOME_FORNECEDOR) forn_nome
         , cnf.VALOR_ITENS_NFIS nf_env_valor
@@ -73,6 +74,7 @@ def query(
         row['cnpj_num'] = format_cnpj(row, sep=False)
         row['forn_nome'] = f"{row['cnpj']} {row['forn_nome']}"
         row['dt_emi'] = row['dt_emi'].date()
+        row['dt_dig'] = row['dt_dig'].date()
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else "-"
         if row['nf_envia'] == 0:
             row['nf_envia'] = "-"
