@@ -26,6 +26,7 @@ class EnvioInsumo(O2BaseGetPostView):
             'forn_nome': ["Fornecedor"],
             'nfe_nf': ["NF Forn.", 'c'],
             'nfe_dt_emi': ["Dt.emissão", 'c'],
+            'nfe_dt_dig': ["Dt.digitação", 'c'],
             'nfe_valor': ["Valor", 'r'],
         },
         ['header', '+style'],
@@ -35,6 +36,7 @@ class EnvioInsumo(O2BaseGetPostView):
     rec_defs = TableDefs(
         {
             'dt_emi': ["Dt.emissão", 'c'],
+            'dt_dig': ["Dt.digitação", 'c'],
             'forn_nome': ["Fornecedor"],
             'nf': ["NF", 'c'],
             'valor': ["Valor", 'r'],
