@@ -18,52 +18,53 @@ from lotes.queries.corte import (
 
 class EnvioInsumo(O2BaseGetPostView):
 
-    env_defs = TableDefs(
-        {
-            'dt_emi': ["Dt.emissão", 'c'],
-            'nf': ["NF", 'c'],
-            'valor': ["Valor", 'r'],
-            'forn_nome': ["Fornecedor"],
-            'nfe_nf': ["NF Forn.", 'c'],
-            'nfe_dt_emi': ["Dt.emissão", 'c'],
-            'nfe_dt_dig': ["Dt.digitação", 'c'],
-            'nfe_valor': ["Valor", 'r'],
-        },
-        ['header', '+style'],
-        style = {'_': 'text-align'},
-    )
+    def init_defs(self):
+        self.env_defs = TableDefs(
+            {
+                'dt_emi': ["Dt.emissão", 'c'],
+                'nf': ["NF", 'c'],
+                'valor': ["Valor", 'r'],
+                'forn_nome': ["Fornecedor"],
+                'nfe_nf': ["NF Forn.", 'c'],
+                'nfe_dt_emi': ["Dt.emissão", 'c'],
+                'nfe_dt_dig': ["Dt.digitação", 'c'],
+                'nfe_valor': ["Valor", 'r'],
+            },
+            ['header', '+style'],
+            style = {'_': 'text-align'},
+        )
 
-    rec_defs = TableDefs(
-        {
-            'dt_emi': ["Dt.emissão", 'c'],
-            'dt_dig': ["Dt.digitação", 'c'],
-            'forn_nome': ["Fornecedor"],
-            'nf': ["NF", 'c'],
-            'valor': ["Valor", 'r'],
-            'nf': ["NF", 'c'],
-            'nf_envia': ["NF de envio", 'c'],
-            'nf_env_dt_emi': ["Dt.emissão", 'c'],
-            'nf_env_valor': ["Valor", 'r'],
-        },
-        ['header', '+style'],
-        style = {'_': 'text-align'},
-    )
+        self.rec_defs = TableDefs(
+            {
+                'dt_emi': ["Dt.emissão", 'c'],
+                'dt_dig': ["Dt.digitação", 'c'],
+                'forn_nome': ["Fornecedor"],
+                'nf': ["NF", 'c'],
+                'valor': ["Valor", 'r'],
+                'nf': ["NF", 'c'],
+                'nf_envia': ["NF de envio", 'c'],
+                'nf_env_dt_emi': ["Dt.emissão", 'c'],
+                'nf_env_valor': ["Valor", 'r'],
+            },
+            ['header', '+style'],
+            style = {'_': 'text-align'},
+        )
 
-    edit_rec_defs = TableDefs(
-        {
-            'dt_emi': ["Dt.emissão", 'c'],
-            'forn_nome': ["Fornecedor"],
-            'nf': ["NF", 'c'],
-            'valor': ["Valor", 'r'],
-            'nf': ["NF", 'c'],
-            'nf_envia': ["NF de envio", 'c'],
-            'editar': ["Editar", 'c'],
-            'nf_env_dt_emi': ["Dt.emissão", 'c'],
-            'nf_env_valor': ["Valor", 'r'],
-        },
-        ['header', '+style'],
-        style = {'_': 'text-align'},
-    )
+        self.edit_rec_defs = TableDefs(
+            {
+                'dt_emi': ["Dt.emissão", 'c'],
+                'forn_nome': ["Fornecedor"],
+                'nf': ["NF", 'c'],
+                'valor': ["Valor", 'r'],
+                'nf': ["NF", 'c'],
+                'nf_envia': ["NF de envio", 'c'],
+                'editar': ["Editar", 'c'],
+                'nf_env_dt_emi': ["Dt.emissão", 'c'],
+                'nf_env_valor': ["Valor", 'r'],
+            },
+            ['header', '+style'],
+            style = {'_': 'text-align'},
+        )
 
     def __init__(self, *args, **kwargs):
         super(EnvioInsumo, self).__init__(*args, **kwargs)
@@ -72,6 +73,8 @@ class EnvioInsumo(O2BaseGetPostView):
         self.template_name = 'lotes/corte/envio_insumo.html'
         self.title_name = "Envio de insumos"
         self.cleaned_data2self = True
+
+        self.init_defs()
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
