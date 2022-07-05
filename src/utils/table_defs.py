@@ -88,6 +88,15 @@ class TableDefs(object):
         else:
             self.cols_list += (pos,) + cols
 
+    def dele(self, key):
+        if not self.cols_list:
+            self.cols()
+        self.cols_list = tuple(
+            col
+            for col in self.cols_list
+            if col != key
+        )
+
     def defs(self, *cols):
         if len(cols) == 0:
             if len(self.cols_list) == 0:
