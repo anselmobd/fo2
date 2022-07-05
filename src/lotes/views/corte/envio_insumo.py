@@ -37,22 +37,6 @@ class EnvioInsumo(O2BaseGetPostView):
         self.rec_defs = TableDefs(
             {
                 'dt_emi': ["Dt.emissão", 'c'],
-                'dt_dig': ["Dt.digitação", 'c'],
-                'forn_nome': ["Fornecedor"],
-                'nf': ["NF", 'c'],
-                'valor': ["Valor", 'r'],
-                'nf': ["NF", 'c'],
-                'nf_envia': ["NF de envio", 'c'],
-                'nf_env_dt_emi': ["Dt.emissão", 'c'],
-                'nf_env_valor': ["Valor", 'r'],
-            },
-            ['header', '+style'],
-            style = {'_': 'text-align'},
-        )
-
-        self.edit_rec_defs = TableDefs(
-            {
-                'dt_emi': ["Dt.emissão", 'c'],
                 'forn_nome': ["Fornecedor"],
                 'nf': ["NF", 'c'],
                 'valor': ["Valor", 'r'],
@@ -156,10 +140,14 @@ class EnvioInsumo(O2BaseGetPostView):
                     row['valor|STYLE'] = 'color: red;'
                     row['nf_env_valor|STYLE'] = 'color: red;'
 
-        if has_permission(self.request, 'lotes.informa_nf_envio_matriz_filial'):
-            self.context['rec_data'] = self.edit_rec_defs.hfs_dict()
-        else:
-            self.context['rec_data'] = self.rec_defs.hfs_dict()
+        edita = has_permission(
+            self.request, 'lotes.informa_nf_envio_matriz_filial')
 
-        self.context['rec_data']['safe'] = ['editar']
+        if not edita:
+            self.rec_defs.dele('editar')
+
+        self.context['rec_data'] = self.rec_defs.hfs_dict()
         self.context['rec_data']['data'] = rec_data
+
+        if edita:
+            self.context['rec_data']['safe'] = ['editar']
