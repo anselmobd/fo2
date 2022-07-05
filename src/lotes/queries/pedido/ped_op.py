@@ -1,11 +1,12 @@
 from pprint import pprint
 
+from utils.functions.queries import debug_cursor_execute
 from utils.functions.models.dictlist import dictlist
 
 
 def ped_op(cursor, pedido):
     # OPs
-    sql = """
+    sql = f"""
         SELECT
           o.PEDIDO_VENDA
         , o.ORDEM_PRODUCAO
@@ -42,11 +43,18 @@ def ped_op(cursor, pedido):
             THEN 1
             ELSE 0
           END TEM_15
+        , ( SELECT
+              count(*)
+            FROM PCPT_020 ro -- cadastro de rolos
+            LEFT JOIN PCPT_025 rc -- alocação de rolo para OP
+              ON rc.CODIGO_ROLO = ro.CODIGO_ROLO
+            where rc.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+          ) qtd_rolos_aloc
         FROM PCPC_020 o -- OP
-        WHERE o.PEDIDO_VENDA = %s
+        WHERE o.PEDIDO_VENDA = {pedido}
         ORDER BY
           o.ORDEM_PRINCIPAL
         , o.ORDEM_PRODUCAO
     """
-    cursor.execute(sql, [pedido])
+    debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
