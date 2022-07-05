@@ -158,7 +158,7 @@ class Pedido(View):
                         for op_str in op_match
                     ])
                     if f"{row['ORDEM_PRODUCAO']}" in ops:
-                        row['NF_FILIAL'] = nf['nf']
+                        row['NF_FILIAL'] = nf['nf'] if nf['nf'] else '-'
                         break
             else:
                 row['TEM_15'] = 'N'
