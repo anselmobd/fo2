@@ -152,18 +152,28 @@ class Expedicao(View):
         qtd_total = 0
         for row in data:
             if row['PEDIDO_VENDA'] in solict_pedidos:
-                row['SOLICITACAO|TARGET'] = '_blank'
                 num_solicit = solict_pedidos[row['PEDIDO_VENDA']]
-                if num_solicit == 'None':
-                    row['SOLICITACAO'] = "#"
-                    row['SOLICITACAO|LINK'] = reverse(
-                        'cd:novo_solicitacao',
-                        args=["sn"]
-                    )+f"?pedido={row['PEDIDO_VENDA']}"
+                if ',' in num_solicit:
+                    num_solicit_list = map(str.strip, num_solicit.split(','))
                 else:
-                    row['SOLICITACAO'] = num_solicit
-                    row['SOLICITACAO|LINK'] = reverse(
-                        'cd:novo_solicitacao', args=[row['SOLICITACAO']])
+                    num_solicit_list = [num_solicit]
+                link_sol_list = []
+                for num_sol in num_solicit_list:
+                    if num_sol == 'None':
+                        num_sol = "#"
+                        link = reverse(
+                            'cd:novo_solicitacao',
+                            args=["sn"],
+                        )+f"?pedido={row['PEDIDO_VENDA']}"
+                    else:
+                        link = reverse(
+                            'cd:novo_solicitacao',
+                            args=[num_sol],
+                        )
+                    link_sol_list.append(
+                        f'<a href="{link}" target="_blank">{num_sol}</a>'
+                    )
+                row['SOLICITACAO'] = ", ".join(link_sol_list)
             else:
                 row['SOLICITACAO'] = '-'
             qtd_total += row['QTD']
@@ -253,8 +263,11 @@ class Expedicao(View):
             headers.append('Tamanho')
         headers.append('Quant.')
 
+        safe = []
+
         fields = ['PEDIDO_VENDA']
         fields.append('SOLICITACAO')
+        safe.append('SOLICITACAO')
         if detalhe == 'p':
             fields.append('GTIN_OK')
         fields.append('PEDIDO_CLIENTE')
@@ -263,9 +276,8 @@ class Expedicao(View):
         fields.append('CLIENTE')
         if detalhe == 'o':
             fields.append('OP')
-            safe = ['CLIENTE', 'OP']
-        else:
-            safe = []
+            safe.append('CLIENTE')
+            safe.append('OP')
         if detalhe in ('r', 'c'):
             fields.append('REF')
         if detalhe == 'c':
