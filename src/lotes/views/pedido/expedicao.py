@@ -148,15 +148,22 @@ class Expedicao(View):
 
         for ped in solict_pedidos:
             solict_pedidos[ped] = ', '.join(map(str, solict_pedidos[ped]))
-        pprint(solict_pedidos)
 
         qtd_total = 0
         for row in data:
             if row['PEDIDO_VENDA'] in solict_pedidos:
-                row['SOLICITACAO'] = solict_pedidos[row['PEDIDO_VENDA']]
                 row['SOLICITACAO|TARGET'] = '_blank'
-                row['SOLICITACAO|LINK'] = reverse(
-                    'cd:novo_solicitacao', args=[row['SOLICITACAO']])
+                num_solicit = solict_pedidos[row['PEDIDO_VENDA']]
+                if num_solicit == 'None':
+                    row['SOLICITACAO'] = "#"
+                    row['SOLICITACAO|LINK'] = reverse(
+                        'cd:novo_solicitacao',
+                        args=["sn"]
+                    )+f"?pedido={row['PEDIDO_VENDA']}"
+                else:
+                    row['SOLICITACAO'] = num_solicit
+                    row['SOLICITACAO|LINK'] = reverse(
+                        'cd:novo_solicitacao', args=[row['SOLICITACAO']])
             else:
                 row['SOLICITACAO'] = '-'
             qtd_total += row['QTD']
