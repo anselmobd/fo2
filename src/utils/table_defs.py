@@ -77,7 +77,10 @@ class TableDefs(object):
         return result
 
     def cols(self, *cols):
-        self.cols_list = cols
+        if cols:
+            self.cols_list = cols
+        else:
+            self.cols_list = self.definition.keys()
 
     def add(self, pos, *cols):
         if isinstance(pos, int):
