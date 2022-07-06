@@ -7,7 +7,7 @@ from django.urls import (
 
 from logistica.views import (
     entr_nf_historico,
-    index,
+    main,
     notafiscal_chave,
     etiqueta_nf,
 )
@@ -27,7 +27,7 @@ app_name = 'logistica'
 urlpatterns = [
     re_path(
         r"^$",
-        index.index,
+        main.index,
         name="index",
     ),
     re_path(
@@ -74,5 +74,10 @@ urlpatterns = [
         r"^ajax/entr_nf_cadastro/(?P<cadastro>[^/]+)/$",
         entr_nf_cadastro.entr_nf_cadastro,
         name="ajax_entr_nf_cadastro",
+    ),
+    path(
+        'etiqueta_nf/',
+        etiqueta_nf.EtiquetaNf.as_view(),
+        name='etiqueta_nf',
     ),
 ]
