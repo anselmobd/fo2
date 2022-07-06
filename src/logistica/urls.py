@@ -16,8 +16,8 @@ from logistica.views.entrada_nf import lista
 from logistica.views.nf import (
     embarcando,
     movimentada,
+    notafiscal_numero,
     notafiscal_rel,
-    numero_nf,
 )
 
 __all__ = ['app_name', 'urlpatterns']
@@ -47,7 +47,7 @@ urlpatterns = [
     ),
     re_path(
         r"^notafiscal_numero/(?P<nf>\d+)?/?$",
-        numero_nf.notafiscal_numero,
+        notafiscal_numero.notafiscal_numero,
         name="notafiscal_numero",
     ),
     re_path(
