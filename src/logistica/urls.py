@@ -6,7 +6,6 @@ from django.urls import (
 )
 
 from logistica.views import (
-    entr_nf_historico,
     entrada_nf,
     main,
     notafiscal_chave,
@@ -67,7 +66,7 @@ urlpatterns = [
     ),
     re_path(
         r"^entrada_nf/historico/(?P<id>[^/]+)/$",
-        entr_nf_historico.EntradaNfHistorico.as_view(),
+        entrada_nf.entr_nf_historico.EntradaNfHistorico.as_view(),
         name="entr_nf_historico",
     ),
     re_path(
