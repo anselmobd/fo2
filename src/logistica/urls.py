@@ -47,7 +47,7 @@ urlpatterns = [
     ),
     re_path(
         r"^notafiscal_numero/(?P<nf>\d+)?/?$",
-        notafiscal_numero.notafiscal_numero,
+        notafiscal_numero.view,
         name="notafiscal_numero",
     ),
     re_path(
