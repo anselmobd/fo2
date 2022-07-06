@@ -1,2 +1,2 @@
-import entr_nf_historico
+import historico
 import lista
