@@ -7,12 +7,12 @@ from django.urls import (
 
 from logistica.views import (
     entr_nf_historico,
+    entrada_nf,
     main,
     notafiscal_chave,
     etiqueta_nf,
 )
 from logistica.views.ajax import entr_nf_cadastro
-from logistica.views.entrada_nf import lista
 from logistica.views.nf import (
     embarcando,
     movimentada,
@@ -62,7 +62,7 @@ urlpatterns = [
     ),
     re_path(
         r"^entrada_nf/lista/$",
-        lista.EntradaNfLista.as_view(),
+        entrada_nf.lista.EntradaNfLista.as_view(),
         name="entr_nf_lista",
     ),
     re_path(
