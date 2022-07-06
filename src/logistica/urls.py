@@ -14,9 +14,9 @@ from logistica.views import (
 from logistica.views.ajax import entr_nf_cadastro
 from logistica.views.entrada_nf import lista
 from logistica.views.nf import (
-    consulta,
     embarcando,
     movimentada,
+    notafiscal_rel,
     numero_nf,
 )
 
@@ -32,12 +32,12 @@ urlpatterns = [
     ),
     re_path(
         r"^notafiscal_rel/$",
-        consulta.NotafiscalRel.as_view(),
+        notafiscal_rel.NotafiscalRel.as_view(),
         name="notafiscal_rel",
     ),
     re_path(
         r"^notafiscal_rel/(?P<dia>\d+)/(?P<mes>\d+)/(?P<ano>\d+)/$",
-        consulta.NotafiscalRel.as_view(),
+        notafiscal_rel.NotafiscalRel.as_view(),
         name="notafiscal_rel__get",
     ),
     re_path(
