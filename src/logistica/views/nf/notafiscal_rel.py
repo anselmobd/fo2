@@ -57,7 +57,7 @@ class NotafiscalRel(View):
 
             for row in data:
                 row['numero|LINK'] = reverse(
-                    'logistica:notafiscal_nf', args=[row['numero']])
+                    'logistica:notafiscal_numero', args=[row['numero']])
                 row['numero|TARGET'] = '_BLANK'
                 if row['quantidade']:
                     row['quantidade'] = int(round(row['quantidade']))

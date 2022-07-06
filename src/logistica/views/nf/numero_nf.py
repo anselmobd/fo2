@@ -7,7 +7,7 @@ from fo2.connections import db_cursor_so
 from logistica.queries import get_chave_pela_nf
 
 
-def notafiscal_nf(request, *args, **kwargs):
+def notafiscal_numero(request, *args, **kwargs):
     if 'nf' not in kwargs or kwargs['nf'] is None:
         return redirect('logistica:index')
 

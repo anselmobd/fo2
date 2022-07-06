@@ -46,9 +46,9 @@ urlpatterns = [
         name="notafiscal_chave",
     ),
     re_path(
-        r"^notafiscal_nf/(?P<nf>\d+)?/?$",
-        numero_nf.notafiscal_nf,
-        name="notafiscal_nf",
+        r"^notafiscal_numero/(?P<nf>\d+)?/?$",
+        numero_nf.notafiscal_numero,
+        name="notafiscal_numero",
     ),
     re_path(
         r"^notafiscal_embarcando/$",

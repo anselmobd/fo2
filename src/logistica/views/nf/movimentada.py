@@ -85,7 +85,7 @@ class NotafiscalMovimentadas(O2BaseGetPostView):
 
                 for row in dados:
                     row['numero|LINK'] = reverse(
-                        'logistica:notafiscal_nf', args=[row['numero']])
+                        'logistica:notafiscal_numero', args=[row['numero']])
                     row['numero|TARGET'] = '_BLANK'
                     if row['saida'] is None:
                         row['saida'] = '-'
