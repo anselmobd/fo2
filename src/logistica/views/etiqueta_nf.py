@@ -30,6 +30,8 @@ class EtiquetaNf(O2BaseGetPostView):
                 'vols': ["Volumes"],
                 'peso_tot': ["Peso Total"],
                 'ped': ["Pedido Tussor"],
+                'ped_cli': ["Pedido do cliente"],
+                'cli_nome': ["Cliente"],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
