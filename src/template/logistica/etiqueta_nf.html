@@ -4,19 +4,19 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'logistica:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
-<style>
-{% include 'layout/simple_table.css' %}
-</style>
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
 {% endblock %}
 
 {% block content %}
-  <form action="{% url 'logistica:etiqueta_nf' %}" method="post" name="formName">
+  <form action="{% url 'logistica:etiqueta_nf' %}" method="post">
+    {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Visualiza"/>
-    {% if request.POST %}
+    {% if request.POST and not msg_erro %}
       <input type="submit" value="Imprime"/>
     {% endif %}
-    {% csrf_token %}
   </form>
   {% if request.POST %}
     {% if msg_erro %}

@@ -3,10 +3,10 @@ from django.db import connections
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
-__all_ = ['dados_nf']
+__all_ = ['get_dados_nf']
 
 
-def dados_nf(cursor, nf):
+def get_dados_nf(cursor, nf):
     sql = f"""
         SELECT
           f.NUM_NOTA_FISCAL nf_num
