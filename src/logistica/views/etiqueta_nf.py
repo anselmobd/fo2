@@ -18,3 +18,11 @@ class EtiquetaNf(O2BaseGetPostView):
 
         self.lotes_por_pagina = 20
 
+    def mount_context(self):
+        cursor = db_cursor_so(self.request)
+
+        data = []
+
+        self.context.update({
+            'data': data,
+        })

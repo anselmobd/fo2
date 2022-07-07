@@ -10,10 +10,12 @@
 {% endblock %}
 
 {% block content %}
-  <form action="{% url 'logistica:notafiscal_rel' %}" method="post" name="formName">
+  <form action="{% url 'logistica:etiqueta_nf' %}" method="post" name="formName">
     {{ form.as_p }}
     <input type="submit" value="Visualiza"/>
-    <input type="submit" value="Imprime"/>
+    {% if request.POST %}
+      <input type="submit" value="Imprime"/>
+    {% endif %}
     {% csrf_token %}
   </form>
   {% if request.POST %}
