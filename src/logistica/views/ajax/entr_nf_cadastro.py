@@ -10,7 +10,7 @@ from utils.functions.cadastro import CNPJ, CPF
 from logistica.models import NfEntrada
 
 
-def entr_nf_cadastro(request, *args, **kwargs):
+def view(request, *args, **kwargs):
     result = {}
 
     try:

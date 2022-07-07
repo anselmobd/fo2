@@ -66,7 +66,7 @@ urlpatterns = [
     ),
     re_path(
         r"^ajax/entr_nf_cadastro/(?P<cadastro>[^/]+)/$",
-        ajax.entr_nf_cadastro.entr_nf_cadastro,
+        ajax.entr_nf_cadastro.view,
         name="ajax_entr_nf_cadastro",
     ),
     path(
