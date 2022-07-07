@@ -1,2 +1,2 @@
-import historico
-import lista
+from . import historico
+from . import lista

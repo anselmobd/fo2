@@ -6,17 +6,12 @@ from django.urls import (
 )
 
 from logistica.views import (
+    ajax,
     entrada_nf,
     main,
+    nf,
     notafiscal_chave,
     etiqueta_nf,
-)
-from logistica.views.ajax import entr_nf_cadastro
-from logistica.views.nf import (
-    embarcando,
-    movimentada,
-    notafiscal_numero,
-    notafiscal_rel,
 )
 
 __all__ = ['app_name', 'urlpatterns']
@@ -31,12 +26,12 @@ urlpatterns = [
     ),
     re_path(
         r"^notafiscal_rel/$",
-        notafiscal_rel.NotafiscalRel.as_view(),
+        nf.notafiscal_rel.NotafiscalRel.as_view(),
         name="notafiscal_rel",
     ),
     re_path(
         r"^notafiscal_rel/(?P<dia>\d+)/(?P<mes>\d+)/(?P<ano>\d+)/$",
-        notafiscal_rel.NotafiscalRel.as_view(),
+        nf.notafiscal_rel.NotafiscalRel.as_view(),
         name="notafiscal_rel__get",
     ),
     re_path(
@@ -46,17 +41,17 @@ urlpatterns = [
     ),
     re_path(
         r"^notafiscal_numero/(?P<nf>\d+)?/?$",
-        notafiscal_numero.view,
+        nf.notafiscal_numero.view,
         name="notafiscal_numero",
     ),
     re_path(
         r"^notafiscal_embarcando/$",
-        embarcando.NotafiscalEmbarcando.as_view(),
+        nf.embarcando.NotafiscalEmbarcando.as_view(),
         name="notafiscal_embarcando",
     ),
     re_path(
         r"^notafiscal_movimentadas/$",
-        movimentada.NotafiscalMovimentadas.as_view(),
+        nf.movimentada.NotafiscalMovimentadas.as_view(),
         name="notafiscal_movimentadas",
     ),
     re_path(
@@ -71,7 +66,7 @@ urlpatterns = [
     ),
     re_path(
         r"^ajax/entr_nf_cadastro/(?P<cadastro>[^/]+)/$",
-        entr_nf_cadastro.entr_nf_cadastro,
+        ajax.entr_nf_cadastro.entr_nf_cadastro,
         name="ajax_entr_nf_cadastro",
     ),
     path(
