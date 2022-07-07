@@ -1,0 +1,30 @@
+{% extends 'logistica/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'logistica:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'logistica:notafiscal_rel' %}" method="post" name="formName">
+    {{ form.as_p }}
+    <input type="submit" value="Visualiza"/>
+    <input type="submit" value="Imprime"/>
+    {% csrf_token %}
+  </form>
+  {% if request.POST %}
+    {% if msg_erro %}
+      <h4>{{ msg_erro }}</h4>
+    {% endif %}
+    {% if data %}
+      <table>
+        {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=data style=style safe=safe only %}
+      </table>
+    {% endif %}
+  {% endif %}
+{% endblock %}
