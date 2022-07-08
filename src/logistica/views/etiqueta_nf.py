@@ -32,6 +32,7 @@ class EtiquetaNf(O2BaseGetPostView):
                 'ped': ["Pedido Tussor"],
                 'ped_cli': ["Pedido do cliente"],
                 'cli_nome': ["Cliente"],
+                'transp_nome': ["Transportadora"],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
