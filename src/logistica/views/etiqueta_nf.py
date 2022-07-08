@@ -70,7 +70,10 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
             })
             return
 
+        qtd_vols = vol_final_val - vol_inicial_val + 1
+
         self.context.update(self.col_defs.hfs_dict())
         self.context.update({
             'data': dados_nf,
+            'qtd_vols': qtd_vols,
         })
