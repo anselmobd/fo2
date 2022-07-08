@@ -86,13 +86,13 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
         if 'print' not in self.request.POST:
             return
 
-        slug_impresso = 'etiqueta-nf'
+        slug_impresso = 'etiqueta-de-volumes-de-nf'
         try:
             impresso = lotes.models.Impresso.objects.get(
                 slug=slug_impresso)
         except lotes.models.Impresso.DoesNotExist:
             self.context.update({
-                'msg_erro': f"Impresso '{nome_impresso}' não cadastrado",
+                'msg_erro': f"Impresso '{slug_impresso}' não cadastrado",
             })
             return
 
