@@ -116,7 +116,7 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
         try:
             for i in range(row['vols']):
                 vol = i + 1
-                if vol < vol_inicial_val or vol > vol_inicial_val:
+                if vol < vol_inicial_val or vol > vol_final_val:
                     continue
                 row['svol'] = f"{vol:04d}"
                 row['svols'] = f"{row['vols']:04d}"
