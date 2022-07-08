@@ -24,6 +24,13 @@ def get_dados_nf(cursor, nf):
         , COALESCE(ped.COD_PED_CLIENTE, ' ') ped_cli
         , c.NOME_CLIENTE cli_nome
         , c.FANTASIA_CLIENTE cli_fant
+        , c.ENDERECO_CLIENTE ende
+        , c.NUMERO_IMOVEL end_num
+        , c.COMPLEMENTO end_compl
+        , c.BAIRRO end_bairro
+        , cid.CIDADE end_cid
+        , cid.ESTADO end_uf
+        , c.CEP_CLIENTE end_cep
         , t.NOME_FORNECEDOR transp_nome
         , e.NOME_EMPRESA empr_nome
         FROM FATU_050 f -- capa de nota fiscal de saída
@@ -43,6 +50,8 @@ def get_dados_nf(cursor, nf):
          AND t.FORNECEDOR2 = f.TRANSPOR_FORNE2
         LEFT JOIN FATU_500 e -- empresa
           ON e.CODIGO_EMPRESA = f.CODIGO_EMPRESA
+        LEFT JOIN BASI_160 cid -- cidades
+          ON cid.COD_CIDADE = c.COD_CIDADE
         WHERE f.CODIGO_EMPRESA = 1 -- empresa tussor
           AND f.NUM_NOTA_FISCAL = {nf}
           AND f.NUMERO_CAIXA_ECF = 0 -- não é nota especial
@@ -57,6 +66,7 @@ def get_dados_nf(cursor, nf):
         row['cli_cnpj_num'] = format_cnpj(row, sep=False, contain='cli')
         row['cli_cnpj'] = format_cnpj(row, contain='cli')
         row['cli_cnpj_nome'] = f"{row['cli_cnpj']} {row['cli_nome']}"
+        row['cli_cep'] = f"{row['end_cep']//1000:05d}-{row['end_cep']%1000}"
         row['transp_cnpj_num'] = format_cnpj(row, sep=False, contain='transp')
         row['transp_cnpj'] = format_cnpj(row, contain='transp')
         row['transp_cnpj_nome'] = f"{row['transp_cnpj']} {row['transp_nome']}"
