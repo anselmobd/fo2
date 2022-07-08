@@ -25,6 +25,7 @@ def get_dados_nf(cursor, nf):
         , c.NOME_CLIENTE cli_nome
         , c.FANTASIA_CLIENTE cli_fant
         , t.NOME_FORNECEDOR transp_nome
+        , e.NOME_EMPRESA empr_nome
         FROM FATU_050 f -- capa de nota fiscal de saída
         LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
           ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
@@ -40,6 +41,8 @@ def get_dados_nf(cursor, nf):
          AND t.FORNECEDOR9 = f.TRANSPOR_FORNE9
          AND t.FORNECEDOR4 = f.TRANSPOR_FORNE4
          AND t.FORNECEDOR2 = f.TRANSPOR_FORNE2
+        LEFT JOIN FATU_500 e -- empresa
+          ON e.CODIGO_EMPRESA = f.CODIGO_EMPRESA
         WHERE f.CODIGO_EMPRESA = 1 -- empresa tussor
           AND f.NUM_NOTA_FISCAL = {nf}
           AND f.NUMERO_CAIXA_ECF = 0 -- não é nota especial

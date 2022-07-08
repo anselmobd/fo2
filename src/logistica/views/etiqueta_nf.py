@@ -25,8 +25,9 @@ class EtiquetaNf(O2BaseGetPostView):
     def init_defs(self):
         self.col_defs = TableDefs(
             {
+                'empr_nome': ["Empresa"],
                 'nf': ["NF"],
-                'vols': ["Volumes"],
+                'vols': ["Volumes", 'c'],
                 'peso_tot': ["Peso Total"],
                 'ped': ["Pedido Tussor"],
                 'ped_cli': ["Pedido do cliente"],
