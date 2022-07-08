@@ -63,6 +63,7 @@ def get_dados_nf(cursor, nf):
     data = dictlist_lower(cursor)
     for row in data:
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}"
+        row['peso_vol'] = row['peso_tot'] / row['vols']
         row['cli_cnpj_num'] = format_cnpj(row, sep=False, contain='cli')
         row['cli_cnpj'] = format_cnpj(row, contain='cli')
         row['cli_cnpj_nome'] = f"{row['cli_cnpj']} {row['cli_nome']}"
