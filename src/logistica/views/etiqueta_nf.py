@@ -87,8 +87,6 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
             return
 
         slug_impresso = 'etiqueta-nf'
-        # impresso = lotes.models.Impresso.objects.all().values()
-        # pprint(impresso)
         try:
             impresso = lotes.models.Impresso.objects.get(
                 slug=slug_impresso)
@@ -125,7 +123,6 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
                 peso = row['peso_tot']/row['vols']
                 row['peso'] = f"{peso:7.2f}"
                 row['nf_num9'] = f"{row['nf_num']:09d}"
-                pprint(row)
                 teg.context(row)
                 try:
                     teg.printer_send()
