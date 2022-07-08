@@ -7,8 +7,6 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetPostView
 from utils.table_defs import TableDefs
 
-from lotes.queries.pedido import ped_inform
-
 from logistica.forms.nf import NfForm
 from logistica.queries.etiqueta_nf import get_dados_nf
 
@@ -57,12 +55,6 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
             })
             return
         
-        pprint(dados_nf)
-
-        dados_ped = ped_inform(cursor, dados_nf[0]['ped'], 1)
-
-        pprint(dados_ped)
-
         self.context.update(self.col_defs.hfs_dict())
         self.context.update({
             'data': dados_nf,
