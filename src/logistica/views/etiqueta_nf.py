@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
@@ -11,7 +13,7 @@ from logistica.forms.nf import NfForm
 from logistica.queries.etiqueta_nf import get_dados_nf
 
 
-class EtiquetaNf(O2BaseGetPostView):
+class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(EtiquetaNf, self).__init__(*args, **kwargs)
