@@ -55,6 +55,21 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
             })
             return
         
+        vol_inicial_val = int(self.vol_inicial) if self.vol_inicial else 1
+        vol_final_val = int(self.vol_final) if self.vol_final else dados_nf[0]['vols']
+
+        if not (1 <= vol_inicial_val <= dados_nf[0]['vols']):
+            self.context.update({
+                'msg_erro': 'Caixa inicial inválida',
+            })
+            return
+
+        if not (vol_inicial_val <= vol_final_val <= dados_nf[0]['vols']):
+            self.context.update({
+                'msg_erro': 'Caixa final inválida',
+            })
+            return
+
         self.context.update(self.col_defs.hfs_dict())
         self.context.update({
             'data': dados_nf,
