@@ -1,14 +1,20 @@
 from pprint import pprint
 
 
-def format_cnpj(row, cnpj4=None, cnpj2=None, tamanho=14, sep=True):
+def format_cnpj(row, cnpj4=None, cnpj2=None, tamanho=14, sep=True, contain=None):
     try:
         barra = "/" if sep else ''
         menos = "-" if sep else ''
         if isinstance(row, dict):
             for k in row:
                 ku = k.upper()
-                if "CNPJ" in ku or "CGC" in ku:
+                if contain:
+                    can_be= contain in ku
+                else:
+                    can_be = True
+                if can_be:
+                    can_be = "CNPJ" in ku or "CGC" in ku
+                if can_be:
                     if "4" in k:
                         cnpj4 = row[k]
                     elif "2" in k:
