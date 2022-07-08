@@ -9,6 +9,7 @@ def format_cnpj(row, cnpj4=None, cnpj2=None, tamanho=14, sep=True, contain=None)
             for k in row:
                 ku = k.upper()
                 if contain:
+                    contain = contain.upper()
                     can_be= contain in ku
                 else:
                     can_be = True
