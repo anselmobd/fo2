@@ -13,9 +13,9 @@
   <form action="{% url 'logistica:etiqueta_nf' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Visualiza"/>
+    <input type="submit" value="Visualiza" name="visualize"/>
     {% if request.POST and not msg_erro %}
-      <input type="submit" value="Imprime"/>
+      <input type="submit" value="Imprime" name="print"/>
     {% endif %}
   </form>
   {% if request.POST %}
