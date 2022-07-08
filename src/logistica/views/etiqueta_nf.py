@@ -20,7 +20,7 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
         super(EtiquetaNf, self).__init__(*args, **kwargs)
         self.Form_class = NfForm
         self.template_name = 'logistica/etiqueta_nf.html'
-        self.title_name = 'Etiqueta de NF'
+        self.title_name = "Etiqueta de NF"
         self.cleaned_data2self = True
 
         self.init_defs()
@@ -28,7 +28,8 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
     def init_defs(self):
         self.col_defs = TableDefs(
             {
-                'empr_nome': ["Empresa"],
+                'remet_nome': ["Emissor"],
+                'remet_cnpj': ["CNPJ"],
                 'nf': ["NF"],
                 'vols': ["Volumes", 'c'],
                 'peso_tot': ["Peso Total"],
@@ -54,7 +55,7 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
         dados_nf = get_dados_nf(cursor, self.nf)
         if len(dados_nf) == 0:
             self.context.update({
-                'msg_erro': 'NF não encontrada',
+                'msg_erro': "NF não encontrada",
             })
             return
         row = dados_nf[0]
@@ -64,13 +65,13 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
 
         if not (1 <= vol_inicial_val <= row['vols']):
             self.context.update({
-                'msg_erro': 'Caixa inicial inválida',
+                'msg_erro': "Caixa inicial inválida",
             })
             return
 
         if not (vol_inicial_val <= vol_final_val <= row['vols']):
             self.context.update({
-                'msg_erro': 'Caixa final inválida',
+                'msg_erro': "Caixa final inválida",
             })
             return
 
@@ -85,13 +86,15 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
         if 'print' not in self.request.POST:
             return
 
-        nome_impresso = 'etiqueta_nf'
+        slug_impresso = 'etiqueta-nf'
+        # impresso = lotes.models.Impresso.objects.all().values()
+        # pprint(impresso)
         try:
             impresso = lotes.models.Impresso.objects.get(
-                nome=nome_impresso)
+                slug=slug_impresso)
         except lotes.models.Impresso.DoesNotExist:
             self.context.update({
-                'msg_erro': 'Impresso não cadastrado',
+                'msg_erro': f"Impresso '{nome_impresso}' não cadastrado",
             })
             return
 
@@ -100,25 +103,35 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
                 usuario=self.request.user, impresso=impresso)
         except lotes.models.UsuarioImpresso.DoesNotExist:
             self.context.update({
-                'msg_erro': 'Impresso não cadastrado para o usuário',
+                'msg_erro': (
+                    f"Impresso '{slug_impresso}' não cadastrado para o usuário '{self.request.user}'"
+                ),
             })
             return
 
         teg = TermalPrint(
             usuario_impresso.impressora_termica.nome,
-            file_dir=f"impresso/{nome_impresso}/%Y/%m"
+            file_dir=f"impresso/{slug_impresso}/%Y/%m"
         )
         teg.template(usuario_impresso.modelo.gabarito, '\r\n')
         teg.printer_start()
         try:
             for i in range(row['vols']):
-                row['vol'] = i + 1
+                vol = i + 1
+                if vol < vol_inicial_val or vol > vol_inicial_val:
+                    continue
+                row['svol'] = f"{vol:04d}"
+                row['svols'] = f"{row['vols']:04d}"
+                peso = row['peso_tot']/row['vols']
+                row['peso'] = f"{peso:7.2f}"
+                row['nf_num9'] = f"{row['nf_num']:09d}"
+                pprint(row)
                 teg.context(row)
                 try:
                     teg.printer_send()
                 except Exception as e:
                     self.context.update({
-                        'msg_erro': f'Erro ao imprimir <{e}>',
+                        'msg_erro': f"Erro ao imprimir <{e}>",
                     })
                     return
         except Exception as e:
