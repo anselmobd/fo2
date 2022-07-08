@@ -32,7 +32,10 @@ def get_dados_nf(cursor, nf):
         , cid.ESTADO end_uf
         , c.CEP_CLIENTE end_cep
         , t.NOME_FORNECEDOR transp_nome
-        , e.NOME_EMPRESA empr_nome
+        , e.NOME_EMPRESA remet_nome
+        , e.CGC_9 remet_cnpj9
+        , e.CGC_4 remet_cnpj4
+        , e.CGC_2 remet_cnpj2
         FROM FATU_050 f -- capa de nota fiscal de saída
         LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
           ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
@@ -71,4 +74,6 @@ def get_dados_nf(cursor, nf):
         row['transp_cnpj_num'] = format_cnpj(row, sep=False, contain='transp')
         row['transp_cnpj'] = format_cnpj(row, contain='transp')
         row['transp_cnpj_nome'] = f"{row['transp_cnpj']} {row['transp_nome']}"
+        row['remet_cnpj_num'] = format_cnpj(row, sep=False, contain='remet')
+        row['remet_cnpj'] = format_cnpj(row, contain='remet')
     return data
