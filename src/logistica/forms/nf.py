@@ -20,3 +20,25 @@ class NfForm(forms.Form):
             }
         )
     )
+
+    vol_inicial = forms.CharField(
+        label='Caixa inicial',
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 5,
+                **a.number,
+            }
+        )
+    )
+
+    vol_final = forms.CharField(
+        label='Caixa final',
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 5,
+                **a.number,
+            }
+        )
+    )
