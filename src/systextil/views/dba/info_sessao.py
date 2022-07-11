@@ -38,6 +38,12 @@ class InfoSessao(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView)
                     args=[row['id_serial']]
                 )
                 row['id_serial|GLYPHICON'] = 'glyphicon-remove-sign'
+            else:
+                row['client_info|LINK'] = reverse(
+                    'systextil:kill_sessao__get',
+                    args=[row['id_serial']]
+                )
+                row['client_info|GLYPHICON'] = 'glyphicon-alert'
 
         self.context.update({
             'headers': [
