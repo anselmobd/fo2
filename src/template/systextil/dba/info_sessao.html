@@ -16,6 +16,8 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
   </form>
+  {% url 'systextil:travadora' as link_travadora %}
+  {% include "layout/link.html" with link=link_travadora text="Sessões travadoras" only %}
   {% if data %}
     <table>
       {% include "layout/thead_generic.html" with data=headers only %}
