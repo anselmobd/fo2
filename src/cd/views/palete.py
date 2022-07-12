@@ -22,7 +22,6 @@ class Palete(O2BaseGetView):
         page = self.request.GET.get('page', 1)
 
         data = get_paletes(cursor)
-        pprint(data[0])
 
         data = paginator_basic(data, 100, page)
 
@@ -35,6 +34,14 @@ class Palete(O2BaseGetView):
                 row['endereco_container'] = '-'
             if not row['ultima_inclusao']:
                 row['ultima_inclusao'] = '-'
+            palete = row['cod_container']
+            row['print'] = f"""
+                <a title="Imprime etiqueta" href="#" id="run_{palete}" onclick="PaletePrint('{palete}');return false;"><span
+                  class="glyphicon glyphicon-print" aria-hidden="true"></span></a><span
+                    class="glyphicon glyphicon-print" id="running_{palete}" style="display:none;color:grey" aria-hidden="true"></span><span
+                      class="glyphicon glyphicon-ok-sign" id="runok_{palete}" style="display:none;color:darkgreen" aria-hidden="true"></span><span
+                        class="glyphicon glyphicon-alert" id="runerr_{palete}" style="display:none;color:darkred" aria-hidden="true"></span>
+            """
 
         self.context.update({
             'headers': [
@@ -42,12 +49,15 @@ class Palete(O2BaseGetView):
                 'Endereço',
                 'Nº Lotes',
                 'Última inclusão',
+                'Imprime',
             ],
             'fields': [
                 'cod_container',
                 'endereco_container',
                 'lotes',
                 'ultima_inclusao',
+                'print',
             ],
             'data': data,
+            'safe': ['print'],
         })

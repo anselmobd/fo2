@@ -14,11 +14,69 @@
   {% if data %}
     {% include "layout/paginator_get.html" with data=data url_name='cd:palete' only %}
     <table>
-      {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+      {% include "layout/thead_generic.html" with data=headers safe=safe thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe only %}
     </table>
     {% include "layout/paginator_get.html" with data=data url_name='cd:palete' only %}
   {% else %}
     <h4>Nenhum palete encontrado</h4>
   {% endif %}
 {% endblock content %}
+
+{% block javascript %}
+  {% block javascript.pos %}
+    <script>
+
+      function PaletePrint(slug) {
+        var run_el = document.getElementById('run_'+slug);
+        var running_el = document.getElementById('running_'+slug);
+        var runok_el = document.getElementById('runok_'+slug);
+        var runerr_el = document.getElementById('runerr_'+slug);
+
+        run_el.style.display = "none";
+        running_el.style.display = "inline";
+        runok_el.style.display = "none";
+        runerr_el.style.display = "none";
+
+        var link = '{% url 'cd:palete_print' 'code' %}';
+        link = link.replace('code', slug);
+        console.log(link);
+
+        $.ajax({
+          type: 'GET',
+          url: link,
+          data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+          success : function(data) {
+            erro = '';
+            if (data) {
+              if (data['result'] == 'ERRO') {
+                console.log(data['state']);
+                runerr_el.style.display = "inline";
+              } else {
+                console.log(data['state']);
+                runok_el.style.display = "inline";
+
+              }
+            } else {
+              // alert('Sem retorno');
+              console.log('Sem retorno');
+              runerr_el.style.display = "inline";
+            }
+            run_el.style.display = "inline";
+            running_el.style.display = "none";
+          },
+          error : function(data) {
+            // alert('Erro na requisição');
+            console.log('Erro na requisição');
+            runerr_el.style.display = "inline";
+            run_el.style.display = "inline";
+            running_el.style.display = "none";
+          }
+        });
+
+        return false;
+      }
+
+    </script>
+  {% endblock javascript.pos %}
+{% endblock javascript %}
