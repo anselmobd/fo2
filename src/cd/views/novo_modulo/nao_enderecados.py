@@ -72,7 +72,7 @@ class NaoEnderecados(O2BaseGetPostView):
 
         for row in data.object_list:
             if not row['sol']:
-                row['sol'] = 0
+                row['sol'] = '#'
 
         form_report_lines = []
         
