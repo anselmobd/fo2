@@ -60,13 +60,12 @@ class NaoEnderecados(O2BaseGetPostView):
         )
         nao_end_len = len(data)
 
-        lotes = set()
-        for row in data:
-            lotes.add(self.Lote(
-                row['op'],
-                row['oc'],
-            ))
-        lotes_len = len(lotes)
+        lotes_len = len(
+            set(
+                (row['op'], row['oc'])
+                for row in data
+            )
+        )
 
         data = paginator_basic(data, self.por_pagina, self.page)
 
