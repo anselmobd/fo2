@@ -50,7 +50,7 @@ def query(cursor, sol_de, sol_ate, situacao):
           AND sl.ORDEM_CONFECCAO <> 0 
           AND sl.GRUPO_DESTINO <> '0'
           AND ec.COD_ENDERECO IS NULL 
-          AND COALESCE(l.QTDE_DISPONIVEL_BAIXA, 1000) > 0
+          AND COALESCE(l.QTDE_DISPONIVEL_BAIXA, 0) > 0
           {filtra_sol_de} -- filtra_sol_de
           {filtra_sol_ate} -- filtra_sol_ate
           {filtra_situacao} -- filtra_situacao
