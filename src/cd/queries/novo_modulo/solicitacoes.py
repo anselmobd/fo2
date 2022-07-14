@@ -35,12 +35,15 @@ def get_solicitacoes(
     else:
         filtra_pedido_destino = ""
 
+    # filtra_ref_destino = f"""--
+    #     AND ( ( sl.GRUPO_DESTINO = '00000'
+    #           AND l.PROCONF_GRUPO = '{ref_destino}'
+    #           )
+    #         OR sl.GRUPO_DESTINO = '{ref_destino}'
+    #         )
+    # """ if ref_destino else ''
     filtra_ref_destino = f"""--
-        AND ( ( sl.GRUPO_DESTINO = '00000'
-              AND l.PROCONF_GRUPO = '{ref_destino}'
-              )
-            OR sl.GRUPO_DESTINO = '{ref_destino}'
-            )
+        AND sl.GRUPO_DESTINO = '{ref_destino}'
     """ if ref_destino else ''
 
     filtra_ref_reservada = f"""--
@@ -68,8 +71,8 @@ def get_solicitacoes(
 
     if (
         filtra_pedido_destino
-        # or filtra_ref_destino
-        # or filtra_ref_reservada
+        or filtra_ref_destino
+        or filtra_ref_reservada
         or filtra_lote
         or filtra_op
     ):
