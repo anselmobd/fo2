@@ -88,6 +88,14 @@ class Solicitacoes(O2BaseGetPostView):
                 get_filtro.append(
                     f"pedido={self.pedido_destino}"
                 )
+            if self.ref_destino:
+                get_filtro.append(
+                    f"ref_destino={self.ref_destino}"
+                )
+            if self.ref_reservada:
+                get_filtro.append(
+                    f"ref_reservada={self.ref_reservada}"
+                )
             if self.lote:
                 get_filtro.append(
                     f"lote={self.lote}"
