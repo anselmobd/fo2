@@ -30,6 +30,8 @@ class Solicitacao(O2BaseGetView):
     def monta_dados_solicitados(self):
         if (
             self.context['pedido']
+            or self.context['ref_destino']
+            or self.context['ref_reservada']
             or self.context['op']
             or self.context['lote']
         ):
@@ -41,6 +43,8 @@ class Solicitacao(O2BaseGetView):
                 self.cursor,
                 solicitacao=solicitacao,
                 pedido_destino=self.context['pedido'],
+                ref_destino=self.context['ref_destino'],
+                ref_reservada=self.context['ref_reservada'],
                 op=self.context['op'],
                 lote=self.context['lote'],
             )
@@ -428,6 +432,8 @@ class Solicitacao(O2BaseGetView):
             self.context['solicitacao'] = '# (sem número)'
         self.context['sem_numero'] = self.sem_numero
         self.context['pedido'] = self.request.GET.get('pedido', None)
+        self.context['ref_destino'] = self.request.GET.get('ref_destino', None)
+        self.context['ref_reservada'] = self.request.GET.get('ref_reservada', None)
         self.context['op'] = self.request.GET.get('op', None)
         self.context['lote'] = self.request.GET.get('lote', None)
 
