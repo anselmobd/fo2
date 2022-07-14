@@ -15,7 +15,7 @@ from utils.functions.strings import only_digits
 from utils.views import totalize_data
 
 from lotes.queries.pedido import ped_inform
-from cd.queries.novo_modulo.solicitacoes import get_solicitacao
+from cd.queries.novo_modulo.solicitacao import get_solicitacao
 
 
 class Solicitacao(O2BaseGetView):
