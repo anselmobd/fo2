@@ -25,11 +25,11 @@ def get_solicitacao(
     """ if pedido_destino else ''
 
     filtra_ref_destino = f"""--
-        AND sl.GRUPO_DESTINO = {ref_destino}
+        AND sl.GRUPO_DESTINO = '{ref_destino}'
     """ if ref_destino else ''
 
     filtra_ref_reservada = f"""--
-        AND l.PROCONF_GRUPO = {ref_reservada}
+        AND l.PROCONF_GRUPO = '{ref_reservada}'
     """ if ref_reservada else ''
 
     filtra_op = f"""--
