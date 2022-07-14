@@ -129,6 +129,8 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
             cursor,
             fields='all',
             modelo=modelo,
+            selecao_lotes='qq',
+            paletizado='t',
         )
 
         grade_inventario = dictlist_to_grade_qtd(
