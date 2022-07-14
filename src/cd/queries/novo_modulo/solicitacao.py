@@ -9,6 +9,8 @@ def get_solicitacao(
     cursor,
     solicitacao=None,
     pedido_destino=None,
+    ref_destino=None,
+    ref_reservada=None,
     op=None,
     lote=None,
 ):
@@ -21,6 +23,14 @@ def get_solicitacao(
     filtra_pedido_destino = f"""--
         AND sl.PEDIDO_DESTINO = {pedido_destino}
     """ if pedido_destino else ''
+
+    filtra_ref_destino = f"""--
+        AND sl.GRUPO_DESTINO = {ref_destino}
+    """ if ref_destino else ''
+
+    filtra_ref_reservada = f"""--
+        AND l.PROCONF_GRUPO = {ref_reservada}
+    """ if ref_reservada else ''
 
     filtra_op = f"""--
         AND sl.ORDEM_PRODUCAO = '{op}'
@@ -103,6 +113,8 @@ def get_solicitacao(
         WHERE 1=1
           {filtra_solicitacao} -- filtra_solicitacao
           {filtra_pedido_destino} -- filtra_pedido_destino
+          {filtra_ref_destino} -- filtra_ref_destino
+          {filtra_ref_reservada} -- filtra_ref_reservada
           {filtra_op} -- filtra_op
           {filtra_lote} -- filtra_lote
         ORDER BY
