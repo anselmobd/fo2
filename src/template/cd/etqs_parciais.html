@@ -13,27 +13,19 @@
   <form action="{% url 'cd:etqs_parciais' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <p>
-      Passo {{passo}} de 3
-    </p>
-    {% if passo == 1 %}
-      <input type="submit" name="busca" value="Busca"/>
-    {% elif passo == 2 %}
-      <input type="submit" name="busca" value="Busca"/>
+    <input type="submit" name="busca" value="Busca"/>
+    {% if request.POST %}
       <input type="submit" name="imprime" value="Imprime"/>
-      <input type="submit" name="volta_para_busca" value="Volta"/>
-      <input type="submit" name="confirma" value="Confirma que foram impressas as etiquetas"/>
-    {% elif passo == 3 %}
-      <input type="submit" name="confirma" value="Confirma que foram impressas as etiquetas"/>
-      <input type="submit" name="volta_para_imprime" value="Volta"/>
     {% endif %}
   </form>
+  
   {% block javascript %}
     <script>
       var inp = document.getElementById('id_numero');
       inp.select();
     </script>
   {% endblock javascript %}
+  
   {% if msg %}
     <h3 style="color:darkred;">{{ msg }}</h3>
   {% endif %}
