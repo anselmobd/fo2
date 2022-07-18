@@ -165,32 +165,7 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
             return
 
         if self.request.POST.get("imprime"):
-            if buscado_numero == numero:
-                data_selecao = []
-                try:
-                    data_selecao = self.seleciona(data, selecao)
-                except Exception as e:
-                    self.context.update({
-                        'msg': 'Seleção para impressão inválida',
-                        'passo': 2,
-                    })
-                if data_selecao:
-                    if self.imprime(data_selecao):
-                        form.data['impresso_numero'] = numero
-                        self.context.update({
-                            'msg': 'Enviado para a impressora',
-                            'passo': 3,
-                        })
-                    else:
-                        self.context.update({
-                            'passo': 2,
-                        })
-                else:
-                    self.context.update({
-                        'msg': 'Nada selecionado',
-                        'passo': 2,
-                    })
-            else:
+            if buscado_numero != numero:
                 form.data['numero'] = ''
                 self.context.update({
                     'numero': None,
@@ -199,22 +174,37 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
                 form.add_error(
                     'numero', "Número não pode ser alterado no passo 2"
                 )
-            return
+                return
 
-        if self.request.POST.get("confirma"):
-            if buscado_numero == numero:
-                if self.marca_impresso(solicitacao):
-                    form.data['numero'] = ''
+            data_selecao = []
+            try:
+                data_selecao = self.seleciona(data, selecao)
+            except Exception as e:
+                self.context.update({
+                    'msg': 'Seleção para impressão inválida',
+                    'passo': 2,
+                })
+            if data_selecao:
+                if self.imprime(data_selecao):
+                    form.data['impresso_numero'] = numero
                     self.context.update({
-                        'msg': 'Impressão marcada como confirmada',
-                        'passo': 1,
+                        'msg': 'Enviado para a impressora',
+                        'passo': 3,
                     })
                 else:
                     self.context.update({
-                        'msg': 'Erro ao marcar impressão como confirmada',
-                        'passo': 3,
+                        'passo': 2,
                     })
             else:
+                self.context.update({
+                    'msg': 'Nada selecionado',
+                    'passo': 2,
+                })
+
+            return
+
+        if self.request.POST.get("confirma"):
+            if buscado_numero != numero:
                 form.data['numero'] = ''
                 self.context.update({
                     'numero': None,
@@ -223,6 +213,19 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
                 form.add_error(
                     'numero', "Número não pode ser alterado no passo 3"
                 )
+                return
+
+            if self.marca_impresso(solicitacao):
+                form.data['numero'] = ''
+                self.context.update({
+                    'msg': 'Impressão marcada como confirmada',
+                    'passo': 1,
+                })
+            else:
+                self.context.update({
+                    'msg': 'Erro ao marcar impressão como confirmada',
+                    'passo': 3,
+                })
 
     def get(self, request, *args, **kwargs):
         self.request = request
