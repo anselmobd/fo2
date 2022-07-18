@@ -19,6 +19,7 @@
     {% if passo == 1 %}
       <input type="submit" name="busca" value="Busca"/>
     {% elif passo == 2 %}
+      <input type="submit" name="busca" value="Busca"/>
       <input type="submit" name="imprime" value="Imprime"/>
       <input type="submit" name="volta_para_busca" value="Volta"/>
       <input type="submit" name="confirma" value="Confirma que foram impressas as etiquetas"/>
@@ -37,7 +38,7 @@
     <h3 style="color:darkred;">{{ msg }}</h3>
   {% endif %}
   {% if numero %}
-    <h4>Solicitação número #{{ numero }} - {{ codigo }} - {{ nome }}</h4>
+    <h4>Solicitação número {{ numero }}</h4>
   {% endif %}
   {% if data %}
     <h3>{{ data|length }} requisiç{{ data|length|pluralize:"ão,ões" }} parcia{{ data|length|pluralize:"l,is" }}</h3>

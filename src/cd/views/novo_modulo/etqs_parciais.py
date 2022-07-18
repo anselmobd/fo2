@@ -9,24 +9,25 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
 from utils.classes import TermalPrint
 
 import lotes.models
 
-import cd.queries as queries
-import cd.forms
+from cd.forms import etqs_parciais
+from cd.queries import novo_modulo
 
 
 class EtiquetasParciais(PermissionRequiredMixin, View):
 
     def __init__(self):
         self.permission_required = 'lotes.can_print__solicitacao_parciais'
-        self.Form_class = cd.forms.EtiquetasSolicitacoesForm
-        self.template_name = 'cd/etiq_solicitacoes.html'
+        self.Form_class = etqs_parciais.EtiquetasParciaisForm
+        self.template_name = 'cd/etqs_parciais.html'
         self.context = {
             'titulo': 'Etiquetas de parciais',
             'passo': 1,
-            'DESLIGANDO_CD_FASE': settings.DESLIGANDO_CD_FASE,
         }
 
     def imprime(self, data):
@@ -99,6 +100,8 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
         return [d for n, d in enumerate(data) if n+1 in selecionadas]
 
     def mount_context(self, form):
+        cursor = db_cursor_so(self.request)
+
         numero = form.cleaned_data['numero']
         buscado_numero = form.cleaned_data['buscado_numero']
         selecao = form.cleaned_data['selecao']
@@ -107,50 +110,45 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
             'numero': numero,
         })
 
-        solicitacao = lotes.models.SolicitaLote.objects.get(id=numero[:-2])
-
-        self.context.update({
-            'codigo': solicitacao.codigo,
-            'nome': solicitacao.descricao,
-        })
-
-        data = lotes.models.SolicitaLoteQtd.objects.values(
-            'lote__op', 'lote__lote', 'lote__qtd_produzir',
-            'lote__referencia', 'lote__cor', 'lote__tamanho'
-        ).annotate(
-            lote_ordem=Coalesce('lote__local', Value('0000')),
-            lote__local=Coalesce('lote__local', Value('-Ausente-')),
-            qtdsum=Sum('qtd')
-        ).filter(
-            solicitacao=solicitacao,
-        ).exclude(
-            lote__qtd_produzir=F('qtdsum'),
-        ).order_by(
-            'lote_ordem', 'lote__op', 'lote__referencia', 'lote__cor',
-            'lote__tamanho', 'lote__lote'
+        solicitacao = novo_modulo.solicitacao.get_solicitacao(
+            cursor,
+            solicitacao=numero,
         )
+
+        data = [
+            row
+            for row in solicitacao
+            if row['qtd_ori'] != row['qtde']
+        ]
 
         for n, row in enumerate(data):
             row['n'] = n + 1
-            row['numero'] = numero
-            row['lote__lote|LINK'] = reverse(
-                'producao:posicao__get',
-                args=[row['lote__lote']])
-            row['lote__lote|TARGET'] = '_BLANK'
+            # row['numero'] = numero
+            # row['lote__lote|LINK'] = reverse(
+            #     'producao:posicao__get',
+            #     args=[row['lote__lote']])
+            # row['lote__lote|TARGET'] = '_BLANK'
+
+        pprint(data)
 
         self.context.update({
             'headers': [
-                'Nº', 'Endereço', 'OP', 'Lote',
+                'Nº', 'Palete', 'Endereço', 'OP', 'Lote',
                 'Referência', 'Cor', 'Tamanho',
-                'Quant. original', 'Quant. Solicitada'
+                'Quant. original', 'Quant. Solicitada',
             ],
             'fields': [
-                'n', 'lote__local', 'lote__op', 'lote__lote',
-                'lote__referencia', 'lote__cor', 'lote__tamanho',
-                'lote__qtd_produzir', 'qtdsum'
+                'n', 'palete', 'endereco', 'ordem_producao', 'lote',
+                'ref', 'cor', 'tam',
+                'qtd_ori', 'qtde',
             ],
             'data': data,
         })
+
+        if self.request.POST.get("busca"):
+            self.context.update({
+                'passo': 1,
+            })
 
         if self.request.POST.get("volta_para_busca"):
             self.context.update({
@@ -229,14 +227,14 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.request = request
-        form = self.Form_class()
+        form = self.Form_class(request=request)
         self.context['form'] = form
         return render(self.request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
         self.request = request
         mutable_request_post = self.request.POST.copy()
-        form = self.Form_class(mutable_request_post)
+        form = self.Form_class(mutable_request_post, request=request)
         if form.is_valid():
             self.mount_context(form)
         self.context['form'] = form
