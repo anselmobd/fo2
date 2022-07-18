@@ -146,21 +146,25 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
         })
 
         if self.request.POST.get("busca"):
+            form.data['buscado_numero'] = numero
             self.context.update({
-                'passo': 1,
+                'passo': 2,
             })
+            return
 
         if self.request.POST.get("volta_para_busca"):
             self.context.update({
                 'passo': 1,
             })
+            return
 
-        elif self.request.POST.get("volta_para_imprime"):
+        if self.request.POST.get("volta_para_imprime"):
             self.context.update({
                 'passo': 2,
             })
+            return
 
-        elif self.request.POST.get("imprime"):
+        if self.request.POST.get("imprime"):
             if buscado_numero == numero:
                 data_selecao = []
                 try:
@@ -195,8 +199,9 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
                 form.add_error(
                     'numero', "Número não pode ser alterado no passo 2"
                 )
+            return
 
-        elif self.request.POST.get("confirma"):
+        if self.request.POST.get("confirma"):
             if buscado_numero == numero:
                 if self.marca_impresso(solicitacao):
                     form.data['numero'] = ''
@@ -218,12 +223,6 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
                 form.add_error(
                     'numero', "Número não pode ser alterado no passo 3"
                 )
-
-        else:  # self.request.POST.get("busca"):
-            form.data['buscado_numero'] = numero
-            self.context.update({
-                'passo': 2,
-            })
 
     def get(self, request, *args, **kwargs):
         self.request = request
