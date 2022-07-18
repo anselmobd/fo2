@@ -22,6 +22,7 @@ from cd.views import (
 from cd.views.novo_modulo import (
     estoque,
     estoque_ficticio,
+    etqs_parciais,
     disponibilidade,
     disponibilidade_ficticio,
     grade_estoque_totais,
@@ -128,6 +129,9 @@ urlpatterns = [
 
     re_path(r'^etiq_solicitacoes/?$',
         views.EtiquetasSolicitacoes.as_view(), name='etiq_solicitacoes'),
+
+    re_path(r'^etqs_parciais/?$',
+        etqs_parciais.EtiquetasParciais.as_view(), name='etqs_parciais'),
 
     re_path(r'^enderecar/$', views.Enderecar.as_view(), name='enderecar'),
     re_path(r'^enderecar/m/$',

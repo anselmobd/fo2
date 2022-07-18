@@ -1,0 +1,49 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'cd:etqs_parciais' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p>
+      Passo {{passo}} de 3
+    </p>
+    {% if passo == 1 %}
+      <input type="submit" name="busca" value="Busca"/>
+    {% elif passo == 2 %}
+      <input type="submit" name="imprime" value="Imprime"/>
+      <input type="submit" name="volta_para_busca" value="Volta"/>
+      <input type="submit" name="confirma" value="Confirma que foram impressas as etiquetas"/>
+    {% elif passo == 3 %}
+      <input type="submit" name="confirma" value="Confirma que foram impressas as etiquetas"/>
+      <input type="submit" name="volta_para_imprime" value="Volta"/>
+    {% endif %}
+  </form>
+  {% block javascript %}
+    <script>
+      var inp = document.getElementById('id_numero');
+      inp.select();
+    </script>
+  {% endblock javascript %}
+  {% if msg %}
+    <h3 style="color:darkred;">{{ msg }}</h3>
+  {% endif %}
+  {% if numero %}
+    <h4>Solicitação número #{{ numero }} - {{ codigo }} - {{ nome }}</h4>
+  {% endif %}
+  {% if data %}
+    <h3>{{ data|length }} requisiç{{ data|length|pluralize:"ão,ões" }} parcia{{ data|length|pluralize:"l,is" }}</h3>
+    <table>
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
+    </table>
+  {% endif %}
+{% endblock %}
