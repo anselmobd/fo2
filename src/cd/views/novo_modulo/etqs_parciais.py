@@ -61,17 +61,6 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
 
         return True
 
-    def marca_impresso(self, solicitacao):
-        try:
-            solicitacao_prt = lotes.models.SolicitaLotePrinted(
-                solicitacao=solicitacao,
-                printed_by=self.request.user
-            )
-            solicitacao_prt.save()
-            return True
-        except Exception:
-            return False
-
     def seleciona(self, data, selecao):
         intervals = [
             v.strip()
@@ -111,6 +100,8 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
                 )
                 return
 
+        form.data['buscado_numero'] = numero
+
         self.context.update({
             'numero': numero,
         })
@@ -134,8 +125,6 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
             #     args=[row['lote__lote']])
             # row['lote__lote|TARGET'] = '_BLANK'
 
-        pprint(data)
-
         self.context.update({
             'headers': [
                 'Nº', 'Palete', 'Endereço', 'OP', 'Lote',
@@ -157,23 +146,17 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
             except Exception as e:
                 self.context.update({
                     'msg': 'Seleção para impressão inválida',
-                    'passo': 2,
                 })
+            pprint(data_selecao)
+
             if data_selecao:
                 if self.imprime(data_selecao):
-                    form.data['impresso_numero'] = numero
                     self.context.update({
                         'msg': 'Enviado para a impressora',
-                        'passo': 3,
-                    })
-                else:
-                    self.context.update({
-                        'passo': 2,
                     })
             else:
                 self.context.update({
                     'msg': 'Nada selecionado',
-                    'passo': 2,
                 })
 
             return
