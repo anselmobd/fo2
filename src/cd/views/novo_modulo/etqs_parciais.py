@@ -28,12 +28,13 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
         self.context = {'titulo': 'Etiquetas de parciais'}
 
     def imprime(self, data):
+        impresso_slug = 'etiqueta-de-parciais'
         try:
             impresso = lotes.models.Impresso.objects.get(
-                slug='etiqueta-de-solicitacao')
+                slug=impresso_slug)
         except lotes.models.Impresso.DoesNotExist:
             self.context.update({
-                'msg': 'Impresso etiqueta-de-solicitacao não cadastrado',
+                'msg': f"Impresso '{impresso_slug}' não cadastrado.",
             })
             return False
 
@@ -42,7 +43,7 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
                 usuario=self.request.user, impresso=impresso)
         except lotes.models.UsuarioImpresso.DoesNotExist:
             self.context.update({
-                'msg': 'Impresso não cadastrado para o usuário',
+                'msg': f"Impresso '{impresso_slug}' não cadastrado para o usuário '{self.request.user}'.",
             })
             return False
 
@@ -119,17 +120,12 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
 
         for n, row in enumerate(data):
             row['n'] = n + 1
-            # row['numero'] = numero
-            # row['lote__lote|LINK'] = reverse(
-            #     'producao:posicao__get',
-            #     args=[row['lote__lote']])
-            # row['lote__lote|TARGET'] = '_BLANK'
 
         self.context.update({
             'headers': [
-                'Nº', 'Palete', 'Endereço', 'OP', 'Lote',
-                'Referência', 'Cor', 'Tamanho',
-                'Quant. original', 'Quant. Solicitada',
+                "Nº", "Palete", "Endereço", "OP", "Lote",
+                "Referência", "Cor", "Tamanho",
+                "Quant. original", "Quant. Solicitada",
             ],
             'fields': [
                 'n', 'palete', 'endereco', 'ordem_producao', 'lote',
@@ -145,18 +141,18 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
                 data_selecao = self.seleciona(data, selecao)
             except Exception as e:
                 self.context.update({
-                    'msg': 'Seleção para impressão inválida',
+                    'msg': "Seleção para impressão inválida",
                 })
             pprint(data_selecao)
 
             if data_selecao:
                 if self.imprime(data_selecao):
                     self.context.update({
-                        'msg': 'Enviado para a impressora',
+                        'msg': "Enviado para a impressora",
                     })
             else:
                 self.context.update({
-                    'msg': 'Nada selecionado',
+                    'msg': "Nada selecionado",
                 })
 
             return
