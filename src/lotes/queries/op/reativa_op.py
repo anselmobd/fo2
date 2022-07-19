@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django.db import DatabaseError, transaction
+from utils.functions.queries import debug_cursor_execute
 
 
 def reativa_op(cursor, op):
@@ -16,9 +17,9 @@ def reativa_op(cursor, op):
               AND o.ORDEM_PRODUCAO = {op}
               AND o.SITUACAO <> 4
               AND o.COD_CANCELAMENTO <> 0
-              AND o.DT_CANCELAMENTO IS NOT NULL
+              -- AND o.DT_CANCELAMENTO IS NOT NULL
         """
-        cursor.execute(sql)
+        debug_cursor_execute(cursor, sql)
 
     def update_lotes():
         sql = f"""
@@ -29,7 +30,7 @@ def reativa_op(cursor, op):
               AND l.ORDEM_PRODUCAO = {op}
               AND l.SITUACAO_ORDEM <> 1
         """
-        cursor.execute(sql)
+        debug_cursor_execute(cursor, sql)
 
     try:
         with transaction.atomic():
