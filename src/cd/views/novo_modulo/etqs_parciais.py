@@ -105,6 +105,7 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
         solicitacao = get_solicitacao(
             cursor,
             solicitacao=numero,
+            order='rota_end',
         )
 
         data = [
@@ -118,12 +119,12 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
 
         self.context.update({
             'headers': [
-                "Nº", "Palete", "Endereço", "OP", "Lote",
+                "Nº", "Palete", "Rota", "Endereço", "OP", "Lote",
                 "Referência", "Cor", "Tamanho",
                 "Quant. original", "Quant. Solicitada",
             ],
             'fields': [
-                'n', 'palete', 'endereco', 'ordem_producao', 'lote',
+                'n', 'palete', 'rota', 'endereco', 'ordem_producao', 'lote',
                 'ref', 'cor', 'tam',
                 'qtd_ori', 'qtde',
             ],
