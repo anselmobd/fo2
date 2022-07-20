@@ -705,6 +705,18 @@
         },
         'delay_file': 15000,
         'n_loops': 22,
+      },
+      'amigo2022': {
+        'dtde': new Date('07/19/2022'),
+        'dtate': new Date('07/20/2022'),
+        'cartaz': {
+          'path': '/media/videos',
+          'files': [
+            'amigo2022.mp4',
+          ]
+        },
+        'delay_file': 117000,
+        'n_loops': 4,
       }
     }
 
@@ -762,10 +774,22 @@
         eldiv.id = name+"d"+i;
         eldiv.classList.add("overlay");
 
-        var elimg = document.createElement('img');
-        elimg.id = name+"i"+i;
-        elimg.classList.add("cartaz");
-        elimg.src = path+'/'+fname;
+        if (fname.endsWith(".mp4")) {
+          var elimg = document.createElement('video');
+          elimg.id = name+"i"+i;
+          elimg.classList.add("cartaz");
+          elimg.src = path+'/'+fname;
+          elimg.type = "video/mp4";
+          elimg.controls = true;
+          // elimg.autoplay = true;
+          // elimg.loop = true;
+          elimg.muted = true;
+        } else {
+          var elimg = document.createElement('img');
+          elimg.id = name+"i"+i;
+          elimg.classList.add("cartaz");
+          elimg.src = path+'/'+fname;
+        }
 
         eldiv.appendChild(elimg);
         document.body.appendChild(eldiv);
@@ -786,9 +810,14 @@
 
         for (var key = 1; key <= nimagens; key++) {
           if (key == imgloop) {
-            post_div = elsdiv[key];
-            elsimg[key].addEventListener('load', post_div_visible)
-            elsimg[key].src = elsimg[key].getAttribute('src');
+            if (elsimg[key].src.endsWith(".mp4")) {
+              elsdiv[key].style.visibility = 'visible';
+              elsimg[key].play();
+            } else {
+              post_div = elsdiv[key];
+              elsimg[key].addEventListener('load', post_div_visible)
+              elsimg[key].src = elsimg[key].getAttribute('src');
+            }
           } else {
             elsdiv[key].style.visibility = 'hidden';
           }
