@@ -27,8 +27,13 @@ def get_solicitacao(
     ref_reservada=None,
     op=None,
     lote=None,
+    order='sit_oc'
 ):
-
+    """
+        order:
+            'sit_oc' = situação, estágio, OP e OC
+            'rota_end' = rota, endereço, OP e OC
+    """
     if solicitacao and solicitacao != '-':
         filtra_solicitacao = f"AND sl.SOLICITACAO = {solicitacao}"
     else:
@@ -53,6 +58,21 @@ def get_solicitacao(
     filtra_lote = f"""--
         AND (l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO = {lote}
     """ if lote else ''
+
+    if order == 'sit_oc':
+        order_by = f"""--
+              sl.SITUACAO
+            , lest.CODIGO_ESTAGIO
+            , sl.ORDEM_PRODUCAO
+            , sl.ORDEM_CONFECCAO
+        """
+    elif order == 'rota_end':
+        order_by = f"""--
+              COALESCE(e.ROTA, '-')
+            , COALESCE(ec.COD_ENDERECO, '-')
+            , sl.ORDEM_PRODUCAO
+            , sl.ORDEM_CONFECCAO
+        """
 
     sql = f"""
         SELECT DISTINCT
@@ -132,10 +152,7 @@ def get_solicitacao(
           {filtra_op} -- filtra_op
           {filtra_lote} -- filtra_lote
         ORDER BY
-          sl.SITUACAO
-        , lest.CODIGO_ESTAGIO
-        , sl.ORDEM_PRODUCAO
-        , sl.ORDEM_CONFECCAO
+          {order_by} -- order_by
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
