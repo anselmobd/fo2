@@ -18,6 +18,7 @@ def sortimento(cursor, **kwargs):
     solicitado = argdef('solicitado', 't')  # default todos os pedidos
     pedido_liberado = argdef('pedido_liberado', 't')  # default todos os pedidos
     total = argdef('total', None)
+    empresa = argdef('empresa', 1)  # default tussor matriz
 
     filtra_pedido = ''
     if pedido is not None:
@@ -110,6 +111,10 @@ def sortimento(cursor, **kwargs):
             AND ped.SITUACAO_VENDA = 0
         """
 
+    filtro_empresa = f"""--
+        AND ped.CODIGO_EMPRESA = {empresa}
+    """
+
     grade_args = {}
     if total is not None:
         grade_args = {
@@ -139,6 +144,7 @@ def sortimento(cursor, **kwargs):
         LEFT JOIN BASI_220 t -- tamanhos
           ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
         WHERE 1=1
+          {filtro_empresa} -- filtro_empresa
           {filtra_pedido} -- filtra_pedido
           {filtro_modelo} -- filtro_modelo
           {filtra_periodo} -- filtra_periodo
@@ -194,6 +200,7 @@ def sortimento(cursor, **kwargs):
         """
     sql += f"""--
         WHERE 1=1
+          {filtro_empresa} -- filtro_empresa
           {filtra_pedido} -- filtra_pedido
           {filtro_modelo} -- filtro_modelo
           {filtra_periodo} -- filtra_periodo
@@ -234,6 +241,7 @@ def sortimento(cursor, **kwargs):
          AND fok.SITUACAO_NFISC <> 2  -- cancelada
          AND fok.NUMERO_CAIXA_ECF = 0
         WHERE 1=1
+          {filtro_empresa} -- filtro_empresa
           {filtra_pedido} -- filtra_pedido
           {filtro_modelo} -- filtro_modelo
           {filtra_periodo} -- filtra_periodo
