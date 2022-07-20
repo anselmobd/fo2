@@ -4,7 +4,7 @@ from django import forms
 
 from fo2.connections import db_cursor_so
 
-from cd.queries.novo_modulo.solicitacao import get_solicitacao
+from cd.queries.novo_modulo.solicitacao import existe_solicitacao, get_solicitacao
 
 
 class EtiquetasParciaisForm(forms.Form):
@@ -35,19 +35,13 @@ class EtiquetasParciaisForm(forms.Form):
 
         numero = self.cleaned_data.get('numero', '')
 
+        if not existe_solicitacao(cursor, numero):
+            raise forms.ValidationError("Solicitação não existe")
+
         solicitacao = get_solicitacao(
             cursor,
             solicitacao=numero,
         )
-        if len(solicitacao) == 0:
-            raise forms.ValidationError("Solicitação não existe")
-
-        # solicitacao_prt = lotes.models.SolicitaLotePrinted.objects.filter(
-        #     solicitacao=solicitacao
-        # )
-        # if len(solicitacao_prt) != 0:
-        #     if not solicitacao.can_print:
-        #         raise forms.ValidationError("Etiquetas já foram impressas")
 
         if all(map(
             lambda r: r['qtd_ori'] == r['qtde'],
