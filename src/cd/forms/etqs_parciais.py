@@ -4,7 +4,7 @@ from django import forms
 
 from fo2.connections import db_cursor_so
 
-from cd.queries import novo_modulo
+from cd.queries.novo_modulo.solicitacao import get_solicitacao
 
 
 class EtiquetasParciaisForm(forms.Form):
@@ -35,7 +35,7 @@ class EtiquetasParciaisForm(forms.Form):
 
         numero = self.cleaned_data.get('numero', '')
 
-        solicitacao = novo_modulo.solicitacao.get_solicitacao(
+        solicitacao = get_solicitacao(
             cursor,
             solicitacao=numero,
         )

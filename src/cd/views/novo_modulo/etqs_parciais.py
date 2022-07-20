@@ -1,12 +1,7 @@
 from pprint import pprint
 
-from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db import connection
-from django.db.models import F, Sum, Value
-from django.db.models.functions import Coalesce
 from django.shortcuts import render
-from django.urls import reverse
 from django.views import View
 
 from fo2.connections import db_cursor_so
@@ -16,7 +11,7 @@ from utils.classes import TermalPrint
 import lotes.models
 
 from cd.forms import etqs_parciais
-from cd.queries import novo_modulo
+from cd.queries.novo_modulo.solicitacao import get_solicitacao
 
 
 class EtiquetasParciais(PermissionRequiredMixin, View):
@@ -107,7 +102,7 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
             'numero': numero,
         })
 
-        solicitacao = novo_modulo.solicitacao.get_solicitacao(
+        solicitacao = get_solicitacao(
             cursor,
             solicitacao=numero,
         )
