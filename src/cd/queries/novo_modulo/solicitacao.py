@@ -5,6 +5,20 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
+def existe_solicitacao(
+    cursor,
+    solicitacao,
+):
+    sql = f"""
+        SELECT DISTINCT
+          sl.SOLICITACAO
+        FROM pcpc_044 sl -- solicitação / lote 
+        WHERE sl.SOLICITACAO = {solicitacao}
+    """
+    debug_cursor_execute(cursor, sql)
+    return len(dictlist_lower(cursor)) != 0
+
+
 def get_solicitacao(
     cursor,
     solicitacao=None,
