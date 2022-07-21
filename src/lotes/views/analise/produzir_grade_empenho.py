@@ -1,4 +1,5 @@
 import copy
+import sys
 from pprint import pprint
 
 from django.db.models import Exists, OuterRef
@@ -130,7 +131,7 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
             fields='all',
             modelo=modelo,
             selecao_lotes='qq',
-            paletizado='t',
+            paletizado='s',
         )
 
         grade_inventario = dictlist_to_grade_qtd(
