@@ -249,20 +249,16 @@ def query(
         """
         joins.add('1ec')
 
-    filtra_tipo_prod = ''
-    if tipo_prod == 'pagb':
-        filtra_tipo_prod = "AND l.PROCONF_GRUPO < 'C0000'"
-    elif tipo_prod == 'pgb':
-        filtra_tipo_prod = \
-            "AND (l.PROCONF_GRUPO like 'A%' OR l.PROCONF_GRUPO like 'B%')"
-    elif tipo_prod == 'pa':
-        filtra_tipo_prod = "AND l.PROCONF_GRUPO < 'A0000'"
-    elif tipo_prod == 'pg':
-        filtra_tipo_prod = "AND l.PROCONF_GRUPO like 'A%'"
-    elif tipo_prod == 'pb':
-        filtra_tipo_prod = "AND l.PROCONF_GRUPO like 'B%'"
-    elif tipo_prod == 'md':
-        filtra_tipo_prod = "AND l.PROCONF_GRUPO >= 'C0000'"
+    dict_tipo_prod = {
+        'pagb': "AND l.PROCONF_GRUPO < 'C0000'",
+        'pgb': "AND (l.PROCONF_GRUPO like 'A%' OR l.PROCONF_GRUPO like 'B%')",
+        'pa': "AND l.PROCONF_GRUPO < 'A0000'",
+        'pg': "AND l.PROCONF_GRUPO like 'A%'",
+        'pb': "AND l.PROCONF_GRUPO like 'B%'",
+        'md': "AND l.PROCONF_GRUPO >= 'C0000'",
+    }
+
+    filtra_tipo_prod = dict_tipo_prod[tipo_prod]
 
     if selecao_ops == '63':
         filtra_selecao_ops = """--
