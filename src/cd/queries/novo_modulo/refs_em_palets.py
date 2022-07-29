@@ -203,14 +203,14 @@ def query(
         refs = refs_ref & refs_modelo
     else:
         refs = refs_ref | refs_modelo
-
-    
-    filtra_ref = 'AND 1=2' if modelo or ref else ''
+   
     if refs:
         ref_virgulas = ', '.join([f"'{r}'" for r in list(refs)])
         filtra_ref = f"""--
             AND l.PROCONF_GRUPO in ({ref_virgulas})
         """
+    else:
+        filtra_ref = 'AND 1=2' if modelo or ref else ''
 
     filtra_cor = f"""--
         AND l.PROCONF_ITEM = '{cor}'
