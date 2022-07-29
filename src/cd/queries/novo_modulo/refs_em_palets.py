@@ -258,7 +258,7 @@ def query(
         'md': "AND l.PROCONF_GRUPO >= 'C0000'",
     }
 
-    filtra_tipo_prod = dict_tipo_prod[tipo_prod]
+    filtra_tipo_prod = dict_tipo_prod[tipo_prod] if tipo_prod else ''
 
     if selecao_ops == '63':
         filtra_selecao_ops = """--
