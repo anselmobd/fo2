@@ -109,7 +109,18 @@ def pedido_faturavel_modelo(
                 AND sl.SITUACAO <> 0
             )
           , 0 
-          ) EMP_SIT
+          ) EMP_SIT_MIN
+        , COALESCE(
+            ( SELECT
+                MAX(sl.SITUACAO)
+              FROM pcpc_044 sl -- solicitação / lote 
+              WHERE sl.PEDIDO_DESTINO = pref.PEDIDO
+                AND sl.ORDEM_CONFECCAO <> 0 
+                AND sl.GRUPO_DESTINO <> '0'
+                AND sl.SITUACAO <> 0
+            )
+          , 0 
+          ) EMP_SIT_MAX
         , pref.QTD_SOL
         , pref.QTD_EMP
         , pref.NIVEL
@@ -260,6 +271,7 @@ def pedido_faturavel_modelo(
         WHERE pref.QTD > pref.QTD_FAT
         ORDER BY
           2
+        , 3
         , ped.DATA_ENTR_VENDA
         , pref.PEDIDO
         , pref.NIVEL
