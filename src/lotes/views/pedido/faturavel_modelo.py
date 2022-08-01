@@ -81,8 +81,13 @@ class PedidoFaturavelModelo(View):
                 row['DATA'] = ''
             else:
                 row['DATA'] = row['DATA'].date()
-            if row['EMP_SIT'] == 0:
+            if row['EMP_SIT_MIN'] == 0:
                 row['EMP_SIT'] = 'Sem Emp.'
+            else:
+                if row['EMP_SIT_MIN'] == row['EMP_SIT_MAX']:
+                    row['EMP_SIT'] = row['EMP_SIT_MIN']
+                else:
+                    row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
 
         group = ['EMP_SIT']
         totalize_grouped_data(data, {
@@ -102,7 +107,7 @@ class PedidoFaturavelModelo(View):
         #     'descr': {'REF': 'Total:'}})
 
         if tot_qtd_fat == 0:
-            headers = ['Sit. Min. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
+            headers = ['Sit. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
                        'Referência', 'Quant. Emp', 'Quant. Sol.', 'Quant. pedida', 'Faturamento']
             fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
                       'REF', 'QTD_EMP', 'QTD_SOL', 'QTD_AFAT', 'FAT']
@@ -112,7 +117,7 @@ class PedidoFaturavelModelo(View):
                 8: 'text-align: right;',
             }
         else:
-            headers = ['Sit. Min. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
+            headers = ['Sit. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
                        'Referência', 'Quant. Emp', 'Quant. Sol.', 'Quant. pedida', 'Quant. faturada',
                        'Quant. a faturar', 'Faturamento']
             fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',

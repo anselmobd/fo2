@@ -34,11 +34,10 @@
   {% if lead != 0 %}
     <h4>Lead do modelo: {{ lead }}</h4>
   {% endif %}
-  <h4>Ordenado por data de embarque</h4>
+  <h4>Ordenado por situação e data de embarque</h4>
   {% if periodo %}
     <h4>Data de embarque até: Hoje + lead + {{ periodo }}</h4>
   {% endif %}
-  <p>Sit. Min. Emp.: Situação mínima dos empenhos do pedido</p>
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
