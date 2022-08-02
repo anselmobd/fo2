@@ -5,7 +5,7 @@ from django.core.cache import cache
 from utils.decorators import caching_function
 from utils.functions import dias_mes_data
 
-import lotes.queries.pedido as l_q_p
+from lotes.queries.pedido import faturavel_modelo
 
 import comercial.models
 import comercial.queries
@@ -57,7 +57,7 @@ def dados_meta_no_ano(cursor, hoje):
         f['mes']: int(round(f['valor']/1000)) for f in devolvidos
     }
 
-    pedidos = l_q_p.pedido_faturavel_modelo(
+    pedidos = faturavel_modelo.pedido_faturavel_modelo(
         cursor, periodo=f'-{dia_atual}:{dias_mes-dia_atual}', nat_oper=(1, 2))
     total_pedido = 0
     for pedido in pedidos:

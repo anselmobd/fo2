@@ -7,7 +7,8 @@ from fo2.connections import db_cursor_so
 from geral.functions import config_get_value
 from utils.views import totalize_data
 
-import lotes.queries.pedido
+from lotes.queries.pedido import faturavel_modelo
+
 import produto.queries
 
 
@@ -26,7 +27,7 @@ def pedido_lead_modelo(request, modelo):
         else:
             periodo = lead + dias_alem_lead
 
-        data_ped = lotes.queries.pedido.pedido_faturavel_modelo(
+        data_ped = faturavel_modelo.pedido_faturavel_modelo(
             cursor, modelo=modelo, periodo=':{}'.format(periodo))
 
         if len(data_ped) == 0:

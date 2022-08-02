@@ -9,7 +9,7 @@ from base.views import O2BaseGetView
 from utils.functions import dias_mes_data
 from utils.views import totalize_data
 
-import lotes.queries.pedido as l_q_p
+from lotes.queries.pedido import faturavel_modelo
 
 
 class PedidosParaMeta(O2BaseGetView):
@@ -33,7 +33,7 @@ class PedidosParaMeta(O2BaseGetView):
             'nat_oper': nat_oper,
         })
 
-        pedidos = l_q_p.pedido_faturavel_modelo(
+        pedidos = faturavel_modelo.pedido_faturavel_modelo(
             cursor, periodo=f'-{dia_atual}:{dias_mes-dia_atual}',
             nat_oper=nat_oper, group='p')
 

@@ -13,7 +13,8 @@ from utils.views import group_rowspan, totalize_grouped_data
 import produto.queries
 
 import lotes.models
-import lotes.queries as queries
+from lotes.queries.pedido import faturavel_modelo
+
 from lotes.forms import PedidoFaturavelModeloForm
 
 
@@ -61,7 +62,7 @@ class PedidoFaturavelModelo(View):
             busca_periodo = lead + dias_alem_lead
             periodo = dias_alem_lead
 
-        data = queries.pedido.pedido_faturavel_modelo(
+        data = faturavel_modelo.pedido_faturavel_modelo(
             cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
             cached=False, tam=tam, cor=cor, colecao=colecao)
         if len(data) == 0:
@@ -141,7 +142,7 @@ class PedidoFaturavelModelo(View):
         })
 
         if lead != 0:
-            data_pos = queries.pedido.pedido_faturavel_modelo(
+            data_pos = faturavel_modelo.pedido_faturavel_modelo(
                 cursor, modelo=modelo, periodo='{}:'.format(busca_periodo),
                 cached=False, colecao=colecao)
             if len(data_pos) != 0:

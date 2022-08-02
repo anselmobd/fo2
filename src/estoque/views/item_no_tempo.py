@@ -14,6 +14,7 @@ from utils.views import totalize_data
 import lotes.models
 import lotes.queries.analise
 import lotes.queries.pedido
+from lotes.queries.pedido import faturavel_modelo
 
 from estoque import forms, queries
 from estoque.functions import transfo2_num_doc, transfo2_num_doc_dt
@@ -237,7 +238,7 @@ class ItemNoTempo(View):
             'dados': dados,
             })
 
-        p_dados = lotes.queries.pedido.pedido_faturavel_modelo(
+        p_dados = faturavel_modelo.pedido_faturavel_modelo(
             self.cursor, cached=False,
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']}
