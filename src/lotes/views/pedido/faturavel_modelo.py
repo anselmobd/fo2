@@ -20,7 +20,7 @@ from lotes.forms import PedidoFaturavelModeloForm
 
 class PedidoFaturavelModelo(View):
     Form_class = PedidoFaturavelModeloForm
-    template_name = 'lotes/pedido_faturavel_modelo.html'
+    template_name = 'lotes/pedido/faturavel_modelo.html'
     title_name = 'Pedido faturável por modelo'
 
     def mount_context(self, cursor, modelo, colecao, tam, cor, considera_lead):
