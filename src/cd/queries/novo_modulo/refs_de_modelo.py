@@ -14,6 +14,8 @@ def to_set(cursor, modelo, com_op=None, com_ped=None):
     ])
 
 def query(cursor, modelo, com_op=False, com_ped=False):
+    if isinstance(modelo, str):
+        modelo = int(modelo)
     filtra_com_op = f"""--
         AND EXISTS (
           SELECT 
