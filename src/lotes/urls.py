@@ -163,12 +163,12 @@ urlpatterns = [
     re_path(r'^pedido/historico/(?P<pedido>\d+)/$', views.pedido.Historico.as_view(),
         name='pedido_historico__get'),
 
-    re_path(r'^pedido_faturavel_modelo/$',
+    re_path(r'^faturavel_modelo/$',
         views.pedido.PedidoFaturavelModelo.as_view(),
-        name='pedido_faturavel_modelo'),
-    re_path(r'^pedido_faturavel_modelo/(?P<modelo>[^/]+)/$',
+        name='faturavel_modelo'),
+    re_path(r'^faturavel_modelo/(?P<modelo>[^/]+)/$',
         views.pedido.PedidoFaturavelModelo.as_view(),
-        name='pedido_faturavel_modelo__get'),
+        name='faturavel_modelo__get'),
 
     re_path(r'^perda/$',
         views.OpPerda.as_view(), name='perda'),

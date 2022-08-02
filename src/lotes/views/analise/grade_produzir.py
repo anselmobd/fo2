@@ -248,7 +248,7 @@ class GradeProduzir(O2BaseGetPostView):
         if total_ped != 0:
             self.context.update({
                 'gped_header_link': reverse(
-                    'producao:pedido_faturavel_modelo__get', args=[modelo]),
+                    'producao:faturavel_modelo__get', args=[modelo]),
             })
             gped = {
                 'headers': gp_header,
