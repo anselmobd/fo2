@@ -43,6 +43,7 @@ def query(cursor, modelo, com_op=False, com_ped=False):
           r.REFERENCIA REF
         FROM BASI_030 r
         WHERE r.NIVEL_ESTRUTURA = 1
+          AND r.REFERENCIA LIKE '%{modelo}%'
           AND r.DESCR_REFERENCIA NOT LIKE '-%'
           {filtra_com_op} -- filtra_com_op
           {filtra_com_ped} -- filtra_com_ped
