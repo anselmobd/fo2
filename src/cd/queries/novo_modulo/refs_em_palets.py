@@ -3,13 +3,14 @@ from pprint import pprint
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
-from cd.queries.novo_modulo import refs_de_modelo
 from lotes.functions.varias import (
     lote_de_periodo_oc,
     modelo_de_ref,
     periodo_oc,
 )
 from lotes.functions.varias import modelo_de_ref
+
+from cd.queries.novo_modulo.gerais import *
 
 __all__ = ['query']
 
@@ -99,61 +100,6 @@ fields_tuple = {
         'qtd_fin',
     ),
 }
-
-def get_refs(
-    cursor,
-    ref=None,
-    modelo=None,
-    com_op=None,
-    com_ped=None,
-):
-    refs_modelo = set()
-    if modelo:
-        refs_modelo = refs_de_modelo.to_set(
-            cursor,
-            modelo,
-            com_op=com_op,
-            com_ped=com_ped,
-        )
-
-    refs_ref = set()
-    if ref:
-        if isinstance(ref, (tuple, list)):
-            refs_ref = set(ref)
-        else:
-            refs_ref = {ref, }
-
-    if modelo and ref:
-        refs = refs_ref & refs_modelo
-    else:
-        refs = refs_ref | refs_modelo
-    return list(refs)
-
-
-def get_filtra_ref(
-    cursor,
-    field,
-    ref=None,
-    modelo=None,
-    com_op=None,
-    com_ped=None,
-):
-    refs_list = get_refs(
-        cursor,
-        ref=ref,
-        modelo=modelo,
-        com_op=com_op,
-        com_ped=com_ped,
-    )
-
-    if refs_list:
-        ref_virgulas = ', '.join([f"'{r}'" for r in refs_list])
-        filtra_ref = f"""--
-            AND {field} in ({ref_virgulas})
-        """
-    else:
-        filtra_ref = 'AND 1=2' if modelo or ref else ''
-    return filtra_ref
 
 
 def query(
