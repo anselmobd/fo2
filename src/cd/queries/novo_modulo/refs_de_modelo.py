@@ -6,8 +6,8 @@ from utils.functions.queries import debug_cursor_execute
 from lotes.functions.varias import modelo_de_ref
 
 
-def to_set(cursor, modelo):
-    data = query(cursor, modelo)
+def to_set(cursor, modelo, com_op=True):
+    data = query(cursor, modelo, com_op)
     return set([
         row['ref']
         for row in data
