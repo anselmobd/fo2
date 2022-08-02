@@ -105,10 +105,16 @@ def get_refs(
     ref=None,
     modelo=None,
     com_op=None,
+    com_ped=None,
 ):
     refs_modelo = set()
     if modelo:
-        refs_modelo = refs_de_modelo.to_set(cursor, modelo, com_op=com_op)
+        refs_modelo = refs_de_modelo.to_set(
+            cursor,
+            modelo,
+            com_op=com_op,
+            com_ped=com_ped,
+        )
 
     refs_ref = set()
     if ref:
@@ -130,12 +136,14 @@ def get_filtra_ref(
     ref=None,
     modelo=None,
     com_op=None,
+    com_ped=None,
 ):
     refs_list = get_refs(
         cursor,
         ref=ref,
         modelo=modelo,
         com_op=com_op,
+        com_ped=com_ped,
     )
 
     if refs_list:
