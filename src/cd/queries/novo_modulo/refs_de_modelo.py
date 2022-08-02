@@ -35,7 +35,7 @@ def query(cursor, modelo, com_op=True, com_ped=False):
             AND cped.CODIGO_EMPRESA = 1
             AND cped.COD_CANCELAMENTO = 0
         )
-    """ if com_op else ''
+    """ if com_ped else ''
     sql = f"""
         SELECT 
           r.REFERENCIA REF
