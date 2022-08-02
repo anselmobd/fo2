@@ -7,7 +7,7 @@ from lotes.functions.varias import modelo_de_ref
 
 
 def to_set(cursor, modelo, com_op=None, com_ped=None):
-    data = query(cursor, modelo, com_op)
+    data = query(cursor, modelo, com_op, com_ped)
     return set([
         row['ref']
         for row in data
