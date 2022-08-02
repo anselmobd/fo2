@@ -11,6 +11,8 @@ from utils.functions import (
 from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
 
+from cd.queries.novo_modulo.gerais import *
+
 
 def query(
         cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
@@ -36,22 +38,30 @@ def query(
         cache_ttl(cache, key_cache)
         return cached_result
 
-    filtro_modelo = ''
-    if modelo is not None and modelo != '':
-        filtro_modelo = f'''--
-            AND TRIM(LEADING '0' FROM
-                     (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
-                                     '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-                                     ))) = '{modelo}' '''
+    # filtro_modelo = ''
+    # if modelo is not None and modelo != '':
+    #     filtro_modelo = f'''--
+    #         AND TRIM(LEADING '0' FROM
+    #                  (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
+    #                                  '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+    #                                  ))) = '{modelo}' '''
 
     filtro_colecao = ''
     if colecao is not None:
         filtro_colecao = f'''--
             AND r.COLECAO = {colecao}'''
 
-    filtro_ref = ''
-    if ref is not None and ref != '':
-        filtro_ref = f"AND i.CD_IT_PE_GRUPO = '{ref}'"
+    # filtro_ref = ''
+    # if ref is not None and ref != '':
+    #     filtro_ref = f"AND i.CD_IT_PE_GRUPO = '{ref}'"
+
+    filtro_ref = get_filtra_ref(
+        cursor,
+        field="i.CD_IT_PE_GRUPO",
+        ref=ref,
+        modelo=modelo,
+        com_ped=True,
+    )
 
     filtro_tam = ''
     if tam is not None and tam != '':
@@ -226,7 +236,7 @@ def query(
                AND r.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99 
               WHERE 1=1
                 {filtro_colecao} -- filtro_colecao
-                {filtro_modelo} -- filtro_modelo
+                -- filtro_modelo -- filtro_modelo
                 {filtro_ref} -- filtro_ref
                 {filtro_tam} -- filtro_tam
                 {filtro_cor} -- filtro_cor
