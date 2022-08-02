@@ -15,17 +15,8 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if modelo %}
-  <h4>Modelo: {{ modelo }}</h4>
-{% endif %}
-{% if colecao %}
-  <h4>Coleção: {{ colecao }}</h4>
-{% endif %}
-{% if tam %}
-  <h4>Tamanho: {{ tam }}</h4>
-{% endif %}
-{% if cor %}
-  <h4>Cor: {{ cor }}</h4>
+{% if request.POST %}
+  {% include "layout/form_inputs_report.html" with form=form h=4 only %}
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
