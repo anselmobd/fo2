@@ -53,7 +53,7 @@ class Form(forms.Form):
     def clean(self):
         if self.errors:
             return
-        clean_form = super(PedidoFaturavelModeloForm, self).clean()
+        clean_form = super(Form, self).clean()
         if not any(
             clean_form.get(x, '')
             for x in (
