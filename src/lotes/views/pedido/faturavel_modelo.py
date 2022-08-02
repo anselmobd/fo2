@@ -17,7 +17,7 @@ from lotes.queries.pedido import faturavel_modelo as queries_faturavel_modelo
 from lotes.forms.pedido import faturavel_modelo as forms_faturavel_modelo
 
 
-class PedidoFaturavelModelo(View):
+class FaturavelModelo(View):
     Form_class = forms_faturavel_modelo.Form
     template_name = 'lotes/pedido/faturavel_modelo.html'
     title_name = 'Pedido faturável por modelo'
