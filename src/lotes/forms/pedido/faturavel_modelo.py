@@ -34,7 +34,11 @@ class Form(forms.Form):
                ('n', 'Não'),
                ]
     considera_pacote = forms.ChoiceField(
-        label='Considera pedidos de pacote', choices=CHOICES, initial='n')
+        label='Considera pedidos de pacote',
+        choices=CHOICES,
+        initial='n',
+        help_text='(quando filtrado por modelo)',
+    )
 
     def clean_tam(self):
         tam = self.cleaned_data['tam'].upper()
