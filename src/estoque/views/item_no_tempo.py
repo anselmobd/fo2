@@ -238,7 +238,7 @@ class ItemNoTempo(View):
             'dados': dados,
             })
 
-        p_dados = faturavel_modelo.pedido_faturavel_modelo(
+        p_dados = faturavel_modelo.query(
             self.cursor, cached=False,
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']}

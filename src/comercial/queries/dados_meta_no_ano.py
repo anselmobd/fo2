@@ -57,7 +57,7 @@ def dados_meta_no_ano(cursor, hoje):
         f['mes']: int(round(f['valor']/1000)) for f in devolvidos
     }
 
-    pedidos = faturavel_modelo.pedido_faturavel_modelo(
+    pedidos = faturavel_modelo.query(
         cursor, periodo=f'-{dia_atual}:{dias_mes-dia_atual}', nat_oper=(1, 2))
     total_pedido = 0
     for pedido in pedidos:

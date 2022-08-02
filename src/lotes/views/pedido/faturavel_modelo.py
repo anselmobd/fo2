@@ -62,7 +62,7 @@ class PedidoFaturavelModelo(View):
             busca_periodo = lead + dias_alem_lead
             periodo = dias_alem_lead
 
-        data = faturavel_modelo.pedido_faturavel_modelo(
+        data = faturavel_modelo.query(
             cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
             cached=False, tam=tam, cor=cor, colecao=colecao)
         if len(data) == 0:
@@ -142,7 +142,7 @@ class PedidoFaturavelModelo(View):
         })
 
         if lead != 0:
-            data_pos = faturavel_modelo.pedido_faturavel_modelo(
+            data_pos = faturavel_modelo.query(
                 cursor, modelo=modelo, periodo='{}:'.format(busca_periodo),
                 cached=False, colecao=colecao)
             if len(data_pos) != 0:

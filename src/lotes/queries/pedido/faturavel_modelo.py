@@ -12,7 +12,7 @@ from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
-def pedido_faturavel_modelo(
+def query(
         cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
         cached=True, deposito=None, empresa=1, nat_oper=None, group="dpnr",
         colecao=None, desconto_duplicata=False):

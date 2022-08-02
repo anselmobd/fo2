@@ -33,7 +33,7 @@ class PedidosParaMeta(O2BaseGetView):
             'nat_oper': nat_oper,
         })
 
-        pedidos = faturavel_modelo.pedido_faturavel_modelo(
+        pedidos = faturavel_modelo.query(
             cursor, periodo=f'-{dia_atual}:{dias_mes-dia_atual}',
             nat_oper=nat_oper, group='p')
 
