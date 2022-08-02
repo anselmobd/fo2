@@ -105,7 +105,8 @@ def pedido_faturavel_modelo(
               FROM pcpc_044 sl -- solicitação / lote 
               WHERE sl.PEDIDO_DESTINO = pref.PEDIDO
                 AND sl.ORDEM_CONFECCAO <> 0 
-                AND sl.GRUPO_DESTINO <> '0'
+                -- AND sl.GRUPO_DESTINO <> '0'
+                AND sl.GRUPO_DESTINO = pref.REF
                 AND sl.SITUACAO <> 0
             )
           , 0 
@@ -116,7 +117,8 @@ def pedido_faturavel_modelo(
               FROM pcpc_044 sl -- solicitação / lote 
               WHERE sl.PEDIDO_DESTINO = pref.PEDIDO
                 AND sl.ORDEM_CONFECCAO <> 0 
-                AND sl.GRUPO_DESTINO <> '0'
+                -- AND sl.GRUPO_DESTINO <> '0'
+                AND sl.GRUPO_DESTINO = pref.REF
                 AND sl.SITUACAO <> 0
             )
           , 0 
