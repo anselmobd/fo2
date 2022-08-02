@@ -124,6 +124,29 @@ def get_refs(
     return list(refs)
 
 
+def get_filtra_ref(
+    cursor,
+    ref=None,
+    modelo=None,
+    com_op=None,
+):
+    refs_list = get_refs(
+        cursor,
+        ref=ref,
+        modelo=modelo,
+        com_op=com_op,
+    )
+
+    if refs_list:
+        ref_virgulas = ', '.join([f"'{r}'" for r in refs_list])
+        filtra_ref = f"""--
+            AND l.PROCONF_GRUPO in ({ref_virgulas})
+        """
+    else:
+        filtra_ref = 'AND 1=2' if modelo or ref else ''
+    return filtra_ref
+
+
 def query(
     cursor,
     fields='ref',
@@ -212,20 +235,12 @@ def query(
     """
     joins = set()
 
-    refs_list = get_refs(
+    filtra_ref = get_filtra_ref(
         cursor,
         ref=ref,
         modelo=modelo,
         com_op=True,
     )
-
-    if refs_list:
-        ref_virgulas = ', '.join([f"'{r}'" for r in refs_list])
-        filtra_ref = f"""--
-            AND l.PROCONF_GRUPO in ({ref_virgulas})
-        """
-    else:
-        filtra_ref = 'AND 1=2' if modelo or ref else ''
 
     filtra_cor = f"""--
         AND l.PROCONF_ITEM = '{cor}'
