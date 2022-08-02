@@ -13,13 +13,12 @@ from utils.views import group_rowspan, totalize_grouped_data
 import produto.queries
 
 import lotes.models
-from lotes.queries.pedido import faturavel_modelo
-
-from lotes.forms.pedido import faturavel_modelo
+from lotes.queries.pedido import faturavel_modelo as queries_faturavel_modelo
+from lotes.forms.pedido import faturavel_modelo as forms_faturavel_modelo
 
 
 class PedidoFaturavelModelo(View):
-    Form_class = faturavel_modelo.Form
+    Form_class = forms_faturavel_modelo.Form
     template_name = 'lotes/pedido/faturavel_modelo.html'
     title_name = 'Pedido faturável por modelo'
 
@@ -62,7 +61,7 @@ class PedidoFaturavelModelo(View):
             busca_periodo = lead + dias_alem_lead
             periodo = dias_alem_lead
 
-        data = faturavel_modelo.query(
+        data = queries_faturavel_modelo.query(
             cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
             cached=False, tam=tam, cor=cor, colecao=colecao)
         if len(data) == 0:
