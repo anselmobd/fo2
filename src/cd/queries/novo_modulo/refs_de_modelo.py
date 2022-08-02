@@ -6,14 +6,14 @@ from utils.functions.queries import debug_cursor_execute
 from lotes.functions.varias import modelo_de_ref
 
 
-def to_set(cursor, modelo, com_op=True):
+def to_set(cursor, modelo, com_op=None, com_ped=None):
     data = query(cursor, modelo, com_op)
     return set([
         row['ref']
         for row in data
     ])
 
-def query(cursor, modelo, com_op=True):
+def query(cursor, modelo, com_op=True, com_ped=False):
     filtra_com_op = f"""--
         AND EXISTS (
           SELECT 
@@ -23,6 +23,19 @@ def query(cursor, modelo, com_op=True):
             AND op.COD_CANCELAMENTO = 0
         )
     """ if com_op else ''
+    filtra_com_ped = f"""--
+        AND EXISTS (
+          SELECT 
+            1
+          FROM PEDI_110 iped -- item de pedido de venda
+          JOIN PEDI_100 cped -- capa de pedido de venda
+            ON iped.PEDIDO_VENDA = cped.PEDIDO_VENDA
+          WHERE iped.CD_IT_PE_GRUPO = r.REFERENCIA 
+            AND iped.CD_IT_PE_NIVEL99 = 1
+            AND cped.CODIGO_EMPRESA = 1
+            AND cped.COD_CANCELAMENTO = 0
+        )
+    """ if com_op else ''
     sql = f"""
         SELECT 
           r.REFERENCIA REF
@@ -30,6 +43,7 @@ def query(cursor, modelo, com_op=True):
         WHERE r.NIVEL_ESTRUTURA = 1
           AND r.DESCR_REFERENCIA NOT LIKE '-%'
           {filtra_com_op} -- filtra_com_op
+          {filtra_com_ped} -- filtra_com_ped
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
