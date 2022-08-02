@@ -126,6 +126,7 @@ def get_refs(
 
 def get_filtra_ref(
     cursor,
+    field,
     ref=None,
     modelo=None,
     com_op=None,
@@ -140,7 +141,7 @@ def get_filtra_ref(
     if refs_list:
         ref_virgulas = ', '.join([f"'{r}'" for r in refs_list])
         filtra_ref = f"""--
-            AND l.PROCONF_GRUPO in ({ref_virgulas})
+            AND {field} in ({ref_virgulas})
         """
     else:
         filtra_ref = 'AND 1=2' if modelo or ref else ''
@@ -237,6 +238,7 @@ def query(
 
     filtra_ref = get_filtra_ref(
         cursor,
+        field="l.PROCONF_GRUPO",
         ref=ref,
         modelo=modelo,
         com_op=True,
