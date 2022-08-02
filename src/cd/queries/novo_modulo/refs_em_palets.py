@@ -100,6 +100,30 @@ fields_tuple = {
     ),
 }
 
+def get_refs(
+    cursor,
+    ref=None,
+    modelo=None,
+    com_op=None,
+):
+    refs_modelo = set()
+    if modelo:
+        refs_modelo = refs_de_modelo.to_set(cursor, modelo, com_op=com_op)
+
+    refs_ref = set()
+    if ref:
+        if isinstance(ref, (tuple, list)):
+            refs_ref = set(ref)
+        else:
+            refs_ref = {ref, }
+
+    if modelo and ref:
+        refs = refs_ref & refs_modelo
+    else:
+        refs = refs_ref | refs_modelo
+    return list(refs)
+
+
 def query(
     cursor,
     fields='ref',
@@ -188,24 +212,15 @@ def query(
     """
     joins = set()
 
-    refs_modelo = set()
-    if modelo:
-        refs_modelo = refs_de_modelo.to_set(cursor, modelo, com_op=True)
+    refs_list = get_refs(
+        cursor,
+        ref=ref,
+        modelo=modelo,
+        com_op=True,
+    )
 
-    refs_ref = set()
-    if ref:
-        if isinstance(ref, (tuple, list)):
-            refs_ref = set(ref)
-        else:
-            refs_ref = {ref, }
-
-    if modelo and ref:
-        refs = refs_ref & refs_modelo
-    else:
-        refs = refs_ref | refs_modelo
-   
-    if refs:
-        ref_virgulas = ', '.join([f"'{r}'" for r in list(refs)])
+    if refs_list:
+        ref_virgulas = ', '.join([f"'{r}'" for r in refs_list])
         filtra_ref = f"""--
             AND l.PROCONF_GRUPO in ({ref_virgulas})
         """
