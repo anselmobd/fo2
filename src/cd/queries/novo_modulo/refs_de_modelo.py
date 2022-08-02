@@ -13,7 +13,7 @@ def to_set(cursor, modelo, com_op=None, com_ped=None):
         for row in data
     ])
 
-def query(cursor, modelo, com_op=True, com_ped=False):
+def query(cursor, modelo, com_op=False, com_ped=False):
     filtra_com_op = f"""--
         AND EXISTS (
           SELECT 

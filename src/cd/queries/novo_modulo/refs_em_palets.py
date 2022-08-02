@@ -190,7 +190,7 @@ def query(
 
     refs_modelo = set()
     if modelo:
-        refs_modelo = refs_de_modelo.to_set(cursor, modelo)
+        refs_modelo = refs_de_modelo.to_set(cursor, modelo, com_op=True)
 
     refs_ref = set()
     if ref:

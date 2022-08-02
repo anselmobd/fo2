@@ -43,7 +43,7 @@ class NovoEstoqueFicticio(O2BaseGetPostView):
 
     def get_lotes_em_estoque(self):
         referencias = tuple(
-            refs_de_modelo.to_set(self.cursor, self.modelo)
+            refs_de_modelo.to_set(self.cursor, self.modelo, com_op=True)
             if self.modelo
             else set()
         )
