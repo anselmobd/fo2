@@ -146,7 +146,7 @@ class FaturavelModelo(View):
         })
 
         if lead != 0:
-            data_pos = faturavel_modelo.query(
+            data_pos = queries_faturavel_modelo.query(
                 cursor, modelo=modelo, periodo='{}:'.format(busca_periodo),
                 cached=False, colecao=colecao)
             if len(data_pos) != 0:
