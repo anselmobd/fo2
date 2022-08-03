@@ -1,5 +1,7 @@
 from pprint import pprint
 
+import comercial.models
+
 from cd.queries.novo_modulo import refs_de_modelo
 
 __all__ = ['get_refs', 'get_filtra_ref']
@@ -11,6 +13,7 @@ def get_refs(
     modelo=None,
     com_op=None,
     com_ped=None,
+    com_pac=False,
 ):
     refs_modelo = set()
     if modelo:
@@ -20,6 +23,18 @@ def get_refs(
             com_op=com_op,
             com_ped=com_ped,
         )
+
+        if com_pac:
+            refs_pac_data = comercial.models.MetaModeloReferencia.objects.filter(
+                modelo=modelo,
+                incl_excl='i',
+            ).values('referencia')
+            if refs_pac_data:
+                refs_pac = set(
+                    row['referencia']
+                    for row in refs_pac_data
+                )
+                refs_modelo = refs_modelo & refs_pac
 
     refs_ref = set()
     if ref:
@@ -42,6 +57,7 @@ def get_filtra_ref(
     modelo=None,
     com_op=None,
     com_ped=None,
+    com_pac=None,
 ):
     refs_list = get_refs(
         cursor,
@@ -49,6 +65,7 @@ def get_filtra_ref(
         modelo=modelo,
         com_op=com_op,
         com_ped=com_ped,
+        com_pac=com_pac,
     )
 
     if refs_list:
