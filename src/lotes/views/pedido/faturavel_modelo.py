@@ -11,6 +11,7 @@ from utils.views import totalize_data
 from utils.views import group_rowspan, totalize_grouped_data
 
 import produto.queries
+import comercial.models
 
 import lotes.models
 from lotes.queries.pedido import faturavel_modelo as queries_faturavel_modelo
@@ -75,6 +76,18 @@ class FaturavelModelo(View):
             })
             return context
 
+        pac_quant = {}
+        if com_pac:
+            pac_quant_data = comercial.models.MetaModeloReferencia.objects.filter(
+                modelo=modelo,
+                incl_excl='i',
+            ).values('referencia', 'quantidade')
+            if pac_quant_data:
+                pac_quant = {
+                    row['referencia']: row['quantidade']
+                    for row in pac_quant_data
+                }
+
         tot_qtd_fat = 0
         for row in data:
             row['PEDIDO|TARGET'] = '_blank'
@@ -93,15 +106,20 @@ class FaturavelModelo(View):
                     row['EMP_SIT'] = row['EMP_SIT_MIN']
                 else:
                     row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
+            if row['REF'] in pac_quant:
+                row['PAC'] = pac_quant[row['REF']]
+            else:
+                row['PAC'] = 1
+            row['QTD_PAC'] = row['QTD_AFAT'] * row['PAC']
 
         group = ['EMP_SIT']
         totalize_grouped_data(data, {
             'group': group,
-            'sum': ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL'],
+            'sum': ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL', 'QTD_PAC'],
             'count': [],
             'descr': {'PEDIDO': 'Total:'},
             'flags': ['NO_TOT_1'],
-            'global_sum': ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL'],
+            'global_sum': ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL', 'QTD_PAC'],
             'global_descr': {'EMP_SIT': 'Total geral:'},
             'row_style': 'font-weight: bold;',
         })
@@ -113,27 +131,33 @@ class FaturavelModelo(View):
 
         if tot_qtd_fat == 0:
             headers = ['Sit. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
-                       'Referência', 'Quant. Emp', 'Quant. Sol.', 'Quant. pedida', 'Faturamento']
+                       'Referência', 'Quant. Emp', 'Quant. Sol.', 'Quant. pedida',
+                       'Pacote' ,'Quant. pacote', 'Faturamento']
             fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
-                      'REF', 'QTD_EMP', 'QTD_SOL', 'QTD_AFAT', 'FAT']
-            style = {
-                6: 'text-align: right;',
-                7: 'text-align: right;',
-                8: 'text-align: right;',
-            }
-        else:
-            headers = ['Sit. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
-                       'Referência', 'Quant. Emp', 'Quant. Sol.', 'Quant. pedida', 'Quant. faturada',
-                       'Quant. a faturar', 'Faturamento']
-            fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
-                      'REF', 'QTD_EMP', 'QTD_SOL', 'QTD', 'QTD_FAT',
-                      'QTD_AFAT', 'FAT']
+                      'REF', 'QTD_EMP', 'QTD_SOL', 'QTD_AFAT',
+                      'PAC', 'QTD_PAC', 'FAT']
             style = {
                 6: 'text-align: right;',
                 7: 'text-align: right;',
                 8: 'text-align: right;',
                 9: 'text-align: right;',
                 10: 'text-align: right;',
+            }
+        else:
+            headers = ['Sit. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
+                       'Referência', 'Quant. Emp', 'Quant. Sol.', 'Quant. pedida', 'Quant. faturada',
+                       'Quant. a faturar', 'Pacote' ,'Quant. pacote', 'Faturamento']
+            fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
+                      'REF', 'QTD_EMP', 'QTD_SOL', 'QTD', 'QTD_FAT',
+                      'QTD_AFAT', 'PAC', 'QTD_PAC', 'FAT']
+            style = {
+                6: 'text-align: right;',
+                7: 'text-align: right;',
+                8: 'text-align: right;',
+                9: 'text-align: right;',
+                10: 'text-align: right;',
+                11: 'text-align: right;',
+                12: 'text-align: right;',
             }
 
         context.update({
