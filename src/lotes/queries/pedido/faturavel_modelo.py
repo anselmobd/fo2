@@ -17,7 +17,7 @@ from cd.queries.novo_modulo.gerais import *
 def query(
         cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
         cached=True, deposito=None, empresa=1, nat_oper=None, group="dpnr",
-        colecao=None, desconto_duplicata=False):
+        colecao=None, desconto_duplicata=False, com_pac=False):
     """Devolve dados de pedidos faturáveis
 
     Recebe:
@@ -61,6 +61,7 @@ def query(
         ref=ref,
         modelo=modelo,
         com_ped=True,
+        com_pac=com_pac,
     )
 
     filtro_tam = ''

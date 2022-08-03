@@ -64,9 +64,11 @@ class FaturavelModelo(View):
             busca_periodo = lead + dias_alem_lead
             periodo = dias_alem_lead
 
+        com_pac = considera_pacote == 's'
+
         data = queries_faturavel_modelo.query(
             cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
-            cached=False, tam=tam, cor=cor, colecao=colecao)
+            cached=False, tam=tam, cor=cor, colecao=colecao, com_pac=com_pac)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedidos não encontrados',
