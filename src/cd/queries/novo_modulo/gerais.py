@@ -34,7 +34,7 @@ def get_refs(
                     row['referencia']
                     for row in refs_pac_data
                 )
-                refs_modelo = refs_modelo & refs_pac
+                refs_modelo = refs_modelo | refs_pac
 
     refs_ref = set()
     if ref:
