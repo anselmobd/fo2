@@ -55,6 +55,7 @@ class MetaModeloReferencia(models.Model):
     modelo = models.CharField(
         max_length=5,
     )
+    quantidade = models.IntegerField()
     referencia = models.CharField(
         max_length=5,
         verbose_name='Referência',
@@ -66,7 +67,7 @@ class MetaModeloReferencia(models.Model):
 
     def __str__(self):
         incl_excl = "Inclui" if self.incl_excl == 'i' else "Exclui"
-        return f'{self.modelo} - {incl_excl} {self.referencia}'
+        return f'{incl_excl} {self.referencia} = {self.modelo} x {self.quantidade}'
 
     class Meta:
         db_table = "fo2_meta_mod_ref"
