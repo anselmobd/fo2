@@ -34,7 +34,7 @@ class Form(forms.Form):
                ('n', 'Não'),
                ]
     considera_pacote = forms.ChoiceField(
-        label='Considera pedidos de pacote',
+        label='Considera pacote do modelo',
         choices=CHOICES,
         initial='n',
         help_text='(quando filtrado por modelo)',
