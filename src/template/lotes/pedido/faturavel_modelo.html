@@ -30,13 +30,13 @@
     <h4>Data de embarque até: Hoje + lead + {{ periodo }}</h4>
   {% endif %}
   <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
   </table>
   {% if data_pos %}
     <h4>Data de embarque após: Hoje + lead + {{ periodo }}</h4>
     <table>
-      {% include "layout/thead_generic.html" with data=headers_pos style=style_pos only %}
+      {% include "layout/thead_generic.html" with data=headers_pos style=style_pos thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields_pos data=data_pos style=style_pos only %}
     </table>
   {% endif %}
