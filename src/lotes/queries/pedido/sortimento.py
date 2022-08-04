@@ -2,6 +2,8 @@ from utils.functions.models.grade_qtd import GradeQtd
 
 from utils.functions import arg_def
 
+from cd.queries.novo_modulo.gerais import *
+
 
 def sortimento(cursor, **kwargs):
     def argdef(arg, default):
@@ -35,13 +37,20 @@ def sortimento(cursor, **kwargs):
         sort_name = 'Cor'
         sort_name_plural = 'Cores'
 
-    filtro_modelo = ''
-    if modelo is not None:
-        filtro_modelo = f"""--
-            AND TRIM(LEADING '0' FROM
-                     (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
-                                     '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-                                     ))) = '{modelo}' """
+    # filtro_modelo = ''
+    # if modelo is not None:
+    #     filtro_modelo = f"""--
+    #         AND TRIM(LEADING '0' FROM
+    #                  (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
+    #                                  '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+    #                                  ))) = '{modelo}' """
+
+    filtro_modelo = get_filtra_ref(
+        cursor,
+        field="i.CD_IT_PE_GRUPO",
+        modelo=modelo,
+        com_ped=True,
+    )
 
     filtra_periodo = ''
     if periodo is not None:
