@@ -12,6 +12,7 @@ def sortimento(cursor, **kwargs):
     pedido = argdef('pedido', None)
     tipo_sort = argdef('tipo_sort', 'rc')
     descr_sort = argdef('descr_sort', True)
+    ref = argdef('ref', None)
     modelo = argdef('modelo', None)
     periodo = argdef('periodo', None)
     cancelado = argdef('cancelado', 't')  # default todos os pedidos
@@ -48,6 +49,7 @@ def sortimento(cursor, **kwargs):
     filtro_modelo = get_filtra_ref(
         cursor,
         field="i.CD_IT_PE_GRUPO",
+        ref=ref,
         modelo=modelo,
         com_ped=True,
     )
