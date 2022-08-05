@@ -4,7 +4,7 @@ from django import forms
 
 from base.forms.custom import O2BaseForm
 from base.forms.fields import \
-    O2FieldNivelForm, \
+    O2FieldNivelReqForm, \
     O2FieldRefForm, \
     O2FieldTamanhoForm, \
     O2FieldCorForm, \
@@ -184,7 +184,7 @@ class ReferenciaNoneForm(
 
 class CustoDetalhadoForm(
         O2BaseForm,
-        O2FieldNivelForm,
+        O2FieldNivelReqForm,
         O2FieldRefForm,
         O2FieldTamanhoForm,
         O2FieldCorForm):
