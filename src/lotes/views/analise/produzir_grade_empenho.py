@@ -127,16 +127,16 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
             }
             gzerada = og.update_gzerada(gzerada, gopa)
 
-        empenhado = refs_em_palets.query(
+        inventario = refs_em_palets.query(
             cursor,
             fields='all',
             modelo=modelo,
-            selecao_lotes='qq',
+            selecao_lotes='63',
             paletizado='s',
         )
 
         grade_inventario = dictlist_to_grade_qtd(
-            empenhado,
+            inventario,
             field_linha='cor',
             field_coluna='tam',
             facade_coluna='Tamanho',
@@ -154,6 +154,14 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
                 'style': grade_inventario['style'],
             }
             gzerada = og.update_gzerada(gzerada, ginv)
+
+        empenhado = refs_em_palets.query(
+            cursor,
+            fields='all',
+            modelo=modelo,
+            selecao_lotes='qq',
+            paletizado='t',
+        )
 
         for row in empenhado:
             row['qtd'] = row['qtd_emp'] + row['qtd_sol']
