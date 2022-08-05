@@ -13,6 +13,13 @@ class O2FieldNivelForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number', 'size': 1}))
 
 
+class O2FieldNivelReqForm(forms.Form):
+    nivel = forms.IntegerField(
+        label='Nível', min_value=1, max_value=9,
+        required=True,
+        widget=forms.TextInput(attrs={'type': 'number', 'size': 1}))
+
+
 class O2FieldModeloForm(forms.Form):
     modelo = forms.IntegerField(
         min_value=1, max_value=99999,
