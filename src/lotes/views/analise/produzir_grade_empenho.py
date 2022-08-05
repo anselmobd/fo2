@@ -17,6 +17,7 @@ import comercial.models
 import produto.models
 import produto.queries
 from cd.queries.novo_modulo import refs_em_palets
+from comercial.models.functions.meta_referencia import meta_ref_incluir
 from comercial.views.estoque import grade_meta_estoque
 
 import lotes.models
@@ -203,6 +204,65 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
                 'style': gp_style,
             }
             gzerada = og.update_gzerada(gzerada, gped)
+
+        refs_adicionadas = meta_ref_incluir(cursor, modelo)
+        # pprint(gped)
+        # pprint(refs_adicionadas)
+
+        for row_ref in refs_adicionadas:
+            # print(row_ref['referencia'])
+            gadd = None
+            if row_ref['ok']:
+
+                ga_header, ga_fields, ga_data, ga_style, total_add = \
+                    lotes.queries.pedido.sortimento(
+                        cursor, tipo_sort='c', descr_sort=False, ref=row_ref['referencia'],
+                        cancelado='n', faturavel='f', total='Total', solicitado='n',
+                        pedido_liberado='s',
+                        periodo=':{}'.format(periodo))
+
+                if total_add != 0:
+                    gadd = {
+                        'headers': ga_header,
+                        'fields': ga_fields,
+                        'data': ga_data,
+                        'style': ga_style,
+                    }
+
+            if gadd:
+                # pprint(gadd)
+                gpac = copy.deepcopy(gzerada)
+                # pprint(gpac)
+                gadd_sortimento_field = gadd['fields'][0]
+                gadd_total_field = gadd['fields'][-1]
+                gpac_sortimento_field = gpac['fields'][0]
+                for ga_row in gadd['data']:
+                    if (
+                        ga_row[gadd_total_field] > 0 and
+                        ga_row[gadd_sortimento_field] != 'Total'
+                    ):
+                        cor0 = ga_row[gadd_sortimento_field].lstrip("0")
+                        ga_row_quants = {
+                            key: ga_row[key]
+                            for key in ga_row
+                            if key not in (gadd_sortimento_field, gadd_total_field)
+                        }
+                        ga_row_comb = row_ref['cores_dict'][cor0]
+                        for ga_row_comb_cor0 in ga_row_comb:
+                            ga_row_comb_cor = ga_row_comb_cor0.zfill(6)
+                            gpac_row = [
+                                row
+                                for row in gpac['data']
+                                if row[gpac_sortimento_field] == ga_row_comb_cor
+                            ][0]
+                            for ga_row_comb_tam in ga_row_quants:
+                                gpac_row[ga_row_comb_tam] += (
+                                    ga_row_quants[ga_row_comb_tam] *
+                                    ga_row_comb[ga_row_comb_cor0]
+                                )
+                # pprint(gpac)
+                gped = og.soma_grades(gped, gpac)
+                # pprint(gped)
 
         # Utiliza grade zerada para igualar cores e tamanhos das grades base
         # dos cálculos
