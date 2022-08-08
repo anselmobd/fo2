@@ -91,9 +91,6 @@ class FaturavelModelo(View):
             cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
             cached=False, tam=tam, cor=cor, colecao=colecao, com_pac=com_pac)
         if len(data) == 0:
-            context.update({
-                'msg_erro': 'Pedidos não encontrados',
-            })
             return context
 
         pac_quant = {}

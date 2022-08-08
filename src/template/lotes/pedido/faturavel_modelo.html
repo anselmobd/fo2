@@ -4,39 +4,38 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'producao:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
-<style>
-{% include 'layout/simple_table.css' %}
-</style>
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'producao:faturavel_modelo' %}" method="post">
+  <form action="{% url 'producao:faturavel_modelo' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
-</form>
-{% if request.POST %}
-  {% include "layout/form_inputs_report.html" with form=form h=4 only %}
-{% endif %}
-{% if msg_erro %}
-  <h3>{{ msg_erro }}</h3>
-{% endif %}
-{% if data %}
-  <h4>Ordenado por situação e data de embarque</h4>
-  {% if considera_lead == 's' %}
-    <h4>Lead do modelo: {{ lead }}</h4>
-    <h4>Data de embarque até: Hoje + lead + {{ dias_alem_lead }}</h4>
+  </form>
+  {% if request.POST %}
+    {% include "layout/form_inputs_report.html" with form=form h=4 only %}
+    <h4>Ordenado por situação e data de embarque</h4>
+    {% if data %}
+      {% if considera_lead == 's' %}
+        <h4>Lead do modelo: {{ lead }}</h4>
+        <h4>Data de embarque até: Hoje + lead + {{ dias_alem_lead }}</h4>
+      {% endif %}
+      <table>
+        {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
+      </table>
+    {% else %}
+      <h3>Pedidos não encontrados</h3>
+    {% endif %}
+    {% if data_pos %}
+      <h4>Data de embarque após: Hoje + lead + {{ dias_alem_lead }}</h4>
+      <table>
+        {% include "layout/thead_generic.html" with data=headers_pos style=style_pos thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=fields_pos data=data_pos style=style_pos only %}
+      </table>
+    {% endif %}
   {% endif %}
-  <table>
-    {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
-  </table>
-  {% if data_pos %}
-    <h4>Data de embarque após: Hoje + lead + {{ dias_alem_lead }}</h4>
-    <table>
-      {% include "layout/thead_generic.html" with data=headers_pos style=style_pos thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=fields_pos data=data_pos style=style_pos only %}
-    </table>
-  {% endif %}
-{% endif %}
 {% endblock %}
