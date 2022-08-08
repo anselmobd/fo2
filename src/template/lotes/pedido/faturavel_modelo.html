@@ -22,19 +22,17 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
-  {% if lead != 0 %}
-    <h4>Lead do modelo: {{ lead }}</h4>
-  {% endif %}
   <h4>Ordenado por situação e data de embarque</h4>
-  {% if periodo %}
-    <h4>Data de embarque até: Hoje + lead + {{ periodo }}</h4>
+  {% if considera_lead == 's' %}
+    <h4>Lead do modelo: {{ lead }}</h4>
+    <h4>Data de embarque até: Hoje + lead + {{ dias_alem_lead }}</h4>
   {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
   </table>
   {% if data_pos %}
-    <h4>Data de embarque após: Hoje + lead + {{ periodo }}</h4>
+    <h4>Data de embarque após: Hoje + lead + {{ dias_alem_lead }}</h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers_pos style=style_pos thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields_pos data=data_pos style=style_pos only %}

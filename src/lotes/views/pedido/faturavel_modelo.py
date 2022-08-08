@@ -78,16 +78,12 @@ class FaturavelModelo(View):
             'lead': lead,
         })
 
-        if considera_lead == 'n':
-            lead = 0
-
-        if lead == 0:
-            busca_periodo = ''
-            periodo = ''
-        else:
+        if considera_lead == 's':
             dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
+            context['dias_alem_lead'] = dias_alem_lead
             busca_periodo = lead + dias_alem_lead
-            periodo = dias_alem_lead
+        else:
+            busca_periodo = ''
 
         com_pac = considera_pacote == 's'
 
@@ -119,10 +115,7 @@ class FaturavelModelo(View):
                 'producao:pedido__get', args=[row['PEDIDO']])
             tot_qtd_fat += row['QTD_FAT']
             row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
-            if row['DATA'] is None:
-                row['DATA'] = ''
-            else:
-                row['DATA'] = row['DATA'].date()
+            row['DATA'] = row['DATA'].date() if row['DATA'] else ''
             if row['EMP_SIT_MIN'] == 0:
                 row['EMP_SIT'] = 'Sem Emp.'
             else:
@@ -159,12 +152,11 @@ class FaturavelModelo(View):
         context.update(self.table_defs.hfs_dict(bitmap=flags_bitmap))
 
         context.update({
-            'periodo': periodo,
             'data': data,
             'group': group,
         })
 
-        if lead != 0:
+        if considera_lead == 's':
             data_pos = queries_faturavel_modelo.query(
                 cursor, modelo=modelo, periodo='{}:'.format(busca_periodo),
                 cached=False, colecao=colecao)
