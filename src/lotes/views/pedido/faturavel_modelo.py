@@ -49,10 +49,11 @@ class FaturavelModelo(O2BaseGetPostView):
 
         self._pac_quant = None
 
-    def get_pac_quant(self, modelo, com_pac):
+    @property
+    def pac_quant(self):
         if self._pac_quant is None:
             pac_quant_data = comercial.models.MetaModeloReferencia.objects.filter(
-                modelo=modelo,
+                modelo=self.modelo,
                 incl_excl='i',
             ).values('referencia', 'quantidade')
             self._pac_quant = {
@@ -78,9 +79,8 @@ class FaturavelModelo(O2BaseGetPostView):
                 else:
                     row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
             if com_pac:
-                pac_quant = self.get_pac_quant(modelo, com_pac)
-                if row['REF'] in pac_quant:
-                    row['PAC'] = pac_quant[row['REF']]
+                if row['REF'] in self.pac_quant:
+                    row['PAC'] = self.pac_quant[row['REF']]
                 else:
                     row['PAC'] = 1
                 row['QTD_PAC'] = row['QTD_AFAT'] * row['PAC']
