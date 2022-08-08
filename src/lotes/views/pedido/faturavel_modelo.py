@@ -1,13 +1,11 @@
 from pprint import pprint
 
-from django.shortcuts import render
 from django.urls import reverse
-from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from base.views import O2BaseGetPostView
 from geral.functions import config_get_value
-from utils.views import totalize_data
 from utils.views import group_rowspan, totalize_grouped_data
 from utils.table_defs import TableDefs
 
@@ -19,13 +17,16 @@ from lotes.queries.pedido import faturavel_modelo as queries_faturavel_modelo
 from lotes.forms.pedido import faturavel_modelo as forms_faturavel_modelo
 
 
-class FaturavelModelo(View):
+class FaturavelModelo(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(FaturavelModelo, self).__init__(*args, **kwargs)
         self.Form_class = forms_faturavel_modelo.Form
         self.template_name = 'lotes/pedido/faturavel_modelo.html'
         self.title_name = 'Pedido faturável por modelo'
+        self.cleaned_data2self = True
+        self.get_args = ['modelo']
+
 
         self.table_defs = TableDefs(
             {
@@ -111,90 +112,51 @@ class FaturavelModelo(View):
         })
         return dados
 
-    def mount_context(
-            self, cursor, modelo, colecao, tam, cor,
-            considera_lead, considera_pacote):
-        context = {
-            'modelo': modelo,
-            'colecao': colecao,
-            'tam': tam,
-            'cor': cor,
-            'considera_lead': considera_lead,
-            'considera_pacote': considera_pacote,
-        }
-        if colecao:
-            colecao = colecao.colecao
+    def mount_context(self):
+        cursor = db_cursor_so(self.request)
+
+        codigo_colecao = self.colecao.colecao if self.colecao else None
         
         lead = 0
-        if modelo:
-            lead = produto.queries.lead_de_modelo(cursor, modelo)
+        if self.modelo:
+            lead = produto.queries.lead_de_modelo(cursor, self.modelo)
 
         lc_lead = 0
-        if colecao:
+        if self.colecao:
             try:
-                lc = lotes.models.RegraColecao.objects.get(colecao=colecao)
+                lc = lotes.models.RegraColecao.objects.get(colecao=codigo_colecao)
                 lc_lead = lc.lead
             except lotes.models.RegraColecao.DoesNotExist:
                 pass
         lead = max(lead, lc_lead)
 
-        context.update({
+        self.context.update({
             'lead': lead,
         })
 
-        if considera_lead == 's':
+        if self.considera_lead == 's':
             dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
-            context['dias_alem_lead'] = dias_alem_lead
+            self.context['dias_alem_lead'] = dias_alem_lead
             busca_periodo = lead + dias_alem_lead
         else:
             busca_periodo = ''
 
-        com_pac = considera_pacote == 's'
+        com_pac = self.considera_pacote == 's'
 
         data = queries_faturavel_modelo.query(
-            cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
-            cached=False, tam=tam, cor=cor, colecao=colecao, com_pac=com_pac)
+            cursor, modelo=self.modelo, periodo=':{}'.format(busca_periodo),
+            cached=False, tam=self.tam, cor=self.cor, colecao=codigo_colecao, com_pac=com_pac)
+        pprint(data)
         if data:
-            context.update({
-                'dados_pre': self.monta_dados(data, modelo, com_pac),
+            self.context.update({
+                'dados_pre': self.monta_dados(data, self.modelo, com_pac),
             })
 
-        if considera_lead == 's':
+        if self.considera_lead == 's':
             data_pos = queries_faturavel_modelo.query(
-                cursor, modelo=modelo, periodo='{}:'.format(busca_periodo),
-                cached=False, colecao=colecao)
+                cursor, modelo=self.modelo, periodo='{}:'.format(busca_periodo),
+                cached=False, colecao=codigo_colecao)
             if data_pos:
-                context.update({
-                    'dados_pos': self.monta_dados(data_pos, modelo, com_pac),
+                self.context.update({
+                    'dados_pos': self.monta_dados(data_pos, self.modelo, com_pac),
                 })
-
-        return context
-
-    def get(self, request, *args, **kwargs):
-        if 'modelo' in kwargs:
-            return self.post(request, *args, **kwargs)
-        else:
-            context = {'titulo': self.title_name}
-            form = self.Form_class()
-            context['form'] = form
-            return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
-        form.data = form.data.copy()
-        if 'modelo' in kwargs:
-            form.data['modelo'] = kwargs['modelo']
-        if form.is_valid():
-            modelo = form.cleaned_data['modelo']
-            colecao = form.cleaned_data['colecao']
-            tam = form.cleaned_data['tam']
-            cor = form.cleaned_data['cor']
-            considera_lead = form.cleaned_data['considera_lead']
-            considera_pacote = form.cleaned_data['considera_pacote']
-            cursor = db_cursor_so(request)
-            context.update(
-                self.mount_context(
-                    cursor, modelo, colecao, tam, cor, considera_lead, considera_pacote))
-        context['form'] = form
-        return render(request, self.template_name, context)

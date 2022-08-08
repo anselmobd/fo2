@@ -18,7 +18,7 @@
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=4 only %}
     <h4>Ordenado por situação e data de embarque</h4>
-    {% if considera_lead == 's' %}
+    {% if form.considera_lead.value == 's' %}
       <h4>Lead do modelo: {{ lead }}</h4>
       <h4>Data de embarque até: Hoje + lead + {{ dias_alem_lead }}</h4>
     {% endif %}
@@ -30,7 +30,7 @@
     {% else %}
       <h3>&nbsp;&nbsp;&nbsp;&nbsp;Pedidos não encontrados</h3>
     {% endif %}
-    {% if considera_lead == 's' %}
+    {% if form.considera_lead.value == 's' %}
       <hr>
       <h4>Data de embarque após: Hoje + lead + {{ dias_alem_lead }}</h4>
       {% if dados_pos.data %}
