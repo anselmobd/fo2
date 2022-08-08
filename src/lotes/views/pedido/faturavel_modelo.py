@@ -163,49 +163,9 @@ class FaturavelModelo(View):
             data_pos = queries_faturavel_modelo.query(
                 cursor, modelo=modelo, periodo='{}:'.format(busca_periodo),
                 cached=False, colecao=colecao)
-            if len(data_pos) != 0:
-                for row in data_pos:
-                    row['PEDIDO|TARGET'] = '_blank'
-                    row['PEDIDO|LINK'] = reverse(
-                        'producao:pedido__get', args=[row['PEDIDO']])
-                    row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
-                    if row['DATA'] is None:
-                        row['DATA'] = ''
-                    else:
-                        row['DATA'] = row['DATA'].date()
-
-                totalize_data(data_pos, {
-                    'sum': ['QTD_AFAT'],
-                    'count': [],
-                    'descr': {'REF': 'Total:'},
-                    'row_style': 'font-weight: bold;',
-                })
-
-                if tot_qtd_fat == 0:
-                    headers_pos = ['Nº do pedido', 'Data de embarque', 'Cliente',
-                            'Referência', 'Quant. pedida', 'Faturamento']
-                    fields_pos = ['PEDIDO', 'DATA', 'CLIENTE',
-                            'REF', 'QTD_AFAT', 'FAT']
-                    style_pos = {
-                        5: 'text-align: right;',
-                    }
-                else:
-                    headers_pos = ['Nº do pedido', 'Data de embarque', 'Cliente',
-                            'Referência', 'Quant. pedida', 'Quant. faturada',
-                            'Quant. a faturar', 'Faturamento']
-                    fields_pos = ['PEDIDO', 'DATA', 'CLIENTE',
-                            'REF', 'QTD', 'QTD_FAT',
-                            'QTD_AFAT', 'FAT']
-                    style_pos = {
-                        5: 'text-align: right;',
-                        6: 'text-align: right;',
-                        7: 'text-align: right;',
-                    }
+            if data_pos:
                 context.update({
-                    'headers_pos': headers_pos,
-                    'fields_pos': fields_pos,
-                    'data_pos': data_pos,
-                    'style_pos': style_pos,
+                    'dados_pos': self.monta_dados(data_pos, modelo, com_pac),
                 })
 
         return context
