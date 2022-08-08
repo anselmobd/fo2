@@ -20,15 +20,10 @@ class Form(forms.Form):
         )
     )
 
-    colecao = forms.ModelChoiceField(
+    colecao = forms.ChoiceField(
         label='Coleção',
         required=False,
-        queryset=Colecao.objects.exclude(
-            colecao=0
-        ).order_by(
-            'colecao'
-        ),
-        empty_label="(Todas)"
+        initial=None,
     )
 
     tam = forms.CharField(
@@ -62,6 +57,22 @@ class Form(forms.Form):
         initial='s',
         help_text='(quando filtrado por modelo)',
     )
+
+    def __init__(self, *args, **kwargs):
+        super(Form, self).__init__(*args, **kwargs)
+        colecoes = Colecao.objects.exclude(
+            colecao=0
+        ).order_by(
+            'colecao'
+        )
+        self.fields['colecao'].choices = [(None, '(Todas)')] + [
+            (
+                colecao.colecao,
+                f"{colecao.colecao}-{colecao.descr_colecao}"
+            )
+            for colecao in colecoes
+        ] if colecoes else []
+        self.fields['colecao'].empty_label="(Todas)"
 
     def clean_tam(self):
         tam = self.cleaned_data['tam'].upper()
