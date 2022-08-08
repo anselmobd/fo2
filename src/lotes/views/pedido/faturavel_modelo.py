@@ -36,39 +36,16 @@ class FaturavelModelo(View):
                 'REF': ["Referência"],
                 'QTD_EMP': ["Qtd. Emp", 'r'],
                 'QTD_SOL': ["Qtd. Sol.", 'r'],
-                'QTD': ["Qtd. pedida", 'r'],
-                'QTD_FAT': ["Qtd. faturada", 'r'],
+                'QTD': ["Qtd. pedida", 'r', 1],
+                'QTD_FAT': ["Qtd. faturada", 'r', 1],
                 'QTD_AFAT': ["Qtd. a faturar", 'r'],
-                'PAC': ["Pacote", 'r'],
-                'QTD_PAC': ["Qtd. pacote", 'r'],
+                'PAC': ["Pacote", 'r', 2],
+                'QTD_PAC': ["Qtd. pacote", 'r', 2],
                 'FAT': ["Faturamento"],
             },
-            ['header', '+style'],
+            ['header', '+style', 'flags_bitmap'],
             style = {'_': 'text-align'},
         )
-        self.fields_ini = [
-            'EMP_SIT',
-            'PEDIDO',
-            'DATA',
-            'CLIENTE',
-            'REF',
-            'QTD_EMP',
-            'QTD_SOL',
-        ]
-        self.fields_fat = [
-            'QTD',
-            'QTD_FAT',
-        ]
-        self.fields_afat = [
-            'QTD_AFAT',
-        ]
-        self.fields_pac = [
-            'PAC',
-            'QTD_PAC',
-        ]
-        self.fields_fim = [
-            'FAT',
-        ]
 
     def mount_context(
             self, cursor, modelo, colecao, tam, cor,
@@ -178,15 +155,8 @@ class FaturavelModelo(View):
         })
         group_rowspan(data, group)
 
-        fields = self.fields_ini
-        if tot_qtd_fat != 0:
-            fields = fields + self.fields_fat
-        fields = fields + self.fields_afat
-        if com_pac:
-            fields = fields + self.fields_pac
-        fields = fields + self.fields_fim
-
-        context.update(self.table_defs.hfs_dict(*fields))
+        flags_bitmap =  (tot_qtd_fat != 0) + (com_pac * 2)
+        context.update(self.table_defs.hfs_dict(bitmap=flags_bitmap))
 
         context.update({
             'periodo': periodo,
