@@ -153,20 +153,26 @@ class FaturavelModelo(View):
                     row['EMP_SIT'] = row['EMP_SIT_MIN']
                 else:
                     row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
-            if row['REF'] in pac_quant:
-                row['PAC'] = pac_quant[row['REF']]
-            else:
-                row['PAC'] = 1
-            row['QTD_PAC'] = row['QTD_AFAT'] * row['PAC']
+            if com_pac:
+                if row['REF'] in pac_quant:
+                    row['PAC'] = pac_quant[row['REF']]
+                else:
+                    row['PAC'] = 1
+                row['QTD_PAC'] = row['QTD_AFAT'] * row['PAC']
+
+        if com_pac:
+            tot_sum_fields = ['QTD_EMP', 'QTD_SOL', 'QTD_PAC']
+        else:
+            tot_sum_fields = ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL']
 
         group = ['EMP_SIT']
         totalize_grouped_data(data, {
             'group': group,
-            'sum': ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL', 'QTD_PAC'],
+            'sum': tot_sum_fields,
             'count': [],
             'descr': {'PEDIDO': 'Total:'},
             'flags': ['NO_TOT_1'],
-            'global_sum': ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL', 'QTD_PAC'],
+            'global_sum': tot_sum_fields,
             'global_descr': {'EMP_SIT': 'Total geral:'},
             'row_style': 'font-weight: bold;',
         })
