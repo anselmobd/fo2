@@ -108,14 +108,15 @@ class TableDefs(object):
         self.style = {}
         self.decimals = {}
         for idx, col in enumerate(cols, 1):
-            if col in self.definition:
-                self.headers.append(
-                    self.definition[col].get('header', '') or col.capitalize())
-                self.fields.append(col)
-                if 'style' in self.definition[col]:
-                    self.style[idx] = self.definition[col]['style']
-                if 'decimals' in self.definition[col]:
-                    self.decimals[idx] = self.definition[col]['decimals']
+            if col not in self.definition:
+                continue
+            self.headers.append(
+                self.definition[col].get('header', '') or col.capitalize())
+            self.fields.append(col)
+            if 'style' in self.definition[col]:
+                self.style[idx] = self.definition[col]['style']
+            if 'decimals' in self.definition[col]:
+                self.decimals[idx] = self.definition[col]['decimals']
 
     def hfs(self, *cols):
         self.defs(*cols)
