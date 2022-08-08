@@ -27,7 +27,6 @@ class FaturavelModelo(O2BaseGetPostView):
         self.cleaned_data2self = True
         self.get_args = ['modelo']
 
-
         self.table_defs = TableDefs(
             {
                 'EMP_SIT': ["Sit. Emp."],
@@ -146,7 +145,6 @@ class FaturavelModelo(O2BaseGetPostView):
         data = queries_faturavel_modelo.query(
             cursor, modelo=self.modelo, periodo=':{}'.format(busca_periodo),
             cached=False, tam=self.tam, cor=self.cor, colecao=codigo_colecao, com_pac=com_pac)
-        pprint(data)
         if data:
             self.context.update({
                 'dados_pre': self.monta_dados(data, self.modelo, com_pac),
