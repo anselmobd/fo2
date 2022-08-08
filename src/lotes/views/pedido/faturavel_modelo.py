@@ -154,7 +154,8 @@ class FaturavelModelo(O2BaseGetPostView):
         if self.considera_lead == 's':
             data_pos = queries_faturavel_modelo.query(
                 cursor, modelo=self.modelo, periodo='{}:'.format(busca_periodo),
-                cached=False, colecao=codigo_colecao)
+                cached=False, tam=self.tam, cor=self.cor,
+                colecao=codigo_colecao, com_pac=self.com_pac)
             if data_pos:
                 self.context.update({
                     'dados_pos': self.monta_dados(data_pos),
