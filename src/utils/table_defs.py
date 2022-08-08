@@ -97,12 +97,26 @@ class TableDefs(object):
             if col != key
         )
 
-    def defs(self, *cols):
+    def bitmap_match(self, col, bitmap):
+        col_bitmap = self.definition[col].get('flags_bitmap', 0)
+        if isinstance(col_bitmap, int) and col_bitmap:
+            return (bitmap & col_bitmap)
+        return True
+
+    def defs(self, *cols, bitmap=None):
         if len(cols) == 0:
             if len(self.cols_list) == 0:
                 cols = self.definition.keys()
             else:
                 cols = self.cols_list
+
+        if isinstance(bitmap, int):
+            cols = [
+                col
+                for col in cols
+                if self.bitmap_match(col, bitmap)
+            ]
+
         self.headers = []
         self.fields = []
         self.style = {}
@@ -118,24 +132,24 @@ class TableDefs(object):
             if 'decimals' in self.definition[col]:
                 self.decimals[idx] = self.definition[col]['decimals']
 
-    def hfs(self, *cols):
-        self.defs(*cols)
+    def hfs(self, *cols, bitmap=None):
+        self.defs(*cols, bitmap=bitmap)
         return self.headers, self.fields, self.style
 
-    def hfs_dict(self, *cols, sufixo=''):
-        self.defs(*cols)
+    def hfs_dict(self, *cols, bitmap=None, sufixo=''):
+        self.defs(*cols, bitmap=bitmap)
         return {
             f'{sufixo}headers': self.headers,
             f'{sufixo}fields': self.fields,
             f'{sufixo}style': self.style,
         }
 
-    def hfsd(self, *cols):
-        self.defs(*cols)
+    def hfsd(self, *cols, bitmap=None):
+        self.defs(*cols, bitmap=bitmap)
         return self.headers, self.fields, self.style, self.decimals
 
-    def hfsd_dict(self, *cols, sufixo=''):
-        self.defs(*cols)
+    def hfsd_dict(self, *cols, bitmap=None, sufixo=''):
+        self.defs(*cols, bitmap=bitmap)
         return {
             f'{sufixo}headers': self.headers,
             f'{sufixo}fields': self.fields,
