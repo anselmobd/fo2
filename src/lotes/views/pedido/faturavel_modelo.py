@@ -61,6 +61,56 @@ class FaturavelModelo(View):
             } if pac_quant_data else {}
         return self._pac_quant
 
+    def monta_dados(self, data, modelo, com_pac):
+        tot_qtd_fat = 0
+        for row in data:
+            row['PEDIDO|TARGET'] = '_blank'
+            row['PEDIDO|LINK'] = reverse(
+                'producao:pedido__get', args=[row['PEDIDO']])
+            tot_qtd_fat += row['QTD_FAT']
+            row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
+            row['DATA'] = row['DATA'].date() if row['DATA'] else ''
+            if row['EMP_SIT_MIN'] == 0:
+                row['EMP_SIT'] = 'Sem Emp.'
+            else:
+                if row['EMP_SIT_MIN'] == row['EMP_SIT_MAX']:
+                    row['EMP_SIT'] = row['EMP_SIT_MIN']
+                else:
+                    row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
+            if com_pac:
+                pac_quant = self.get_pac_quant(modelo, com_pac)
+                if row['REF'] in pac_quant:
+                    row['PAC'] = pac_quant[row['REF']]
+                else:
+                    row['PAC'] = 1
+                row['QTD_PAC'] = row['QTD_AFAT'] * row['PAC']
+
+        if com_pac:
+            tot_sum_fields = ['QTD_EMP', 'QTD_SOL', 'QTD_PAC']
+        else:
+            tot_sum_fields = ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL']
+
+        group = ['EMP_SIT']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': tot_sum_fields,
+            'count': [],
+            'descr': {'PEDIDO': 'Total:'},
+            'flags': ['NO_TOT_1'],
+            'global_sum': tot_sum_fields,
+            'global_descr': {'EMP_SIT': 'Total geral:'},
+            'row_style': 'font-weight: bold;',
+        })
+        group_rowspan(data, group)
+
+        flags_bitmap =  (tot_qtd_fat != 0) + (com_pac * 2)
+        dados = self.table_defs.hfs_dict(bitmap=flags_bitmap)
+        dados.update({
+            'data': data,
+            'group': group,
+        })
+        return dados
+
     def mount_context(
             self, cursor, modelo, colecao, tam, cor,
             considera_lead, considera_pacote):
@@ -104,57 +154,10 @@ class FaturavelModelo(View):
         data = queries_faturavel_modelo.query(
             cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
             cached=False, tam=tam, cor=cor, colecao=colecao, com_pac=com_pac)
-        if len(data) == 0:
-            return context
-
-        tot_qtd_fat = 0
-        for row in data:
-            row['PEDIDO|TARGET'] = '_blank'
-            row['PEDIDO|LINK'] = reverse(
-                'producao:pedido__get', args=[row['PEDIDO']])
-            tot_qtd_fat += row['QTD_FAT']
-            row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
-            row['DATA'] = row['DATA'].date() if row['DATA'] else ''
-            if row['EMP_SIT_MIN'] == 0:
-                row['EMP_SIT'] = 'Sem Emp.'
-            else:
-                if row['EMP_SIT_MIN'] == row['EMP_SIT_MAX']:
-                    row['EMP_SIT'] = row['EMP_SIT_MIN']
-                else:
-                    row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
-            if com_pac:
-                pac_quant = self.get_pac_quant(modelo, com_pac)
-                if row['REF'] in pac_quant:
-                    row['PAC'] = pac_quant[row['REF']]
-                else:
-                    row['PAC'] = 1
-                row['QTD_PAC'] = row['QTD_AFAT'] * row['PAC']
-
-        if com_pac:
-            tot_sum_fields = ['QTD_EMP', 'QTD_SOL', 'QTD_PAC']
-        else:
-            tot_sum_fields = ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL']
-
-        group = ['EMP_SIT']
-        totalize_grouped_data(data, {
-            'group': group,
-            'sum': tot_sum_fields,
-            'count': [],
-            'descr': {'PEDIDO': 'Total:'},
-            'flags': ['NO_TOT_1'],
-            'global_sum': tot_sum_fields,
-            'global_descr': {'EMP_SIT': 'Total geral:'},
-            'row_style': 'font-weight: bold;',
-        })
-        group_rowspan(data, group)
-
-        flags_bitmap =  (tot_qtd_fat != 0) + (com_pac * 2)
-        context.update(self.table_defs.hfs_dict(bitmap=flags_bitmap))
-
-        context.update({
-            'data': data,
-            'group': group,
-        })
+        if data:
+            context.update({
+                'dados_pre': self.monta_dados(data, modelo, com_pac),
+            })
 
         if considera_lead == 's':
             data_pos = queries_faturavel_modelo.query(
