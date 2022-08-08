@@ -9,6 +9,7 @@ from fo2.connections import db_cursor_so
 from geral.functions import config_get_value
 from utils.views import totalize_data
 from utils.views import group_rowspan, totalize_grouped_data
+from utils.table_defs import TableDefs
 
 import produto.queries
 import comercial.models
@@ -19,9 +20,55 @@ from lotes.forms.pedido import faturavel_modelo as forms_faturavel_modelo
 
 
 class FaturavelModelo(View):
-    Form_class = forms_faturavel_modelo.Form
-    template_name = 'lotes/pedido/faturavel_modelo.html'
-    title_name = 'Pedido faturável por modelo'
+
+    def __init__(self, *args, **kwargs):
+        super(FaturavelModelo, self).__init__(*args, **kwargs)
+        self.Form_class = forms_faturavel_modelo.Form
+        self.template_name = 'lotes/pedido/faturavel_modelo.html'
+        self.title_name = 'Pedido faturável por modelo'
+
+        self.table_defs = TableDefs(
+            {
+                'EMP_SIT': ["Sit. Emp."],
+                'PEDIDO': ["Nº pedido"],
+                'DATA': ["Data embarque"],
+                'CLIENTE': ["Cliente"],
+                'REF': ["Referência"],
+                'QTD_EMP': ["Qtd. Emp", 'r'],
+                'QTD_SOL': ["Qtd. Sol.", 'r'],
+                'QTD': ["Qtd. pedida", 'r'],
+                'QTD_FAT': ["Qtd. faturada", 'r'],
+                'QTD_AFAT': ["Qtd. a faturar", 'r'],
+                'PAC': ["Pacote", 'r'],
+                'QTD_PAC': ["Qtd. pacote", 'r'],
+                'FAT': ["Faturamento"],
+            },
+            ['header', '+style'],
+            style = {'_': 'text-align'},
+        )
+        self.fields_ini = [
+            'EMP_SIT',
+            'PEDIDO',
+            'DATA',
+            'CLIENTE',
+            'REF',
+            'QTD_EMP',
+            'QTD_SOL',
+        ]
+        self.fields_fat = [
+            'QTD',
+            'QTD_FAT',
+        ]
+        self.fields_afat = [
+            'QTD_AFAT',
+        ]
+        self.fields_pac = [
+            'PAC',
+            'QTD_PAC',
+        ]
+        self.fields_fim = [
+            'FAT',
+        ]
 
     def mount_context(
             self, cursor, modelo, colecao, tam, cor,
@@ -125,48 +172,20 @@ class FaturavelModelo(View):
         })
         group_rowspan(data, group)
 
-        # totalize_data(data, {
-        #     'sum': ['QTD_AFAT'],
-        #     'descr': {'REF': 'Total:'}})
+        fields = self.fields_ini
+        if tot_qtd_fat != 0:
+            fields = fields + self.fields_fat
+        fields = fields + self.fields_afat
+        if com_pac:
+            fields = fields + self.fields_pac
+        fields = fields + self.fields_fim
 
-        if tot_qtd_fat == 0:
-            headers = ['Sit. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
-                       'Referência', 'Quant. Emp', 'Quant. Sol.', 'Quant. pedida',
-                       'Pacote' ,'Quant. pacote', 'Faturamento']
-            fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
-                      'REF', 'QTD_EMP', 'QTD_SOL', 'QTD_AFAT',
-                      'PAC', 'QTD_PAC', 'FAT']
-            style = {
-                6: 'text-align: right;',
-                7: 'text-align: right;',
-                8: 'text-align: right;',
-                9: 'text-align: right;',
-                10: 'text-align: right;',
-            }
-        else:
-            headers = ['Sit. Emp.', 'Nº do pedido', 'Data de embarque', 'Cliente',
-                       'Referência', 'Quant. Emp', 'Quant. Sol.', 'Quant. pedida', 'Quant. faturada',
-                       'Quant. a faturar', 'Pacote' ,'Quant. pacote', 'Faturamento']
-            fields = ['EMP_SIT', 'PEDIDO', 'DATA', 'CLIENTE',
-                      'REF', 'QTD_EMP', 'QTD_SOL', 'QTD', 'QTD_FAT',
-                      'QTD_AFAT', 'PAC', 'QTD_PAC', 'FAT']
-            style = {
-                6: 'text-align: right;',
-                7: 'text-align: right;',
-                8: 'text-align: right;',
-                9: 'text-align: right;',
-                10: 'text-align: right;',
-                11: 'text-align: right;',
-                12: 'text-align: right;',
-            }
+        context.update(self.table_defs.hfs_dict(*fields))
 
         context.update({
             'periodo': periodo,
-            'headers': headers,
-            'fields': fields,
             'data': data,
             'group': group,
-            'style': style,
         })
 
         if lead != 0:
