@@ -62,7 +62,7 @@ class FaturavelModelo(O2BaseGetPostView):
             } if pac_quant_data else {}
         return self._pac_quant
 
-    def monta_dados(self, data, modelo, com_pac):
+    def monta_dados(self, data):
         tot_qtd_fat = 0
         for row in data:
             row['PEDIDO|TARGET'] = '_blank'
@@ -78,14 +78,14 @@ class FaturavelModelo(O2BaseGetPostView):
                     row['EMP_SIT'] = row['EMP_SIT_MIN']
                 else:
                     row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
-            if com_pac:
+            if self.com_pac:
                 if row['REF'] in self.pac_quant:
                     row['PAC'] = self.pac_quant[row['REF']]
                 else:
                     row['PAC'] = 1
                 row['QTD_PAC'] = row['QTD_AFAT'] * row['PAC']
 
-        if com_pac:
+        if self.com_pac:
             tot_sum_fields = ['QTD_EMP', 'QTD_SOL', 'QTD_PAC']
         else:
             tot_sum_fields = ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL']
@@ -103,7 +103,7 @@ class FaturavelModelo(O2BaseGetPostView):
         })
         group_rowspan(data, group)
 
-        flags_bitmap =  (tot_qtd_fat != 0) + (com_pac * 2)
+        flags_bitmap =  (tot_qtd_fat != 0) + (self.com_pac * 2)
         dados = self.table_defs.hfs_dict(bitmap=flags_bitmap)
         dados.update({
             'data': data,
@@ -140,14 +140,15 @@ class FaturavelModelo(O2BaseGetPostView):
         else:
             busca_periodo = ''
 
-        com_pac = self.considera_pacote == 's'
+        self.com_pac = self.considera_pacote == 's'
 
         data = queries_faturavel_modelo.query(
             cursor, modelo=self.modelo, periodo=':{}'.format(busca_periodo),
-            cached=False, tam=self.tam, cor=self.cor, colecao=codigo_colecao, com_pac=com_pac)
+            cached=False, tam=self.tam, cor=self.cor,
+            colecao=codigo_colecao, com_pac=self.com_pac)
         if data:
             self.context.update({
-                'dados_pre': self.monta_dados(data, self.modelo, com_pac),
+                'dados_pre': self.monta_dados(data),
             })
 
         if self.considera_lead == 's':
@@ -156,5 +157,5 @@ class FaturavelModelo(O2BaseGetPostView):
                 cached=False, colecao=codigo_colecao)
             if data_pos:
                 self.context.update({
-                    'dados_pos': self.monta_dados(data_pos, self.modelo, com_pac),
+                    'dados_pos': self.monta_dados(data_pos),
                 })
