@@ -1,3 +1,4 @@
+from email.policy import default
 from pprint import pprint
 
 from django import forms
@@ -7,32 +8,54 @@ from systextil.models import Colecao
 
 class Form(forms.Form):
     modelo = forms.CharField(
-        label='Modelo', max_length=5, min_length=1, required=False,
-        widget=forms.TextInput(attrs={'type': 'number',
-                               'autofocus': 'autofocus'}))
+        label='Modelo',
+        max_length=5,
+        min_length=1,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'number',
+                'autofocus': 'autofocus'
+            }
+        )
+    )
 
     colecao = forms.ModelChoiceField(
-        label='Coleção', required=False,
-        queryset=Colecao.objects.exclude(colecao=0).order_by(
-            'colecao'), empty_label="(Todas)")
+        label='Coleção',
+        required=False,
+        queryset=Colecao.objects.exclude(
+            colecao=0
+        ).order_by(
+            'colecao'
+        ),
+        empty_label="(Todas)"
+    )
 
     tam = forms.CharField(
-        label='Tamanho', required=False,
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        label='Tamanho',
+        required=False,
+        widget=forms.TextInput(attrs={'type': 'string'})
+    )
 
     cor = forms.CharField(
         label='Cor', required=False,
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        widget=forms.TextInput(attrs={'type': 'string'})
+    )
 
-    CHOICES = [('s', 'Sim'),
-               ('n', 'Não'),
-               ]
+    CHOICES = [
+        ('s', 'Sim'),
+        ('n', 'Não'),
+    ]
     considera_lead = forms.ChoiceField(
-        label='Considera configuração de lead', choices=CHOICES, initial='s')
+        label='Considera configuração de lead',
+        choices=CHOICES,
+        initial='s',
+    )
 
-    CHOICES = [('s', 'Sim'),
-               ('n', 'Não'),
-               ]
+    CHOICES = [
+        ('s', 'Sim'),
+        ('n', 'Não'),
+    ]
     considera_pacote = forms.ChoiceField(
         label='Considera pacote do modelo',
         choices=CHOICES,
