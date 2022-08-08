@@ -47,6 +47,20 @@ class FaturavelModelo(View):
             style = {'_': 'text-align'},
         )
 
+        self._pac_quant = None
+
+    def get_pac_quant(self, modelo, com_pac):
+        if self._pac_quant is None:
+            pac_quant_data = comercial.models.MetaModeloReferencia.objects.filter(
+                modelo=modelo,
+                incl_excl='i',
+            ).values('referencia', 'quantidade')
+            self._pac_quant = {
+                row['referencia']: row['quantidade']
+                for row in pac_quant_data
+            } if pac_quant_data else {}
+        return self._pac_quant
+
     def mount_context(
             self, cursor, modelo, colecao, tam, cor,
             considera_lead, considera_pacote):
@@ -93,18 +107,6 @@ class FaturavelModelo(View):
         if len(data) == 0:
             return context
 
-        pac_quant = {}
-        if com_pac:
-            pac_quant_data = comercial.models.MetaModeloReferencia.objects.filter(
-                modelo=modelo,
-                incl_excl='i',
-            ).values('referencia', 'quantidade')
-            if pac_quant_data:
-                pac_quant = {
-                    row['referencia']: row['quantidade']
-                    for row in pac_quant_data
-                }
-
         tot_qtd_fat = 0
         for row in data:
             row['PEDIDO|TARGET'] = '_blank'
@@ -121,6 +123,7 @@ class FaturavelModelo(View):
                 else:
                     row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
             if com_pac:
+                pac_quant = self.get_pac_quant(modelo, com_pac)
                 if row['REF'] in pac_quant:
                     row['PAC'] = pac_quant[row['REF']]
                 else:
