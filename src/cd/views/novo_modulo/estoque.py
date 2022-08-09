@@ -38,6 +38,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'sol': ['Solicitação'],
                 'qtd_emp': ['Qtd.Empen.', 'r'],
                 'qtd_sol': ['Qtd.Solic.', 'r'],
+                'tot_emp': ['Tot.Empen.', 'r'],
                 'qtd_disp': ['Qtd.Disp.', 'r'],
                 'qtd_fin': ['Qtd.Fin.', 'r'],
                 'sit': ['Situação'],
@@ -76,7 +77,8 @@ class NovoEstoque(O2BaseGetPostView):
                 row['qtd_emp'] = 0
                 row['qtd_sol'] = 0
             row['qtd_dbaixa'] = row['qtd']
-            row['qtd_disp'] = row['qtd_dbaixa'] - row['qtd_emp'] - row['qtd_sol']
+            row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
+            row['qtd_disp'] = row['qtd_dbaixa'] - row['tot_emp']
         return dados
 
 
@@ -89,7 +91,7 @@ class NovoEstoque(O2BaseGetPostView):
                 self.lotes.sort(key=operator.itemgetter('modelo', 'ref', 'ordem_tam', 'cor', 'op', 'lote'))
 
         len_lotes = len(self.lotes)
-        sum_fields = ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'qtd_disp']
+        sum_fields = ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp']
         if self.situacao_empenho == 'esf':
             sum_fields.append('qtd_fin')
         totalize_data(
@@ -118,7 +120,7 @@ class NovoEstoque(O2BaseGetPostView):
             'palete', 'endereco', 'rota',
             'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
             'qtd_prog', 'qtd_dbaixa', 'estagio',
-            'solicitacoes', 'qtd_sol', 'qtd_emp', 'qtd_disp',
+            'solicitacoes', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp',
         ]
         if self.situacao_empenho == 'esf':
             fields.append('sol_fin')
