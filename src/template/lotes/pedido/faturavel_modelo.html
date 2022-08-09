@@ -15,7 +15,7 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
   </form>
-  {% if request.POST %}
+  {% if form_method == 'POST' %}
     {% include "layout/form_inputs_report.html" with form=form h=4 only %}
     <h4>Ordenado por situação e data de embarque</h4>
     {% if form.considera_lead.value == 's' %}
