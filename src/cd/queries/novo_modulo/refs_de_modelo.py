@@ -1,9 +1,18 @@
 from pprint import pprint
 
+from django.core.cache import cache
+
+from utils.cache import entkeys
+from utils.functions import (
+    fo2logger,
+    my_make_key_cache,
+)
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from lotes.functions.varias import modelo_de_ref
+
+__all__ = ['to_set', 'query']
 
 
 def to_set(cursor, modelo, com_op=None, com_ped=None):
@@ -14,6 +23,18 @@ def to_set(cursor, modelo, com_op=None, com_ped=None):
     ])
 
 def query(cursor, modelo, com_op=False, com_ped=False):
+
+    key_cache = my_make_key_cache(
+        'cd/queries/novo_modulo/refs_de_modelo/query',
+        modelo, com_op, com_ped,
+    )
+
+    refs = cache.get(key_cache)
+
+    if refs is not None:
+        fo2logger.info('cached '+key_cache)
+        return refs
+
     if isinstance(modelo, str):
         modelo = int(modelo)
     filtra_com_op = f"""--
@@ -50,8 +71,13 @@ def query(cursor, modelo, com_op=False, com_ped=False):
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
-    return [
+    refs = [
         row
         for row in dados        
         if modelo_de_ref(row['ref']) == modelo
     ]
+
+    cache.set(key_cache, refs, timeout=entkeys._MINUTE)
+    fo2logger.info('calculated '+key_cache)
+
+    return refs
