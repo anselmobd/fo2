@@ -42,5 +42,15 @@
         <h3>&nbsp;&nbsp;&nbsp;&nbsp;Pedidos não encontrados</h3>
       {% endif %}
     {% endif %}
+    <hr>
+    <h4>Faturados com empenho</h4>
+    {% if dados_fat.data %}
+      <table>
+        {% include "layout/thead_generic.html" with data=dados_fat.headers style=dados_fat.style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=dados_fat.fields data=dados_fat.data group=dados_fat.group style=dados_fat.style only %}
+      </table>
+    {% else %}
+      <h3>&nbsp;&nbsp;&nbsp;&nbsp;Pedidos não encontrados</h3>
+    {% endif %}
   {% endif %}
 {% endblock %}

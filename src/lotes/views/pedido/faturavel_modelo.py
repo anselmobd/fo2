@@ -14,6 +14,7 @@ import comercial.models
 
 import lotes.models
 from lotes.queries.pedido import faturavel_modelo as queries_faturavel_modelo
+from lotes.queries.pedido import faturado_empenhado
 from lotes.forms.pedido import faturavel_modelo as forms_faturavel_modelo
 
 
@@ -30,18 +31,18 @@ class FaturavelModelo(O2BaseGetPostView):
 
         self.table_defs = TableDefs(
             {
-                'EMP_SIT': ["Sit. Emp."],
+                'EMP_SIT': ["Sit.Emp."],
                 'PEDIDO': ["Nº pedido"],
                 'DATA': ["Data embarque"],
                 'CLIENTE': ["Cliente"],
                 'REF': ["Referência"],
-                'QTD_EMP': ["Qtd. Emp", 'r'],
-                'QTD_SOL': ["Qtd. Sol.", 'r'],
-                'QTD': ["Qtd. pedida", 'r', 1],
-                'QTD_FAT': ["Qtd. faturada", 'r', 1],
-                'QTD_AFAT': ["Qtd. a faturar", 'r'],
+                'QTD_EMP': ["Qtd.Emp.", 'r'],
+                'QTD_SOL': ["Qtd.Fin.", 'r'],
+                'QTD': ["Qtd.pedida", 'r', 1],
+                'QTD_FAT': ["Qtd.faturada", 'r', 9],
+                'QTD_AFAT': ["Qtd.faturar", 'r', 4],
                 'PAC': ["Pacote", 'r', 2],
-                'QTD_PAC': ["Qtd. pacote", 'r', 2],
+                'QTD_PAC': ["Qtd.pacote", 'r', 2],
                 'FAT': ["Faturamento"],
             },
             ['header', '+style', 'flags_bitmap'],
@@ -63,7 +64,7 @@ class FaturavelModelo(O2BaseGetPostView):
             } if pac_quant_data else {}
         return self._pac_quant
 
-    def monta_dados(self, data):
+    def monta_dados(self, data, faturavel=False, faturado=False):
         tot_qtd_fat = 0
         for row in data:
             row['PEDIDO|TARGET'] = '_blank'
@@ -84,12 +85,18 @@ class FaturavelModelo(O2BaseGetPostView):
                     row['PAC'] = self.pac_quant[row['REF']]
                 else:
                     row['PAC'] = 1
-                row['QTD_PAC'] = row['QTD_AFAT'] * row['PAC']
+                if faturavel:
+                    row['QTD_PAC'] = row['QTD_AFAT'] * row['PAC']
+                if faturado:
+                    row['QTD_PAC'] = row['QTD_FAT'] * row['PAC']
 
         if self.com_pac:
             tot_sum_fields = ['QTD_EMP', 'QTD_SOL', 'QTD_PAC']
         else:
-            tot_sum_fields = ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL']
+            if faturavel:
+                tot_sum_fields = ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL']
+            if faturado:
+                tot_sum_fields = ['QTD_FAT', 'QTD_EMP', 'QTD_SOL']
 
         group = ['EMP_SIT']
         totalize_grouped_data(data, {
@@ -104,7 +111,12 @@ class FaturavelModelo(O2BaseGetPostView):
         })
         group_rowspan(data, group)
 
-        flags_bitmap =  (tot_qtd_fat != 0) + (self.com_pac * 2)
+        flags_bitmap = (
+            (1 * (tot_qtd_fat != 0 and faturavel)) +
+            (2 * self.com_pac) +
+            (4 * faturavel) +
+            (8 * faturado)
+        )
         dados = self.table_defs.hfs_dict(bitmap=flags_bitmap)
         dados.update({
             'data': data,
@@ -149,7 +161,7 @@ class FaturavelModelo(O2BaseGetPostView):
             colecao=codigo_colecao, com_pac=self.com_pac)
         if data:
             self.context.update({
-                'dados_pre': self.monta_dados(data),
+                'dados_pre': self.monta_dados(data, faturavel=True),
             })
 
         if self.considera_lead == 's':
@@ -159,5 +171,19 @@ class FaturavelModelo(O2BaseGetPostView):
                 colecao=codigo_colecao, com_pac=self.com_pac)
             if data_pos:
                 self.context.update({
-                    'dados_pos': self.monta_dados(data_pos),
+                    'dados_pos': self.monta_dados(data_pos, faturavel=True),
                 })
+
+        data_fat = faturado_empenhado.query(
+            cursor,
+            modelo=self.modelo,
+            colecao=codigo_colecao,
+            cor=self.cor,
+            tam=self.tam,
+            com_pac=self.com_pac,
+            cached=False,
+        )
+        if data_fat:
+            self.context.update({
+                'dados_fat': self.monta_dados(data_fat, faturado=True),
+            })
