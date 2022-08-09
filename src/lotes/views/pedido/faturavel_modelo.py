@@ -24,8 +24,9 @@ class FaturavelModelo(O2BaseGetPostView):
         self.Form_class = forms_faturavel_modelo.Form
         self.template_name = 'lotes/pedido/faturavel_modelo.html'
         self.title_name = 'Pedido faturável por modelo'
-        self.cleaned_data2self = True
         self.get_args = ['modelo']
+        self.get_args2form = True
+        self.cleaned_data2self = True
 
         self.table_defs = TableDefs(
             {
