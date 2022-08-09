@@ -48,6 +48,11 @@ class FaturavelModelo(O2BaseGetPostView):
             ['header', '+style', 'flags_bitmap'],
             style = {'_': 'text-align'},
         )
+        # flags_bitmap
+        # 1 = faturavel parcialmente faturado
+        # 2 = pacotes
+        # 4 = faturavel
+        # 8 = faturado
 
         self._pac_quant = None
 
@@ -156,9 +161,15 @@ class FaturavelModelo(O2BaseGetPostView):
         self.com_pac = self.considera_pacote == 's'
 
         data = queries_faturavel_modelo.query(
-            cursor, modelo=self.modelo, periodo=':{}'.format(busca_periodo),
-            cached=False, tam=self.tam, cor=self.cor,
-            colecao=codigo_colecao, com_pac=self.com_pac)
+            cursor,
+            periodo=':{}'.format(busca_periodo),
+            modelo=self.modelo,
+            colecao=codigo_colecao,
+            tam=self.tam,
+            cor=self.cor,
+            com_pac=self.com_pac,
+            cached=False,
+        )
         if data:
             self.context.update({
                 'dados_pre': self.monta_dados(data, faturavel=True),
@@ -166,9 +177,15 @@ class FaturavelModelo(O2BaseGetPostView):
 
         if self.considera_lead == 's':
             data_pos = queries_faturavel_modelo.query(
-                cursor, modelo=self.modelo, periodo='{}:'.format(busca_periodo),
-                cached=False, tam=self.tam, cor=self.cor,
-                colecao=codigo_colecao, com_pac=self.com_pac)
+                cursor,
+                periodo='{}:'.format(busca_periodo),
+                modelo=self.modelo,
+                colecao=codigo_colecao,
+                tam=self.tam,
+                cor=self.cor,
+                com_pac=self.com_pac,
+                cached=False,
+            )
             if data_pos:
                 self.context.update({
                     'dados_pos': self.monta_dados(data_pos, faturavel=True),
