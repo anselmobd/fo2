@@ -64,7 +64,7 @@ class FaturavelModelo(O2BaseGetPostView):
             } if pac_quant_data else {}
         return self._pac_quant
 
-    def monta_dados(self, data, faturavel=False, faturado=False):
+    def monta_dados(self, data, faturavel=False):
         tot_qtd_fat = 0
         for row in data:
             row['PEDIDO|TARGET'] = '_blank'
@@ -87,7 +87,7 @@ class FaturavelModelo(O2BaseGetPostView):
                     row['PAC'] = 1
                 if faturavel:
                     row['QTD_PAC'] = row['QTD_AFAT'] * row['PAC']
-                if faturado:
+                else:
                     row['QTD_PAC'] = row['QTD_FAT'] * row['PAC']
 
         if self.com_pac:
@@ -95,7 +95,7 @@ class FaturavelModelo(O2BaseGetPostView):
         else:
             if faturavel:
                 tot_sum_fields = ['QTD_AFAT', 'QTD_EMP', 'QTD_SOL']
-            if faturado:
+            else:
                 tot_sum_fields = ['QTD_FAT', 'QTD_EMP', 'QTD_SOL']
 
         group = ['EMP_SIT']
@@ -115,7 +115,7 @@ class FaturavelModelo(O2BaseGetPostView):
             (1 * (tot_qtd_fat != 0 and faturavel)) +
             (2 * self.com_pac) +
             (4 * faturavel) +
-            (8 * faturado)
+            (8 * (not faturavel))
         )
         dados = self.table_defs.hfs_dict(bitmap=flags_bitmap)
         dados.update({
@@ -185,5 +185,5 @@ class FaturavelModelo(O2BaseGetPostView):
         )
         if data_fat:
             self.context.update({
-                'dados_fat': self.monta_dados(data_fat, faturado=True),
+                'dados_fat': self.monta_dados(data_fat, faturavel=False),
             })
