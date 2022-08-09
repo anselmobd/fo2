@@ -45,6 +45,7 @@ class Form(forms.Form):
         label='Considera configuração de lead',
         choices=CHOICES,
         initial='s',
+        required=False,
     )
 
     CHOICES = [
@@ -55,6 +56,7 @@ class Form(forms.Form):
         label='Considera pacote do modelo',
         choices=CHOICES,
         initial='s',
+        required=False,
         help_text='(quando filtrado por modelo)',
     )
 
