@@ -95,6 +95,7 @@ class O2BaseGetPostView(CustomView):
         else:
             self.form = self.Form_class(
                 initial=self.form_initial(), **self.form_create_kwargs)
+        self.context['form_method'] = 'GET'
         return self.render_mount()
 
     def post(self, request, *args, **kwargs):
@@ -106,6 +107,7 @@ class O2BaseGetPostView(CustomView):
             for arg in self.get_args:
                 self.set_form_arg(arg)
 
+        self.context['form_method'] = 'POST'
         return self.render_mount()
 
 
