@@ -71,7 +71,7 @@ def query(
         , MAX(sl.SITUACAO) EMP_SIT_MAX
         , sl.PEDIDO_DESTINO PEDIDO 
         , sl.GRUPO_DESTINO REF
-        , SUM(sl.QTDE) QTD
+        , SUM(sl.QTDE) QTD_EMP
         FROM pcpc_044 sl -- solicitação / lote 
         JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = 1
