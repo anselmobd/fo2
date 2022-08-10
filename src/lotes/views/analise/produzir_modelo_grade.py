@@ -7,6 +7,7 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetView
 from geral.functions import config_get_value
 from utils.views import totalize_data
+from utils.table_defs import TableDefs
 
 import comercial.models
 
@@ -16,7 +17,31 @@ class ProduzirModeloGrade(O2BaseGetView):
     def __init__(self, *args, **kwargs):
         super(ProduzirModeloGrade, self).__init__(*args, **kwargs)
         self.template_name = 'lotes/analise/produzir_modelo_grade.html'
-        self.title_name = 'Aproduzir - Por modelo - Totais com grade'
+        self.title_name = 'A produzir - Por modelo - Totais com grade'
+
+        self.table_defs = TableDefs(
+            {
+                'modelo': ["Modelo"],
+                'meta_estoque': ["Meta de estoque", 'r'],
+                'meta_giro': ["Meta de giro (lead)", 'r'],
+                'meta': ["Total das metas(A)", 'r'],
+                'inventario': ["Inventário/CD", 'r'],
+                'op_andamento': ["OPs em andamento", 'r'],
+                'total_op': ["Total em OPs", 'r'],
+                'empenho': ["Empenhos", 'r'],
+                'pedido': ["Carteira de pedidos", 'r'],
+                'livres': ["OPs-Empenhos-Pedidos(B)", 'r'],
+                'excesso': ["Excesso(A-B)[-]", 'r'],
+                'a_produzir': ["A produzir(A-B)[+]", 'r'],
+                'a_produzir_tam': ["A produzir lote tamanho", 'r'],
+                'a_produzir_cor': ["A produzir lote cor", 'r'],
+            },
+            ['header', '+style'],
+            style = {'_': 'text-align'},
+        )
+        self.val_fields = self.table_defs.definition.keys()
+        self.val_fields = list(self.val_fields)
+        self.val_fields.remove('modelo')
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
@@ -30,73 +55,56 @@ class ProduzirModeloGrade(O2BaseGetView):
                 data__gt=OuterRef('data')
             )
         ))
-        metas = metas.filter(antiga=False)
+        metas = metas.filter(
+            modelo__in=(2, 256),
+            antiga=False,
+        )
         metas = metas.exclude(venda_mensal=0)
-        metas = metas.values()
+        metas = list(metas.values())
 
         for row in metas:
-            data_row = next(
-                (dr for dr in data if dr['modelo'] == row['modelo']),
-                False)
-            if not data_row:
-                data_row = {
-                    'modelo': row['modelo'],
-                }
-                data.append(data_row)
-            data_row['meta_giro'] = row['meta_giro']
+            modelo = row['modelo']
+            data_row = {}
+            data.append(data_row)
+            data_row['modelo'] = modelo
+            data_row['modelo|CLASS'] = 'modelo'
             data_row['meta_estoque'] = row['meta_estoque']
+            data_row['meta_giro'] = row['meta_giro']
             data_row['meta'] = row['meta_giro'] + row['meta_estoque']
+            data_row['inventario'] = 0
+            data_row['inventario|CLASS'] = f'inventario-{modelo}'
+            data_row['op_andamento'] = 0
+            data_row['op_andamento|CLASS'] = f'op_andamento-{modelo}'
             data_row['total_op'] = 0
-            data_row['total_op|CLASS'] = 'total_op-{}'.format(row['modelo'])
-            data_row['total_est'] = 0
-            data_row['total_est|CLASS'] = 'total_est-{}'.format(row['modelo'])
-            data_row['total_ped'] = 0
-            data_row['total_ped|CLASS'] = 'total_ped-{}'.format(row['modelo'])
-            data_row['op_menos_ped'] = 0
-            data_row['op_menos_ped|CLASS'] = 'op_menos_ped-{}'.format(
-                row['modelo'])
-            data_row['a_produzir'] = data_row['meta']
-            data_row['a_produzir|CLASS'] = 'a_produzir-{}'.format(
-                row['modelo'])
+            data_row['total_op|CLASS'] = f'total_op-{modelo}'
+            data_row['empenho'] = 0
+            data_row['empenho|CLASS'] = f'empenho-{modelo}'
+            data_row['pedido'] = 0
+            data_row['pedido|CLASS'] = f'pedido-{modelo}'
+            data_row['livres'] = 0
+            data_row['livres|CLASS'] = f'livres-{modelo}'
             data_row['excesso'] = 0
-            data_row['excesso|CLASS'] = 'excesso-{}'.format(
-                row['modelo'])
+            data_row['excesso|CLASS'] = f'excesso-{modelo}'
+            data_row['a_produzir'] = 0
+            data_row['a_produzir|CLASS'] = f'a_produzir-{modelo}'
+            data_row['a_produzir_tam'] = 0
+            data_row['a_produzir_tam|CLASS'] = f'a_produzir_tam-{modelo}'
+            data_row['a_produzir_cor'] = 0
+            data_row['a_produzir_cor|CLASS'] = f'a_produzir_cor-{modelo}'
 
         data = sorted(data, key=lambda i: -i['meta'])
 
         totalize_data(data, {
-            'sum': ['meta_giro', 'meta_estoque', 'meta',
-                    'total_op', 'total_est', 'total_ped',
-                    'op_menos_ped', 'a_produzir', 'excesso'],
+            'sum': self.val_fields,
             'count': [],
             'descr': {'modelo': 'Totais:'},
             'row_style': 'font-weight: bold;',
             'class_suffix': '__total',
         })
 
-        dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
+        self.context.update(
+            self.table_defs.hfs_dict()
+        )
         self.context.update({
-            'dias_alem_lead': dias_alem_lead,
-            'headers': ['Modelo', 'Meta de estoque', 'Meta de giro (lead)',
-                        'Total das metas(A)', 'Total das OPs',
-                        'Total nos depósitos', 'Carteira de pedidos',
-                        'OPs+Depósitos–Pedidos(B)', 'A produzir(A-B)[+]',
-                        'Excesso(A-B)[-]'],
-            'fields': ['modelo', 'meta_estoque', 'meta_giro',
-                       'meta', 'total_op',
-                       'total_est', 'total_ped',
-                       'op_menos_ped', 'a_produzir',
-                       'excesso'],
             'data': data,
-            'style': {
-                2: 'text-align: right;',
-                3: 'text-align: right;',
-                4: 'text-align: right;',
-                5: 'text-align: right;',
-                6: 'text-align: right;',
-                7: 'text-align: right;',
-                8: 'text-align: right;',
-                9: 'text-align: right;',
-                10: 'text-align: right;',
-            },
         })
