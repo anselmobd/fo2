@@ -5,11 +5,12 @@ from django.db.models import Exists, OuterRef
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetView
-from geral.functions import config_get_value
 from utils.views import totalize_data
 from utils.table_defs import TableDefs
 
 import comercial.models
+
+from lotes.queries.analise.produzir_grade_empenho import mount_produzir_grade_empenho
 
 
 class ProduzirModeloGrade(O2BaseGetView):
@@ -43,6 +44,12 @@ class ProduzirModeloGrade(O2BaseGetView):
         self.val_fields = list(self.val_fields)
         self.val_fields.remove('modelo')
 
+    def get_total(self, dados, grade):
+        if grade in dados:
+            return dados[grade]['total']
+        else:
+            return 0
+
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
@@ -66,30 +73,31 @@ class ProduzirModeloGrade(O2BaseGetView):
             modelo = row['modelo']
             data_row = {}
             data.append(data_row)
+            dados_produzir = mount_produzir_grade_empenho(cursor, modelo)
             data_row['modelo'] = modelo
             data_row['modelo|CLASS'] = 'modelo'
             data_row['meta_estoque'] = row['meta_estoque']
             data_row['meta_giro'] = row['meta_giro']
             data_row['meta'] = row['meta_giro'] + row['meta_estoque']
-            data_row['inventario'] = 0
+            data_row['inventario'] = self.get_total(dados_produzir, 'ginv')
             data_row['inventario|CLASS'] = f'inventario-{modelo}'
-            data_row['op_andamento'] = 0
+            data_row['op_andamento'] = self.get_total(dados_produzir, 'gopa_ncd')
             data_row['op_andamento|CLASS'] = f'op_andamento-{modelo}'
-            data_row['total_op'] = 0
+            data_row['total_op'] = self.get_total(dados_produzir, 'gopa')
             data_row['total_op|CLASS'] = f'total_op-{modelo}'
-            data_row['empenho'] = 0
+            data_row['empenho'] = self.get_total(dados_produzir, 'gsol')
             data_row['empenho|CLASS'] = f'empenho-{modelo}'
-            data_row['pedido'] = 0
+            data_row['pedido'] = self.get_total(dados_produzir, 'gped')
             data_row['pedido|CLASS'] = f'pedido-{modelo}'
-            data_row['livres'] = 0
+            data_row['livres'] = self.get_total(dados_produzir, 'gopp')
             data_row['livres|CLASS'] = f'livres-{modelo}'
-            data_row['excesso'] = 0
+            data_row['excesso'] = self.get_total(dados_produzir, 'gex')
             data_row['excesso|CLASS'] = f'excesso-{modelo}'
-            data_row['a_produzir'] = 0
+            data_row['a_produzir'] = self.get_total(dados_produzir, 'gap')
             data_row['a_produzir|CLASS'] = f'a_produzir-{modelo}'
-            data_row['a_produzir_tam'] = 0
+            data_row['a_produzir_tam'] = self.get_total(dados_produzir, 'glm')
             data_row['a_produzir_tam|CLASS'] = f'a_produzir_tam-{modelo}'
-            data_row['a_produzir_cor'] = 0
+            data_row['a_produzir_cor'] = self.get_total(dados_produzir, 'glc')
             data_row['a_produzir_cor|CLASS'] = f'a_produzir_cor-{modelo}'
 
         data = sorted(data, key=lambda i: -i['meta'])
