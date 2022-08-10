@@ -832,15 +832,6 @@ class AddRegrasLoteCaixaForm(forms.Form):
         return referencia
 
 
-class ProduzirModeloGradeForm(forms.Form):
-    CHOICES = [('s', 'Sim'),
-               ('n', 'Não'),
-               ]
-    deposito = forms.ChoiceField(
-        label='Considera depósito',
-        choices=CHOICES, required=False, initial='s')
-
-
 class ImprimeOb1Form(forms.Form):
     os = forms.IntegerField(
         label='OS',
