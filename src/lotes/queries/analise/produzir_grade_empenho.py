@@ -121,7 +121,6 @@ def mount_produzir_grade_empenho(cursor, modelo):
         selecao_lotes='63',
         paletizado='s',
     )
-    pprint(inventario)
     grade_inventario = dictlist_to_grade_qtd(
         inventario,
         field_linha='cor',
@@ -130,11 +129,9 @@ def mount_produzir_grade_empenho(cursor, modelo):
         field_ordem_coluna='ordem_tam',
         field_quantidade='qtd',
     )
-    pprint(grade_inventario)
     total_inv = grade_inventario['total']
 
     ginv = None
-    print("################################", total_inv)
     if total_inv != 0:
         ginv = {
             'headers': grade_inventario['headers'],
@@ -203,11 +200,8 @@ def mount_produzir_grade_empenho(cursor, modelo):
         gzerada = og.update_gzerada(gzerada, gped)
 
     refs_adicionadas = meta_ref_incluir(cursor, modelo)
-    # pprint(gped)
-    # pprint(refs_adicionadas)
 
     for row_ref in refs_adicionadas:
-        # print(row_ref['referencia'])
         gadd = None
         if row_ref['ok']:
 
@@ -227,9 +221,7 @@ def mount_produzir_grade_empenho(cursor, modelo):
                 }
 
         if gadd:
-            # pprint(gadd)
             gpac = copy.deepcopy(gzerada)
-            # pprint(gpac)
             gadd_sortimento_field = gadd['fields'][0]
             gadd_total_field = gadd['fields'][-1]
             gpac_sortimento_field = gpac['fields'][0]
@@ -257,9 +249,7 @@ def mount_produzir_grade_empenho(cursor, modelo):
                                 ga_row_quants[ga_row_comb_tam] *
                                 ga_row_comb[ga_row_comb_cor0]
                             )
-            # pprint(gpac)
             gped = og.soma_grades(gped, gpac)
-            # pprint(gped)
 
     # Utiliza grade zerada para igualar cores e tamanhos das grades base
     # dos cálculos
