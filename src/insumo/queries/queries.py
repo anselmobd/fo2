@@ -821,7 +821,17 @@ def mapa_refs(cursor, insumo, conta_estoque, necessidade):
     return dictlist(cursor)
 
 
-def mapa_refs_simples(cursor, insumo, conta_estoque):
+def mapa_refs_simples(cursor, insumo, conta_estoque, nivel=None):
+    filtro_nivel = "AND i.NIVEL_ESTRUTURA <> 1"
+    if nivel:
+        if not isinstance(nivel, tuple):
+            nivel = (nivel, )
+        filtro_nivel = (
+            "AND i.NIVEL_ESTRUTURA IN (" +
+            ", ".join(map(str, nivel))+
+            ")"
+        )
+
     filtro_insumo = ''
     if insumo:
         if len(insumo) == 5:
@@ -856,7 +866,8 @@ def mapa_refs_simples(cursor, insumo, conta_estoque):
         JOIN BASI_030 g -- grupo
           ON g.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA 
         AND g.REFERENCIA = i.GRUPO_ESTRUTURA
-        WHERE i.NIVEL_ESTRUTURA <> 1
+        WHERE 1=1
+          {filtro_nivel} -- filtro_nivel
           {filtro_insumo} -- filtro_insumo
           {filtro_conta_estoque} -- filtro_conta_estoque
         ORDER BY
