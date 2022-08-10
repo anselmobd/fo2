@@ -20,7 +20,7 @@
     <h4>Ordenado por situação e data de embarque</h4>
     {% if form.considera_lead.value == 's' %}
       <h4>Lead do modelo: {{ lead }}</h4>
-      <h4>Data de embarque até: Hoje + lead + {{ dias_alem_lead }}</h4>
+      <h3>Data de embarque até: Hoje + lead + {{ dias_alem_lead }}</h3>
     {% endif %}
     {% if dados_pre.data %}
       <table>
@@ -28,29 +28,39 @@
         {% include "layout/tbody_generic.html" with fields=dados_pre.fields data=dados_pre.data group=dados_pre.group style=dados_pre.style only %}
       </table>
     {% else %}
-      <h3>&nbsp;&nbsp;&nbsp;&nbsp;Pedidos não encontrados</h3>
+      <h4>Pedidos não encontrados</h4>
     {% endif %}
     {% if form.considera_lead.value == 's' %}
       <hr>
-      <h4>Data de embarque após: Hoje + lead + {{ dias_alem_lead }}</h4>
+      <h3>Data de embarque após: Hoje + lead + {{ dias_alem_lead }}</h3>
       {% if dados_pos.data %}
         <table>
           {% include "layout/thead_generic.html" with data=dados_pos.headers style=dados_pos.style thclass='sticky' only %}
           {% include "layout/tbody_generic.html" with fields=dados_pos.fields data=dados_pos.data group=dados_pos.group style=dados_pos.style only %}
         </table>
       {% else %}
-        <h3>&nbsp;&nbsp;&nbsp;&nbsp;Pedidos não encontrados</h3>
+        <h4>Pedidos não encontrados</h4>
       {% endif %}
     {% endif %}
     <hr>
-    <h4>Faturados com empenho</h4>
+    <h3>Faturados com empenho</h3>
     {% if dados_fat.data %}
       <table>
         {% include "layout/thead_generic.html" with data=dados_fat.headers style=dados_fat.style thclass='sticky' only %}
         {% include "layout/tbody_generic.html" with fields=dados_fat.fields data=dados_fat.data group=dados_fat.group style=dados_fat.style only %}
       </table>
     {% else %}
-      <h3>&nbsp;&nbsp;&nbsp;&nbsp;Pedidos não encontrados</h3>
+      <h4>Pedidos não encontrados</h4>
+    {% endif %}
+    <hr>
+    <h3>Empenhos de varejo</h3>
+    {% if dados_var.data %}
+      <table>
+        {% include "layout/thead_generic.html" with data=dados_var.headers style=dados_var.style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=dados_var.fields data=dados_var.data group=dados_var.group style=dados_var.style only %}
+      </table>
+    {% else %}
+      <h4>Empenhos não encontrados</h4>
     {% endif %}
   {% endif %}
 {% endblock %}

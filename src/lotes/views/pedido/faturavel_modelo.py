@@ -13,7 +13,7 @@ import produto.queries
 import comercial.models
 
 import lotes.models
-from lotes.queries.pedido import faturavel_modelo as queries_faturavel_modelo
+from lotes.queries.pedido import faturavel_modelo as queries_faturavel_modelo, varejo_empenhado
 from lotes.queries.pedido import faturado_empenhado
 from lotes.forms.pedido import faturavel_modelo as forms_faturavel_modelo
 
@@ -129,6 +129,56 @@ class FaturavelModelo(O2BaseGetPostView):
         })
         return dados
 
+    def monta_dados_var(self, data):
+        for row in data:
+            if row['EMP_SIT_MIN'] == row['EMP_SIT_MAX']:
+                row['EMP_SIT'] = row['EMP_SIT_MIN']
+            else:
+                row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
+            if self.com_pac:
+                if row['REF'] in self.pac_quant:
+                    row['PAC'] = self.pac_quant[row['REF']]
+                else:
+                    row['PAC'] = 1
+                row['QTD_PAC'] = row['QTD'] * row['PAC']
+
+        if self.com_pac:
+            tot_sum_fields = ['QTD_PAC']
+        else:
+            tot_sum_fields = ['QTD']
+
+        group = ['EMP_SIT']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': tot_sum_fields,
+            'count': [],
+            'descr': {'PEDIDO': 'Total:'},
+            'flags': ['NO_TOT_1'],
+            'global_sum': tot_sum_fields,
+            'global_descr': {'EMP_SIT': 'Total geral:'},
+            'row_style': 'font-weight: bold;',
+        })
+        group_rowspan(data, group)
+
+        var_fields=[
+            'EMP_SIT',
+            'PEDIDO',
+            'REF',
+            'QTD',
+        ]
+        if self.com_pac:
+            var_fields += [
+                'PAC',
+                'QTD_PAC',
+            ]
+        dados = self.table_defs.hfs_dict(*var_fields)
+        dados.update({
+            'data': data,
+            'group': group,
+        })
+        return dados
+
+
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
@@ -203,4 +253,18 @@ class FaturavelModelo(O2BaseGetPostView):
         if data_fat:
             self.context.update({
                 'dados_fat': self.monta_dados(data_fat, faturavel=False),
+            })
+
+        data_var = varejo_empenhado.query(
+            cursor,
+            modelo=self.modelo,
+            colecao=codigo_colecao,
+            cor=self.cor,
+            tam=self.tam,
+            com_pac=False,
+            cached=False,
+        )
+        if data_var:
+            self.context.update({
+                'dados_var': self.monta_dados_var(data_var),
             })
