@@ -606,7 +606,11 @@ class MapaPorRefs(View):
         })
 
         data = queries.mapa_refs_simples(
-            cursor, insumo, conta_estoque)
+            cursor,
+            insumo,
+            conta_estoque,
+            nivel=(2, 9),
+        )
 
         if len(data) == 0:
             context.update({
