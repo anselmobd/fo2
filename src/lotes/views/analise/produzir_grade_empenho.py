@@ -1,5 +1,4 @@
 import copy
-import sys
 from pprint import pprint
 
 from django.db.models import Exists, OuterRef
@@ -11,7 +10,6 @@ from base.views import O2BaseGetPostView
 from geral.functions import config_get_value
 from utils.functions.dictlist.dictlist_to_grade import dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
-from utils.views import totalize_data
 
 import comercial.models
 import produto.models
