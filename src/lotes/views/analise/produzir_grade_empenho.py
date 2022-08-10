@@ -23,6 +23,8 @@ import lotes.queries.op
 import lotes.queries.pedido
 from lotes.views.parametros_functions import grade_meta_giro
 
+__all__ = ['ProduzirGradeEmpenho', 'mount_produzir_grade_empenho']
+
 
 class ProduzirGradeEmpenho(O2BaseGetPostView):
 
@@ -37,11 +39,11 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
         modelo = self.form.cleaned_data['modelo']
         self.context.update(
-            produzir_grade_empenho(cursor, modelo)
+            mount_produzir_grade_empenho(cursor, modelo)
         )
 
 
-def produzir_grade_empenho(cursor, modelo):
+def mount_produzir_grade_empenho(cursor, modelo):
     og = OperacoesGrade()
 
     context = {
