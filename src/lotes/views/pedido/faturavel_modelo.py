@@ -135,17 +135,17 @@ class FaturavelModelo(O2BaseGetPostView):
                 row['EMP_SIT'] = row['EMP_SIT_MIN']
             else:
                 row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
-            if self.com_pac:
-                if row['REF'] in self.pac_quant:
-                    row['PAC'] = self.pac_quant[row['REF']]
-                else:
-                    row['PAC'] = 1
-                row['QTD_PAC'] = row['QTD'] * row['PAC']
+            # if self.com_pac:
+            #     if row['REF'] in self.pac_quant:
+            #         row['PAC'] = self.pac_quant[row['REF']]
+            #     else:
+            #         row['PAC'] = 1
+            #     row['QTD_PAC'] = row['QTD'] * row['PAC']
 
-        if self.com_pac:
-            tot_sum_fields = ['QTD_PAC']
-        else:
-            tot_sum_fields = ['QTD']
+        # if self.com_pac:
+        #     tot_sum_fields = ['QTD_PAC']
+        # else:
+        tot_sum_fields = ['QTD_EMP']
 
         group = ['EMP_SIT']
         totalize_grouped_data(data, {
@@ -164,13 +164,13 @@ class FaturavelModelo(O2BaseGetPostView):
             'EMP_SIT',
             'PEDIDO',
             'REF',
-            'QTD',
+            'QTD_EMP',
         ]
-        if self.com_pac:
-            var_fields += [
-                'PAC',
-                'QTD_PAC',
-            ]
+        # if self.com_pac:
+        #     var_fields += [
+        #         'PAC',
+        #         'QTD_PAC',
+        #     ]
         dados = self.table_defs.hfs_dict(*var_fields)
         dados.update({
             'data': data,
