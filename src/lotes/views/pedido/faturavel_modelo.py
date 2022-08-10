@@ -43,7 +43,7 @@ class FaturavelModelo(O2BaseGetPostView):
                 'QTD_AFAT': ["Qtd.faturar", 'r', 4],
                 'PAC': ["Pacote", 'r', 2],
                 'QTD_PAC': ["Qtd.pacote", 'r', 2],
-                'FAT': ["Faturamento"],
+                'FAT': ["Faturamento", 'l', 4],
             },
             ['header', '+style', 'flags_bitmap'],
             style = {'_': 'text-align'},
