@@ -248,6 +248,7 @@ def query(
 
     filtra_tipo_prod = dict_tipo_prod[tipo_prod] if tipo_prod else ''
 
+    filtra_selecao_ops = ''
     if selecao_ops == '63':
         filtra_selecao_ops = """--
             AND EXISTS (
