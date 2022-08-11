@@ -135,6 +135,8 @@ def query(
                e solicitações (empenhos com e sem número de solicitação)
         'detalhe': igual a 'all' mais informações sobre estágio, números 
                    de solicitações e endereçamento
+        'detalhe+fin': igual a 'detalhe' mais informações sobre
+                       finalizados
     ref: filtra no BD por referência
         uma referência ou um list (ou tuple) de referências
     cor: filtra no BD por cor
@@ -448,6 +450,7 @@ def query(
                     -- AND sl.ORDEM_CONFECCAO <> 0 
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO IN (1, 2, 3, 4)
+                    AND sl.QTDE <> 0
                 ),
             '-'
             )
