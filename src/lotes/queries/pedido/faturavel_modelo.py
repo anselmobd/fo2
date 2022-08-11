@@ -115,10 +115,20 @@ def query(
             ( SELECT
                 MIN(sl.SITUACAO)
               FROM pcpc_044 sl -- solicitação / lote 
+              JOIN PCPC_040 l
+                ON l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO 
+               AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
+               AND l.SEQUENCIA_ESTAGIO = 1
               WHERE sl.PEDIDO_DESTINO = pref.PEDIDO
                 AND sl.ORDEM_CONFECCAO <> 0 
                 -- AND sl.GRUPO_DESTINO <> '0'
-                AND sl.GRUPO_DESTINO = pref.REF
+                -- AND sl.GRUPO_DESTINO = pref.REF
+                   AND (
+                     CASE WHEN sl.GRUPO_DESTINO = '00000'
+                     THEN l.PROCONF_GRUPO
+                     ELSE sl.GRUPO_DESTINO
+                     END = pref.REF
+                   )
                 AND sl.SITUACAO <> 0
             )
           , 0 
@@ -127,10 +137,20 @@ def query(
             ( SELECT
                 MAX(sl.SITUACAO)
               FROM pcpc_044 sl -- solicitação / lote 
+              JOIN PCPC_040 l
+                ON l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO 
+               AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
+               AND l.SEQUENCIA_ESTAGIO = 1
               WHERE sl.PEDIDO_DESTINO = pref.PEDIDO
                 AND sl.ORDEM_CONFECCAO <> 0 
                 -- AND sl.GRUPO_DESTINO <> '0'
-                AND sl.GRUPO_DESTINO = pref.REF
+                -- AND sl.GRUPO_DESTINO = pref.REF
+                   AND (
+                     CASE WHEN sl.GRUPO_DESTINO = '00000'
+                     THEN l.PROCONF_GRUPO
+                     ELSE sl.GRUPO_DESTINO
+                     END = pref.REF
+                   )
                 AND sl.SITUACAO <> 0
             )
           , 0 
