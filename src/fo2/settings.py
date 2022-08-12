@@ -199,7 +199,7 @@ DATABASES = {
     # },
     'persona': {  # Nasajon
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "nasajon_db3_20200617_163619",
+        'NAME': "nasajon_db",
         'USER': "postgres",
         'PASSWORD': DBPASS_PERSONA,
         'HOST': 'localhost',
