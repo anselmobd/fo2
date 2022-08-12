@@ -99,7 +99,9 @@ class ProduzirModeloGrade(O2BaseGetView):
             'row_style': 'font-weight: bold;',
             'class_suffix': '__total',
         })
-        data[-1]['meta_estoque'] = 0
+
+        for row in data:
+            row['meta_estoque'] = 0
 
         self.context.update(
             self.table_defs.hfs_dict()
