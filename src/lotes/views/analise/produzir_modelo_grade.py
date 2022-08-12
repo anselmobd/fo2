@@ -77,9 +77,9 @@ class ProduzirModeloGrade(O2BaseGetView):
             dados_produzir = mount_produzir_grade_empenho(cursor, modelo)
             data_row['modelo'] = modelo
             data_row['modelo|CLASS'] = 'modelo'
-            data_row['meta_estoque'] = row['meta_estoque']
-            data_row['meta_giro'] = row['meta_giro']
-            data_row['meta'] = row['meta_giro'] + row['meta_estoque']
+            data_row['meta_estoque'] = self.get_total(dados_produzir, 'gme')
+            data_row['meta_giro'] = self.get_total(dados_produzir, 'gmg')
+            data_row['meta'] = self.get_total(dados_produzir, 'gm')
             data_row['inventario'] = self.get_total(dados_produzir, 'ginv')
             data_row['inventario|CLASS'] = f'inventario-{modelo}'
             data_row['op_andamento'] = self.get_total(dados_produzir, 'gopa_ncd')
