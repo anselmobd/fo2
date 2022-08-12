@@ -23,5 +23,4 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
         modelo = self.form.cleaned_data['modelo']
         dados_produzir = mount_produzir_grade_empenho(cursor, modelo)
-        pprint(dados_produzir)
         self.context.update(dados_produzir)
