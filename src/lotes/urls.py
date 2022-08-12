@@ -13,7 +13,7 @@ from lotes.views.corte import (
 )
 from lotes.views.ops import seq_erro
 from lotes.views.analise import produzir_grade_empenho
-
+from lotes.views.ajax import produzir_modelo_grade as ajax_produzir_modelo_grade
 
 app_name = 'producao'
 urlpatterns = [
@@ -64,6 +64,10 @@ urlpatterns = [
     re_path(r'^analise/produzir_modelo_grade/$',
         views.analise.ProduzirModeloGrade.as_view(),
         name='produzir_modelo_grade'),
+
+    re_path(r'^ajax/produzir_modelo_grade/(?P<modelo>[^/]+)/$',
+        ajax_produzir_modelo_grade.produzir_modelo_grade,
+        name='ajax_produzir_modelo_grade'),
 
     re_path(r'^busca_op/$', views.ord_prod.BuscaOP.as_view(), name='busca_op'),
     re_path(r'^busca_op/(?P<ref>.+)/$', views.ord_prod.BuscaOP.as_view(),
