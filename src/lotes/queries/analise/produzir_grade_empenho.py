@@ -1,9 +1,15 @@
 import copy
 from pprint import pprint
 
+from django.core.cache import cache
 from django.db.models import Exists, OuterRef
 
 from geral.functions import config_get_value
+from utils.cache import entkeys
+from utils.functions import (
+    fo2logger,
+    my_make_key_cache,
+)
 from utils.functions.dictlist.dictlist_to_grade import dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
 
@@ -23,6 +29,18 @@ __all__ = ['mount_produzir_grade_empenho']
 
 
 def mount_produzir_grade_empenho(cursor, modelo):
+
+    key_cache = my_make_key_cache(
+        'lotes/queries/analise/prod_grad_emp/mount',
+        modelo,
+    )
+
+    mount_produzir = cache.get(key_cache)
+
+    if mount_produzir:
+        fo2logger.info('cached '+key_cache)
+        return mount_produzir
+
     og = OperacoesGrade()
     modelo = f"{modelo}"
     modelo = int(modelo)
@@ -455,5 +473,9 @@ def mount_produzir_grade_empenho(cursor, modelo):
             mount_produzir.update({
                 'glc': glc,
             })
+
+
+    cache.set(key_cache, mount_produzir, timeout=entkeys._MINUTE*5)
+    fo2logger.info('calculated '+key_cache)
 
     return mount_produzir
