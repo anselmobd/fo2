@@ -9,8 +9,7 @@ from lotes.queries.analise.produzir_grade_empenho import mount_produzir_grade_em
 __all__ = ['produzir_modelo_grade']
 
 
-def get_total(dados, grade, grade_alt=None):
-    grades = [grade, grade_alt]
+def get_total(dados, *grades):
     for grd in grades:
         if grd:
             if grd in dados:
@@ -42,7 +41,7 @@ def produzir_modelo_grade(request, modelo):
         data['excesso'] = get_total(dados_produzir, 'gex')
         data['a_produzir'] = get_total(dados_produzir, 'gap')
         data['a_produzir_tam'] = get_total(dados_produzir, 'glm', 'gap')
-        data['a_produzir_cor'] = get_total(dados_produzir, 'glc', 'gap')
+        data['a_produzir_cor'] = get_total(dados_produzir, 'glc', 'glm', 'gap')
 
     except Exception as e:
         data.update({
