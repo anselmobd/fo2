@@ -17,7 +17,7 @@ def get_total(dados, grade, grade_alt=None):
                 for row in dados[grd]['data']:
                     if row['cor'] == 'Total':
                         return row['total']
-    return -1
+    return 0
 
 
 def produzir_modelo_grade(request, modelo):
