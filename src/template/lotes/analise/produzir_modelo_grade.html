@@ -86,11 +86,8 @@
         val_el.innerHTML = formatNumber(data[campo]);
 
         var tot_el = document.querySelectorAll('.'+campo+'__total')[0];
-        console.log(modelo, tot_el.innerHTML)
         a_produzir__total = parseInt(unformatNumber(tot_el.innerHTML));
-        console.log(modelo, a_produzir__total)
         a_produzir__total += data[campo];
-        console.log(modelo, a_produzir__total)
         tot_el.innerHTML = formatNumber(a_produzir__total);
 
       }
