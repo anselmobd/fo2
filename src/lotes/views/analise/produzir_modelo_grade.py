@@ -46,7 +46,9 @@ class ProduzirModeloGrade(O2BaseGetView):
 
     def get_total(self, dados, grade):
         if grade in dados:
-            return dados[grade]['total']
+            for row in dados[grade]['data']:
+                if row['cor'] == 'Total':
+                    return row['total']
         else:
             return 0
 
