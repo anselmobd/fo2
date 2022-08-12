@@ -90,7 +90,18 @@
         a_produzir__total = parseInt(unformatNumber(tot_el.innerHTML));
         a_produzir__total += data[campo];
         tot_el.innerHTML = formatNumber(a_produzir__total);
+      }
 
+      function set_destaque(modelo) {
+        var ap_el = document.querySelectorAll('.a_produzir-'+modelo)[0];
+        var apt_el = document.querySelectorAll('.a_produzir_tam-'+modelo)[0];
+        var apc_el = document.querySelectorAll('.a_produzir_cor-'+modelo)[0];
+        if ( apt_el.innerHTML != ap_el.innerHTML ) {
+          apt_el.style.color = 'red';
+        }
+        if ( apc_el.innerHTML != apt_el.innerHTML ) {
+          apc_el.style.color = 'red';
+        }
       }
 
       // function load_dados_modelo(modelo) {
@@ -137,6 +148,7 @@
                   for (var ic=0, lenc=campos.length|0; ic<lenc; ic=ic+1|0) {
                     set_valores(data, modelo, campos[ic]);
                   }
+                  set_destaque(modelo);
                 } else {
                   console.log('Erro: '+data['descricao_erro']);
                 }
