@@ -63,11 +63,6 @@ class ProduzirModeloGrade(O2BaseGetView):
             )
         ))
         metas = metas.filter(
-            modelo__in=(
-                256, 156, 505, 5156, 251, 617, 2156,
-                290, 613, 263, 619, 103, 295, 417, 2,
-                322, 498, 620, 543, 5376, 5370, 5314
-            ),
             antiga=False,
         )
         metas = metas.exclude(venda_mensal=0)
