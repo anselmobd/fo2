@@ -67,7 +67,7 @@ def debug_cursor_execute(
             "\n".join([
                 f"-- {line}"
                 for line
-                in debug(depth=slice(2, None), prt=False)
+                in debug(depth=slice(2, None), prt=False, verbose=False)
             ])
         )
         if list_args:
