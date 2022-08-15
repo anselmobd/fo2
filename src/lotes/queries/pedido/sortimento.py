@@ -243,6 +243,7 @@ def sortimento(cursor, **kwargs):
           {filtro_faturado} -- filtro_faturado
           {filtro_faturavel} -- filtro_faturavel
           {filtro_solicitado} -- filtro_solicitado
+          {filtro_agrupado} -- filtro_agrupado
           {filtro_pedido_liberado} -- filtro_pedido_liberado
         GROUP BY
           {sort_group} -- sort_group
@@ -284,6 +285,7 @@ def sortimento(cursor, **kwargs):
           {filtro_faturado} -- filtro_faturado
           {filtro_faturavel} -- filtro_faturavel
           {filtro_solicitado} -- filtro_solicitado
+          {filtro_agrupado} -- filtro_agrupado
           {filtro_pedido_liberado} -- filtro_pedido_liberado
         GROUP BY
           {sort_group} -- sort_group
