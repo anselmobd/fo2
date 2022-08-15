@@ -101,6 +101,7 @@ def query(
         JOIN pcpc_044 sl -- solicitação / lote
           ON sl.PEDIDO_DESTINO = a.AGRUPADOR
          AND sl.GRUPO_DESTINO = a.REF
+         AND sl.SITUACAO IN (1, 2, 3, 4)
         GROUP BY 
           a.AGRUPADOR
         , a.REF
