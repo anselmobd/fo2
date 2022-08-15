@@ -204,7 +204,7 @@ def mount_produzir_grade_empenho(cursor, modelo):
         lotes.queries.pedido.sortimento(
             cursor, tipo_sort='c', descr_sort=False, modelo=modelo,
             cancelado='n', faturavel='f', total='Total', solicitado='n',
-            pedido_liberado='s',
+            agrupado='n', pedido_liberado='s',
             periodo=':{}'.format(periodo))
 
     gped = None
