@@ -66,31 +66,50 @@ def query(
         filtro_cor = f"AND sl.COR_DESTINO = '{cor}'"
 
     sql = f"""
+        WITH agrup
+          AS
+        ( SELECT
+            sl.PEDIDO_DESTINO AGRUPADOR 
+          , sl.GRUPO_DESTINO REF
+          , LISTAGG(DISTINCT COALESCE(iped.PEDIDO_VENDA, 0), ', ')
+            WITHIN GROUP (ORDER BY iped.PEDIDO_VENDA) PEDIDOS
+          FROM pcpc_044 sl -- solicitação / lote 
+          JOIN basi_030 r
+            ON r.NIVEL_ESTRUTURA = 1
+           AND r.REFERENCIA = sl.GRUPO_DESTINO
+          JOIN PEDI_110 iped -- item de pedido de venda
+            ON iped.AGRUPADOR_PRODUCAO = sl.PEDIDO_DESTINO - 999000000
+          WHERE 1=1
+            AND sl.PEDIDO_DESTINO >= 999000000
+            AND sl.SITUACAO IN (1, 2, 3, 4)
+            {filtro_colecao} -- filtro_colecao
+            {filtro_ref} -- filtro_ref
+            {filtro_tam} -- filtro_tam
+            {filtro_cor} -- filtro_cor
+          GROUP BY 
+            sl.PEDIDO_DESTINO 
+          , sl.GRUPO_DESTINO  
+        )
         SELECT
-          MIN(sl.SITUACAO) EMP_SIT_MIN
+          a.AGRUPADOR
+        , a.REF
+        , a.PEDIDOS
+        , MIN(sl.SITUACAO) EMP_SIT_MIN
         , MAX(sl.SITUACAO) EMP_SIT_MAX
-        , sl.PEDIDO_DESTINO PEDIDO 
-        , sl.GRUPO_DESTINO REF
         , SUM(sl.QTDE) QTD_EMP
-        FROM pcpc_044 sl -- solicitação / lote 
-        JOIN basi_030 r
-          ON r.NIVEL_ESTRUTURA = 1
-         AND r.REFERENCIA = sl.GRUPO_DESTINO
-        WHERE 1=1
-          AND sl.PEDIDO_DESTINO >= 999000000
-          AND sl.SITUACAO IN (1, 2, 3, 4)
-          {filtro_colecao} -- filtro_colecao
-          {filtro_ref} -- filtro_ref
-          {filtro_tam} -- filtro_tam
-          {filtro_cor} -- filtro_cor
+        FROM agrup a
+        JOIN pcpc_044 sl -- solicitação / lote
+          ON sl.PEDIDO_DESTINO = a.AGRUPADOR
+         AND sl.GRUPO_DESTINO = a.REF
         GROUP BY 
-          sl.PEDIDO_DESTINO 
-        , sl.GRUPO_DESTINO  
+          a.AGRUPADOR
+        , a.REF
+        , a.PEDIDOS
         ORDER BY 
-          1 
-        , 2 
-        , sl.PEDIDO_DESTINO 
-        , sl.GRUPO_DESTINO  
+          4 
+        , 5 
+        , a.AGRUPADOR 
+        , a.REF  
     """
 
     debug_cursor_execute(cursor, sql)
