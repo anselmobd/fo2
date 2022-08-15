@@ -74,6 +74,8 @@ class FaturavelModelo(O2BaseGetPostView):
     def monta_dados(self, data, faturavel=False):
         tot_qtd_fat = 0
         for row in data:
+            row['PEDIDO'] = f"{row['PEDIDO']}"
+            row['PEDIDO|GLYPHICON'] = '_'
             row['PEDIDO|TARGET'] = '_blank'
             row['PEDIDO|LINK'] = reverse(
                 'producao:pedido__get', args=[row['PEDIDO']])
@@ -134,12 +136,28 @@ class FaturavelModelo(O2BaseGetPostView):
         })
         return dados
 
+    def add_links_pedidos(self, pedidos):
+        if not pedidos:
+            return ''
+        pedido_list = []
+        for pedido in pedidos.split(','):
+            pedido = pedido.strip()
+            link = reverse(
+                'producao:pedido__get', args=[pedido])
+            pedido_list.append(
+                f'<a href="{link}" '
+                f'target="_BLANK">{pedido}</a>'
+            )
+        return ', '.join(pedido_list)
+
     def monta_dados_var(self, data):
         for row in data:
             if row['EMP_SIT_MIN'] == row['EMP_SIT_MAX']:
                 row['EMP_SIT'] = row['EMP_SIT_MIN']
             else:
                 row['EMP_SIT'] = f"{row['EMP_SIT_MIN']} a {row['EMP_SIT_MAX']}"
+            row['PEDIDOS'] = self.add_links_pedidos(row['PEDIDOS'])
+            row['PEDIDOS|SAFE'] = True
             # if self.com_pac:
             #     if row['REF'] in self.pac_quant:
             #         row['PAC'] = self.pac_quant[row['REF']]
