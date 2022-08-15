@@ -155,6 +155,14 @@ def query(
             )
           , 0 
           ) EMP_SIT_MAX
+        , COALESCE(
+            ( SELECT 
+                MIN(iped.AGRUPADOR_PRODUCAO)
+              FROM PEDI_110 iped -- item de pedido de venda
+              WHERE iped.PEDIDO_VENDA = pref.PEDIDO
+            )
+          , 0 
+          ) AGRUPADOR
         , pref.QTD_SOL
         , pref.QTD_EMP
         , pref.NIVEL
@@ -306,6 +314,7 @@ def query(
         ORDER BY
           2
         , 3
+        , 4
         , ped.DATA_ENTR_VENDA
         , pref.PEDIDO
         , pref.NIVEL
