@@ -79,7 +79,10 @@ class FaturavelModelo(O2BaseGetPostView):
             row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
             row['DATA'] = row['DATA'].date() if row['DATA'] else ''
             if row['EMP_SIT_MIN'] == 0:
-                row['EMP_SIT'] = 'Sem Emp.'
+                if row['AGRUPADOR'] == 0:
+                    row['EMP_SIT'] = 'Sem Emp.'
+                else:
+                    row['EMP_SIT'] = 'Emp.Varejo'
             else:
                 if row['EMP_SIT_MIN'] == row['EMP_SIT_MAX']:
                     row['EMP_SIT'] = row['EMP_SIT_MIN']
