@@ -19,6 +19,7 @@ def sortimento(cursor, **kwargs):
     faturado = argdef('faturado', 't')  # default todos os pedidos
     faturavel = argdef('faturavel', 't')  # default todos os pedidos
     solicitado = argdef('solicitado', 't')  # default todos os pedidos
+    agrupado = argdef('agrupado', 't')  # default todos os pedidos
     pedido_liberado = argdef('pedido_liberado', 't')  # default todos os pedidos
     total = argdef('total', None)
     empresa = argdef('empresa', 1)  # default tussor matriz
@@ -116,6 +117,28 @@ def sortimento(cursor, **kwargs):
                 )
         """
 
+    filtro_agrupado = ''
+    if agrupado == 's':  # agrupado em empenho para varejo
+        filtro_agrupado = """--
+            AND EXISTS
+                ( SELECT
+                    1
+                  FROM PEDI_110 iped -- item de pedido de venda
+                  WHERE iped.PEDIDO_VENDA = i.PEDIDO_VENDA
+                    AND iped.AGRUPADOR_PRODUCAO <> 0
+                )
+        """
+    elif agrupado == 'n':  # agrupado em empenho para varejo
+        filtro_agrupado = """--
+            AND NOT EXISTS
+                ( SELECT
+                    1
+                  FROM PEDI_110 iped -- item de pedido de venda
+                  WHERE iped.PEDIDO_VENDA = i.PEDIDO_VENDA
+                    AND iped.AGRUPADOR_PRODUCAO <> 0
+                )
+        """
+
     filtro_pedido_liberado = ''
     if pedido_liberado == 's':  # pedido_liberado
         filtro_pedido_liberado = """--
@@ -163,6 +186,7 @@ def sortimento(cursor, **kwargs):
           {filtro_faturado} -- filtro_faturado
           {filtro_faturavel} -- filtro_faturavel
           {filtro_solicitado} -- filtro_solicitado
+          {filtro_agrupado} -- filtro_agrupado
           {filtro_pedido_liberado} -- filtro_pedido_liberado
         ORDER BY
           t.ORDEM_TAMANHO
