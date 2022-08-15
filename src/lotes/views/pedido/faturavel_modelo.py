@@ -33,6 +33,8 @@ class FaturavelModelo(O2BaseGetPostView):
             {
                 'EMP_SIT': ["Sit.Emp."],
                 'PEDIDO': ["Nº pedido"],
+                'AGRUPADOR': ["Agrupador"],
+                'PEDIDOS': ["Pedidos"],
                 'DATA': ["Data embarque"],
                 'CLIENTE': ["Cliente"],
                 'REF': ["Referência"],
@@ -165,7 +167,8 @@ class FaturavelModelo(O2BaseGetPostView):
 
         var_fields=[
             'EMP_SIT',
-            'PEDIDO',
+            'AGRUPADOR',
+            'PEDIDOS',
             'REF',
             'QTD_EMP',
         ]
