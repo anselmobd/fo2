@@ -156,7 +156,7 @@ def min_not_None(*args):
     return mini
 
 
-def debug(message=None, level=0, depth=None, prt=True):
+def debug(message=None, level=0, depth=None, prt=True, verbose=True):
     if depth is None:
         depth = slice(1,None)
     if isinstance(depth, int):
@@ -165,7 +165,7 @@ def debug(message=None, level=0, depth=None, prt=True):
         lines = []
     for callerframerecord in inspect.stack()[depth]:
         line = debug_line(
-            callerframerecord, message, level
+            callerframerecord, message, level, verbose=verbose,
         )
         if line:
             if prt:
@@ -176,7 +176,7 @@ def debug(message=None, level=0, depth=None, prt=True):
         return lines
 
 
-def debug_line(callerframerecord, message=None, level=0):
+def debug_line(callerframerecord, message=None, level=0, verbose=True):
     frame = callerframerecord[0]
     info = inspect.getframeinfo(frame)
 
@@ -193,11 +193,17 @@ def debug_line(callerframerecord, message=None, level=0):
 
     msg_list = []
     if level >= 3:
-        msg_list.append(f"file={filename}")
+        msg_list.append(
+            f"file={filename}" if verbose else f"{filename}"
+        )
     if level >= 2:
-        msg_list.append(f"func={info.function}")
+        msg_list.append(
+            f"func={info.function}" if verbose else f"{info.function}"
+        )
     if level >= 1:
-        msg_list.append(f"line={info.lineno}")
+        msg_list.append(
+            f"line={info.lineno}" if verbose else f"{info.lineno}"
+        )
     if message:
         msg_list.append(message)
 
