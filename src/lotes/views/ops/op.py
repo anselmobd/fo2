@@ -8,12 +8,14 @@ from fo2.connections import db_cursor_so
 
 from geral.functions import config_get_value
 from utils.classes import Perf
+from utils.functions.dictlist.dictlist_to_grade import dictlist_to_grade_qtd
 
 import lotes.forms as forms
 import lotes.queries.lote
 import lotes.queries.op
 import lotes.queries.os
 from lotes.queries.lote import op_lotes
+from lotes.queries.op import op_disponivel
 
 
 class Op(View):
@@ -236,6 +238,25 @@ class Op(View):
                         'so_fields': so_fields,
                         'so_data': so_data,
                     })
+
+            # Grade de disponível (sem empenhos)
+            qtd_disponivel = op_disponivel.query(cursor, op)
+
+            grade_disponivel = dictlist_to_grade_qtd(
+                qtd_disponivel,
+                field_linha='cor',
+                field_coluna='tam',
+                facade_coluna='Tamanho',
+                field_ordem_coluna='ordem_tam',
+                field_quantidade='qtd',
+            )
+
+            if grade_disponivel['total'] != 0:
+                context.update({
+                    'gd_headers': grade_disponivel['headers'],
+                    'gd_fields': grade_disponivel['fields'],
+                    'gd_data': grade_disponivel['data'],
+                })
 
             # Estágios
             e_data = lotes.queries.op.op_estagios(cursor, op)

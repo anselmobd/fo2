@@ -140,7 +140,20 @@
             </table>
           </td>
         {% endif %}
-      </tr>
+        <td></td>
+        <td style="border-left: thin solid lightgrey;"></td>
+        <td style="vertical-align: top;">
+          <h3>Disponível</h3>
+          {% if gd_data %}
+            <table>
+              {% include "layout/thead_generic.html" with data=gd_headers only %}
+              {% include "layout/tbody_generic.html" with fields=gd_fields data=gd_data only %}
+            </table>
+          {% else %}
+            <b>Tudo empenhado</b>
+          {% endif %}
+        </td>
+    </tr>
     </table>
     <h3 style="page-break-before: always;">Estágios</h3>
     <div>
