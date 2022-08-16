@@ -49,6 +49,7 @@ def query(cursor, op):
           JOIN PCPC_044 sl -- solicitação lote
             ON sl.ORDEM_PRODUCAO = l.op
            AND sl.ORDEM_CONFECCAO = l.OC 
+           AND sl.SITUACAO IN (1, 2, 3, 4)
           GROUP BY 
             l.OP
           , l.PER 
