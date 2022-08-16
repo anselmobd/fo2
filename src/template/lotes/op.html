@@ -146,11 +146,11 @@
           <h3>Disponível</h3>
           {% if gd_data %}
             <table>
-              {% include "layout/thead_generic.html" with data=gd_headers only %}
-              {% include "layout/tbody_generic.html" with fields=gd_fields data=gd_data only %}
+              {% include "layout/thead_generic.html" with data=gd_headers style=gd_style only %}
+              {% include "layout/tbody_generic.html" with fields=gd_fields data=gd_data style=gd_style only %}
             </table>
           {% else %}
-            <b>Tudo empenhado</b>
+            <b>Vazia</b>
           {% endif %}
         </td>
     </tr>

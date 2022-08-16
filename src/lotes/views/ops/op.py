@@ -256,6 +256,7 @@ class Op(View):
                     'gd_headers': grade_disponivel['headers'],
                     'gd_fields': grade_disponivel['fields'],
                     'gd_data': grade_disponivel['data'],
+                    'gd_style': grade_disponivel['style'],
                 })
 
             # Estágios
