@@ -37,6 +37,26 @@ def query(
         , COALESCE(forn.NOME_FANTASIA, forn.NOME_FORNECEDOR) forn_nome
         , cnf.VALOR_ITENS_NFIS nf_env_valor
         , cnf.DATA_EMISSAO nf_env_dt_emi
+        , ( SELECT
+              LISTAGG(
+                DISTINCT
+                '(' ||
+                infe.CODITEM_NIVEL99 || '.' ||
+                infe.CODITEM_GRUPO || ')' ||
+                r.DESCR_REFERENCIA
+              , ', '
+              )
+              WITHIN GROUP (ORDER BY infe.CODITEM_NIVEL99, infe.CODITEM_GRUPO)
+            FROM OBRF_015 infe
+            LEFT JOIN basi_030 r
+              ON r.NIVEL_ESTRUTURA = infe.CODITEM_NIVEL99
+             AND r.REFERENCIA = infe.CODITEM_GRUPO
+            WHERE infe.CAPA_ENT_FORCLI9 = cnfe.CGC_CLI_FOR_9
+              AND infe.CAPA_ENT_FORCLI4 = cnfe.CGC_CLI_FOR_4
+              AND infe.CAPA_ENT_FORCLI2 = cnfe.CGC_CLI_FOR_2
+              AND infe.CAPA_ENT_NRDOC = cnfe.DOCUMENTO
+              AND infe.CAPA_ENT_SERIE = cnfe.SERIE
+          ) itens
         FROM OBRF_010 cnfe -- capa de nota de entrada
         LEFT JOIN SUPR_010 forn -- fornecedor
           ON forn.FORNECEDOR9 = cnfe.CGC_CLI_FOR_9
