@@ -25,6 +25,7 @@ class EnvioInsumo(O2BaseGetPostView):
                 'nf': ["NF", 'c'],
                 'valor': ["Valor", 'r'],
                 'forn_nome': ["Fornecedor"],
+                'itens': ["Itens"],
                 'nfe_nf': ["NF Forn.", 'c'],
                 'nfe_dt_emi': ["Dt.emissão", 'c'],
                 'nfe_dt_dig': ["Dt.digitação", 'c'],
