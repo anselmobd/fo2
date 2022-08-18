@@ -60,6 +60,12 @@
     {% include "layout/tbody_generic.html" with fields=s_fields data=s_data group=s_group style=s_style only %}
   </table>
 {% endif %}
+{% if agr_data %}
+  <table>
+    {% include "layout/thead_generic.html" with data=agr_headers style=agr_style only %}
+    {% include "layout/tbody_generic.html" with fields=agr_fields data=agr_data group=agr_group style=agr_style only %}
+  </table>
+{% endif %}
 {% if d_data and s_data %}
     </td>
   </tr>
