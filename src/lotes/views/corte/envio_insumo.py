@@ -63,7 +63,7 @@ class EnvioInsumo(O2BaseGetPostView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
-        relacionamentos.verifica_novos(cursor)
+        # relacionamentos.verifica_novos(cursor)
         
         env_data = nfs_de_envio.query(
             cursor,
