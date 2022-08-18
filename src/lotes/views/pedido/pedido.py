@@ -12,6 +12,8 @@ from base.forms.forms2 import PedidoForm2
 from geral.functions import get_empresa
 from utils.functions import coalesce
 
+from cd.queries.novo_modulo.agrupador import get_agrupador
+
 import lotes.models as models
 import lotes.queries as queries
 from lotes.queries.pedido.ped_alter import pedidos_filial_na_data
@@ -114,6 +116,14 @@ class Pedido(View):
             's_headers': ["Solicitação"],
             's_fields': ["solicitacao"],
             's_data': s_data,
+        })
+
+        # agrupador
+        agr_data = get_agrupador(cursor, pedido)
+        self.context.update({
+            'agr_headers': ["Agrupador"],
+            'agr_fields': ["agrupador"],
+            'agr_data': agr_data,
         })
 
         # OPs

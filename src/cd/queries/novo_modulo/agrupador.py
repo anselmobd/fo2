@@ -5,13 +5,10 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def get_agrupador(
-    cursor,
-    pedido=None,
-):
+def get_agrupador(cursor, pedido):
     sql = f"""
         SELECT
-          iped.AGRUPADOR_PRODUCAO + 999000
+          iped.AGRUPADOR_PRODUCAO + 999000 AGRUPADOR
         FROM  PEDI_110 iped -- item de pedido de venda
         WHERE iped.PEDIDO_VENDA = {pedido}
           AND iped.AGRUPADOR_PRODUCAO <> 0
