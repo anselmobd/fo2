@@ -38,6 +38,24 @@ def query(
         , cnfe.DATA_EMISSAO nfe_dt_emi
         , cnfe.DATA_DIGITACAO nfe_dt_dig
         , COALESCE(forn.NOME_FANTASIA, forn.NOME_FORNECEDOR) forn_nome
+        , ( SELECT
+              LISTAGG(
+                DISTINCT
+                '(' ||
+                inf.NIVEL_ESTRUTURA || '.' ||
+                inf.GRUPO_ESTRUTURA || ')' ||
+                r.DESCR_REFERENCIA
+              , ', '
+              )
+              WITHIN GROUP (ORDER BY inf.NIVEL_ESTRUTURA, inf.GRUPO_ESTRUTURA)
+            FROM FATU_060 inf
+            LEFT JOIN basi_030 r
+              ON r.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
+             AND r.REFERENCIA = inf.GRUPO_ESTRUTURA
+            WHERE inf.CH_IT_NF_CD_EMPR = cnf.CODIGO_EMPRESA
+              AND inf.CH_IT_NF_NUM_NFIS = cnf.NUM_NOTA_FISCAL
+              AND inf.CH_IT_NF_SER_NFIS = cnf.SERIE_NOTA_FISC
+          ) itens
         FROM FATU_050 cnf -- capa faturamento
         LEFT JOIN OBRF_010 cnfe -- capa de nota de entrada
           ON cnfe.LOCAL_ENTREGA = cnf.CODIGO_EMPRESA
