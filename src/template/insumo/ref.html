@@ -4,82 +4,82 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'insumo:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
-<style>
-{% include 'layout/simple_table.css' %}
-</style>
+  <style>
+  {% include 'layout/simple_table.css' %}
+  </style>
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'insumo:ref' %}" method="post">
+  <form action="{% url 'insumo:ref' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
-</form>
-{% if ref %}
-  <h2>Nível: {{ nivel}} - Referência: {{ ref }}</h2>
-{% endif %}
-{% if msg_erro %}
-  <h3>{{ msg_erro }}</h3>
-{% endif %}
-{% if data %}
-  <table>
-    {% include "layout/html_thead.html" with data=headers only %}
-    {% include "layout/html_tbody.html" with fields=fields data=data only %}
-  </table>
-  {% if b2_data %}
-    <table>
-      {% include "layout/html_thead.html" with data=b2_headers only %}
-      {% include "layout/html_tbody.html" with fields=b2_fields data=b2_data only %}
-    </table>
+  </form>
+  {% if ref %}
+    <h2>Nível: {{ nivel}} - Referência: {{ ref }}</h2>
   {% endif %}
-  {% if m_data %}
-    <table>
-      {% include "layout/html_thead.html" with data=m_headers only %}
-      {% include "layout/html_tbody.html" with fields=m_fields data=m_data only %}
-    </table>
+  {% if msg_erro %}
+    <h3>{{ msg_erro }}</h3>
   {% endif %}
-  <table class="layout">
-    <tr>
-      <td style="vertical-align: top;">
-        {% if t_data %}
-          <h3>Tamanhos</h3>
-          <table>
-            {% include "layout/html_thead.html" with data=t_headers only %}
-            {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
-          </table>
-        {% endif %}
-      </td>
-      <td>
-        &nbsp;
-      </td>
-      <td style="vertical-align: top;">
-        {% if c_data %}
-          <h3>Cores</h3>
-          <table>
-            {% include "layout/html_thead.html" with data=c_headers only %}
-            {% include "layout/html_tbody.html" with fields=c_fields data=c_data only %}
-          </table>
-        {% endif %}
-      </td>
-    </tr>
-  </table>
-  <h3>Parâmetros</h3>
-  {% if p_data %}
+  {% if data %}
     <table>
-      {% include "layout/html_thead.html" with data=p_headers only %}
-      {% include "layout/html_tbody.html" with fields=p_fields data=p_data only %}
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
     </table>
-  {% else %}
-    <h4>Sem parâmetros!</h4>
-  {% endif %}
-  <h3>Usado nas estruturas</h3>
-  {% if u_data %}
-    <table>
-      {% include "layout/html_thead.html" with data=u_headers only %}
-      {% include "layout/html_tbody_link.html" with fields=u_fields data=u_data link=u_link only %}
+    {% if b2_data %}
+      <table>
+        {% include "layout/thead_generic.html" with data=b2_headers only %}
+        {% include "layout/tbody_generic.html" with fields=b2_fields data=b2_data only %}
+      </table>
+    {% endif %}
+    {% if m_data %}
+      <table>
+        {% include "layout/thead_generic.html" with data=m_headers only %}
+        {% include "layout/tbody_generic.html" with fields=m_fields data=m_data only %}
+      </table>
+    {% endif %}
+    <table class="layout">
+      <tr>
+        <td style="vertical-align: top;">
+          {% if t_data %}
+            <h3>Tamanhos</h3>
+            <table>
+              {% include "layout/thead_generic.html" with data=t_headers only %}
+              {% include "layout/tbody_generic.html" with fields=t_fields data=t_data only %}
+            </table>
+          {% endif %}
+        </td>
+        <td>
+          &nbsp;
+        </td>
+        <td style="vertical-align: top;">
+          {% if c_data %}
+            <h3>Cores</h3>
+            <table>
+              {% include "layout/thead_generic.html" with data=c_headers only %}
+              {% include "layout/tbody_generic.html" with fields=c_fields data=c_data only %}
+            </table>
+          {% endif %}
+        </td>
+      </tr>
     </table>
-  {% else %}
-    <h4>Não utilizado!</h4>
+    <h3>Parâmetros</h3>
+    {% if p_data %}
+      <table>
+        {% include "layout/thead_generic.html" with data=p_headers only %}
+        {% include "layout/tbody_generic.html" with fields=p_fields data=p_data only %}
+      </table>
+    {% else %}
+      <h4>Sem parâmetros!</h4>
+    {% endif %}
+    <h3>Usado nas estruturas</h3>
+    {% if u_data %}
+      <table>
+        {% include "layout/thead_generic.html" with data=u_headers only %}
+        {% include "layout/tbody_generic.html" with fields=u_fields data=u_data link=u_link only %}
+      </table>
+    {% else %}
+      <h4>Não utilizado!</h4>
+    {% endif %}
   {% endif %}
-{% endif %}
 {% endblock %}

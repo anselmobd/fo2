@@ -114,10 +114,9 @@ class Ref(View):
 
         # Usado em
         u_data = ref_usado_em.query(cursor, nivel, ref)
-        u_link = ('REF')
         for row in u_data:
             if row['NIVEL'] == '1':
-                row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
+                row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             if row['NIVEL'] == '5':
                 row['ESTAGIO'] = '-'
         if len(u_data) != 0:
@@ -131,7 +130,6 @@ class Ref(View):
                              'TAM', 'COR',
                              'ALTERNATIVA', 'CONSUMO', 'ESTAGIO'),
                 'u_data': u_data,
-                'u_link': u_link,
             })
 
         return context
