@@ -123,25 +123,23 @@ class Ref(View):
                 if row['NIVEL'] == '5':
                     row['ESTAGIO'] = '-'
 
-            self.table_defs = TableDefsHpS(
-                {
-                    'TAM_COMP': ["Tamanho"],
-                    'COR_COMP': ["Cor"],
-                    'TIPO': ["Tipo"],
-                    'NIVEL': ["Nível"],
-                    'REF': ["Referência"],
-                    'DESCR': ["Descrição"],
-                    'TAM': ["Tamanho"],
-                    'COR': ["Cor"],
-                    'ALTERNATIVA': ["Alternativa", 'r'],
-                    'CONSUMO': ["Consumo", 'r'],
-                    'ESTAGIO': ["Estágio"],
-                },
+            TableDefsHpS({
+                'TAM_COMP': ["Tamanho"],
+                'COR_COMP': ["Cor"],
+                'TIPO': ["Tipo"],
+                'NIVEL': ["Nível"],
+                'REF': ["Referência"],
+                'DESCR': ["Descrição"],
+                'TAM': ["Tamanho"],
+                'COR': ["Cor"],
+                'ALTERNATIVA': ["Alternativa", 'r'],
+                'CONSUMO': ["Consumo", 'r'],
+                'ESTAGIO': ["Estágio"],
+            }).hfs_dict(
+                context=context,
+                sufixo='u_',
             )
-            context.update(self.table_defs.hfs_dict(sufixo='u_'))
-            context.update({
-                'u_data': u_data,
-            })
+            context['u_data'] = u_data
 
         return context
 
