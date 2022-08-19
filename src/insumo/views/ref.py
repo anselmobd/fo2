@@ -8,6 +8,7 @@ from fo2.connections import db_cursor_so
 
 import insumo.forms as forms
 import insumo.queries as queries
+from insumo.queries import ref_usado_em
 
 
 class Ref(View):
@@ -112,7 +113,7 @@ class Ref(View):
             })
 
         # Usado em
-        u_data = queries.ref_usado_em(cursor, nivel, ref)
+        u_data = ref_usado_em.query(cursor, nivel, ref)
         u_link = ('REF')
         for row in u_data:
             if row['NIVEL'] == '1':
