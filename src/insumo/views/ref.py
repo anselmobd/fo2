@@ -6,7 +6,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.table_defs import TableDefsHpS
+from utils.table_defs import TableDefsHpSD
 
 import insumo.forms as forms
 import insumo.queries as queries
@@ -117,13 +117,16 @@ class Ref(View):
         # Usado em
         u_data = ref_usado_em.query(cursor, nivel, ref)
         if u_data:
+            max_digits = 0
             for row in u_data:
+                num_digits = str(row['CONSUMO'])[::-1].strip('0').find('.')
+                max_digits = max(max_digits, num_digits)
                 if row['NIVEL'] == '1':
                     row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
                 if row['NIVEL'] == '5':
                     row['ESTAGIO'] = '-'
 
-            TableDefsHpS({
+            TableDefsHpSD({
                 'TAM_COMP': ["Tamanho"],
                 'COR_COMP': ["Cor"],
                 'TIPO': ["Tipo"],
@@ -133,9 +136,9 @@ class Ref(View):
                 'TAM': ["Tamanho"],
                 'COR': ["Cor"],
                 'ALTERNATIVA': ["Alternativa", 'r'],
-                'CONSUMO': ["Consumo", 'r'],
+                'CONSUMO': ["Consumo", 'r', max_digits],
                 'ESTAGIO': ["Estágio"],
-            }).hfs_dict(
+            }).hfsd_dict(
                 context=context,
                 sufixo='u_',
             )
