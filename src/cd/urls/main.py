@@ -26,6 +26,7 @@ from cd.views.novo_modulo import (
     disponibilidade,
     disponibilidade_ficticio,
     grade_estoque_totais,
+    historico_lote,
     nao_enderecados,
     solicitacao,
     solicitacoes,
@@ -110,8 +111,11 @@ urlpatterns = [
     re_path(r'^historico/(?P<op>[^/]+)?$',
         views.Historico.as_view(), name='historico__get'),
 
+    re_path(r'^historico_lote_old/(?P<lote>[^/]+)?$',
+        views.HistoricoLote.as_view(), name='historico_lote_old'),
+
     re_path(r'^historico_lote/(?P<lote>[^/]+)?$',
-        views.HistoricoLote.as_view(), name='historico_lote'),
+        historico_lote.HistoricoLote.as_view(), name='historico_lote'),
 
     # re_path(r'^rearrumar/$', views.Rearrumar.as_view(), name='rearrumar'),
     # re_path(r'^rearrumar/m/$',
