@@ -4,32 +4,33 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
-<style>
-{% include 'layout/simple_table.css' %}
-</style>
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'cd:historico_lote' %}" method="post">
+  <form action="{% url 'cd:historico_lote' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
-</form>
-{% if erro %}
-  <h4>{{ erro }}</h4>
-{% else %}
-  {% if lote %}
-    {% url 'producao:posicao__get' lote as detalhe_lote %}
-    {% include "layout/link.html" with link=detalhe_lote text='Detalhes do lote '|add:lote only %}<br />
-    {% url 'cd:historico__get' op as hist_op %}
-    {% include "layout/link.html" with link=hist_op text='Histórico da OP '|add:op|add:' no CD' only %}
-    <h4>Lote: {{ lote }}</h4>
+  </form>
+  {% if erro %}
+    <h4>{{ erro }}</h4>
+  {% else %}
+    {% if lote %}
+      {% url 'producao:posicao__get' lote as detalhe_lote %}
+      {% include "layout/link.html" with link=detalhe_lote text='Detalhes do lote '|add:lote only %}<br />
+      <!-- { % url 'cd:historico__get' op as hist_op %}
+      { % include "layout/link.html" with link=hist_op text='Histórico da OP '|add:op|add:' no CD' only %} -->
+      <h4>Lote: {{ lote }}</h4>
+      <h4>OP: {{ op }}</h4>
+    {% endif %}
+    {% if data %}
+      <table>
+        {% include "layout/thead_generic.html" with data=headers only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+      </table>
+    {% endif %}
   {% endif %}
-  {% if data %}
-    <table>
-      {% include "layout/thead_generic.html" with data=headers only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
-    </table>
-  {% endif %}
-{% endif %}
 {% endblock %}

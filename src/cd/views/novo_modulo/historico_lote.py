@@ -29,8 +29,6 @@ class HistoricoLote(O2BaseGetPostView):
                 'atividade': ['Atividade'],
                 'cod_container': ['Palete'],
                 'endereco': ['Endereço'],
-                'ordem_producao': ['OP'],
-                'ordem_confeccao': ['OC'],
             },
             ['header'],
         )
@@ -39,17 +37,25 @@ class HistoricoLote(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
 
         lote = self.form.cleaned_data['lote']
+        self.context['lote'] = lote
 
         data = op_de_lote.query(cursor, lote)
         if not data:
             self.context['erro'] = 'Lote não encontrado'
             return
 
-        self.context['op'] = data[0]['op']
+        self.context['op'] = f"{data[0]['op']}"
 
         data = cd_lote_hist.query(cursor, lote)
-        
+
+        for row in data:
+            if row['endereco'] is None:
+                row['endereco'] = '-'
+            if row['usuario'] is None:
+                row['usuario'] = '-'
+
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
             'data': data,
         })
+        pprint(self.context)
