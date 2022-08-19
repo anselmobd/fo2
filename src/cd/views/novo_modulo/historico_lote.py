@@ -26,7 +26,7 @@ class HistoricoLote(O2BaseGetPostView):
             {
                 'atividade': ['Atividade'],
                 'cod_container': ['Palete'],
-                'endereco': ['Endereço'],
+                # 'endereco': ['Endereço'],  # não utilizado em movimentos de lotes
                 'data_hora': ['Quando'],
                 'usuario': ['Usuário'],
             },
