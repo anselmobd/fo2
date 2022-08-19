@@ -119,25 +119,25 @@ class Ref(View):
         if u_data:
             max_digits = 0
             for row in u_data:
-                num_digits = str(row['CONSUMO'])[::-1].strip('0').find('.')
+                num_digits = str(row['consumo'])[::-1].strip('0').find('.')
                 max_digits = max(max_digits, num_digits)
-                if row['NIVEL'] == '1':
-                    row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
-                if row['NIVEL'] == '5':
-                    row['ESTAGIO'] = '-'
+                if row['nivel'] == '1':
+                    row['ref|LINK'] = reverse('produto:ref__get', args=[row['ref']])
+                if row['nivel'] == '5':
+                    row['estagio'] = '-'
 
             TableDefsHpSD({
-                'TAM_COMP': ["Tamanho"],
-                'COR_COMP': ["Cor"],
-                'TIPO': ["Tipo"],
-                'NIVEL': ["Nível"],
-                'REF': ["Referência"],
-                'DESCR': ["Descrição"],
-                'TAM': ["Tamanho"],
-                'COR': ["Cor"],
-                'ALTERNATIVA': ["Alternativa", 'r'],
-                'CONSUMO': ["Consumo", 'r', max_digits],
-                'ESTAGIO': ["Estágio"],
+                'tam_comp': ["Tamanho"],
+                'cor_comp': ["Cor"],
+                'tipo': ["Tipo"],
+                'nivel': ["Nível"],
+                'ref': ["Referência"],
+                'descr': ["Descrição"],
+                'tam': ["Tamanho"],
+                'cor': ["Cor"],
+                'alternativa': ["Alternativa", 'r'],
+                'consumo': ["Consumo", 'r', max_digits],
+                'estagio': ["Estágio"],
             }).hfsd_dict(
                 context=context,
                 sufixo='u_',
