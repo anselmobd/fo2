@@ -112,15 +112,19 @@ class Ref(O2BaseGetPostView):
                 't_data': t_data,
             })
 
-        p_data = ref_parametros.query(cursor, nivel, ref)
-        self.context['param'] = {
+        self.context['param'] = self.get_param(cursor, nivel, ref)
+        self.context['usado'] = self.get_usado(cursor, nivel, ref)
+
+    def get_param(self, cursor, nivel, ref):
+        data = ref_parametros.query(cursor, nivel, ref)
+        result = {
             'titulo': "Parâmetros",
-            'data': p_data,
+            'data': data,
             'vazio': "Nenhum",
         }
-        if p_data:
+        if data:
             max_digits = 0
-            for row in p_data:
+            for row in data:
                 num_digits = str(row['estoque_minimo'])[::-1].strip('0').find('.')
                 max_digits = max(max_digits, num_digits)
                 num_digits = str(row['estoque_maximo'])[::-1].strip('0').find('.')
@@ -132,11 +136,8 @@ class Ref(O2BaseGetPostView):
                 'estoque_minimo': ["Estoque mínimo", 'r', max_digits],
                 'estoque_maximo': ["Estoque máximo", 'r', max_digits],
                 'lead': ["Lead", 'r'],
-            }).hfsd_dict(
-                context=self.context['param'],
-            )
-
-        self.context['usado'] = self.get_usado(cursor, nivel, ref)
+            }).hfsd_dict(context=result)
+        return result
 
     def get_usado(self, cursor, nivel, ref):
         data = ref_usado_em.query(cursor, nivel, ref)
@@ -154,7 +155,6 @@ class Ref(O2BaseGetPostView):
                     row['ref|LINK'] = reverse('produto:ref__get', args=[row['ref']])
                 if row['nivel'] == '5':
                     row['estagio'] = '-'
-
             TableDefsHpSD({
                 'tam_comp': ["Tamanho"],
                 'cor_comp': ["Cor"],
@@ -167,7 +167,5 @@ class Ref(O2BaseGetPostView):
                 'alternativa': ["Alternativa", 'r'],
                 'consumo': ["Consumo", 'r', max_digits],
                 'estagio': ["Estágio"],
-            }).hfsd_dict(
-                context=result,
-            )
+            }).hfsd_dict(context=result)
         return result
