@@ -135,38 +135,32 @@ class TableDefs(object):
             if 'decimals' in self.definition[col]:
                 self.decimals[idx] = self.definition[col]['decimals']
 
-    def hfs(self, *cols, bitmap=None):
+    def hfs(self, *cols, bitmap=None, decimals=False):
         self.defs(*cols, bitmap=bitmap)
-        return self.headers, self.fields, self.style
+        result = [self.headers, self.fields, self.style]
+        if decimals:
+            result.append(self.decimals)
+        return tuple(result)
 
-    def hfs_dict(self, *cols, bitmap=None, context=None, sufixo=''):
+    def hfs_dict(self, *cols, bitmap=None, context=None, sufixo='', decimals=False):
         self.defs(*cols, bitmap=bitmap)
-        hfs = {
+        config = {
             f'{sufixo}headers': self.headers,
             f'{sufixo}fields': self.fields,
             f'{sufixo}style': self.style,
         }
+        if decimals:
+            config[f'{sufixo}decimals'] = self.decimals
         if context:
-            context.update(hfs)
+            context.update(config)
         else:
-            return hfs
+            return config
 
     def hfsd(self, *cols, bitmap=None):
-        self.defs(*cols, bitmap=bitmap)
-        return self.headers, self.fields, self.style, self.decimals
+        return self.hfs(*cols, bitmap=bitmap, decimals=True)
 
     def hfsd_dict(self, *cols, bitmap=None, context=None, sufixo=''):
-        self.defs(*cols, bitmap=bitmap)
-        hfsd = {
-            f'{sufixo}headers': self.headers,
-            f'{sufixo}fields': self.fields,
-            f'{sufixo}style': self.style,
-            f'{sufixo}decimals': self.decimals,
-        }
-        if context:
-            context.update(hfsd)
-        else:
-            return hfsd
+        return self.hfs_dict(*cols, bitmap=bitmap, context=context, sufixo=sufixo, decimals=True)
 
 
 class TableDefsHpS(TableDefs):
