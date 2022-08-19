@@ -128,56 +128,6 @@ def ref_parametros(cursor, nivel, ref):
     return dictlist(cursor)
 
 
-def ref_usado_em(cursor, nivel, ref):
-    # Informações básicas
-    sql = """
-        SELECT DISTINCT
-          CASE WHEN e.NIVEL_ITEM = 1 THEN
-            CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
-            WHEN r.REFERENCIA like 'A%' or r.REFERENCIA like 'B%' THEN 'PG'
-            WHEN r.REFERENCIA like 'Z%' THEN 'MP'
-            ELSE 'MD'
-            END
-          WHEN e.NIVEL_ITEM = 5 THEN 'RE'
-          ELSE 'MP'
-          END TIPO
-        , e.SUB_COMP TAM_COMP
-        , e.ITEM_COMP COR_COMP
-        , e.NIVEL_ITEM NIVEL
-        , e.GRUPO_ITEM REF
-        , e.SUB_ITEM TAM
-        , e.ITEM_ITEM COR
-        , e.GRUPO_ITEM REF
-        , r.DESCR_REFERENCIA DESCR
-        , e.ALTERNATIVA_ITEM ALTERNATIVA
-        , e.CONSUMO
-        , e.ESTAGIO || '-' || es.DESCRICAO ESTAGIO
-        FROM BASI_050 e
-        LEFT JOIN basi_030 r
-          ON r.NIVEL_ESTRUTURA = e.NIVEL_ITEM
-         AND r.REFERENCIA = e.GRUPO_ITEM
-        LEFT JOIN MQOP_005 es
-          ON es.CODIGO_ESTAGIO = e.ESTAGIO
-        WHERE 1=1
-          AND (
-            ( e.NIVEL_ITEM = 1
-            AND r.RESPONSAVEL IS NOT NULL
-            )
-          OR e.NIVEL_ITEM <> 1
-          )
-          AND e.NIVEL_COMP = {}
-          AND e.GRUPO_COMP = '{}'
-        ORDER BY
-          e.SUB_COMP
-        , e.ITEM_COMP
-        , NLSSORT(e.GRUPO_ITEM,'NLS_SORT=BINARY_AI')
-        , e.ALTERNATIVA_ITEM
-    """
-    sql = sql.format(nivel, ref)
-    cursor.execute(sql)
-    return dictlist(cursor)
-
-
 def lista_insumo(cursor, busca, conta_estoque, tipo_conta_estoque):
     filtro = ''
     for palavra in busca.split(' '):
