@@ -11,7 +11,8 @@ def query(cursor, nivel, ref):
         SELECT DISTINCT
           CASE WHEN e.NIVEL_ITEM = 1 THEN
             CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
-            WHEN r.REFERENCIA like 'A%' or r.REFERENCIA like 'B%' THEN 'PG'
+            WHEN r.REFERENCIA like 'A%' THEN 'PG'
+            WHEN r.REFERENCIA like 'B%' THEN 'PB'
             WHEN r.REFERENCIA like 'Z%' THEN 'MP'
             ELSE 'MD'
             END
