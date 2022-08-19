@@ -1,0 +1,11 @@
+{% if dados.titulo %}
+  <h{% firstof dados.titulo_h 3 %}>{{dados.titulo}}</h{% firstof dados.titulo_h 3 %}>
+{% endif %}
+{% if dados.data %}
+  <table>
+    {% include "layout/thead_generic.html" with data=dados.headers style=dados.style only %}
+    {% include "layout/tbody_generic.html" with fields=dados.fields data=dados.data style=dados.style decimals=dados.decimals safe=dados.safe group=dados.group only %}
+  </table>
+{% else %}
+  <h{% firstof dados.vazio_h 4 %}>{{dados.vazio}}</h{% firstof dados.vazio_h 4 %}>
+{% endif %}
