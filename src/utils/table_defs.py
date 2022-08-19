@@ -172,3 +172,14 @@ class TableDefsHpS(TableDefs):
             style = {'_': 'text-align'},
 
         )
+
+
+class TableDefsHpSD(TableDefs):
+
+    def __init__(self, definition):
+        super(TableDefsHpSD, self).__init__(
+            definition,
+            ['header', '+style', 'decimals'],
+            style = {'_': 'text-align'},
+
+        )
