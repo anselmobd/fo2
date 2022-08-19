@@ -6,7 +6,7 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 from utils.table_defs import TableDefsHpSD
-
+from utils.functions.dictlist.get_max_digits import get_max_digits
 import insumo.forms as forms
 import insumo.queries as queries
 from insumo.queries import (
@@ -123,12 +123,13 @@ class Ref(O2BaseGetPostView):
             'vazio': "Nenhum",
         }
         if data:
-            max_digits = 0
-            for row in data:
-                num_digits = str(row['estoque_minimo'])[::-1].strip('0').find('.')
-                max_digits = max(max_digits, num_digits)
-                num_digits = str(row['estoque_maximo'])[::-1].strip('0').find('.')
-                max_digits = max(max_digits, num_digits)
+            max_digits = max(
+                get_max_digits(
+                    data,
+                    'estoque_minimo',
+                    'estoque_maximo'
+                )
+            )
             TableDefsHpSD({
                 'tam': ["Tamanho"],
                 'cor': ["Cor"],
@@ -147,10 +148,11 @@ class Ref(O2BaseGetPostView):
             'vazio': "Nenhuma",
         }
         if data:
-            max_digits = 0
+            max_digits = get_max_digits(
+                data,
+                'consumo',
+            )
             for row in data:
-                num_digits = str(row['consumo'])[::-1].strip('0').find('.')
-                max_digits = max(max_digits, num_digits)
                 if row['nivel'] == '1':
                     row['ref|LINK'] = reverse('produto:ref__get', args=[row['ref']])
                 if row['nivel'] == '5':
