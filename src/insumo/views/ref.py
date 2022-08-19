@@ -117,9 +117,7 @@ class Ref(View):
                 'p_data': p_data,
             })
 
-        # Usado em
         u_data = ref_usado_em.query(cursor, nivel, ref)
-        u_data = []
         context['usado'] = {
             'titulo': "Utilizado nas estruturas",
             'data': u_data,
