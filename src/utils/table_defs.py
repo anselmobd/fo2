@@ -139,26 +139,34 @@ class TableDefs(object):
         self.defs(*cols, bitmap=bitmap)
         return self.headers, self.fields, self.style
 
-    def hfs_dict(self, *cols, bitmap=None, sufixo=''):
+    def hfs_dict(self, *cols, bitmap=None, context=None, sufixo=''):
         self.defs(*cols, bitmap=bitmap)
-        return {
+        hfs = {
             f'{sufixo}headers': self.headers,
             f'{sufixo}fields': self.fields,
             f'{sufixo}style': self.style,
         }
+        if context:
+            context.update(hfs)
+        else:
+            return hfs
 
     def hfsd(self, *cols, bitmap=None):
         self.defs(*cols, bitmap=bitmap)
         return self.headers, self.fields, self.style, self.decimals
 
-    def hfsd_dict(self, *cols, bitmap=None, sufixo=''):
+    def hfsd_dict(self, *cols, bitmap=None, context=None, sufixo=''):
         self.defs(*cols, bitmap=bitmap)
-        return {
+        hfsd = {
             f'{sufixo}headers': self.headers,
             f'{sufixo}fields': self.fields,
             f'{sufixo}style': self.style,
             f'{sufixo}decimals': self.decimals,
         }
+        if context:
+            context.update(hfsd)
+        else:
+            return hfsd
 
 
 class TableDefsHpS(TableDefs):
