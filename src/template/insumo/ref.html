@@ -63,17 +63,7 @@
         </td>
       </tr>
     </table>
-    <h3>Parâmetros</h3>
-    {% if p_data %}
-      <table>
-        {% include "layout/thead_generic.html" with data=p_headers only %}
-        {% include "layout/tbody_generic.html" with fields=p_fields data=p_data only %}
-      </table>
-    {% else %}
-      <h4>Sem parâmetros!</h4>
-    {% endif %}
-
+    {% include "layout/table_generic.html" with dados=param only %}
     {% include "layout/table_generic.html" with dados=usado only %}
-
   {% endif %}
 {% endblock %}

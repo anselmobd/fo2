@@ -106,22 +106,35 @@ class Ref(View):
                 't_data': t_data,
             })
 
-        # Parametros
         p_data = ref_parametros.query(cursor, nivel, ref)
-        if len(p_data) != 0:
-            context.update({
-                'p_headers': ('Tamanho', 'Cor', 'Depósito', 'Estoque mínimo',
-                              'Estoque máximo', 'Lead'),
-                'p_fields': ('tam', 'cor', 'deposito', 'estoque_minimo',
-                             'estoque_maximo', 'lead'),
-                'p_data': p_data,
-            })
+        context['param'] = {
+            'titulo': "Parâmetros",
+            'data': p_data,
+            'vazio': "Nenhum",
+        }
+        if p_data:
+            max_digits = 0
+            for row in p_data:
+                num_digits = str(row['estoque_minimo'])[::-1].strip('0').find('.')
+                max_digits = max(max_digits, num_digits)
+                num_digits = str(row['estoque_maximo'])[::-1].strip('0').find('.')
+                max_digits = max(max_digits, num_digits)
+            TableDefsHpSD({
+                'tam': ["Tamanho"],
+                'cor': ["Cor"],
+                'deposito': ["Depósito"],
+                'estoque_minimo': ["Estoque mínimo", 'r', max_digits],
+                'estoque_maximo': ["Estoque máximo", 'r', max_digits],
+                'lead': ["Lead", 'r'],
+            }).hfsd_dict(
+                context=context['param'],
+            )
 
         u_data = ref_usado_em.query(cursor, nivel, ref)
         context['usado'] = {
             'titulo': "Utilizado nas estruturas",
             'data': u_data,
-            'vazio': "Nenhuma!",
+            'vazio': "Nenhuma",
         }
         if u_data:
             max_digits = 0
