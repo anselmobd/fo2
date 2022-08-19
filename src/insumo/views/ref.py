@@ -136,15 +136,18 @@ class Ref(O2BaseGetPostView):
                 context=self.context['param'],
             )
 
-        u_data = ref_usado_em.query(cursor, nivel, ref)
-        self.context['usado'] = {
+        self.context['usado'] = self.get_usado(cursor, nivel, ref)
+
+    def get_usado(self, cursor, nivel, ref):
+        data = ref_usado_em.query(cursor, nivel, ref)
+        result = {
             'titulo': "Utilizado nas estruturas",
-            'data': u_data,
+            'data': data,
             'vazio': "Nenhuma",
         }
-        if u_data:
+        if data:
             max_digits = 0
-            for row in u_data:
+            for row in data:
                 num_digits = str(row['consumo'])[::-1].strip('0').find('.')
                 max_digits = max(max_digits, num_digits)
                 if row['nivel'] == '1':
@@ -165,5 +168,6 @@ class Ref(O2BaseGetPostView):
                 'consumo': ["Consumo", 'r', max_digits],
                 'estagio': ["Estágio"],
             }).hfsd_dict(
-                context=self.context['usado'],
+                context=result,
             )
+        return result
