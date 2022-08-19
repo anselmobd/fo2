@@ -119,6 +119,12 @@ class Ref(View):
 
         # Usado em
         u_data = ref_usado_em.query(cursor, nivel, ref)
+        u_data = []
+        context['usado'] = {
+            'titulo': "Utilizado nas estruturas",
+            'data': u_data,
+            'vazio': "Nenhuma!",
+        }
         if u_data:
             max_digits = 0
             for row in u_data:
@@ -142,10 +148,8 @@ class Ref(View):
                 'consumo': ["Consumo", 'r', max_digits],
                 'estagio': ["Estágio"],
             }).hfsd_dict(
-                context=context,
-                sufixo='u_',
+                context=context['usado'],
             )
-            context['u_data'] = u_data
 
         return context
 

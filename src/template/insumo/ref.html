@@ -72,14 +72,26 @@
     {% else %}
       <h4>Sem parâmetros!</h4>
     {% endif %}
-    <h3>Usado nas estruturas</h3>
-    {% if u_data %}
-      <table>
-        {% include "layout/thead_generic.html" with data=u_headers style=u_style only %}
-        {% include "layout/tbody_generic.html" with fields=u_fields data=u_data style=u_style decimals=u_decimals only %}
-      </table>
-    {% else %}
-      <h4>Não utilizado!</h4>
-    {% endif %}
+    {% with dados=usado %}
+      {% if dados.titulo %}
+        {% if dados.titulo_h %}
+          <h{{dados.titulo_h}}>{{dados.titulo}}</h{{dados.titulo_h}}>
+        {% else %}
+          <h3>{{dados.titulo}}</h3>
+        {% endif %}
+      {% endif %}
+      {% if dados.data %}
+        <table>
+          {% include "layout/thead_generic.html" with data=dados.headers style=dados.style only %}
+          {% include "layout/tbody_generic.html" with fields=dados.fields data=dados.data style=dados.style decimals=dados.decimals safe=dados.safe group=dados.group only %}
+        </table>
+      {% else %}
+        {% if dados.vazio %}
+          <h{{dados.vazio_h}}>{{dados.vazio}}</h{{dados.vazio_h}}>
+        {% else %}
+          <h3>{{dados.vazio}}</h3>
+        {% endif %}
+      {% endif %}
+    {% endwith %}
   {% endif %}
 {% endblock %}
