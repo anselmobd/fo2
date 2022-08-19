@@ -119,10 +119,15 @@ def ref_parametros(cursor, nivel, ref):
         , p.ESTOQUE_MAXIMO
         , p.TEMPO_REPOSICAO LEAD
         FROM BASI_015 p
+        LEFT JOIN BASI_220 t -- tamanhos
+          ON t.TAMANHO_REF = p.SUBGRU_ESTRUTURA
         JOIN BASI_205 d
           ON d.CODIGO_DEPOSITO = p.CODIGO_DEPOSITO
         WHERE p.NIVEL_ESTRUTURA = %s
           AND p.GRUPO_ESTRUTURA = %s
+        ORDER BY
+          t.ORDEM_TAMANHO
+        , p.ITEM_ESTRUTURA
     """
     cursor.execute(sql, [nivel, ref])
     return dictlist(cursor)
