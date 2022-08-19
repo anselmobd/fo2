@@ -6,7 +6,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.table_defs import TableDefs
+from utils.table_defs import TableDefsHpS
 
 import insumo.forms as forms
 import insumo.queries as queries
@@ -123,7 +123,7 @@ class Ref(View):
                 if row['NIVEL'] == '5':
                     row['ESTAGIO'] = '-'
 
-            self.table_defs = TableDefs(
+            self.table_defs = TableDefsHpS(
                 {
                     'TAM_COMP': ["Tamanho"],
                     'COR_COMP': ["Cor"],
@@ -137,8 +137,6 @@ class Ref(View):
                     'CONSUMO': ["Consumo", 'r'],
                     'ESTAGIO': ["Estágio"],
                 },
-                ['header', '+style'],
-                style = {'_': 'text-align'},
             )
             context.update(self.table_defs.hfs_dict(sufixo='u_'))
             context.update({

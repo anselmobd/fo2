@@ -75,7 +75,7 @@
     <h3>Usado nas estruturas</h3>
     {% if u_data %}
       <table>
-        {% include "layout/thead_generic.html" with data=u_headers only %}
+        {% include "layout/thead_generic.html" with data=u_headers style=u_style only %}
         {% include "layout/tbody_generic.html" with fields=u_fields data=u_data style=u_style only %}
       </table>
     {% else %}
