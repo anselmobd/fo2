@@ -33,9 +33,9 @@ class HistoricoLote(O2BaseGetPostView):
             ['header'],
         )
         self.atividade = {
-            1: "Inserido ou alterado",
-            2: "Apagado",
-            3: "(?)",
+            1: "Colocando lote em palete",
+            2: "Tirando lote de palete",
+            3: "(Des)Endereçando palete",  # não utilizado em movimentos de lotes
         }
 
     def mount_context(self):
