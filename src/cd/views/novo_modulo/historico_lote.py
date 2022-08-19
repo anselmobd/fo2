@@ -24,14 +24,19 @@ class HistoricoLote(O2BaseGetPostView):
 
         self.table_defs = TableDefs(
             {
-                'usuario': ['Usuário'],
-                'data_hora': ['Quando'],
                 'atividade': ['Atividade'],
                 'cod_container': ['Palete'],
                 'endereco': ['Endereço'],
+                'data_hora': ['Quando'],
+                'usuario': ['Usuário'],
             },
             ['header'],
         )
+        self.atividade = {
+            1: "Inserido ou alterado",
+            2: "Apagado",
+            3: "(?)",
+        }
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
@@ -53,6 +58,7 @@ class HistoricoLote(O2BaseGetPostView):
                 row['endereco'] = '-'
             if row['usuario'] is None:
                 row['usuario'] = '-'
+            row['atividade'] = self.atividade[row['atividade']]
 
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
