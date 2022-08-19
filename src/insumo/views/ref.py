@@ -1,11 +1,10 @@
 from pprint import pprint
 
-from django.shortcuts import render
 from django.urls import reverse
-from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from base.views import O2BaseGetPostView
 from utils.table_defs import TableDefsHpSD
 
 import insumo.forms as forms
@@ -16,49 +15,56 @@ from insumo.queries import (
 )
 
 
-class Ref(View):
-    Form_class = forms.RefForm
-    template_name = 'insumo/ref.html'
-    title_name = 'Insumo'
+class Ref(O2BaseGetPostView):
 
-    def mount_context(self, cursor, item):
-        context = {'item': item}
+    def __init__(self, *args, **kwargs):
+        super(Ref, self).__init__(*args, **kwargs)
+        self.Form_class = forms.RefForm
+        self.template_name = 'insumo/ref.html'
+        self.title_name = 'Insumo'
+        self.get_args = ['item']
+
+    def mount_context(self):
+        cursor = db_cursor_so(self.request)
+        item = self.form.cleaned_data['item']
+
+        self.context.update({'item': item})
 
         if len(item) == 5:
             data = queries.item_count_nivel(cursor, item)
             row = data[0]
             if row['COUNT'] > 1:
-                context.update({
+                self.context.update({
                     'msg_erro':
                         'Referência de insumo ambígua. Informe o nível.',
                 })
-                return context
+                return self.context
             elif row['COUNT'] == 1:
                 nivel = row['NIVEL']
                 ref = item
         else:
             nivel = item[0]
             if nivel not in ('2', '9'):
-                context.update({
+                self.context.update({
                     'msg_erro': 'Nível inválido',
                 })
-                return context
+                return self.context
             ref = item[-5:]
             data = queries.item_count_nivel(cursor, ref, nivel)
             row = data[0]
         if row['COUNT'] == 0:
-            context.update({
+            self.context.update({
                 'msg_erro': 'Referência de insumo não encontrada',
             })
-            return context
-        context.update({
+            return self.context
+        self.context.update({
             'nivel': nivel,
             'ref': ref,
         })
 
         # Informações básicas
         data = queries.ref_inform(cursor, nivel, ref)
-        context.update({
+        self.context.update({
             'headers': ('Descrição', 'Unidade de medida', 'Conta de estoque',
                         'NCM', 'Código Contábil'),
             'fields': ('DESCR', 'UM', 'CONTA_ESTOQUE',
@@ -69,7 +75,7 @@ class Ref(View):
         if data[0]['FORNECEDOR'] is not None:
             # Informações básicas 2
             data = queries.ref_inform(cursor, nivel, ref)
-            context.update({
+            self.context.update({
                 'b2_headers': ['Último fornecedor'],
                 'b2_fields': ['FORNECEDOR'],
                 'b2_data': data,
@@ -77,7 +83,7 @@ class Ref(View):
 
         # Informações básicas - tecidos
         if nivel == '2':
-            context.update({
+            self.context.update({
                 'm_headers': ('Linha de produto', 'Coleção',
                               'Artigo de produto', 'Tipo de produto'),
                 'm_fields': ('LINHA', 'COLECAO',
@@ -88,7 +94,7 @@ class Ref(View):
         # Cores
         c_data = queries.ref_cores(cursor, nivel, ref)
         if len(c_data) != 0:
-            context.update({
+            self.context.update({
                 'c_headers': ('Cor', 'Descrição'),
                 'c_fields': ('COR', 'DESCR'),
                 'c_data': c_data,
@@ -100,14 +106,14 @@ class Ref(View):
             if row['COMPL'] is None:
                 row['COMPL'] = '-'
         if len(t_data) != 0:
-            context.update({
+            self.context.update({
                 't_headers': ('Tamanho', 'Descrição', 'Complemento'),
                 't_fields': ('TAM', 'DESCR', 'COMPL'),
                 't_data': t_data,
             })
 
         p_data = ref_parametros.query(cursor, nivel, ref)
-        context['param'] = {
+        self.context['param'] = {
             'titulo': "Parâmetros",
             'data': p_data,
             'vazio': "Nenhum",
@@ -127,11 +133,11 @@ class Ref(View):
                 'estoque_maximo': ["Estoque máximo", 'r', max_digits],
                 'lead': ["Lead", 'r'],
             }).hfsd_dict(
-                context=context['param'],
+                context=self.context['param'],
             )
 
         u_data = ref_usado_em.query(cursor, nivel, ref)
-        context['usado'] = {
+        self.context['usado'] = {
             'titulo': "Utilizado nas estruturas",
             'data': u_data,
             'vazio': "Nenhuma",
@@ -159,29 +165,5 @@ class Ref(View):
                 'consumo': ["Consumo", 'r', max_digits],
                 'estagio': ["Estágio"],
             }).hfsd_dict(
-                context=context['usado'],
+                context=self.context['usado'],
             )
-
-        return context
-
-    def get(self, request, *args, **kwargs):
-        if 'item' in kwargs:
-            return self.post(request, *args, **kwargs)
-        else:
-            context = {'titulo': self.title_name}
-            form = self.Form_class()
-            context['form'] = form
-            return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
-        form.data = form.data.copy()
-        if 'item' in kwargs:
-            form.data['item'] = kwargs['item']
-        if form.is_valid():
-            item = form.cleaned_data['item']
-            cursor = db_cursor_so(request)
-            context.update(self.mount_context(cursor, item))
-        context['form'] = form
-        return render(request, self.template_name, context)
