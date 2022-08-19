@@ -6,6 +6,8 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from utils.table_defs import TableDefs
+
 import insumo.forms as forms
 import insumo.queries as queries
 from insumo.queries import ref_usado_em
@@ -114,21 +116,32 @@ class Ref(View):
 
         # Usado em
         u_data = ref_usado_em.query(cursor, nivel, ref)
-        for row in u_data:
-            if row['NIVEL'] == '1':
-                row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
-            if row['NIVEL'] == '5':
-                row['ESTAGIO'] = '-'
-        if len(u_data) != 0:
+        if u_data:
+            for row in u_data:
+                if row['NIVEL'] == '1':
+                    row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+                if row['NIVEL'] == '5':
+                    row['ESTAGIO'] = '-'
+
+            self.table_defs = TableDefs(
+                {
+                    'TAM_COMP': ["Tamanho"],
+                    'COR_COMP': ["Cor"],
+                    'TIPO': ["Tipo"],
+                    'NIVEL': ["Nível"],
+                    'REF': ["Referência"],
+                    'DESCR': ["Descrição"],
+                    'TAM': ["Tamanho"],
+                    'COR': ["Cor"],
+                    'ALTERNATIVA': ["Alternativa", 'r'],
+                    'CONSUMO': ["Consumo", 'r'],
+                    'ESTAGIO': ["Estágio"],
+                },
+                ['header', '+style'],
+                style = {'_': 'text-align'},
+            )
+            context.update(self.table_defs.hfs_dict(sufixo='u_'))
             context.update({
-                'u_headers': ('Tamanho', 'Cor',
-                              'Tipo', 'Nível', 'Referência', 'Descrição',
-                              'Tamanho', 'Cor',
-                              'Alternativa', 'Consumo', 'Estágio'),
-                'u_fields': ('TAM_COMP', 'COR_COMP',
-                             'TIPO', 'NIVEL', 'REF', 'DESCR',
-                             'TAM', 'COR',
-                             'ALTERNATIVA', 'CONSUMO', 'ESTAGIO'),
                 'u_data': u_data,
             })
 

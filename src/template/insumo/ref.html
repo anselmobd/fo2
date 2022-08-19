@@ -76,7 +76,7 @@
     {% if u_data %}
       <table>
         {% include "layout/thead_generic.html" with data=u_headers only %}
-        {% include "layout/tbody_generic.html" with fields=u_fields data=u_data link=u_link only %}
+        {% include "layout/tbody_generic.html" with fields=u_fields data=u_data style=u_style only %}
       </table>
     {% else %}
       <h4>Não utilizado!</h4>
