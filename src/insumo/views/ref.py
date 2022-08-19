@@ -10,7 +10,10 @@ from utils.table_defs import TableDefsHpSD
 
 import insumo.forms as forms
 import insumo.queries as queries
-from insumo.queries import ref_usado_em
+from insumo.queries import (
+    ref_parametros,
+    ref_usado_em,
+)
 
 
 class Ref(View):
@@ -104,13 +107,13 @@ class Ref(View):
             })
 
         # Parametros
-        p_data = queries.ref_parametros(cursor, nivel, ref)
+        p_data = ref_parametros.query(cursor, nivel, ref)
         if len(p_data) != 0:
             context.update({
                 'p_headers': ('Tamanho', 'Cor', 'Depósito', 'Estoque mínimo',
                               'Estoque máximo', 'Lead'),
-                'p_fields': ('TAM', 'COR', 'DEPOSITO', 'ESTOQUE_MINIMO',
-                             'ESTOQUE_MAXIMO', 'LEAD'),
+                'p_fields': ('tam', 'cor', 'deposito', 'estoque_minimo',
+                             'estoque_maximo', 'lead'),
                 'p_data': p_data,
             })
 
