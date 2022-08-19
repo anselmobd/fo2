@@ -1,5 +1,8 @@
 from pprint import pprint
 
+__all__ = ['TableDefs', 'TableDefsHpS']
+
+
 
 class TableDefs(object):
     '''
@@ -156,3 +159,14 @@ class TableDefs(object):
             f'{sufixo}style': self.style,
             f'{sufixo}decimals': self.decimals,
         }
+
+
+class TableDefsHpS(TableDefs):
+
+    def __init__(self, definition):
+        super(TableDefsHpS, self).__init__(
+            definition,
+            ['header', '+style'],
+            style = {'_': 'text-align'},
+
+        )
