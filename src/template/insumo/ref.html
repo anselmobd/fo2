@@ -47,13 +47,7 @@
           &nbsp;
         </td>
         <td style="vertical-align: top;">
-          {% if c_data %}
-            <h3>Cores</h3>
-            <table>
-              {% include "layout/thead_generic.html" with data=c_headers only %}
-              {% include "layout/tbody_generic.html" with fields=c_fields data=c_data only %}
-            </table>
-          {% endif %}
+          {% include "layout/table_generic.html" with dados=cores only %}
         </td>
       </tr>
     </table>

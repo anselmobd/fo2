@@ -95,18 +95,24 @@ class Ref(O2BaseGetPostView):
                 'm_data': data,
             })
 
-        # Cores
-        c_data = queries.ref_cores(cursor, nivel, ref)
-        if len(c_data) != 0:
-            self.context.update({
-                'c_headers': ('Cor', 'Descrição'),
-                'c_fields': ('COR', 'DESCR'),
-                'c_data': c_data,
-            })
-
+        self.context['cores'] = self.get_cores(cursor, nivel, ref)
         self.context['taman'] = self.get_taman(cursor, nivel, ref)
         self.context['param'] = self.get_param(cursor, nivel, ref)
         self.context['usado'] = self.get_usado(cursor, nivel, ref)
+
+    def get_cores(self, cursor, nivel, ref):
+        data = dictlist_to_lower(
+            queries.ref_cores(cursor, nivel, ref))
+        result = {
+            'titulo': "Cores",
+            'data': data,
+        }
+        if data:
+            TableDefsH({
+                'cor': ["Cor"],
+                'descr': ["Descrição"],
+            }).hfs_dict(context=result)
+        return result
 
     def get_taman(self, cursor, nivel, ref):
         data = dictlist_to_lower(prod_tamanhos(cursor, nivel, ref))
