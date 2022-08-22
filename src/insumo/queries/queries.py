@@ -6,25 +6,6 @@ from utils.functions.models.dictlist import dictlist, dictlist_lower
 import produto.queries
 
 
-def item_count_nivel(cursor, ref, nivel=None):
-    # verifica existêcia, unicidade e nível
-    param = [ref, ]
-    sql = """
-        SELECT
-          count(*) COUNT
-        , min(r.NIVEL_ESTRUTURA) NIVEL
-        FROM basi_030 r
-        WHERE r.REFERENCIA = %s
-    """
-    if nivel is not None:
-        sql = sql + """
-            AND r.NIVEL_ESTRUTURA = %s
-        """
-        param.append(nivel)
-    cursor.execute(sql, param)
-    return dictlist(cursor)
-
-
 def ref_inform(cursor, nivel, ref):
     # Informações básicas
     sql = """
