@@ -33,6 +33,8 @@ class Ref(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
         item = self.form.cleaned_data['item']
 
+        self.context['item'] = item
+
         if len(item) not in (5, 6):
             self.context.update({
                 'msg_erro':
@@ -70,6 +72,7 @@ class Ref(O2BaseGetPostView):
             'nivel': nivel,
             'ref': ref,
         })
+        del(self.context['item'])
 
         self.context['infos'] = self.get_infos(cursor, nivel, ref)
         self.context['cores'] = self.get_cores(cursor, nivel, ref)

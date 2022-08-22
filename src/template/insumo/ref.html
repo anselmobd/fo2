@@ -15,8 +15,11 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
   </form>
+  {% if item %}
+    <h2>Item: {{ item }}</h2>
+  {% endif %}
   {% if ref %}
-    <h2>Nível: {{ nivel}} - Referência: {{ ref }}</h2>
+    <h2>Nível: {{ nivel }} - Referência: {{ ref }}</h2>
   {% endif %}
   {% if msg_erro %}
     <h3>{{ msg_erro }}</h3>
