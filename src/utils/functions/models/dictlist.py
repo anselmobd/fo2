@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 __all__ = [
     'rows_to_key_dict',
     'dictlist_zip_columns',
@@ -88,12 +90,17 @@ def queryset_to_dictlist_lower(qs):
     return result
 
 
+@lru_cache(maxsize=128)
+def key_lower(text):
+    return text.lower()
+
+
 def dictlist_to_lower(data):
     data_lower = []
     for row in data:
         row_lower = {}
         for key in row.keys():
-            row_lower[key.lower()] = row[key]
+            row_lower[key_lower(key)] = row[key]
         data_lower.append(row_lower)
     return data_lower
 
