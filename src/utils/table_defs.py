@@ -163,6 +163,15 @@ class TableDefs(object):
         return self.hfs_dict(*cols, bitmap=bitmap, context=context, sufixo=sufixo, decimals=True)
 
 
+class TableDefsH(TableDefs):
+
+    def __init__(self, definition):
+        super(TableDefsH, self).__init__(
+            definition,
+            ['header'],
+        )
+
+
 class TableDefsHpS(TableDefs):
 
     def __init__(self, definition):
@@ -170,7 +179,6 @@ class TableDefsHpS(TableDefs):
             definition,
             ['header', '+style'],
             style = {'_': 'text-align'},
-
         )
 
 
@@ -181,5 +189,4 @@ class TableDefsHpSD(TableDefs):
             definition,
             ['header', '+style', 'decimals'],
             style = {'_': 'text-align'},
-
         )
