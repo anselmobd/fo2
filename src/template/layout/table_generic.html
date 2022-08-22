@@ -1,11 +1,15 @@
 {% if dados.titulo %}
   <h{% firstof dados.titulo_h 3 %}>{{dados.titulo}}</h{% firstof dados.titulo_h 3 %}>
 {% endif %}
-{% if dados.data %}
+{% if dados.data or data %}
   <table>
     {% include "layout/thead_generic.html" with data=dados.headers style=dados.style only %}
-    {% include "layout/tbody_generic.html" with fields=dados.fields data=dados.data style=dados.style decimals=dados.decimals safe=dados.safe group=dados.group only %}
-  </table>
+    {% if dados.data %}
+      {% include "layout/tbody_generic.html" with fields=dados.fields data=dados.data style=dados.style decimals=dados.decimals safe=dados.safe group=dados.group only %}
+    {% else %}
+      {% include "layout/tbody_generic.html" with fields=dados.fields data=data style=dados.style decimals=dados.decimals safe=dados.safe group=dados.group only %}
+    {% endif %}
+    </table>
 {% else %}
   <h{% firstof dados.vazio_h 4 %}>{{dados.vazio}}</h{% firstof dados.vazio_h 4 %}>
 {% endif %}
