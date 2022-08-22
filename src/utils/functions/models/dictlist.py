@@ -1,4 +1,8 @@
+import pandas as pd
 from functools import lru_cache
+from pprint import pprint
+
+from django.db.models.base import ModelState
 
 __all__ = [
     'rows_to_key_dict',
@@ -13,10 +17,6 @@ __all__ = [
     'dict_options',
     'record2dict',
 ]
-
-from pprint import pprint
-
-from django.db.models.base import ModelState
 
 
 def rows_to_key_dict(cursor, keys):
@@ -97,6 +97,12 @@ def dictlist_to_lower(data):
             row_lower[key_lower(key)] = row[key]
         data_lower.append(row_lower)
     return data_lower
+
+
+def df_dictlist_to_lower(data):
+    df = pd.DataFrame(data)
+    df.columns= df.columns.str.lower()
+    return df.to_dict('records')
 
 
 def dictlist_indexed(data, key):
