@@ -73,12 +73,6 @@ def dictlist_lower(cursor):
     return custom_dictlist(cursor, name_case=str.lower)
 
 
-def dictlist_to_lower(data):
-    for row in data:
-        for key in row:
-            row[key.lower()] = row[key]
-            del(row[key])
-
 def queryset_to_dictlist_lower(qs):
     result = []
     for obj in qs:
