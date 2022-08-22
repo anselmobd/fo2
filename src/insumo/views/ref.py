@@ -14,6 +14,7 @@ from produto.queries import prod_tamanhos
 import insumo.forms as forms
 import insumo.queries as queries
 from insumo.queries import (
+    item_count_nivel,
     ref_parametros,
     ref_usado_em,
 )
@@ -32,35 +33,39 @@ class Ref(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
         item = self.form.cleaned_data['item']
 
-        self.context.update({'item': item})
+        if len(item) not in (5, 6):
+            self.context.update({
+                'msg_erro':
+                    'Informe "Referência" ou "NívelReferência".',
+            })
+            return
 
         if len(item) == 5:
-            data = queries.item_count_nivel(cursor, item)
-            row = data[0]
-            if row['COUNT'] > 1:
-                self.context.update({
-                    'msg_erro':
-                        'Referência de insumo ambígua. Informe o nível.',
-                })
-                return self.context
-            elif row['COUNT'] == 1:
-                nivel = row['NIVEL']
-                ref = item
+            nivel = None
+            ref = item
         else:
             nivel = item[0]
+            ref = item[1:]
             if nivel not in ('2', '9'):
-                self.context.update({
-                    'msg_erro': 'Nível inválido',
-                })
-                return self.context
-            ref = item[-5:]
-            data = queries.item_count_nivel(cursor, ref, nivel)
-            row = data[0]
-        if row['COUNT'] == 0:
+                self.context['msg_erro'] = 'Nível inválido'
+                return
+
+        data = item_count_nivel.query(cursor, ref, nivel)
+
+        if not data:
             self.context.update({
                 'msg_erro': 'Referência de insumo não encontrada',
             })
-            return self.context
+            return
+    
+        if data[0]['count'] != 1:
+            self.context.update({
+                'msg_erro':
+                    'Referência de insumo não encontrada ou ambígua.',
+            })
+            return
+
+        nivel = data[0]['nivel']
         self.context.update({
             'nivel': nivel,
             'ref': ref,
