@@ -118,11 +118,6 @@ class Ref(O2BaseGetPostView):
             for row in data:
                 if row['compl'] is None:
                     row['compl'] = '-'
-            self.context.update({
-                't_headers': ('', '', ''),
-                't_fields': ('', '', ''),
-                't_data': data,
-            })
             TableDefsH({
                 'tam': ["Tamanho"],
                 'descr': ["Descrição"],
