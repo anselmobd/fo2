@@ -104,10 +104,6 @@ def ref_cores(cursor, nivel, ref):
     return produto.queries.prod_cores(cursor, nivel, ref)
 
 
-def ref_tamanhos(cursor, nivel, ref):
-    return produto.queries.prod_tamanhos(cursor, nivel, ref)
-
-
 def lista_insumo(cursor, busca, conta_estoque, tipo_conta_estoque):
     filtro = ''
     for palavra in busca.split(' '):

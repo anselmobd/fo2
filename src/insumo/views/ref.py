@@ -7,6 +7,9 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetPostView
 from utils.table_defs import TableDefsH, TableDefsHpSD
 from utils.functions.dictlist.get_max_digits import get_max_digits
+
+from produto.queries import prod_tamanhos
+
 import insumo.forms as forms
 import insumo.queries as queries
 from insumo.queries import (
@@ -105,7 +108,7 @@ class Ref(O2BaseGetPostView):
         self.context['usado'] = self.get_usado(cursor, nivel, ref)
 
     def get_taman(self, cursor, nivel, ref):
-        data = queries.ref_tamanhos(cursor, nivel, ref)
+        data = prod_tamanhos(cursor, nivel, ref)
         result = {
             'titulo': "Tamanhos",
             'data': data,
