@@ -78,7 +78,6 @@ class Ref(O2BaseGetPostView):
 
         if data[0]['FORNECEDOR'] is not None:
             # Informações básicas 2
-            data = queries.ref_inform(cursor, nivel, ref)
             self.context.update({
                 'b2_headers': ['Último fornecedor'],
                 'b2_fields': ['FORNECEDOR'],
