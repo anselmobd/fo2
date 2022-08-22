@@ -66,38 +66,41 @@ class Ref(O2BaseGetPostView):
             'ref': ref,
         })
 
-        # Informações básicas
-        data = queries.ref_inform(cursor, nivel, ref)
-        self.context.update({
-            'headers': ('Descrição', 'Unidade de medida', 'Conta de estoque',
-                        'NCM', 'Código Contábil'),
-            'fields': ('DESCR', 'UM', 'CONTA_ESTOQUE',
-                       'NCM', 'CODIGO_CONTABIL'),
-            'data': data,
-        })
-
-        if data[0]['FORNECEDOR'] is not None:
-            # Informações básicas 2
-            self.context.update({
-                'b2_headers': ['Último fornecedor'],
-                'b2_fields': ['FORNECEDOR'],
-                'b2_data': data,
-            })
-
-        # Informações básicas - tecidos
-        if nivel == '2':
-            self.context.update({
-                'm_headers': ('Linha de produto', 'Coleção',
-                              'Artigo de produto', 'Tipo de produto'),
-                'm_fields': ('LINHA', 'COLECAO',
-                             'ARTIGO', 'TIPO_PRODUTO'),
-                'm_data': data,
-            })
-
+        self.context['infos'] = self.get_infos(cursor, nivel, ref)
         self.context['cores'] = self.get_cores(cursor, nivel, ref)
         self.context['taman'] = self.get_taman(cursor, nivel, ref)
         self.context['param'] = self.get_param(cursor, nivel, ref)
         self.context['usado'] = self.get_usado(cursor, nivel, ref)
+
+    def get_infos(self, cursor, nivel, ref):
+        data = dictlist_to_lower(
+            queries.ref_inform(cursor, nivel, ref))
+        result = {
+            'data': data,
+        }
+        if data:
+            result['info1'] = TableDefsH({
+                'descr': ["Descrição"],
+                'um': ["Unidade de medida"],
+                'conta_estoque': ["Conta de estoque"],
+                'ncm': ["NCM"],
+                'codigo_contabil': ["Código Contábil"],
+            }).hfs_dict()
+
+            if data[0]['fornecedor'] is not None:
+                result['info2'] = TableDefsH({
+                    'fornecedor': ["Último fornecedor"],
+                }).hfs_dict()
+    
+            if nivel == '2':
+                result['info3'] = TableDefsH({
+                    'linha': ["Linha de produto"],
+                    'colecao': ["Coleção"],
+                    'artigo': ["Artigo de produto"],
+                    'tipo_produto': ["Tipo de produto"],
+                }).hfs_dict()
+
+        return result
 
     def get_cores(self, cursor, nivel, ref):
         data = dictlist_to_lower(

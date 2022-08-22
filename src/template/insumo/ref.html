@@ -21,22 +21,13 @@
   {% if msg_erro %}
     <h3>{{ msg_erro }}</h3>
   {% endif %}
-  {% if data %}
-    <table>
-      {% include "layout/thead_generic.html" with data=headers only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
-    </table>
-    {% if b2_data %}
-      <table>
-        {% include "layout/thead_generic.html" with data=b2_headers only %}
-        {% include "layout/tbody_generic.html" with fields=b2_fields data=b2_data only %}
-      </table>
+  {% if infos.data %}
+    {% include "layout/table_generic.html" with dados=infos.info1 data=infos.data only %}
+    {% if infos.info2 %}
+      {% include "layout/table_generic.html" with dados=infos.info2 data=infos.data only %}
     {% endif %}
-    {% if m_data %}
-      <table>
-        {% include "layout/thead_generic.html" with data=m_headers only %}
-        {% include "layout/tbody_generic.html" with fields=m_fields data=m_data only %}
-      </table>
+    {% if infos.info3 %}
+      {% include "layout/table_generic.html" with dados=infos.info3 data=infos.data only %}
     {% endif %}
     <table class="layout">
       <tr>
