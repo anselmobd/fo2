@@ -41,13 +41,7 @@
     <table class="layout">
       <tr>
         <td style="vertical-align: top;">
-          {% if t_data %}
-            <h3>Tamanhos</h3>
-            <table>
-              {% include "layout/thead_generic.html" with data=t_headers only %}
-              {% include "layout/tbody_generic.html" with fields=t_fields data=t_data only %}
-            </table>
-          {% endif %}
+          {% include "layout/table_generic.html" with dados=taman only %}
         </td>
         <td>
           &nbsp;

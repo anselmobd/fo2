@@ -5,7 +5,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
-from utils.table_defs import TableDefsHpSD
+from utils.table_defs import TableDefsH, TableDefsHpSD
 from utils.functions.dictlist.get_max_digits import get_max_digits
 import insumo.forms as forms
 import insumo.queries as queries
@@ -100,20 +100,31 @@ class Ref(O2BaseGetPostView):
                 'c_data': c_data,
             })
 
-        # Tamanhos
-        t_data = queries.ref_tamanhos(cursor, nivel, ref)
-        for row in t_data:
-            if row['COMPL'] is None:
-                row['COMPL'] = '-'
-        if len(t_data) != 0:
-            self.context.update({
-                't_headers': ('Tamanho', 'Descrição', 'Complemento'),
-                't_fields': ('TAM', 'DESCR', 'COMPL'),
-                't_data': t_data,
-            })
-
+        self.context['taman'] = self.get_taman(cursor, nivel, ref)
         self.context['param'] = self.get_param(cursor, nivel, ref)
         self.context['usado'] = self.get_usado(cursor, nivel, ref)
+
+    def get_taman(self, cursor, nivel, ref):
+        data = queries.ref_tamanhos(cursor, nivel, ref)
+        result = {
+            'titulo': "Tamanhos",
+            'data': data,
+        }
+        if data:
+            for row in data:
+                if row['COMPL'] is None:
+                    row['COMPL'] = '-'
+            self.context.update({
+                't_headers': ('', '', ''),
+                't_fields': ('', '', ''),
+                't_data': data,
+            })
+            TableDefsH({
+                'TAM': ["Tamanho"],
+                'DESCR': ["Descrição"],
+                'COMPL': ["Complemento"],
+            }).hfs_dict(context=result)
+        return result
 
     def get_param(self, cursor, nivel, ref):
         data = ref_parametros.query(cursor, nivel, ref)
