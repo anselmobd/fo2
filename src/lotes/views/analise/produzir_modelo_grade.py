@@ -16,7 +16,7 @@ class ProduzirModeloGrade(O2BaseGetView):
     def __init__(self, *args, **kwargs):
         super(ProduzirModeloGrade, self).__init__(*args, **kwargs)
         self.template_name = 'lotes/analise/produzir_modelo_grade.html'
-        self.title_name = 'A produzir - Por modelo - Totais com grade'
+        self.title_name = 'A produzir por modelo'
 
         self.table_defs = TableDefs(
             {
