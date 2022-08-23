@@ -27,14 +27,25 @@
     <h3>{{ msg_erro }}</h3>
   {% endif %}
   {% if data %}
-    <div id="myProgress">
-      <div id="myBar"></div>
+    <ul class="nav nav-tabs" id="myTab">
+      <li class="active"><a data-toggle="tab" href="#totais">Totais</a></li>
+      <li><a data-toggle="tab" href="#grades">Grades finais</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="totais" class="tab-pane fade in active">
+        <div id="myProgress">
+          <div id="myBar"></div>
+        </div>
+        <table id='produzir'>
+          {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
+          {% include "layout/tbody_generic.html" with fields=fields data=data style=style id_key=id_key only %}
+        </table>
+      </div>
+      <div id="grades" class="tab-pane fade">      
+      </div>
     </div>
-    <table id='produzir'>
-      {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data style=style id_key=id_key only %}
-    </table>
-  {% endif %}
+      {% endif %}
 {% endblock %}
 
 {% block javascript %}
@@ -60,6 +71,8 @@
         'a_produzir_tam',
         'a_produzir_cor'
       ];
+
+      var grades = document.getElementById("grades")
 
       function moveBar(i, tot) {
         var elem = document.getElementById("myBar");
@@ -149,6 +162,7 @@
                     set_valores(data, modelo, campos[ic]);
                   }
                   set_destaque(modelo);
+                  grades.insertAdjacentHTML('beforeend', data['grade']);
                 } else {
                   console.log('Erro: '+data['descricao_erro']);
                 }
