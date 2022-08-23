@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 from fo2.connections import db_cursor_so
 
@@ -17,6 +18,14 @@ def get_total(dados, *grades):
                     if row['cor'] == 'Total':
                         return row['total']
     return 0
+
+
+def get_grade_final(dados, *grades):
+    for grd in grades:
+        if grd:
+            if grd in dados:
+                return dados[grd]
+    return []
 
 
 def produzir_modelo_grade(request, modelo):
@@ -42,6 +51,15 @@ def produzir_modelo_grade(request, modelo):
         data['a_produzir'] = get_total(dados_produzir, 'gap')
         data['a_produzir_tam'] = get_total(dados_produzir, 'glm', 'gap')
         data['a_produzir_cor'] = get_total(dados_produzir, 'glc', 'glm', 'gap')
+
+        context = {
+            'dados': get_grade_final(dados_produzir, 'glc', 'glm', 'gap'),
+        }
+        context['dados']['titulo'] = modelo
+        data['grade'] = render_to_string(
+            "layout/table_generic.html",
+            context,
+        )
 
     except Exception as e:
         data.update({
