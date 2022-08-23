@@ -42,7 +42,8 @@
           {% include "layout/tbody_generic.html" with fields=fields data=data style=style id_key=id_key only %}
         </table>
       </div>
-      <div id="grades" class="tab-pane fade">      
+      <div id="grades" class="tab-pane fade">
+        <h4 style="text-align: right;">Total: <span id="grades_total">0</span></h4>
       </div>
     </div>
       {% endif %}
@@ -72,7 +73,9 @@
         'a_produzir_cor'
       ];
 
-      var grades = document.getElementById("grades")
+      var grades = document.getElementById("grades");
+      var totais_total = document.querySelectorAll('.a_produzir_cor__total')[0];
+      var grades_total = document.getElementById("grades_total");
 
       function moveBar(i, tot) {
         var elem = document.getElementById("myBar");
@@ -163,6 +166,7 @@
                   }
                   set_destaque(modelo);
                   grades.insertAdjacentHTML('beforeend', data['grade']);
+                  grades_total.innerHTML = totais_total.innerHTML;
                 } else {
                   console.log('Erro: '+data['descricao_erro']);
                 }
