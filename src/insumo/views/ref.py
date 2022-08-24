@@ -35,7 +35,7 @@ class Ref(O2BaseGetPostView):
 
         self.context['item'] = item
 
-        if len(item) not in (5, 6):
+        if len(item) not in (5, 6, 7):
             self.context.update({
                 'msg_erro':
                     'Informe "Referência" ou "NívelReferência".',
@@ -47,7 +47,7 @@ class Ref(O2BaseGetPostView):
             ref = item
         else:
             nivel = item[0]
-            ref = item[1:]
+            ref = item[-5:]
             if nivel not in ('2', '9'):
                 self.context['msg_erro'] = 'Nível inválido'
                 return
