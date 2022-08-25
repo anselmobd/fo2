@@ -8,7 +8,7 @@ from utils.functions.queries import debug_cursor_execute
 def get_agrupador(cursor, pedido):
     sql = f"""
         SELECT DISTINCT
-          iped.AGRUPADOR_PRODUCAO + 999000 AGRUPADOR
+          iped.AGRUPADOR_PRODUCAO + 999000000 AGRUPADOR
         FROM  PEDI_110 iped -- item de pedido de venda
         WHERE iped.PEDIDO_VENDA = {pedido}
           AND iped.AGRUPADOR_PRODUCAO <> 0
