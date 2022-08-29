@@ -76,21 +76,28 @@ class ListaReferencias(View):
                 else:
                     modelos_vendidos[digits] = row['data_emissao']
 
-        dados = []
+        modelos = {}
         for ref in refs_old:
             modelo = int(only_digits(ref))
+            if modelo in modelos:
+                modelos[modelo].append(ref)
+            else:
+                modelos[modelo] = [ref]
+
+        dados = []
+        for modelo in modelos:
             dados.append({
                 'modelo': modelo,
-                'ref': ref,
+                'ref': ", ".join(sorted(modelos[modelo])),
                 'op': modelos_op[modelo].date() if modelo in modelos_op else 'Sem OP',
                 'nf': modelos_vendidos[modelo].date() if modelo in modelos_vendidos else 'Sem NF',
             })
         
-        dados.sort(key=operator.itemgetter('modelo', 'ref'))
+        dados.sort(key=operator.itemgetter('modelo'))
 
         self.context.update({
             'headers': [
-                'Referência sistema antigo',
+                'Referências no sistema antigo',
                 'Modelo',
                 'Data da última OP do modelo',
                 'Data da última venda do modelo',
