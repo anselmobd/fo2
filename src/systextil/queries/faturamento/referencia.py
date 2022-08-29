@@ -1,12 +1,14 @@
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
+from utils.functions.queries import debug_cursor_execute
 
 
 def referencias_vendidas(cursor):
     sql = f'''
         SELECT DISTINCT 
           inf.GRUPO_ESTRUTURA ref
+        , max(nf.DATA_EMISSAO) data_emissao
         FROM FATU_050 nf -- nota fiscal da Tussor - capa
         JOIN PEDI_080 nop -- natureza da operação
           ON nop.NATUR_OPERACAO = nf.NATOP_NF_NAT_OPER
@@ -21,6 +23,10 @@ def referencias_vendidas(cursor):
           AND nop.DIVISAO_NATUR = 1
           AND fe.DOCUMENTO IS NULL
           AND inf.NIVEL_ESTRUTURA = 1
+        GROUP BY 
+          inf.GRUPO_ESTRUTURA
+        ORDER BY 
+          inf.GRUPO_ESTRUTURA
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)
