@@ -88,7 +88,7 @@ class ListaReferencias(View):
         dados_op = []
         for modelo in modelos:
             dados_op.append({
-                'modelo': modelo,
+                'modelo': f"{modelo}",
                 'ref': ", ".join(sorted(modelos[modelo])),
                 'op': modelos_op[modelo].date() if modelo in modelos_op else dt_old,
                 'nf': modelos_vendidos[modelo].date() if modelo in modelos_vendidos else 'Sem NF',
@@ -112,6 +112,7 @@ class ListaReferencias(View):
                 'Data da última venda do modelo',
             ],
             'fields': ['ref', 'modelo', 'op', 'nf'],
+            'style': {2: 'text-align: right;'},
             'data': dados,
             'data_op': dados_op,
         })

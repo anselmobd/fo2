@@ -18,14 +18,14 @@
     <div class="tab-content">
       <div id="modelo" class="tab-pane fade in active">
         <table>
-          {% include "layout/thead_generic.html" with data=headers only %}
-          {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+          {% include "layout/thead_generic.html" with data=headers style=style only %}
+          {% include "layout/tbody_generic.html" with fields=fields style=style data=data only %}
         </table>
       </div>
       <div id="op" class="tab-pane fade">
         <table>
-          {% include "layout/thead_generic.html" with data=headers only %}
-          {% include "layout/tbody_generic.html" with fields=fields data=data_op only %}
+          {% include "layout/thead_generic.html" with data=headers style=style only %}
+          {% include "layout/tbody_generic.html" with fields=fields style=style data=data_op only %}
         </table>
       </div>
     </div>
