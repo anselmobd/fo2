@@ -1,10 +1,7 @@
 from pprint import pprint
 
-from django import forms
-from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
-from django.urls import reverse
 from django.utils import timezone
 from django.views import View
 
@@ -14,17 +11,9 @@ from lotes.models.inventario import (
     Inventario,
     InventarioLote,
 )
-from lotes.queries.lote import get_lote
-from lotes.views.lote.conserto_lote import dict_conserto_lote
 
 import cd.forms
 import cd.views.gerais
-from cd.queries.endereco import (
-    lotes_em_local,
-    esvazia_palete,
-    get_palete,
-    palete_guarda_hist,
-)
 from cd.queries.inventario_lote import get_qtd_lotes_63
 
 
