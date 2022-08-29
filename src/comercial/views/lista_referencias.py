@@ -62,12 +62,19 @@ class ListaReferencias(View):
                 else:
                     modelos_op[digits] = row['dt_digitacao']
 
-        modelos_vendidos = set()
+        modelos_vendidos = {}
         refs_vendidos = referencias_vendidas(cursor)
         for row in refs_vendidos:
             digits = only_digits(row['ref'])
             if digits:
-                modelos_vendidos.add(int(digits))
+                digits = int(digits)
+                if digits in modelos_vendidos:
+                    modelos_vendidos[digits] = max(
+                        modelos_vendidos[digits],
+                        row['data_emissao'],
+                    )
+                else:
+                    modelos_vendidos[digits] = row['data_emissao']
 
         dados = []
         for ref in refs_old:
@@ -76,7 +83,7 @@ class ListaReferencias(View):
                 'modelo': modelo,
                 'ref': ref,
                 'op': modelos_op[modelo].date() if modelo in modelos_op else 'Sem OP',
-                'nf': 'S' if modelo in modelos_vendidos else 'N',
+                'nf': modelos_vendidos[modelo].date() if modelo in modelos_vendidos else 'Sem NF',
             })
         
         dados.sort(key=operator.itemgetter('modelo', 'ref'))
@@ -86,7 +93,7 @@ class ListaReferencias(View):
                 'Referência sistema antigo',
                 'Modelo',
                 'Data da última OP do modelo',
-                'Modelo vendido',
+                'Data da última venda do modelo',
             ],
             'fields': ['ref', 'modelo', 'op', 'nf'],
             'data': dados,
