@@ -1,3 +1,4 @@
+import datetime
 import operator
 import tempfile
 from dbfread import DBF
@@ -24,6 +25,7 @@ class ListaReferencias(View):
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
+        dt_old = datetime.date(2000, 1, 1)
 
         # There will be some mechanism to capture userID, password, client_machine_name, server_name and server_ip
         # client_machine_name can be an arbitary ASCII string
@@ -41,7 +43,6 @@ class ListaReferencias(View):
 
         refs_old = set()
         with DBF(file_obj.name) as bars:
-            print('DBF')
             for bar in bars:
                 if bar['B_DESLIG'] is None:
                     refs_old.add(bar['B_PROD'])
@@ -84,16 +85,24 @@ class ListaReferencias(View):
             else:
                 modelos[modelo] = [ref]
 
-        dados = []
+        dados_op = []
         for modelo in modelos:
-            dados.append({
+            dados_op.append({
                 'modelo': modelo,
                 'ref': ", ".join(sorted(modelos[modelo])),
-                'op': modelos_op[modelo].date() if modelo in modelos_op else 'Sem OP',
+                'op': modelos_op[modelo].date() if modelo in modelos_op else dt_old,
                 'nf': modelos_vendidos[modelo].date() if modelo in modelos_vendidos else 'Sem NF',
             })
         
+        dados_op.sort(key=operator.itemgetter('op'))
+
+        for row in dados_op:
+            if row['op'] == dt_old:
+                row['op'] = 'Sem OP'
+        
+        dados = dados_op.copy()
         dados.sort(key=operator.itemgetter('modelo'))
+
 
         self.context.update({
             'headers': [
@@ -104,6 +113,7 @@ class ListaReferencias(View):
             ],
             'fields': ['ref', 'modelo', 'op', 'nf'],
             'data': dados,
+            'data_op': dados_op,
         })
 
     def get(self, request, *args, **kwargs):
