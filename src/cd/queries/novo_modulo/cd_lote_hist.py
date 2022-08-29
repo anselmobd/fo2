@@ -2,6 +2,7 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
+from utils.views import data_url_image
 
 __all__ = ['query']
 
@@ -22,4 +23,12 @@ def query(cursor, lote):
           h.DATA_HORA DESC 
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
+    data = dictlist_lower(cursor)
+    for row in data:
+        if row['usuario']:
+            if (
+                row['usuario'].startswith('WsAssociaca ')
+                or row['usuario'].startswith('WS Associaca ')
+            ):
+               row['usuario'] = row['usuario'].split("-")[1]
+    return data
