@@ -272,10 +272,27 @@ def esvazia_palete(cursor, palete):
 
 def palete_guarda_hist(cursor, palete):
     sql = f"""
-        INSERT INTO ENDR_014_HIST_DUOMO
-          (COD_CONTAINER, ORDEM_PRODUCAO, ORDEM_CONFECCAO, DATA_INCLUSAO, NIVEL, GRUPO, SUB, ITEM, QUANTIDADE)
+        INSERT INTO ENDR_014_HIST_DUOMO (
+          COD_CONTAINER
+        , ORDEM_PRODUCAO
+        , ORDEM_CONFECCAO
+        , DATA_INCLUSAO
+        , NIVEL
+        , GRUPO
+        , SUB
+        , ITEM
+        , QUANTIDADE
+        )
         SELECT
-          COD_CONTAINER, ORDEM_PRODUCAO, ORDEM_CONFECCAO, DATA_INCLUSAO, NIVEL, GRUPO, SUB, ITEM, QUANTIDADE
+          COD_CONTAINER
+        , ORDEM_PRODUCAO
+        , ORDEM_CONFECCAO
+        , DATA_INCLUSAO
+        , NIVEL
+        , GRUPO
+        , SUB
+        , ITEM
+        , QUANTIDADE
         FROM ENDR_014 -- lote/palete - oc/container
         WHERE COD_CONTAINER = '{palete}'
     """
