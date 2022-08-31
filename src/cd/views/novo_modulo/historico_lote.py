@@ -1,7 +1,5 @@
 from pprint import pprint
 
-from django.urls import reverse
-
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
@@ -55,4 +53,3 @@ class HistoricoLote(O2BaseGetPostView):
         self.context.update({
             'data': data,
         })
-        pprint(self.context)

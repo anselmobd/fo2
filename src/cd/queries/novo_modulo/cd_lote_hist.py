@@ -2,7 +2,6 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
-from utils.views import data_url_image
 
 __all__ = ['query']
 
