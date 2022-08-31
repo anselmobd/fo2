@@ -270,7 +270,7 @@ def esvazia_palete(cursor, palete):
     except Exception as e:
         return False
 
-def palete_guarda_hist(cursor, palete):
+def palete_guarda_hist(cursor, palete, usuario):
     sql = f"""
         INSERT INTO ENDR_014_HIST_DUOMO (
           COD_CONTAINER
@@ -282,6 +282,7 @@ def palete_guarda_hist(cursor, palete):
         , SUB
         , ITEM
         , QUANTIDADE
+        , USUARIO_SYSTEXTIL
         )
         SELECT
           COD_CONTAINER
@@ -293,6 +294,7 @@ def palete_guarda_hist(cursor, palete):
         , SUB
         , ITEM
         , QUANTIDADE
+        , '{usuario}'
         FROM ENDR_014 -- lote/palete - oc/container
         WHERE COD_CONTAINER = '{palete}'
     """
