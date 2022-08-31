@@ -25,10 +25,31 @@ def query(cursor, lote):
     debug_cursor_execute(cursor, sql)
     data = dictlist_lower(cursor)
     for row in data:
+        row['usuario_db'] = row['usuario']
         if row['usuario']:
             if (
                 row['usuario'].startswith('WsAssociaca ')
                 or row['usuario'].startswith('WS Associaca ')
             ):
-               row['usuario'] = row['usuario'].split("-")[1]
+                row['usuario'] = row['usuario'].split("-")[1]
+                row['tela'] = 'endr_f015'
+                row['sistema'] = 'Systextil'
+                continue
+            if (
+                row['usuario'].startswith('python3@intranet ')
+            ):
+                row['usuario'] = '-'
+                row['tela'] = 'Esvazia palete'
+                row['sistema'] = 'Apoio'
+                continue
+            if (
+                row['usuario'].startswith('SYSTEXTIL/APEX:APP ')
+            ):
+                row['usuario'] = '?'
+                row['tela'] = '?'
+                row['sistema'] = 'APEX'
+                continue
+        row['tela'] = '?'
+        row['sistema'] = '?'
+               
     return data
