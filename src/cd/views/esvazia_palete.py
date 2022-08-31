@@ -1,17 +1,13 @@
 from pprint import pprint
 
-from django import forms
-from django.conf import settings
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
-from django.urls import reverse
 from django.views import View
 
 from fo2.connections import db_cursor_so
 
-import lotes.models
-import lotes.queries
-from lotes.views.lote.conserto_lote import dict_conserto_lote
+from base.models import Colaborador
+from systextil.models import Usuario as SystextilUsuario
 
 import cd.forms
 import cd.views.gerais
@@ -23,7 +19,7 @@ from cd.queries.endereco import (
 )
 
 
-class EsvaziaPalete(View):
+class EsvaziaPalete(LoginRequiredMixin, View):
 
     def __init__(self):
         self.Form_class = cd.forms.EsvaziaPaleteForm
@@ -31,6 +27,24 @@ class EsvaziaPalete(View):
         self.context = {'titulo': 'Esvazia palete'}
 
     def mount_context(self):
+        try:
+            colab = Colaborador.objects.get(user=self.request.user)
+        except Colaborador.DoesNotExist as e:
+            self.context.update({
+                'erro': 'Não é possível utilizar um usuário que não '
+                    'está cadastrado como colaborador.'
+            })
+            return
+
+        try:
+            s_user = SystextilUsuario.objects.get(codigo_usuario=colab.matricula)
+        except SystextilUsuario.DoesNotExist as e:
+            self.context.update({
+                'erro': 'Não é possível utilizar um colaborador sem '
+                    'matrícula válida ou inativo.'
+            })
+            return
+
         cursor = db_cursor_so(self.request)
 
         identificado = self.context['form'].cleaned_data['identificado']
@@ -71,7 +85,7 @@ class EsvaziaPalete(View):
             self.context['identificado'] = None
             return
 
-        if not palete_guarda_hist(cursor, palete):
+        if not palete_guarda_hist(cursor, palete, s_user.usuario):
             self.context.update({
                 'erro': f"Erro ao guardar histórico do palete {palete}."})
 
