@@ -33,7 +33,11 @@ def query(cursor, lote):
         , h.ENDERECO
         , h.ORDEM_PRODUCAO
         , h.ORDEM_CONFECCAO
-        FROM ENDR_016_HIST h
+        , u.USUARIO USUARIO_SYSTEXTIL
+        FROM ENDR_016_HIST h -- histórico de endereçamento
+        LEFT JOIN HDOC_030 u -- usuários
+          ON u.EMPRESA = 1
+         AND u.USUARIO = h.USUARIO 
         WHERE h.ORDEM_CONFECCAO = {lote}
         ORDER BY 
           h.DATA_HORA DESC 
@@ -69,6 +73,8 @@ def query(cursor, lote):
                 row['usuario'].startswith('SYSTEXTIL/APEX:APP ')
             ):
                 row['sistema'] = 'APEX'
+            elif row['usuario_systextil']:
+                row['login'] = row['usuario_systextil']
         else:
             row['usuario'] = '-'
 
