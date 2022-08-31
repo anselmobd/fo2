@@ -3,6 +3,8 @@ from pprint import pprint
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
+from cd.queries.novo_modulo import cd_lote_hist_duomo
+
 __all__ = ['query']
 
 
@@ -14,6 +16,14 @@ __atividade = {
 
 
 def query(cursor, lote):
+
+    hist_duomo = cd_lote_hist_duomo.query(cursor, lote)
+
+    def get_hist_row(data_versao):
+        for row in hist_duomo:
+            if row['data_versao'] <= data_versao:
+                return row
+
     sql = f"""
         SELECT
           h.USUARIO
@@ -48,9 +58,13 @@ def query(cursor, lote):
             elif (
                 row['usuario'].startswith('python3@intranet ')
             ):
+                hist_row = get_hist_row(row['data_hora'])
                 row['sistema'] = 'Apoio'
                 row['tela'] = 'Esvazia palete'
-                row['login'] = '-'
+                if hist_row:
+                    row['login'] = hist_row['usuario_systextil'] or '-'
+                else:
+                    row['login'] = '?'
             elif (
                 row['usuario'].startswith('SYSTEXTIL/APEX:APP ')
             ):
