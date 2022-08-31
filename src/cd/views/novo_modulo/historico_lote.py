@@ -30,16 +30,11 @@ class HistoricoLote(O2BaseGetPostView):
                 'data_hora': ['Quando'],
                 'sistema': ['Sistema'],
                 'tela': ['Tela'],
-                'usuario': ['Usuário'],
-                'usuario_db': ['Obs.'],
+                'login': ['Usuário'],
+                'usuario': ['Obs.'],
             },
             ['header'],
         )
-        self.atividade = {
-            1: "Colocando lote em palete",
-            2: "Tirando lote de palete",
-            3: "(Des)Endereçando palete",  # não utilizado em movimentos de lotes
-        }
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
@@ -55,13 +50,6 @@ class HistoricoLote(O2BaseGetPostView):
         self.context['op'] = f"{data[0]['op']}"
 
         data = cd_lote_hist.query(cursor, lote)
-
-        for row in data:
-            if row['endereco'] is None:
-                row['endereco'] = '-'
-            if row['usuario'] is None:
-                row['usuario'] = '-'
-            row['atividade'] = self.atividade[row['atividade']]
 
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({

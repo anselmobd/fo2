@@ -7,6 +7,13 @@ from utils.views import data_url_image
 __all__ = ['query']
 
 
+__atividade = {
+    1: "Colocando lote em palete",
+    2: "Tirando lote de palete",
+    3: "(Des)Endereçando palete",  # não utilizado em movimentos de lotes
+}
+
+
 def query(cursor, lote):
     sql = f"""
         SELECT
@@ -25,31 +32,31 @@ def query(cursor, lote):
     debug_cursor_execute(cursor, sql)
     data = dictlist_lower(cursor)
     for row in data:
-        row['usuario_db'] = row['usuario']
+        row['atividade'] = __atividade[row['atividade']]
+        if row['endereco'] is None:
+            row['endereco'] = '-'
+        row['sistema'] = '?'
+        row['tela'] = '?'
+        row['login'] = '?'
         if row['usuario']:
             if (
                 row['usuario'].startswith('WsAssociaca ')
                 or row['usuario'].startswith('WS Associaca ')
             ):
-                row['usuario'] = row['usuario'].split("-")[1]
-                row['tela'] = 'endr_f015'
                 row['sistema'] = 'Systextil'
-                continue
-            if (
+                row['tela'] = 'endr_f015'
+                row['login'] = row['usuario'].split("-")[1]
+            elif (
                 row['usuario'].startswith('python3@intranet ')
             ):
-                row['usuario'] = '-'
-                row['tela'] = 'Esvazia palete'
                 row['sistema'] = 'Apoio'
-                continue
-            if (
+                row['tela'] = 'Esvazia palete'
+                row['login'] = '-'
+            elif (
                 row['usuario'].startswith('SYSTEXTIL/APEX:APP ')
             ):
-                row['usuario'] = '?'
-                row['tela'] = '?'
                 row['sistema'] = 'APEX'
-                continue
-        row['tela'] = '?'
-        row['sistema'] = '?'
-               
+        else:
+            row['usuario'] = '-'
+
     return data
