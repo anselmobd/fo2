@@ -12,6 +12,7 @@ from utils.functions import (
     my_make_key_cache,
 )
 from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import debug_cursor_execute
 
 import produto.queries
 
@@ -315,7 +316,7 @@ def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
         FROM comb_com_alt a
     """
 
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
 
     cached_result = dictlist(cursor)
     cache.set(key_cache, cached_result, timeout=entkeys._MINUTE * 3)
@@ -636,7 +637,7 @@ def mapa_compras_necessidades(
             FROM filtrado a
         """
 
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
 
     cached_result = dictlist(cursor)
     cache.set(key_cache, cached_result, timeout=entkeys._MINUTE)
