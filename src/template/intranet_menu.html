@@ -113,6 +113,7 @@
         {% endif %}
       </ul>
     </td>
+    {% if request.user.is_authenticated or base_ip_interno %}
     <td>&nbsp;</td>
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
@@ -123,7 +124,6 @@
           <ul>
             <li><a href="http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx" target="_blank">Disponibilidade do portal de NF-e</a></li>
           </ul>
-          {% if request.user.is_authenticated or base_ip_interno %}
           <li>Servidor de e-mail (Zoho)</li>
           <ul>
             <li><a href="https://status.zoho.com/" target="_blank">Disponibilidade dos serviços</a></li>
@@ -132,7 +132,6 @@
           <ul>
             <li><a href="https://ocistatus.oraclecloud.com/" target="_blank">Disponibilidade dos serviços</a></li>
           </ul>
-          {% endif %}
           <li>Link da internet</li>
           <ul>
             <li>Testes de velocidade</li>
@@ -144,7 +143,6 @@
             <ul>
               <li><a href="https://pingtool.org/" target="_blank">PingTool.org</a></li>
             </ul>
-            {% if request.user.is_authenticated or base_ip_interno %}
             <li>Monitoramento</li>
             <ul>
               <li><a href="https://uptimerobot.com/" target="_blank">Uptime Robot</a></li>
@@ -152,7 +150,6 @@
                 <li><a href="https://monitor.tussor.com.br/" target="_blank">Monitor Tussor</a></li>
               </ul> -->
             </ul>
-            {% endif %}
           </ul>
         </ul>
         <br />
@@ -166,5 +163,6 @@
         </ul>
       </ul>
     </td>
+    {% endif %}
   </tr>
 </table>
