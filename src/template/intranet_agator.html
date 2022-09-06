@@ -6,9 +6,9 @@
 {% block header.content %}Intranet{% endblock header.content %}
 
 {% block content %}
-{% if request.user.is_authenticated or base_ip_interno %}
 <table>
   <tr>
+    {% if request.user.is_authenticated or base_ip_interno %}
     <td style="vertical-align: top;">
       <ul>
         <li>ERP</li>
@@ -36,9 +36,35 @@
     </td>
     <td>&nbsp;</td>
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+    {% endif %}
     <td style="vertical-align: top;">
       <ul>
+        {% if request.user.is_authenticated or base_ip_interno %}
         {% include 'sites_interesse.html' %}
+        <br/>
+        {% endif %}
+        <li>Intranet</li>
+        <ul>
+          <li>Usuário{% if request.user.is_authenticated %} ( {{ request.user.username }} ){% endif %}</li>
+            <ul>
+            {% if request.user.is_authenticated %}
+              <li><a href="{% url 'encerrar' %}">Encerrar sessão</a></li>
+              <li><a href="/rootadm/password_change/?next=/">Alterar senha</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}?next={% url 'intranet' %}">Identificar-se (Login)</a></li>
+            {% endif %}
+            {% if request.user.is_authenticated or base_ip_interno %}
+              <li><a href="{% url 'base:usuarios' %}?next=/">{{logged_count}} logado{{ logged_count|pluralize }}</a></li>
+            {% endif %}
+          </ul>
+          {% if request.user.is_authenticated %}
+            <li>Administração</li>
+            <ul>
+              <li><a href="/intradm/" target="_blank">Configurações e Dados</a></li>
+              <li><a href="/rootadm/" target="_blank">Usuários</a></li>
+            </ul>
+          {% endif %}
+        </ul>
         {% if request.user.is_authenticated or base_ip_interno %}
           <br/>
           <li>Páginas de empresas parceiras</li>
@@ -52,6 +78,7 @@
         {% endif %}
       </ul>
     </td>
+    {% if request.user.is_authenticated or base_ip_interno %}
     <td>&nbsp;</td>
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
@@ -59,7 +86,7 @@
         {% include 'verifica_servicos.html' %}
       </ul>
     </td>
+    {% endif %}
   </tr>
 </table>
-{% endif %}
 {% endblock %}
