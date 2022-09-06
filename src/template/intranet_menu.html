@@ -55,12 +55,13 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
-  {% endif %}{# request.user.is_authenticated or base_ip_interno #}
         <li><a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
+        <li><a href="https://somosduomo.com.br/" target="_blank">Somos D'UOMO</a></li>
         <br />
+  {% endif %}{# request.user.is_authenticated or base_ip_interno #}
         <li>Páginas da cuecas D'UOMO na web</li>
         <ul>
-          <li><a href="https://b2b.cuecasduomo.com.br" target="_blank">Loja on-line B2B</a></li>
+          <!-- <li><a href="https://b2b.cuecasduomo.com.br" target="_blank">Loja on-line B2B</a></li> -->
           <li><a href="https://pt-br.facebook.com/cuecasduomo" target="_blank">No Facebook</a></li>
           <li><a href="https://www.instagram.com/cuecasduomo/" target="_blank">No Instagram</a></li>
           <li><a href="http://www.cuecasduomo.net.br/" target="_blank">Institucional e catálogo</a></li>
