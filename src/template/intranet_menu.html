@@ -118,42 +118,7 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
-        <li>Verificação de serviços utilizados</li>
-        <ul>
-          <li>Serviços do governo (SEFAZ)</li>
-          <ul>
-            <li><a href="http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx" target="_blank">Disponibilidade do portal de NF-e</a></li>
-          </ul>
-          <li>Servidor de e-mail (Zoho)</li>
-          <ul>
-            <li><a href="https://status.zoho.com/" target="_blank">Disponibilidade dos serviços</a></li>
-          </ul>
-          <li>Oracle Cloud (Systêxtil)</li>
-          <ul>
-            <li><a href="https://ocistatus.oraclecloud.com/" target="_blank">Disponibilidade dos serviços</a></li>
-          </ul>
-          <li>Link da internet</li>
-          <ul>
-            <li>Testes de velocidade</li>
-            <ul>
-              <li><a href="https://www.nperf.com/pt/" target="_blank">nPerf</a></li>
-              <li><a href="https://speedsmart.net" target="_blank">SpeedSmart</a></li>
-              <li><a href="https://www.minhaconexao.com.br" target="_blank">Minha Conexão</a></li>             
-              <li><a href="https://fast.com/pt/" target="_blank">Fast</a></li>             
-            </ul>
-            <li>Outros testes</li>
-            <ul>
-              <li><a href="https://pingtool.org/" target="_blank">PingTool.org</a></li>
-            </ul>
-            <li>Monitoramento</li>
-            <ul>
-              <li><a href="https://uptimerobot.com/" target="_blank">Uptime Robot</a></li>
-              <!-- <ul>
-                <li><a href="https://monitor.tussor.com.br/" target="_blank">Monitor Tussor</a></li>
-              </ul> -->
-            </ul>
-          </ul>
-        </ul>
+        {% include 'verifica_servicos.html' %}
         <br />
         {% include 'sites_interesse.html' %}
       </ul>
