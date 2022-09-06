@@ -72,8 +72,8 @@
           <li>Usuário{% if request.user.is_authenticated %} ( {{ request.user.username }} ){% endif %}</li>
             <ul>
             {% if request.user.is_authenticated %}
-              <li><a href="{% url 'encerrar' %}">Encerrar sessão</a></li>
-              <li><a href="/rootadm/password_change/?next=/">Alterar senha</a></li>
+              <li><a href="{% url 'encerrar_intranet' %}">Encerrar sessão</a></li>
+              <li><a href="/rootadm/password_change/?next={% url 'intranet' %}">Alterar senha</a></li>
             {% else %}
               <li><a href="{% url 'login' %}?next={% url 'intranet' %}">Identificar-se (Login)</a></li>
             {% endif %}
