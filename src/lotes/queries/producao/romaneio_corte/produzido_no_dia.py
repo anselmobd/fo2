@@ -51,21 +51,18 @@ def query(cursor, data=None):
             om.OP
           , om.PER1
           , om.SEQ1
+          , l.CODIGO_ESTAGIO EST1
           , min(l.ORDEM_CONFECCAO) OC1
-          , min(
-              CASE WHEN l.SEQUENCIA_ESTAGIO = om.SEQ1
-              THEN l.CODIGO_ESTAGIO
-              ELSE 999
-              END 
-            ) EST1
           FROM op_min_prep om
           JOIN PCPC_040 l
             ON l.ORDEM_PRODUCAO = om.OP
            AND l.PERIODO_PRODUCAO = om.PER1
+           AND l.SEQUENCIA_ESTAGIO = om.SEQ1
           GROUP BY 
             om.OP
           , om.PER1
           , om.SEQ1
+          , l.CODIGO_ESTAGIO
         )
         , op_lotes AS 
         ( SELECT
