@@ -53,17 +53,27 @@ def query_base(cursor, data, cliente_slug=None):
           GROUP BY
             o.OP
         )
+        , lote_perdas AS
+        ( SELECT 
+            l.PERIODO_PRODUCAO 
+          , l.ORDEM_CONFECCAO
+          , sum(l.QTDE_PERDAS) PERDAS
+          FROM PCPC_040 l
+          GROUP BY 
+            l.PERIODO_PRODUCAO 
+          , l.ORDEM_CONFECCAO
+        )
         , op_completas_ate_16 AS
-        ( SELECT
+        ( SELECT DISTINCT 
             o.OP
           FROM PCPC_040 l
+          JOIN lote_perdas lp
+            ON lp.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+           AND lp.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
           JOIN op_seq_est_16 o
             ON o.OP = l.ORDEM_PRODUCAO
-          AND o.SEQ_EST >= l.SEQUENCIA_ESTAGIO
-          HAVING 
-            sum(l.QTDE_PECAS_PROG) = sum(l.QTDE_PECAS_PROD + l.QTDE_PERDAS)
-          GROUP BY
-            o.OP
+           AND o.SEQ_EST = l.SEQUENCIA_ESTAGIO
+          WHERE l.QTDE_PECAS_PROG = l.QTDE_PECAS_PROD + lp.PERDAS
         )
         SELECT DISTINCT 
           CASE WHEN op.PEDIDO_VENDA = 0
@@ -87,7 +97,8 @@ def query_base(cursor, data, cliente_slug=None):
         , cli.CGC_9
         , cli.CGC_4
         , cli.CGC_2
-        , sum(l.QTDE_PECAS_PROD + l.QTDE_PERDAS) mov_qtd
+        --, sum(l.QTDE_PECAS_PROD + l.QTDE_PERDAS) mov_qtd
+        , sum(l.QTDE_PECAS_PROD) mov_qtd
         FROM filtro, PCPC_040 l
         JOIN op_completas_ate_16 oc16
           ON oc16.OP = l.ORDEM_PRODUCAO
