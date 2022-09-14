@@ -88,7 +88,7 @@ def meta_ref_incluir(cursor, modelo):
     """
     ref_incl = comercial.models.MetaModeloReferencia.objects.filter(
         modelo=modelo,
-        incl_excl='i',
+        # incl_excl='i',
     ).order_by('referencia').values('referencia')
     if len(ref_incl) != 0:
 

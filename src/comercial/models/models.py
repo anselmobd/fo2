@@ -60,14 +60,15 @@ class MetaModeloReferencia(models.Model):
         max_length=5,
         verbose_name='Referência',
     )
-    incl_excl = models.CharField(
-        max_length=1,
-        verbose_name='Inclui/Exclui',
-    )
+    # incl_excl = models.CharField(
+    #     max_length=1,
+    #     verbose_name='Inclui/Exclui',
+    # )
 
     def __str__(self):
-        incl_excl = "Inclui" if self.incl_excl == 'i' else "Exclui"
-        return f'{incl_excl} {self.referencia} = {self.modelo} x {self.quantidade}'
+        # incl_excl = "Inclui" if self.incl_excl == 'i' else "Exclui"
+        # return f'{incl_excl} {self.referencia} = {self.modelo} x {self.quantidade}'
+        return f'{self.referencia} = {self.modelo} x {self.quantidade}'
 
     class Meta:
         db_table = "fo2_meta_mod_ref"

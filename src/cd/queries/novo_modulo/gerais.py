@@ -27,7 +27,7 @@ def get_refs(
         if com_pac:
             refs_pac_data = comercial.models.MetaModeloReferencia.objects.filter(
                 modelo=modelo,
-                incl_excl='i',
+                # incl_excl='i',
             ).values('referencia')
             if refs_pac_data:
                 refs_pac = set(

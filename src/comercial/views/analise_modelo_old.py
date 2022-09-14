@@ -55,7 +55,7 @@ class AnaliseModeloOld(LoginRequiredMixin, O2BaseGetPostView):
         # referências a incluir
         ref_incl = models.MetaModeloReferencia.objects.filter(
             modelo=modelo,
-            incl_excl='i',
+            # incl_excl='i',
         ).values('referencia', 'multiplicador')
         if len(ref_incl) == 0:
             refs_incl = None

@@ -64,7 +64,7 @@ class FaturavelModelo(O2BaseGetPostView):
         if self._pac_quant is None:
             pac_quant_data = comercial.models.MetaModeloReferencia.objects.filter(
                 modelo=self.modelo,
-                incl_excl='i',
+                # incl_excl='i',
             ).values('referencia', 'quantidade')
             self._pac_quant = {
                 row['referencia']: row['quantidade']
