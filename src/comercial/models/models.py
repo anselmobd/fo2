@@ -58,7 +58,7 @@ class MetaModeloReferencia(models.Model):
     quantidade = models.IntegerField()
     referencia = models.CharField(
         max_length=5,
-        verbose_name='Referência',
+        verbose_name='Pacote',
     )
     # incl_excl = models.CharField(
     #     max_length=1,
@@ -72,8 +72,8 @@ class MetaModeloReferencia(models.Model):
 
     class Meta:
         db_table = "fo2_meta_mod_ref"
-        verbose_name = "Referência de modelo para meta"
-        verbose_name_plural = "Referências de modelos para meta"
+        verbose_name = "Pacote de modelo para meta"
+        verbose_name_plural = "Pacotes de modelos para meta"
 
 
 class MetaEstoque(models.Model):
