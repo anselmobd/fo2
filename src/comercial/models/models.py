@@ -68,7 +68,7 @@ class MetaModeloReferencia(models.Model):
     def __str__(self):
         # incl_excl = "Inclui" if self.incl_excl == 'i' else "Exclui"
         # return f'{incl_excl} {self.referencia} = {self.modelo} x {self.quantidade}'
-        return f'{self.referencia} = {self.modelo} x {self.quantidade}'
+        return f'{self.referencia} = {self.quantidade} x {self.modelo}'
 
     class Meta:
         db_table = "fo2_meta_mod_ref"

@@ -38,8 +38,10 @@ class MetaEstoqueCorAdmin(admin.ModelAdmin):
 
 
 class MetaModeloReferenciaAdmin(admin.ModelAdmin):
-    list_display = ['__str__']
+    list_display = ['modelo', '__str__']
+    list_display_links = ['__str__']
     ordering = ['modelo', 'referencia']
+    fields = ['referencia', 'quantidade', 'modelo']
 
 
 intr_adm_site.register(MetaEstoque, MetaEstoqueAdmin)
