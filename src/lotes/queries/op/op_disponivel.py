@@ -43,8 +43,8 @@ def query(cursor, op):
           , l.QPROG
           , l.QEMPROD
           , sum(sl.QTDE) QEMP
-          , l.QPROG - sum(sl.QTDE) QPROGDISP
-          , l.QEMPROD - sum(sl.QTDE) QEMPRODDISP
+          --, l.QPROG - sum(sl.QTDE) QPROGDISP
+          --, l.QEMPROD - sum(sl.QTDE) QEMPRODDISP
           FROM lotes l
           JOIN PCPC_044 sl -- solicitação lote
             ON sl.ORDEM_PRODUCAO = l.op
@@ -67,7 +67,8 @@ def query(cursor, op):
         , COALESCE(tam.ORDEM_TAMANHO, 0) ordem_tam
         , s.TAM
         , s.COR
-        , sum(s.QEMPRODDISP) QTD
+        --, sum(s.QEMPRODDISP) QTD
+        , sum(s.QEMPROD - s.QEMP) QTD
         FROM solicitados s
         LEFT JOIN BASI_220 tam -- cadastro de tamanhos
           ON tam.TAMANHO_REF = s.TAM
