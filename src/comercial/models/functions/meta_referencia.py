@@ -18,6 +18,7 @@ def descr_combinacoes_de_alternativas(cursor, ref):
     comb_info = {
         'cores_list': [],
     }
+    cores_dict_alt = []
     for alternativa in alternativas:
         cores_dict_alt = produto.queries.dict_combinacoes_cores(
             cursor, ref, alternativa)
