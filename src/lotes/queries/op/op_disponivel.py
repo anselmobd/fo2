@@ -42,11 +42,11 @@ def query(cursor, op):
           , l.COR
           , l.QPROG
           , l.QEMPROD
-          , sum(sl.QTDE) QEMP
+          , COALESCE(SUM(sl.QTDE), 0) QEMP
           --, l.QPROG - sum(sl.QTDE) QPROGDISP
           --, l.QEMPROD - sum(sl.QTDE) QEMPRODDISP
           FROM lotes l
-          JOIN PCPC_044 sl -- solicitação lote
+          LEFT JOIN PCPC_044 sl -- solicitação lote
             ON sl.ORDEM_PRODUCAO = l.op
            AND sl.ORDEM_CONFECCAO = l.OC 
            AND sl.SITUACAO IN (1, 2, 3, 4)
