@@ -7,6 +7,7 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetPostView
 
 from cd.forms.add1palete import Add1PaleteForm
+from cd.queries.palete import custom_add_palete
 
 
 class Add1Palete(O2BaseGetPostView, PermissionRequiredMixin):
@@ -22,3 +23,10 @@ class Add1Palete(O2BaseGetPostView, PermissionRequiredMixin):
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
+
+        status, inseridos = custom_add_palete(cursor, prefix=self.tipo)
+
+        if status == "OK":
+            self.context['msg'] = f"Inserido palete {inseridos[0]}"
+        else:
+            self.context['msg'] = f"Erro <{status}>, inserindo palete {inseridos[0]}"
