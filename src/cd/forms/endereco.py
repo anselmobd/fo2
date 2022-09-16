@@ -44,15 +44,3 @@ class EnderecoImprimeForm(forms.Form):
     #         'style': 'text-transform:uppercase;',
     #     })
     # )
-
-
-class PaleteForm(forms.Form):
-    CHOICES = [
-        ('P', 'Palete padrão'),
-        ('C', 'Palete da calha'),
-    ]
-    tipo = forms.ChoiceField(
-        choices=CHOICES, initial='P')
-
-    page = forms.IntegerField(
-        required=False, widget=forms.HiddenInput())
