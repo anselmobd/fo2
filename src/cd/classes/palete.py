@@ -10,9 +10,14 @@ class Plt():
     _PLT_PREFIX_DEFAULTS = {
         "PLT": 1,
         "CALHA": 2,
+        "FANTAS": 3,
     }
     _PLT_PREFIX = "PLT"
-    _PLT_NUM_LEN = 4
+    _PLT_PREFIX_NUM_LEN = {
+        "PLT": 4,
+        "CALHA": 2,
+        "FANTAS": 1,
+    }
 
     def __init__(self, code=None) -> None:
         self.code = code
@@ -60,8 +65,14 @@ class Plt():
         return self.mount(next_num, prefix, len(strnum))
 
 
-    def mount(self, num, prefix=_PLT_PREFIX, num_len=_PLT_NUM_LEN):
+    def mount(self, num, prefix=_PLT_PREFIX, num_len=None):
+        """
+        Obs.: Se for passado um prefix que não consta no
+        _PLT_PREFIX_NUM_LEN, também deve ser informado um num_len
+        """
         strnum = str(num)
+        if not num_len:
+            num_len = self._PLT_PREFIX_NUM_LEN[prefix]
         len_strnum = len(strnum)
         if len_strnum > num_len:
             prefix = prefix[:num_len-len_strnum]
