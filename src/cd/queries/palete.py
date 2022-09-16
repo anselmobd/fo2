@@ -34,24 +34,31 @@ def query_palete(impressa_SNA='A', order='D', prefix='PLT'):
 
 
 def add_palete(cursor, quant=1):
-    return custom_add_palete(cursor, quant)
+    status, _ = custom_add_palete(cursor, "PLT", quant)
+    if status != "OK":
+        return status
 
 
-def custom_add_palete(cursor, tipo=None, quant=1):
+def custom_add_palete(cursor, prefix=None, quant=1):
     """Cria palete no banco de dados
-    Recebe: cursor e quant de paletes a ser criados
+    Recebe:
+        cursor
+        prefix: PLT, CALHA ou FANTAS
+        quant de paletes a ser criados        
     Retorna: Se sucesso, None, senão, mensagem de erro
     """
-    paletes = query_palete()
+    paletes = query_palete(prefix=prefix)
     if len(paletes) == 0:
-        palete = Plt().mount(1)
+        palete = Plt().mount(1, prefix=prefix)
     else:
         palete = Plt(paletes[0]['palete']).next()
 
     if isinstance(quant, str):
         quant = int(quant)
 
+    inseridos = []
     for _ in range(quant):
+        inseridos.append(palete)
         sql = f"""
             INSERT INTO SYSTEXTIL.ENDR_012
             (COD_CONTAINER, COD_TIPO, ENDERECO, TARA_CONTAINER, QUANTIDADE_MAXIMO, ULTIMA_ATUALIZACAO_TARA, SITUACAO)
@@ -60,8 +67,10 @@ def custom_add_palete(cursor, tipo=None, quant=1):
         try:
             debug_cursor_execute(cursor, sql)
         except Exception as e:
-            return repr(e)
+            return repr(e), inseridos
         palete = Plt(palete).next()
+
+    return "OK", inseridos
 
 
 def mark_palete_printed(cursor, palete):
