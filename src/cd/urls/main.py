@@ -3,6 +3,7 @@ from django.urls import include, re_path
 import cd.views as views
 from cd.views import (
     admin_palete,
+    add1palete,
     api_lote,
     api_palete,
     compara_apoio_systextil,
@@ -150,6 +151,9 @@ urlpatterns = [
 
     re_path(r'^admin_palete/$',
         admin_palete.AdminPalete.as_view(), name='admin_palete'),
+
+    re_path(r'^add1palete/$',
+        add1palete.Add1Palete.as_view(), name='add1palete'),
 
     re_path(r'^api/palete_add/(?P<quant>.+)$',
         api_palete.palete_add, name='palete_add'),
