@@ -11,7 +11,3 @@ class Add1PaleteForm(forms.Form):
     ]
     tipo = forms.ChoiceField(
         choices=CHOICES, initial='P')
-
-    page = forms.IntegerField(
-        required=False, widget=forms.HiddenInput())
-
