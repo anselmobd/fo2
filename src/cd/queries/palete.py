@@ -9,17 +9,16 @@ from utils.functions.queries import debug_cursor_execute
 from cd.classes.palete import Plt
 
 
-def query_palete(impressa_SNA='A', order='D'):
-    where_impressa = []
-    if impressa_SNA != 'A':
-        where_impressa = [
-            f"COALESCE(co.TUSSOR_IMPRESSA, 'N') = '{impressa_SNA}'"
-        ]
+def query_palete(impressa_SNA='A', order='D', prefix='PLT'):
+    where_impressa = [
+        f"COALESCE(co.TUSSOR_IMPRESSA, 'N') = '{impressa_SNA}'"
+    ] if impressa_SNA != 'A' else []
 
-    if order[0].upper() == 'D':
-        order = "DESC"
-    else:
-        order = "ASC"
+    order = "DESC" if order[0].upper() == 'D' else "ASC"
+
+    where_prefix = [
+        f"co.COD_CONTAINER LIKE '{prefix[0]}%'"
+    ] if prefix != '*' else []
 
     return SMountQuery(
         fields=[
@@ -27,10 +26,7 @@ def query_palete(impressa_SNA='A', order='D'):
           "COALESCE(co.TUSSOR_IMPRESSA, 'N') impressa",
         ],
         table="ENDR_012 co",
-        where=[
-            "co.COD_CONTAINER LIKE 'P%'",
-        ]+
-        where_impressa,
+        where=where_impressa + where_prefix,
         order=[
           f"co.COD_CONTAINER {order}",
         ],
@@ -38,6 +34,10 @@ def query_palete(impressa_SNA='A', order='D'):
 
 
 def add_palete(cursor, quant=1):
+    return custom_add_palete(cursor, quant)
+
+
+def custom_add_palete(cursor, tipo=None, quant=1):
     """Cria palete no banco de dados
     Recebe: cursor e quant de paletes a ser criados
     Retorna: Se sucesso, None, senão, mensagem de erro
