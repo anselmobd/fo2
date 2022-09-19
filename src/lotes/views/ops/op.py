@@ -239,26 +239,6 @@ class Op(View):
                         'so_data': so_data,
                     })
 
-            # Grade de disponível (sem empenhos)
-            qtd_disponivel = op_disponivel.query(cursor, op)
-
-            grade_disponivel = dictlist_to_grade_qtd(
-                qtd_disponivel,
-                field_linha='cor',
-                field_coluna='tam',
-                facade_coluna='Tamanho',
-                field_ordem_coluna='ordem_tam',
-                field_quantidade='qtd',
-            )
-
-            if grade_disponivel['total'] != 0:
-                context.update({
-                    'gd_headers': grade_disponivel['headers'],
-                    'gd_fields': grade_disponivel['fields'],
-                    'gd_data': grade_disponivel['data'],
-                    'gd_style': grade_disponivel['style'],
-                })
-
             # Estágios
             e_data = lotes.queries.op.op_estagios(cursor, op)
             p.prt('op_estagios')
@@ -294,6 +274,27 @@ class Op(View):
                 'e_data': e_data,
                 'qtd_lotes_fim': qtd_lotes_fim,
             })
+
+            if tem_63:
+                # Grade de disponível (sem empenhos)
+                qtd_disponivel = op_disponivel.query(cursor, op)
+
+                grade_disponivel = dictlist_to_grade_qtd(
+                    qtd_disponivel,
+                    field_linha='cor',
+                    field_coluna='tam',
+                    facade_coluna='Tamanho',
+                    field_ordem_coluna='ordem_tam',
+                    field_quantidade='qtd',
+                )
+
+                if grade_disponivel['total'] != 0:
+                    context.update({
+                        'gd_headers': grade_disponivel['headers'],
+                        'gd_fields': grade_disponivel['fields'],
+                        'gd_data': grade_disponivel['data'],
+                        'gd_style': grade_disponivel['style'],
+                    })
 
             # Totais por referência + estágio
             t_data = lotes.queries.op.op_ref_estagio(cursor, op)
