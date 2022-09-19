@@ -1,4 +1,7 @@
+from pprint import pprint
+
 from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import debug_cursor_execute
 
 
 def ped_expedicao(
@@ -159,7 +162,7 @@ def ped_expedicao(
               ON cg.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND cg.MIN_GTIN = 1
              AND cg.MAX_GTIN = 1"""
-    sql += f"""
+    sql += f"""--
         WHERE 1=1
           AND ped.CODIGO_EMPRESA = {empresa}
           {filtro_embarque_de} -- filtro_embarque_de
@@ -218,5 +221,5 @@ def ped_expedicao(
           JOIN PEDI_100 p -- pedido de venda
             ON p.PEDIDO_VENDA = s.PEDIDO_VENDA
         """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
