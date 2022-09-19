@@ -187,6 +187,10 @@ class Expedicao(View):
                 else:
                     row['GTIN_OK'] = 'Não'
             if detalhe == 'o':
+                if row['AGRUPADOR'] == 0:
+                    row['AGRUPADOR'] = '-'
+                else:
+                    row['AGRUPADOR'] = f"{999000000+row['AGRUPADOR']}"
                 o_data = queries.pedido.ped_op(cursor, row['PEDIDO_VENDA'])
                 ops = []
                 for o_row in o_data:
@@ -232,10 +236,17 @@ class Expedicao(View):
                     referencias,
                 )
 
-        if detalhe not in ['p', 'o']:
+        if detalhe == 'p':
             group = ['PEDIDO_VENDA', 'SOLICITACAO', 'PEDIDO_CLIENTE',
                      'DT_EMISSAO', 'DT_EMBARQUE',
                      'CLIENTE']
+
+        if detalhe == 'o':
+            group = ['PEDIDO_VENDA', 'AGRUPADOR', 'SOLICITACAO', 'PEDIDO_CLIENTE',
+                     'DT_EMISSAO', 'DT_EMBARQUE',
+                     'CLIENTE']
+
+        if detalhe not in ['p', 'o']:
             totalize_grouped_data(data, {
                 'group': group,
                 'sum': ['QTD'],
@@ -245,6 +256,8 @@ class Expedicao(View):
             group_rowspan(data, group)
 
         headers = ['Pedido Tussor']
+        if detalhe == 'o':
+            headers.append('Agrupador')
         headers.append('Solicitação')
         if detalhe == 'p':
             headers.append('GTIN OK')
@@ -266,6 +279,8 @@ class Expedicao(View):
         safe = []
 
         fields = ['PEDIDO_VENDA']
+        if detalhe == 'o':
+            fields.append('AGRUPADOR')
         fields.append('SOLICITACAO')
         safe.append('SOLICITACAO')
         if detalhe == 'p':
