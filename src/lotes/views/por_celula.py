@@ -18,7 +18,7 @@ class PorCelula(O2BaseGetPostView):
         super(PorCelula, self).__init__(*args, **kwargs)
         self.Form_class = PorCelulaForm
         self.template_name = 'lotes/por_celula.html'
-        self.title_name = 'Produção por célula'
+        self.title_name = 'Produção por célula/estágio'
         self.cleaned_data2self = True
         self.get_args2context = True
         self.form_class_has_initial = True
@@ -28,12 +28,14 @@ class PorCelula(O2BaseGetPostView):
 
         if not self.data_ate:
             self.data_ate = self.data_de
+        
+        divisao = self.celula.divisao_producao if self.celula else None
 
         dados = query_por_celula(
             self.cursor,
             self.data_de,
             self.data_ate,
-            self.celula.divisao_producao,
+            divisao,
             self.estagio.codigo_estagio,
         )
 
