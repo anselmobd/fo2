@@ -217,6 +217,11 @@ def ped_expedicao(
           select
             s.*
           , p.OBSERVACAO
+          , ( SELECT
+                max(i.AGRUPADOR_PRODUCAO)
+              FROM PEDI_110 i -- item de pedido de venda
+              WHERE i.PEDIDO_VENDA = s.PEDIDO_VENDA
+            ) AGRUPADOR
           from sele s
           JOIN PEDI_100 p -- pedido de venda
             ON p.PEDIDO_VENDA = s.PEDIDO_VENDA
