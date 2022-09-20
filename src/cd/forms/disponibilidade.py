@@ -66,11 +66,11 @@ class DisponibilidadeForm(forms.Form):
     )
 
     corte_de = forms.DateField(
-        label='Data de corte - De', required=False,
+        label='Data de corte inicial', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
 
     corte_ate = forms.DateField(
-        label='Até', required=False,
+        label='Data de corte final', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
 
     CHOICES_PAGINADOR = [
