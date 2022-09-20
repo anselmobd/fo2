@@ -116,10 +116,19 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             for row in referencias
         ]
 
+        if self.tipo_inventario == 'p':
+            paletizado = 's'
+            selecao_lotes = '63'
+        elif self.tipo_inventario == 'n':
+            paletizado = 't'
+            selecao_lotes = 'qq'
+
         inventario = refs_em_palets.query(
             self.cursor,
             fields='all',
             ref=filtra_ref,
+            paletizado=paletizado,
+            selecao_lotes=selecao_lotes,
         )
         p.prt('inventario')
 

@@ -55,6 +55,16 @@ class DisponibilidadeForm(forms.Form):
         )
     )
 
+    CHOICES = [
+        ('p', 'Lotes em paletes com quantidade no 63-CD'),
+        ('n', 'Lotes independente de ser paletizado com quantidade em qualquer estágio'),
+    ]
+    tipo_inventario = forms.ChoiceField(
+        label='Inventário',
+        choices=CHOICES,
+        initial='p'
+    )
+
     CHOICES_PAGINADOR = [
         ('s', 'Sim'),
         ('n', 'Não'),
