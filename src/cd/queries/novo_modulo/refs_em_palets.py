@@ -120,6 +120,8 @@ def query(
     paletizado='s',
     selecao_ops='63',
     selecao_lotes='63',
+    corte_de=None,
+    corte_ate=None,
 ):
     """
     cursor: cursor de acesso ao BD
@@ -218,6 +220,14 @@ def query(
     filtra_op = f"""--
         AND l.ORDEM_PRODUCAO = '{op}'
     """ if op else ''
+
+    filtra_corte_de = f"""--
+        AND op.DATA_ENTRADA_CORTE >= DATE '{corte_de}'
+    """ if corte_de else ''
+
+    filtra_corte_ate = f"""--
+        AND op.DATA_ENTRADA_CORTE <= DATE '{corte_ate}'
+    """ if corte_ate else ''
 
     if lote:
          per, oc = periodo_oc(lote)
@@ -587,6 +597,8 @@ def query(
           {filtra_selecao_ops} -- filtra_selecao_ops
           {filtra_selecao_lotes} -- filtra_selecao_lotes
           {filtra_op} -- filtra_op
+          {filtra_corte_de} -- filtra_corte_de
+          {filtra_corte_ate} -- filtra_corte_ate
           {filtra_per} -- filtra_per
           {filtra_oc} -- filtra_oc
           {filtra_ref} -- filtra_ref

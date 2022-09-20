@@ -129,6 +129,8 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             ref=filtra_ref,
             paletizado=paletizado,
             selecao_lotes=selecao_lotes,
+            corte_de=self.corte_de,
+            corte_ate=self.corte_ate,
         )
         p.prt('inventario')
 
