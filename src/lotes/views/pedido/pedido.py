@@ -193,6 +193,7 @@ class Pedido(View):
         if ops_tecidos:
             nft_data = ped_nf_rolos.query(cursor, ops_tecidos)
             for row in nft_data:
+                row['op|TARGET'] = '_blank'
                 row['op|LINK'] = reverse(
                     'producao:op__get',
                     args=[row['op']],
@@ -200,6 +201,7 @@ class Pedido(View):
                 row['cnpj'] = format_cnpj(row)
                 row['cnpj_num'] = format_cnpj(row, sep=False)
                 row['nf'] = f"{row['nf_num']}-{row['nf_ser']}"
+                row['nf|TARGET'] = '_blank'
                 row['nf|LINK'] = reverse(
                     'contabil:nf_recebida__get',
                     args=[
