@@ -129,11 +129,10 @@ class Pedido(View):
         # OPs
         o_data = queries.pedido.ped_op(cursor, pedido)
 
-        tem_15 = sum([
+        if any([
             row['TEM_15']
             for row in o_data    
-        ]) > 0
-        if tem_15:
+        ]):
             dados_filial = pedidos_filial_na_data(cursor, fantasia=fantasia)
 
         for row in o_data:
