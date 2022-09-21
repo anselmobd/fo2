@@ -50,6 +50,8 @@
 
   {% if request.user.is_authenticated and request.user.username == 'anselmo_sis' %}
   <br/>
+  <li>Telas "desligadas"</li>
+  <ul>
   <li>Sistema novo rascunho</li>
   <ul>
     <li><a href="{% url 'cd:grade_estoque_totais' %}">Totais de grades do estoque</a></li>
@@ -94,6 +96,7 @@
     <li><a href="{% url 'cd:etiq_solicitacoes' %}">Etiquetas de solicitações</a></li>
   </ul>
   <li><a href="{% url 'cd:mapa:index' %}">Mapa</a></li>
+  </ul>
   </ul>
   {% endif %}
 
