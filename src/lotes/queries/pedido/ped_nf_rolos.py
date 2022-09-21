@@ -13,8 +13,8 @@ def query(cursor, op):
     sql = f"""
         SELECT
           rc.ORDEM_PRODUCAO op
-        , ro.NOTA_FISCAL_ENT nf
-        , ro.SERI_FISCAL_ENT serie
+        , ro.NOTA_FISCAL_ENT nf_num
+        , ro.SERI_FISCAL_ENT nf_ser
         , ro.FORNECEDOR_CGC9 cnpj9
         , ro.FORNECEDOR_CGC4 cnpj4
         , ro.FORNECEDOR_CGC2 cnpj2
@@ -22,6 +22,7 @@ def query(cursor, op):
         , ro.PANOACAB_GRUPO ref
         , ro.PANOACAB_SUBGRUPO tam
         , ro.PANOACAB_ITEM cor
+        , count(*) rolos
         , sum(rc.QTDE_KG_FINAL) qtd
         FROM PCPT_020 ro -- cadastro de rolos
         LEFT JOIN PCPT_025 rc -- alocação de rolo para OP
