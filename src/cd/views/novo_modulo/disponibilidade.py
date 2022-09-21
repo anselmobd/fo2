@@ -116,10 +116,13 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             for row in referencias
         ]
 
-        if self.tipo_inventario == 'p':
+        if self.tipo_inventario == 'p 63':
             paletizado = 's'
             selecao_lotes = '63'
-        elif self.tipo_inventario == 'n':
+        elif self.tipo_inventario == 'n <63':
+            paletizado = 'n'
+            selecao_lotes = 'qq'
+        elif self.tipo_inventario == '* *':
             paletizado = 't'
             selecao_lotes = 'qq'
 

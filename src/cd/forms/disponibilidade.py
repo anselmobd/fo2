@@ -56,13 +56,14 @@ class DisponibilidadeForm(forms.Form):
     )
 
     CHOICES = [
-        ('p', 'Lotes em paletes com quantidade no 63-CD'),
-        ('n', 'Lotes independente de ser paletizado com quantidade em qualquer estágio'),
+        ('p 63', 'Lotes paletizados com quantidade no 63-CD'),
+        ('n <63', 'Lotes não paletizados com quantidade antes do 63-CD'),
+        ('* *', 'Lotes independente de ser paletizado com quantidade em qualquer estágio'),
     ]
     tipo_inventario = forms.ChoiceField(
         label='Inventário',
         choices=CHOICES,
-        initial='p'
+        initial='p 63'
     )
 
     corte_de = forms.DateField(
