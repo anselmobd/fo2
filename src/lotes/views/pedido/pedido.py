@@ -190,6 +190,7 @@ class Pedido(View):
         })
 
         # NF de compra de tecido
+        self.context['ops_tecidos'] = ops_tecidos
         if ops_tecidos:
             nft_data = ped_nf_rolos.query(cursor, ops_tecidos)
             for row in nft_data:
