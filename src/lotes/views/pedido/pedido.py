@@ -193,8 +193,22 @@ class Pedido(View):
         if ops_tecidos:
             nft_data = ped_nf_rolos.query(cursor, ops_tecidos)
             for row in nft_data:
-                row['nf'] = f"{row['nf']}-{row['serie']}"
+                row['op|LINK'] = reverse(
+                    'producao:op__get',
+                    args=[row['op']],
+                )
                 row['cnpj'] = format_cnpj(row)
+                row['cnpj_num'] = format_cnpj(row, sep=False)
+                row['nf'] = f"{row['nf_num']}-{row['nf_ser']}"
+                row['nf|LINK'] = reverse(
+                    'contabil:nf_recebida__get',
+                    args=[
+                        '1',
+                        row['nf_num'],
+                        row['nf_ser'],
+                        row['cnpj_num']
+                    ],
+                )
             self.context.update({
                 'nft_headers': [
                     'OP',
@@ -204,7 +218,8 @@ class Pedido(View):
                     'Referência',
                     'Tamanho',
                     'Cor',
-                    'Quantidade utilizada',
+                    'Rolos',
+                    'Peso utilizado',
                 ],
                 'nft_fields': [
                     'op',
@@ -214,6 +229,7 @@ class Pedido(View):
                     'ref',
                     'tam',
                     'cor',
+                    'rolos',
                     'qtd',
                 ],
                 'nft_data': nft_data,
