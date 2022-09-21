@@ -8,7 +8,9 @@ from utils.functions.models.dictlist import dictlist_lower
 def query(cursor, op):
     if (not isinstance(op, collections.abc.Sequence)) or isinstance(op, str):
         op = (op, )
-    test_op = f"rc.ORDEM_PRODUCAO IN ({', '.join(map(str, op))})"
+    filtra_op = f"""--
+        AND rc.ORDEM_PRODUCAO IN ({', '.join(map(str, op))})
+    """
 
     sql = f"""
         SELECT
@@ -27,7 +29,8 @@ def query(cursor, op):
         FROM PCPT_020 ro -- cadastro de rolos
         LEFT JOIN PCPT_025 rc -- alocação de rolo para OP
           ON rc.CODIGO_ROLO = ro.CODIGO_ROLO
-        WHERE {test_op}
+        WHERE 1=1
+          {filtra_op} -- filtra_op
           AND ro.NOTA_FISCAL_ENT > 0
         GROUP BY 
           rc.ORDEM_PRODUCAO
