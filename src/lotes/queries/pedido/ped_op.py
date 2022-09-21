@@ -13,8 +13,9 @@ def ped_op(cursor, pedido):
         , CASE
           when o.REFERENCIA_PECA <= '99999' then 'PA'
           when o.REFERENCIA_PECA <= 'B9999' then 'PG'
-          when o.REFERENCIA_PECA >= 'Z0000' then 'CO' -- componente/parte
-          when o.REFERENCIA_PECA LIKE 'F%' then 'MP'
+          when o.REFERENCIA_PECA >= 'Z0000' then 'MP'
+          when o.REFERENCIA_PECA LIKE 'F%' then 'CO' -- componente/parte forro
+          when o.REFERENCIA_PECA LIKE 'T%' then 'CO' -- componente/parte tela
           else 'MD'
           END TIPO
         , o.REFERENCIA_PECA
