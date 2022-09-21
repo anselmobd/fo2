@@ -78,6 +78,13 @@
     {% include "layout/html_tbody_group.html" with fields=o_fields data=o_data group=o_group only %}
   </table>
 {% endif %}
+{% if nft_data %}
+  <h3>NF de tecidos de OP</h3>
+  <table>
+    {% include "layout/html_thead.html" with data=nft_headers only %}
+    {% include "layout/html_tbody_group.html" with fields=nft_fields data=nft_data group=nft_group only %}
+  </table>
+{% endif %}
 {% if nf_data %}
   <h3>NF do pedido</h3>
   <table>

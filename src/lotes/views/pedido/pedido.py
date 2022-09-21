@@ -16,6 +16,7 @@ from cd.queries.novo_modulo.agrupador import get_agrupador
 
 import lotes.models as models
 import lotes.queries as queries
+from lotes.queries.pedido import ped_nf_rolos
 from lotes.queries.pedido.ped_alter import pedidos_filial_na_data
 
 
@@ -135,7 +136,10 @@ class Pedido(View):
         ]):
             dados_filial = pedidos_filial_na_data(cursor, fantasia=fantasia)
 
+        ops_tecidos = []
         for row in o_data:
+            if row['QTD_ROLOS_ALOC'] != 0:
+                ops_tecidos.append(row['ORDEM_PRODUCAO'])
             row['ORDEM_PRODUCAO|LINK'] = '/lotes/op/{}'.format(
                 row['ORDEM_PRODUCAO'])
             row['REFERENCIA_PECA|LINK'] = reverse(
@@ -183,6 +187,31 @@ class Pedido(View):
                             'TEM_15', 'QTD_ROLOS_ALOC', 'NF_FILIAL'),
             'o_data': o_data,
         })
+
+        # NF de compra dos tecidos
+        if ops_tecidos:
+            nft_data = ped_nf_rolos.query(cursor, ops_tecidos[0])
+            self.context.update({
+                'nft_headers': [
+                    'OP',
+                    'NF',
+                    'Nível',
+                    'Referência',
+                    'Tamanho',
+                    'Cor',
+                    'Quantidade utilizada',
+                ],
+                'nft_fields': [
+                    'op',
+                    'nf',
+                    'nivel',
+                    'ref',
+                    'tam',
+                    'cor',
+                    'qtd',
+                ],
+                'nft_data': nft_data,
+            })
 
         # NFs
         nf_data = queries.pedido.ped_nf(cursor, pedido, especiais=True, empresa=empresa)
