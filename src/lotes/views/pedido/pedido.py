@@ -11,6 +11,7 @@ from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
 from base.forms.forms2 import PedidoForm2
 from geral.functions import get_empresa
 from utils.functions import coalesce
+from utils.functions.format import format_cnpj
 
 from cd.queries.novo_modulo.agrupador import get_agrupador
 
@@ -188,13 +189,17 @@ class Pedido(View):
             'o_data': o_data,
         })
 
-        # NF de compra dos tecidos
+        # NF de compra de tecido
         if ops_tecidos:
-            nft_data = ped_nf_rolos.query(cursor, ops_tecidos[0])
+            nft_data = ped_nf_rolos.query(cursor, ops_tecidos)
+            for row in nft_data:
+                row['nf'] = f"{row['nf']}-{row['serie']}"
+                row['cnpj'] = format_cnpj(row)
             self.context.update({
                 'nft_headers': [
                     'OP',
                     'NF',
+                    'Fornecedor',
                     'Nível',
                     'Referência',
                     'Tamanho',
@@ -204,6 +209,7 @@ class Pedido(View):
                 'nft_fields': [
                     'op',
                     'nf',
+                    'cnpj',
                     'nivel',
                     'ref',
                     'tam',
