@@ -184,12 +184,13 @@ def query(
         n63: Sem estágio 63 (CD)
         t: Não filtra
     selecao_lotes: filtra no BD lotes
-        63 = lotes endereçados e com quantidade no estágio 63
-        qq = lotes endereçados e com quantidade em qq estágio
-        605763 = lotes endereçados e com quantidade nos estágios 60, 57 ou 63
-        n63 = lotes endereçados e com quantidade não no estágio 63
-        60 = lotes endereçados e com quantidade no estágio 60
-        57 = lotes endereçados e com quantidade no estágio 57
+        63 = lotes com quantidade no estágio 63
+        qq = lotes com quantidade em qq estágio
+        605763 = lotes com quantidade nos estágios 60, 57 ou 63
+        n63 = lotes com quantidade não no estágio 63
+        <63 = lotes com quantidade anterior ao estágio 63
+        60 = lotes com quantidade no estágio 60
+        57 = lotes com quantidade no estágio 57
         fin = lotes finalizados
     """
     joins = set()
@@ -288,6 +289,17 @@ def query(
     elif selecao_lotes == 'n63':
         filtra_selecao_lotes = """--
             AND l.CODIGO_ESTAGIO <> 63
+            AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
+    elif selecao_lotes == '<63':
+        filtra_selecao_lotes = """--
+            AND l.SEQUENCIA_ESTAGIO < (
+              SELECT
+                MIN(l2.SEQUENCIA_ESTAGIO)
+              FROM pcpc_040 l2 -- lote 
+              WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                AND l2.CODIGO_ESTAGIO = 63
+            )
             AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
     elif selecao_lotes == '60':
