@@ -22,6 +22,7 @@ class AtividadeCD63(O2BaseGetPostView):
             {
                 'data': ['Data'],
                 'usuario': ['Obs.'],
+                'dep': ['Depósito'],
                 'atividade': ['Atividade'],
                 'qtd': ['Quantidade'],
             },
