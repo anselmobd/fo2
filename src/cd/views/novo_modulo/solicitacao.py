@@ -281,6 +281,7 @@ class Solicitacao(O2BaseGetView):
                     if pedido in pedidos_info
                     else '-'
                 ),
+                'dt_embarque': pedidos_info[pedido]['DT_EMBARQUE'].date(),
                 'qtde': dict_pedidos[pedido]['qtde'],
             }
             for pedido in dict_pedidos
@@ -298,10 +299,10 @@ class Solicitacao(O2BaseGetView):
         })
 
         self.context.update({
-            'p_headers': ["Pedido", "Cliente", "Quantidade"],
-            'p_fields': ['pedido', 'cliente', 'qtde'],
+            'p_headers': ["Pedido", "Cliente", "Data embarque", "Quantidade"],
+            'p_fields': ['pedido', 'cliente', 'dt_embarque', 'qtde'],
             'p_style': {
-                3: 'text-align: right;'
+                4: 'text-align: right;'
             },
             'p_data': self.dados_pedidos,
         })
