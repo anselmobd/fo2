@@ -26,7 +26,7 @@ class Solicitacoes(O2BaseGetPostView):
         self.cleaned_data2self = True
         self.cleaned_data2data = True
         self.template_name = 'cd/novo_modulo/solicitacoes.html'
-        self.title_name = 'Solicitações'
+        self.title_name = 'Empenhos/Solicitações'
         self.por_pagina = 20
 
     def mount_context(self):

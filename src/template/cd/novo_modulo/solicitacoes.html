@@ -32,7 +32,9 @@
       Situçação: 1=A confirmar; 2=Confirmado; 3=Programado; 4=Solicitado; 5=Baixado</p>
     {% include "layout/paginator.html" with data=data url_name='cd:novo_solicitacoes' only %}
   {% else %}
-    <h4>Nenhuma solicitação encontrada</h4>
+    {% if request.POST %}
+      <h4>Nenhum empenho ou solicitação encontrado</h4>
+    {% endif %}
   {% endif %}
 {% endblock content %}
 

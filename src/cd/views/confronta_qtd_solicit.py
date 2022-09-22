@@ -15,7 +15,7 @@ class ConfrontaQtdSolicit(O2BaseGetView):
     def __init__(self, *args, **kwargs):
         super(ConfrontaQtdSolicit, self).__init__(*args, **kwargs)
         self.template_name = 'cd/confronta_qtd_solicit.html'
-        self.title_name = 'Confronta quant. solicitadas'
+        self.title_name = 'Confronta quant. empenhadas'
         self.por_pagina = 50
 
         self.table_defs = TableDefs(
