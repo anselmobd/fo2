@@ -236,17 +236,15 @@ class Expedicao(View):
                     referencias,
                 )
 
-        if detalhe == 'p':
-            group = ['PEDIDO_VENDA', 'SOLICITACAO', 'PEDIDO_CLIENTE',
-                     'DT_EMISSAO', 'DT_EMBARQUE',
-                     'CLIENTE']
-
         if detalhe == 'o':
             group = ['PEDIDO_VENDA', 'AGRUPADOR', 'SOLICITACAO', 'PEDIDO_CLIENTE',
                      'DT_EMISSAO', 'DT_EMBARQUE',
                      'CLIENTE']
 
         if detalhe not in ['p', 'o']:
+            group = ['PEDIDO_VENDA', 'SOLICITACAO', 'PEDIDO_CLIENTE',
+                     'DT_EMISSAO', 'DT_EMBARQUE',
+                     'CLIENTE']
             totalize_grouped_data(data, {
                 'group': group,
                 'sum': ['QTD'],
