@@ -104,6 +104,8 @@ def mount_produzir_grade_empenho(cursor, modelo):
         gzerada = og.update_gzerada(gzerada, gme)
 
     lead = produto.queries.lead_de_modelo(cursor, modelo)
+    mount_produzir['lead'] = lead
+
     gmg = None
     if meta.meta_giro == 0:
         mount_produzir.update({
