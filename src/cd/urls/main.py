@@ -21,6 +21,7 @@ from cd.views import (
     vizualiza_esvaziamento,
 )
 from cd.views.novo_modulo import (
+    atividade_cd63,
     estoque,
     estoque_ficticio,
     etqs_parciais,
@@ -117,6 +118,9 @@ urlpatterns = [
 
     re_path(r'^historico_lote/(?P<lote>[^/]+)?$',
         historico_lote.HistoricoLote.as_view(), name='historico_lote'),
+
+    re_path(r'^atividade_cd63$',
+        atividade_cd63.AtividadeCD63.as_view(), name='atividade_cd63'),
 
     # re_path(r'^rearrumar/$', views.Rearrumar.as_view(), name='rearrumar'),
     # re_path(r'^rearrumar/m/$',
