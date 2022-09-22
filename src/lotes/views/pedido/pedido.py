@@ -11,7 +11,6 @@ from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
 from base.forms.forms2 import PedidoForm2
 from geral.functions import get_empresa
 from utils.functions import coalesce
-from utils.functions.format import format_cnpj
 
 from cd.queries.novo_modulo.agrupador import get_agrupador
 
@@ -199,9 +198,6 @@ class Pedido(View):
                     'producao:op__get',
                     args=[row['op']],
                 )
-                row['cnpj'] = format_cnpj(row)
-                row['cnpj_num'] = format_cnpj(row, sep=False)
-                row['nf'] = f"{row['nf_num']}-{row['nf_ser']}"
                 row['nf|TARGET'] = '_blank'
                 row['nf|LINK'] = reverse(
                     'contabil:nf_recebida__get',
@@ -217,21 +213,17 @@ class Pedido(View):
                     'OP',
                     'NF',
                     'Fornecedor',
-                    'Nível',
-                    'Referência',
-                    'Tamanho',
-                    'Cor',
+                    'Item',
+                    'Descrição',
                     'Rolos',
                     'Peso utilizado',
                 ],
                 'nft_fields': [
                     'op',
                     'nf',
-                    'cnpj',
-                    'nivel',
-                    'ref',
-                    'tam',
-                    'cor',
+                    'cnpj_forn',
+                    'item',
+                    'item_descr',
                     'rolos',
                     'qtd',
                 ],
