@@ -1,7 +1,7 @@
 from django import forms
 
 from base.forms.custom import O2BaseForm
-from base.forms.fields import O2FieldRefForm, O2FieldModeloForm, O2FieldClienteForm
+from base.forms.fields import O2FieldCorForm, O2FieldRefForm, O2FieldModeloForm, O2FieldClienteForm, O2FieldTamanhoForm
 from utils.functions import mes_atual, ano_atual
 
 from systextil.models import Colecao
@@ -125,6 +125,8 @@ class DevolucaoParaMetaForm(
 class FaturamentoParaMetaForm(
         O2BaseForm,
         O2FieldRefForm,
+        O2FieldTamanhoForm,
+        O2FieldCorForm,
         O2FieldClienteForm):
 
     ano = forms.IntegerField(
@@ -171,6 +173,8 @@ class FaturamentoParaMetaForm(
             'ano',
             'mes',
             'ref',
+            'tamanho',
+            'cor',
             'colecao',
             'cliente',
             'apresentacao',
