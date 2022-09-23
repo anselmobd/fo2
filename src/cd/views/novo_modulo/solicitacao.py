@@ -273,6 +273,12 @@ class Solicitacao(O2BaseGetView):
             'PEDIDO_VENDA',
         )
 
+        def dt_embarque(info, pedido):
+            try:
+                return info[pedido]['DT_EMBARQUE']
+            except Exception:
+                return "-"
+
         self.dados_pedidos = [
             {
                 'pedido': pedido,
@@ -281,7 +287,7 @@ class Solicitacao(O2BaseGetView):
                     if pedido in pedidos_info
                     else '-'
                 ),
-                'dt_embarque': pedidos_info[pedido]['DT_EMBARQUE'].date(),
+                'dt_embarque': dt_embarque(pedidos_info, pedido),
                 'qtde': dict_pedidos[pedido]['qtde'],
             }
             for pedido in dict_pedidos
