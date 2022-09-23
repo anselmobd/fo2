@@ -183,11 +183,33 @@ def query(
               ( SELECT
                   SUM(sl.QTDE)
                 FROM pcpc_044 sl -- solicitação / lote 
+                JOIN PCPC_040 l
+                  ON l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO 
+                 AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
+                 AND l.SEQUENCIA_ESTAGIO = 1
                 WHERE sl.PEDIDO_DESTINO = pqs.PEDIDO
                   AND sl.ORDEM_CONFECCAO <> 0 
-                  AND sl.GRUPO_DESTINO = pqs.REF
-                  AND sl.SUB_DESTINO = pqs.TAM
-                  AND sl.COR_DESTINO = pqs.COR
+                  -- AND sl.GRUPO_DESTINO = pqs.REF
+                  AND (
+                     CASE WHEN sl.GRUPO_DESTINO = '00000'
+                     THEN l.PROCONF_GRUPO
+                     ELSE sl.GRUPO_DESTINO
+                     END = pqs.REF
+                  )
+                  -- AND sl.SUB_DESTINO = pqs.TAM
+                  AND (
+                     CASE WHEN sl.GRUPO_DESTINO = '00000'
+                     THEN l.PROCONF_SUBGRUPO
+                     ELSE sl.SUB_DESTINO
+                     END = pqs.TAM
+                  )
+                  -- AND sl.COR_DESTINO = pqs.COR
+                  AND (
+                     CASE WHEN sl.GRUPO_DESTINO = '00000'
+                     THEN l.PROCONF_ITEM
+                     ELSE sl.COR_DESTINO
+                     END = pqs.COR
+                  )
                   AND sl.SITUACAO = 5
               )
             , 0 
@@ -196,11 +218,33 @@ def query(
               ( SELECT
                   SUM(sl.QTDE)
                 FROM pcpc_044 sl -- solicitação / lote 
+                JOIN PCPC_040 l
+                  ON l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO 
+                 AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
+                 AND l.SEQUENCIA_ESTAGIO = 1
                 WHERE sl.PEDIDO_DESTINO = pqs.PEDIDO
                   AND sl.ORDEM_CONFECCAO <> 0 
-                  AND sl.GRUPO_DESTINO = pqs.REF
-                  AND sl.SUB_DESTINO = pqs.TAM
-                  AND sl.COR_DESTINO = pqs.COR
+                  -- AND sl.GRUPO_DESTINO = pqs.REF
+                  AND (
+                     CASE WHEN sl.GRUPO_DESTINO = '00000'
+                     THEN l.PROCONF_GRUPO
+                     ELSE sl.GRUPO_DESTINO
+                     END = pqs.REF
+                  )
+                  -- AND sl.SUB_DESTINO = pqs.TAM
+                  AND (
+                     CASE WHEN sl.GRUPO_DESTINO = '00000'
+                     THEN l.PROCONF_SUBGRUPO
+                     ELSE sl.SUB_DESTINO
+                     END = pqs.TAM
+                  )
+                  -- AND sl.COR_DESTINO = pqs.COR
+                  AND (
+                     CASE WHEN sl.GRUPO_DESTINO = '00000'
+                     THEN l.PROCONF_ITEM
+                     ELSE sl.COR_DESTINO
+                     END = pqs.COR
+                  )
                   AND sl.SITUACAO IN (1, 2, 3, 4)
               )
             , 0 
