@@ -174,7 +174,8 @@ SQL_TIPO_FAT_META = {
 
 def faturamento_para_meta(
         cursor, ano, mes=None, tipo='mes', empresa=1,
-        ref=None, ordem='apresentacao', cliente=None,
+        ref=None, tamanho=None, cor=None,
+        ordem='apresentacao', cliente=None,
         colecao=None, verifica_devolucao=False):
     '''
         tipo: 
@@ -202,16 +203,16 @@ def faturamento_para_meta(
         mes = f"{mes:02}"
         prox_mes = f"{prox_mes:02}"
 
-    filtra_emissao = f"""
+    filtra_emissao = f"""--
         AND f.DATA_EMISSAO >=
             TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
         AND f.DATA_EMISSAO <
             TIMESTAMP '{prox_ano}-{prox_mes}-01 00:00:00.000'
     """
 
-    filtra_ref = ""
-    if ref:
-        filtra_ref = f"AND fi.GRUPO_ESTRUTURA = '{ref}'"
+    filtra_ref = f"AND fi.GRUPO_ESTRUTURA = '{ref}'" if ref else ""
+    filtra_tam = f"AND fi.SUBGRU_ESTRUTURA = '{tamanho}'" if tamanho else ""
+    filtra_cor = f"AND fi.ITEM_ESTRUTURA = '{cor}'" if cor else ""
 
     filtra_colecao = ""
     if colecao is not None:
@@ -282,6 +283,8 @@ def faturamento_para_meta(
         WHERE 1=1
           AND f.CODIGO_EMPRESA = {empresa}
           {filtra_ref} -- filtra_ref
+          {filtra_tam} -- filtra_tam
+          {filtra_cor} -- filtra_cor
           {filtra_colecao} -- filtra_colecao
           {filtro_cliente} -- filtro_cliente
           -- ou o faturamento tem uma transação de venda
