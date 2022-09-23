@@ -177,15 +177,20 @@ class Pedido(View):
                 row['TEM_15'] = 'N'
 
         self.context.update({
-            'o_headers': ('Stuação', 'OP', 'Tipo',
-                            'Referência', 'OP principal', 'Quantidade',
-                            'Data Digitação', 'Data Corte',
-                            'Tem est. 15?', 'Qtd.rolos', 'NF filial'),
-            'o_fields': ('SITUACAO', 'ORDEM_PRODUCAO', 'TIPO',
-                            'REFERENCIA_PECA', 'ORDEM_PRINCIPAL', 'QTD',
-                            'DT_DIGITACAO', 'DT_CORTE',
-                            'TEM_15', 'QTD_ROLOS_ALOC', 'NF_FILIAL'),
-            'o_data': o_data,
+            'o_dados': {
+                'headers': (
+                    'Stuação', 'OP', 'Tipo', 'Referência',
+                    'OP principal', 'Quantidade', 'Data Digitação', 'Data Corte',
+                    'Tem est. 15?', 'Qtd.rolos', 'NF filial'
+                ),
+                'fields': (
+                    'SITUACAO', 'ORDEM_PRODUCAO', 'TIPO', 'REFERENCIA_PECA',
+                    'ORDEM_PRINCIPAL', 'QTD', 'DT_DIGITACAO', 'DT_CORTE',
+                    'TEM_15', 'QTD_ROLOS_ALOC', 'NF_FILIAL'
+                ),
+                'data': o_data,
+                'titulo': "OP do pedido",
+            },
         })
 
         # NF de compra de tecido

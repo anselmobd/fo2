@@ -71,13 +71,7 @@
   </tr>
 </table>
 {% endif %}
-{% if o_data %}
-  <h3>OP do pedido</h3>
-  <table>
-    {% include "layout/html_thead.html" with data=o_headers only %}
-    {% include "layout/html_tbody_group.html" with fields=o_fields data=o_data group=o_group only %}
-  </table>
-{% endif %}
+{% include "layout/table_generic.html" with dados=o_dados only %}
 {% if ops_tecidos %}
   {% if nft_data %}
     <h3>NF de tecidos de OP</h3>
