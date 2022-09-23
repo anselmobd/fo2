@@ -11,5 +11,7 @@
     {% endif %}
     </table>
 {% else %}
-  <h{% firstof dados.vazio_h 4 %}>{{dados.vazio}}</h{% firstof dados.vazio_h 4 %}>
+  {% if dados.vazio %}
+    <h{% firstof dados.vazio_h 4 %}>{{dados.vazio}}</h{% firstof dados.vazio_h 4 %}>
+  {% endif %}
 {% endif %}
