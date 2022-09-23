@@ -1,6 +1,8 @@
 import re
 from pprint import pprint
 
+from django.utils.text import slugify
+
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
@@ -65,6 +67,8 @@ def inclui_pedido_item(cursor, pedido, nat_cod, nat_uf, seq, row):
 
 
 def pedidos_filial_na_data(cursor, data=None, fantasia=None):
+    if fantasia:
+        slug_fantasia =  slugify(fantasia)
     filtra_data = f"""--
         AND p.DATA_EMIS_VENDA = DATE '{data}'
         AND p.DATA_ENTR_VENDA = DATE '{data}'
@@ -103,12 +107,19 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None):
             if not cliente_match:
                 continue
             cliente = cliente_match.group(1).lower()
-        if fantasia and cliente.upper() != fantasia.upper():
-            continue
+        if fantasia:
+            if cliente.upper() != slug_fantasia.upper():
+                continue
+            cliente = fantasia
+
         if cliente not in peds:
             peds[cliente] = []
         peds[cliente].append(row)
-    return peds
+
+    if fantasia:
+        return peds[fantasia]
+    else:
+        return peds
 
 
 def pedido_matriz_de_pedido_filial(cursor, pedido_filial):

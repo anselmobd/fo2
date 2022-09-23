@@ -160,8 +160,8 @@ class Pedido(View):
                 row['SITUACAO'] = 'Ativa'
 
             row['NF_FILIAL'] = '-'
-            if row['TEM_15'] and fantasia.lower() in dados_filial:
-                for nf in dados_filial[fantasia.lower()]:
+            if row['TEM_15'] and dados_filial:
+                for nf in dados_filial:
                     op_match = re.findall('OP\(([^\)]+)\)', nf['obs'])
                     if not op_match:
                         continue
