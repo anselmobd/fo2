@@ -108,7 +108,10 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None):
                 continue
             cliente = cliente_match.group(1).lower()
         if fantasia:
-            if cliente.upper() != slug_fantasia.upper():
+            if not (
+                cliente.upper().startswith(slug_fantasia.upper())
+                or slug_fantasia.upper().startswith(cliente.upper())
+            ):
                 continue
             cliente = fantasia
 
