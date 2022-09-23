@@ -1,6 +1,8 @@
 import datetime
 from pprint import pprint
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
@@ -229,6 +231,15 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         headers = tabela[apresentacao]['headers']
         fields = tabela[apresentacao]['fields']
         style = tabela[apresentacao]['style']
+
+        if 'pedido' in fields:
+            for row in faturados:
+                if row['pedido'] and row['pedido'] != '-':
+                    row['pedido|TARGET'] = '_blank'
+                    row['pedido|LINK'] = reverse(
+                        'producao:pedido__get',
+                        args=[row['pedido']],
+                    )
 
         self.context.update({
             'headers': headers,
