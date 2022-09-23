@@ -1,7 +1,7 @@
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
-
+from utils.functions.queries import debug_cursor_execute
 
 SQL_TIPO_FAT_META = {
     'mes': {
@@ -300,5 +300,5 @@ def faturamento_para_meta(
         {sql_group} -- group
         {sql_order} -- order
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)
