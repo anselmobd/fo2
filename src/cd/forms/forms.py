@@ -832,7 +832,7 @@ class FinalizaEmpenhoOpForm(forms.Form):
 class SolicitacoesForm(forms.Form):
     solicitacao = forms.CharField(
         label='Solicitação',
-        required=False,
+        required=True,
         widget=forms.TextInput(
             attrs={
                 'size': 6,
