@@ -25,6 +25,7 @@ from cd.views.novo_modulo import (
     estoque,
     estoque_ficticio,
     etqs_parciais,
+    finaliza_emp_op,
     disponibilidade,
     disponibilidade_ficticio,
     grade_estoque_totais,
@@ -208,6 +209,9 @@ urlpatterns = [
 
     re_path(r'^novo/solicitacoes/$',
         solicitacoes.Solicitacoes.as_view(), name='novo_solicitacoes'),
+
+    re_path(r'^novo/finaliza_emp_op/$',
+        finaliza_emp_op.FinalizaEmpenhoOp.as_view(), name='finaliza_emp_op'),
 
     re_path(r'^novo/solicitacao/(?P<solicitacao>[^/]+)$',
         solicitacao.Solicitacao.as_view(), name='novo_solicitacao'),

@@ -17,8 +17,8 @@ class Oracle:
         username='systextil',
         password=DBPASS_ORACLE,
         hostname='localhost',
-        port=28521,
-        servicename='XE',
+        port=14521,
+        servicename='db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
         schema='SYSTEXTIL',
     ):
         self.username = username

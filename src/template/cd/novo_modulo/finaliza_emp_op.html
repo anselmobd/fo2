@@ -1,0 +1,16 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block content %}
+  <form action="{% url 'cd:finaliza_emp_op' %}" method="post" name="myForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Finaliza"/>
+  </form>
+  <br/>
+  {% if request.POST %}
+    <h4>{{ mensagem }}</h4>
+  {% endif %}
+{% endblock content %}

@@ -815,6 +815,20 @@ class SolicitacaoForm(forms.Form):
     )
 
 
+class FinalizaEmpenhoOpForm(forms.Form):
+    op = forms.CharField(
+        label='OP',
+        required=False,
+        min_length=1,
+        max_length=6,
+        widget=forms.TextInput(
+            attrs={
+                'size': 6,
+                'type': 'number',
+            }
+        )
+    )
+
 class SolicitacoesForm(forms.Form):
     solicitacao = forms.CharField(
         label='Solicitação',

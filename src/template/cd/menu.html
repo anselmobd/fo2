@@ -10,6 +10,9 @@
   <ul>
     <li><a href="{% url 'cd:novo_solicitacoes' %}">Empenhos/Solicitações</a></li>
     <li><a href="{% url 'cd:confronta_qtd_solicit' %}">Confronta quant. empenhadas</a></li>
+    {% if perms.cd.pode_finalizar_empenho_op_finalizada %}
+      <li><a href="{% url 'cd:finaliza_emp_op' %}">Finaliza empenho de OP fin.</a></li>
+    {% endif %}
     <li><a href="{% url 'cd:nao_enderecados' %}">Empenhos não endereçados</a></li>
     <li><a href="{% url 'cd:etqs_parciais' %}">Etiquetas de parciais</a></li>
   </ul>
