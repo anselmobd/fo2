@@ -7,30 +7,53 @@ from utils.functions.queries import debug_cursor_execute
 def exec(
     cursor,
     executa=False,
-    op=None,
-    oc=None,
-    ped=None,
-    ref=None,
+    ordem_producao=None,
+    ordem_confeccao=None,
+    pedido_destino=None,
+    op_destino=None,
+    # oc_destino=None,
+    # dep_destino=None,
+    grupo_destino=None,
+    alter_destino=None,
+    sub_destino=None,
+    cor_destino=None,
 ):
-    filtra_op = f"""--
-        AND sl.ORDEM_PRODUCAO = {op}
-    """ if op else ''
 
-    filtra_oc = f"""--
-        AND sl.ORDEM_CONFECCAO = {oc}
-    """ if oc else ''
+    filtra_ordem_producao = f"""--
+        AND sl.ORDEM_PRODUCAO = {ordem_producao}
+    """ if ordem_producao else ''
+
+    filtra_ordem_confeccao = f"""--
+        AND sl.ORDEM_CONFECCAO = {ordem_confeccao}
+    """ if ordem_confeccao else ''
 
     filtra_pedido_destino = f"""--
-        AND sl.PEDIDO_DESTINO = {ped}
-    """ if ped else ''
+        AND sl.PEDIDO_DESTINO = {pedido_destino}
+    """ if pedido_destino else ''
 
-    filtra_ref_destino = f"""--
+    filtra_op_destino = f"""--
+        AND sl.OP_DESTINO = {op_destino}
+    """ if op_destino else ''
+
+    filtra_grupo_destino = f"""--
         AND
           CASE WHEN sl.GRUPO_DESTINO = '00000'
           THEN l.PROCONF_GRUPO
           ELSE sl.GRUPO_DESTINO
-          END = '{ref}'
-    """ if ref else ''
+          END = '{grupo_destino}'
+    """ if grupo_destino else ''
+
+    filtra_alter_destino = f"""--
+        AND sl.ALTER_DESTINO = {alter_destino}
+    """ if alter_destino else ''
+
+    filtra_sub_destino = f"""--
+        AND sl.SUB_DESTINO = {sub_destino}
+    """ if sub_destino else ''
+
+    filtra_cor_destino = f"""--
+        AND sl.COR_DESTINO = {cor_destino}
+    """ if cor_destino else ''
 
     sql = f"""--
         SELECT
@@ -55,10 +78,14 @@ def exec(
          AND l.CODIGO_ESTAGIO = 63
         WHERE 1=1
           AND sl.SITUACAO <> 5
-          {filtra_op} -- filtra_op
-          {filtra_oc} -- filtra_oc
+          {filtra_ordem_producao} -- filtra_ordem_producao
+          {filtra_ordem_confeccao} -- filtra_ordem_confeccao
           {filtra_pedido_destino} -- filtra_pedido_destino
-          {filtra_ref_destino} -- filtra_ref_destino
+          {filtra_op_destino} -- filtra_op_destino
+          {filtra_grupo_destino} -- filtra_grupo_destino
+          {filtra_alter_destino} -- filtra_alter_destino
+          {filtra_sub_destino} -- filtra_sub_destino
+          {filtra_cor_destino} -- filtra_cor_destino
     """
     if executa:
         sql = f"""
