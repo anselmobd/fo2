@@ -1,6 +1,18 @@
 import textwrap
 from pprint import pprint
 
+from utils.functions import coalesce
+
+
+def pluralize(conta, plural=None, singular=None):
+    plural = coalesce(plural, "s")
+    singular = coalesce(singular, "")
+    try:
+        um = len(conta) == 1
+    except TypeError:
+        um = conta == 1
+    return singular if um else plural
+
 
 def all_str(something):
     """
