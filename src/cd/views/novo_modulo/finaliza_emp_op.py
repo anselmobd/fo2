@@ -85,7 +85,11 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
                     ped=row['pedido_destino'],
                     ref=row['grupo_destino'],
                 )
-
-        self.context.update({
-            'mensagem': f'Finalizados empenhos da OP: {count_nao_finalizados}',
-        })
+        if count_nao_finalizados > 1:
+            self.context.update({
+                'mensagem': f'Finalizados {count_nao_finalizados} empenhos da OP',
+            })
+        else:
+            self.context.update({
+                'mensagem': f'Finalizado {count_nao_finalizados} empenho da OP',
+            })
