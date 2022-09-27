@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
@@ -13,10 +15,11 @@ from cd.queries.novo_modulo.solicitacao import get_solicitacao
 from cd.queries.novo_modulo import finaliza_empenho
 
 
-class FinalizaEmpenhoOp(O2BaseGetPostView):
+class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(FinalizaEmpenhoOp, self).__init__(*args, **kwargs)
+        self.permission_required = 'cd.pode_finalizar_empenho_op_finalizada'
         self.Form_class = cd.forms.FinalizaEmpenhoOpForm
         self.cleaned_data2self = True
         self.cleaned_data2data = True
