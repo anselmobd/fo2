@@ -7,6 +7,9 @@ from base.views import O2BaseGetPostView
 from lotes.queries.op import op_aprod
 
 import cd.forms
+from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
+from cd.queries.novo_modulo.solicitacao import get_solicitacao
+from cd.queries.novo_modulo import finaliza_empenho
 
 
 class FinalizaEmpenhoOp(O2BaseGetPostView):
@@ -34,6 +37,66 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
             self.context['mensagem'] = 'OP não finalizada'
             return
 
+        data = get_solicitacoes(cursor, op=self.op)
+        pprint(data)
+
+        if not data:
+            self.context['mensagem'] = 'OP sem empenhos'
+            return
+
+        data = get_solicitacao(
+                cursor,
+                op=self.op,
+            )
+        pprint(data[:2])
+
+        count_nao_finalizados = 0
+        for row in data[:2]:
+            if row['solicitacao']:
+                self.context['mensagem'] = 'OP com solicitação'
+                return
+            if row['situacao'] < 5:
+                count_nao_finalizados += 1
+
+        if not count_nao_finalizados:
+            self.context['mensagem'] = 'OP sem empenhos'
+            return
+
+        for row in data[:2]:
+            if row['situacao'] < 5:
+                empenho = finaliza_empenho.exec(
+                    cursor,
+                    op=row['ordem_producao'],
+                    oc=row['ordem_confeccao'],
+                    ped=row['pedido_destino'],
+                    ref=row['grupo_destino'],
+                )
+                if len(empenho) > 1:
+                    self.context['mensagem'] = (
+                        'Ao verificar o que seria exluido, filtro de '
+                        'lote encontrou mais de um registro'
+                    )
+                    return
+                pprint(empenho)
+
+        for row in data[:1]:
+            if row['situacao'] < 5:
+                empenho = finaliza_empenho.exec(
+                    cursor,
+                    executa=True,
+                    op=row['ordem_producao'],
+                    oc=row['ordem_confeccao'],
+                    ped=row['pedido_destino'],
+                    ref=row['grupo_destino'],
+                )
+                print(
+                    row['ordem_producao'],
+                    row['ordem_confeccao'],
+                    row['pedido_destino'],
+                    row['grupo_destino'],
+                )
+                pprint(empenho)
+
         self.context.update({
-            'mensagem': 'Finalizado empenho da OP',
+            'mensagem': f'Finalizados empenhos da OP: {count_nao_finalizados}',
         })
