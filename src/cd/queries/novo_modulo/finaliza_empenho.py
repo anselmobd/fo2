@@ -45,6 +45,7 @@ def exec(
          AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
          AND l.CODIGO_ESTAGIO = 63
         WHERE 1=1
+          AND sl.SITUACAO <> 5
           {filtra_op} -- filtra_op
           {filtra_oc} -- filtra_oc
           {filtra_pedido_destino} -- filtra_pedido_destino
