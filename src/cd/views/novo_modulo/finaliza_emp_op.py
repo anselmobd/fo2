@@ -67,10 +67,10 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
             if row['situacao'] < 5:
                 empenho = finaliza_empenho.exec(
                     cursor,
-                    op=row['ordem_producao'],
-                    oc=row['ordem_confeccao'],
-                    ped=row['pedido_destino'],
-                    ref=row['grupo_destino'],
+                    ordem_producao=row['ordem_producao'],
+                    ordem_confeccao=row['ordem_confeccao'],
+                    pedido_destino=row['pedido_destino'],
+                    grupo_destino=row['grupo_destino'],
                 )
                 if len(empenho) > 1:
                     self.context['mensagem'] = (
@@ -84,10 +84,10 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
                 empenho = finaliza_empenho.exec(
                     cursor,
                     executa=True,
-                    op=row['ordem_producao'],
-                    oc=row['ordem_confeccao'],
-                    ped=row['pedido_destino'],
-                    ref=row['grupo_destino'],
+                    ordem_producao=row['ordem_producao'],
+                    ordem_confeccao=row['ordem_confeccao'],
+                    pedido_destino=row['pedido_destino'],
+                    grupo_destino=row['grupo_destino'],
                 )
 
         self.context.update({
