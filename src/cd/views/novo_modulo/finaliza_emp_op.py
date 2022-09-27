@@ -3,6 +3,7 @@ from pprint import pprint
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from utils.functions.strings import pluralize
 
 from lotes.queries.op import op_aprod
 
@@ -47,15 +48,15 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
                 op=self.op,
             )
 
-        count_nao_finalizados = 0
+        count = 0
         for row in data:
             if row['solicitacao']:
                 self.context['mensagem'] = 'OP com solicitação'
                 return
             if row['situacao'] < 5:
-                count_nao_finalizados += 1
+                count += 1
 
-        if not count_nao_finalizados:
+        if not count:
             self.context['mensagem'] = 'OP sem empenhos'
             return
 
@@ -75,7 +76,7 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
                     )
                     return
 
-        for row in data:
+        for row in data[:1]:
             if row['situacao'] < 5:
                 empenho = finaliza_empenho.exec(
                     cursor,
@@ -85,11 +86,10 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
                     ped=row['pedido_destino'],
                     ref=row['grupo_destino'],
                 )
-        if count_nao_finalizados > 1:
-            self.context.update({
-                'mensagem': f'Finalizados {count_nao_finalizados} empenhos da OP',
-            })
-        else:
-            self.context.update({
-                'mensagem': f'Finalizado {count_nao_finalizados} empenho da OP',
-            })
+
+        self.context.update({
+            'mensagem': (
+                f"Finalizado{pluralize(count)} "
+                f"{count} empenho{pluralize(count)} da OP"
+            ),
+        })
