@@ -11,52 +11,61 @@ def exec(
     ordem_confeccao=None,
     pedido_destino=None,
     op_destino=None,
-    # oc_destino=None,
-    # dep_destino=None,
+    oc_destino=None,  # atualmente não utilizado
+    dep_destino=None,  # atualmente não utilizado
     grupo_destino=None,
     alter_destino=None,
     sub_destino=None,
     cor_destino=None,
 ):
 
-    filtra_ordem_producao = f"""--
+    filtra_ordem_producao = "" if ordem_producao is None else f"""--
         AND sl.ORDEM_PRODUCAO = {ordem_producao}
-    """ if ordem_producao else ''
+    """
 
-    filtra_ordem_confeccao = f"""--
+    filtra_ordem_confeccao = "" if ordem_confeccao is None else f"""--
         AND sl.ORDEM_CONFECCAO = {ordem_confeccao}
-    """ if ordem_confeccao else ''
+    """
 
-    filtra_pedido_destino = f"""--
+    filtra_pedido_destino = "" if pedido_destino is None else f"""--
         AND sl.PEDIDO_DESTINO = {pedido_destino}
-    """ if pedido_destino else ''
+    """
 
-    filtra_op_destino = f"""--
+    filtra_op_destino = "" if op_destino is None else f"""--
         AND sl.OP_DESTINO = {op_destino}
-    """ if op_destino else ''
+    """
 
-    filtra_grupo_destino = f"""--
+    filtra_oc_destino = "" if oc_destino is None else f"""--
+        AND sl.OC_DESTINO = {oc_destino}
+    """
+
+    filtra_dep_destino = "" if dep_destino is None else f"""--
+        AND sl.DEP_DESTINO = {dep_destino}
+    """
+
+    filtra_grupo_destino = "" if grupo_destino is None else f"""--
         AND
           CASE WHEN sl.GRUPO_DESTINO = '00000'
           THEN l.PROCONF_GRUPO
           ELSE sl.GRUPO_DESTINO
           END = '{grupo_destino}'
-    """ if grupo_destino else ''
+    """
 
-    filtra_alter_destino = f"""--
+    filtra_alter_destino = "" if alter_destino is None else f"""--
         AND sl.ALTER_DESTINO = {alter_destino}
-    """ if alter_destino else ''
+    """
 
-    filtra_sub_destino = f"""--
+    filtra_sub_destino = "" if sub_destino is None else f"""--
         AND sl.SUB_DESTINO = {sub_destino}
-    """ if sub_destino else ''
+    """
 
-    filtra_cor_destino = f"""--
+    filtra_cor_destino = "" if cor_destino is None else f"""--
         AND sl.COR_DESTINO = {cor_destino}
-    """ if cor_destino else ''
+    """
 
     sql = f"""--
         SELECT
+          -- PK fields
           sl.ORDEM_PRODUCAO
         , sl.ORDEM_CONFECCAO
         , sl.PEDIDO_DESTINO
@@ -82,6 +91,8 @@ def exec(
           {filtra_ordem_confeccao} -- filtra_ordem_confeccao
           {filtra_pedido_destino} -- filtra_pedido_destino
           {filtra_op_destino} -- filtra_op_destino
+          {filtra_oc_destino} -- filtra_oc_destino
+          {filtra_dep_destino} --filtra_dep_destino
           {filtra_grupo_destino} -- filtra_grupo_destino
           {filtra_alter_destino} -- filtra_alter_destino
           {filtra_sub_destino} -- filtra_sub_destino
@@ -93,6 +104,7 @@ def exec(
             SET 
               SITUACAO = 5
             WHERE (
+              -- PK fields
               ORDEM_PRODUCAO
             , ORDEM_CONFECCAO
             , PEDIDO_DESTINO
