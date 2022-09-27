@@ -4,7 +4,7 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 
-import lotes.queries
+from lotes.queries.op import op_aprod
 
 import cd.forms
 
@@ -22,12 +22,18 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
-        data = lotes.queries.op.op_inform(cursor, self.op, cached=False)
+        data = op_aprod.query(cursor, self.op)
+        pprint(data)
+        row = data[0]
 
-        if len(data) == 0:
+        if row['qtd'] is None:
             self.context['mensagem'] = 'OP não encontrada'
             return
 
+        if row['qtd'] != 0:
+            self.context['mensagem'] = 'OP não finalizada'
+            return
+
         self.context.update({
-            'mensagem': 'em desenvolvimento',
+            'mensagem': 'Finalizado empenho da OP',
         })
