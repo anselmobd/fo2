@@ -1,5 +1,4 @@
 from pprint import pprint
-from typing import Iterable
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
@@ -7,6 +6,7 @@ from utils.functions.queries import debug_cursor_execute
 
 def exec(
     cursor,
+    executa=False,
     op=None,
     oc=None,
     ped=None,
@@ -32,9 +32,18 @@ def exec(
           END = '{ref}'
     """ if ref else ''
 
-    sql = f"""
+    sql = f"""--
         SELECT
-          sl.*
+          sl.ORDEM_PRODUCAO
+        , sl.ORDEM_CONFECCAO
+        , sl.PEDIDO_DESTINO
+        , sl.OP_DESTINO
+        , sl.OC_DESTINO
+        , sl.DEP_DESTINO
+        , sl.GRUPO_DESTINO
+        , sl.ALTER_DESTINO
+        , sl.SUB_DESTINO
+        , sl.COR_DESTINO
         FROM pcpc_044 sl -- solicitação / lote 
         -- Na tabela de solicitações aparece a OP de expedição também como
         -- reservada, com situação 4. Para tentar evitar isso, não listo
@@ -51,6 +60,30 @@ def exec(
           {filtra_pedido_destino} -- filtra_pedido_destino
           {filtra_ref_destino} -- filtra_ref_destino
     """
-    debug_cursor_execute(cursor, sql)
-    dados = dictlist_lower(cursor)
-    return dados
+    if executa:
+        sql = f"""
+            UPDATE SYSTEXTIL.PCPC_044
+            SET 
+              SITUACAO = 5
+            WHERE (
+              ORDEM_PRODUCAO
+            , ORDEM_CONFECCAO
+            , PEDIDO_DESTINO
+            , OP_DESTINO
+            , OC_DESTINO
+            , DEP_DESTINO
+            , GRUPO_DESTINO
+            , ALTER_DESTINO
+            , SUB_DESTINO
+            , COR_DESTINO
+            )
+            IN (
+              {sql} --sql
+            )
+        """
+    result = debug_cursor_execute(cursor, sql)
+    if executa:
+        return result
+    else:
+        dados = dictlist_lower(cursor)
+        return dados
