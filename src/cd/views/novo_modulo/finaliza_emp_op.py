@@ -26,7 +26,6 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
 
         data = op_aprod.query(cursor, self.op)
-        pprint(data)
         row = data[0]
 
         if row['qtd'] is None:
@@ -38,7 +37,6 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
             return
 
         data = get_solicitacoes(cursor, op=self.op)
-        pprint(data)
 
         if not data:
             self.context['mensagem'] = 'OP sem empenhos'
@@ -48,10 +46,9 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
                 cursor,
                 op=self.op,
             )
-        pprint(data[:2])
 
         count_nao_finalizados = 0
-        for row in data[:2]:
+        for row in data:
             if row['solicitacao']:
                 self.context['mensagem'] = 'OP com solicitação'
                 return
@@ -62,7 +59,7 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
             self.context['mensagem'] = 'OP sem empenhos'
             return
 
-        for row in data[:2]:
+        for row in data:
             if row['situacao'] < 5:
                 empenho = finaliza_empenho.exec(
                     cursor,
@@ -77,9 +74,8 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
                         'lote encontrou mais de um registro'
                     )
                     return
-                pprint(empenho)
 
-        for row in data[:1]:
+        for row in data:
             if row['situacao'] < 5:
                 empenho = finaliza_empenho.exec(
                     cursor,
@@ -89,13 +85,6 @@ class FinalizaEmpenhoOp(O2BaseGetPostView):
                     ped=row['pedido_destino'],
                     ref=row['grupo_destino'],
                 )
-                print(
-                    row['ordem_producao'],
-                    row['ordem_confeccao'],
-                    row['pedido_destino'],
-                    row['grupo_destino'],
-                )
-                pprint(empenho)
 
         self.context.update({
             'mensagem': f'Finalizados empenhos da OP: {count_nao_finalizados}',
