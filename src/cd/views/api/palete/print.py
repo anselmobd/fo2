@@ -30,7 +30,6 @@ class PaletePrint(View):
             })
             return False
 
-
     def verifica_usuario_impresso(self):
         try:
             self.usuario_impresso = lotes.models.UsuarioImpresso.objects.get(
@@ -39,12 +38,16 @@ class PaletePrint(View):
                 'modelo': self.usuario_impresso.modelo.codigo,
             })
             return True
+        except TypeError:
+            self.context.update({
+                'msg_erro': 'Usuário não logado',
+            })
+            return False
         except lotes.models.UsuarioImpresso.DoesNotExist:
             self.context.update({
                 'msg_erro': 'Impresso não cadastrado para o usuário',
             })
             return False
-
 
     def print(self):
         if not all([
@@ -67,7 +70,6 @@ class PaletePrint(View):
 
 
         return True
-
 
     def mount_context(self):
         if self.code:
@@ -109,7 +111,6 @@ class PaletePrint(View):
                 'result': 'ERRO',
                 'state': 'Erro ao imprimir',
             })
-
 
     def get(self, request, *args, **kwargs):
         self.copias = (
