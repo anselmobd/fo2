@@ -16,4 +16,5 @@ class CdPermissions(models.Model):
                 "pode_finalizar_empenho_op_finalizada",
                 "Pode finalizar empenho de OP finalizada",
             ),
+            ("imprime_etq_palete", "Imprime etiqueta de palete"),
         )
