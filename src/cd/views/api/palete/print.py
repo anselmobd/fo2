@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 
@@ -11,9 +12,10 @@ from cd.classes.palete import Plt
 from cd.queries.palete import query_palete
 
 
-class PaletePrint(View):
+class PaletePrint(PermissionRequiredMixin, View):
 
     def __init__(self) -> None:
+        self.permission_required = 'cd.can_admin_pallet'
         self.impresso = 'etiqueta-de-palete'
 
     def verifica_impresso(self):
