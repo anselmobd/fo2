@@ -43,21 +43,24 @@ class Palete(O2BaseGetView):
                         class="glyphicon glyphicon-alert" id="runerr_{palete}" style="display:none;color:darkred" aria-hidden="true"></span>
             """
 
+        headers = [
+            'Palete',
+            'Endereço',
+            'Nº Lotes',
+            'Última inclusão',
+        ]
+        fields = [
+            'cod_container',
+            'endereco_container',
+            'lotes',
+            'ultima_inclusao',
+        ]
+        if self.request.user.is_authenticated:
+            headers.append('Imprime')
+            fields.append('print')
         self.context.update({
-            'headers': [
-                'Palete',
-                'Endereço',
-                'Nº Lotes',
-                'Última inclusão',
-                'Imprime',
-            ],
-            'fields': [
-                'cod_container',
-                'endereco_container',
-                'lotes',
-                'ultima_inclusao',
-                'print',
-            ],
+            'headers': headers,
+            'fields': fields,
             'data': data,
             'safe': ['print'],
         })
