@@ -56,7 +56,15 @@
                 console.log(data['state']);
                 console.log(data['msg_erro']);
                 runerr_el.style.display = "inline";
-                runerr_el.title = data['state'] + ' - ' + data['msg_erro'];
+                runerr_el.title = "";
+                var title_sep = "";
+                if (data['state']) {
+                  runerr_el.title = data['state'];
+                  title_sep = " - ";
+                }
+                if (data['msg_erro']) {
+                  runerr_el.title += title_sep + data['msg_erro'];
+                }
               }
             } else {
               // alert('Sem retorno');
