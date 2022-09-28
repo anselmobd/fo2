@@ -49,14 +49,14 @@
           success : function(data) {
             erro = '';
             if (data) {
-              if (data['result'] == 'ERRO') {
-                console.log(data['state']);
-                runerr_el.style.display = "inline";
-                runerr_el.title = data['state'];
-              } else {
+              if (data['result'] == 'OK') {
                 console.log(data['state']);
                 runok_el.style.display = "inline";
-
+              } else {
+                console.log(data['state']);
+                console.log(data['msg_erro']);
+                runerr_el.style.display = "inline";
+                runerr_el.title = data['state'] + ' - ' + data['msg_erro'];
               }
             } else {
               // alert('Sem retorno');
@@ -71,7 +71,7 @@
             // alert('Erro na requisição');
             console.log('Erro na requisição');
             runerr_el.style.display = "inline";
-            runerr_el.title = data['msg_erro'];
+            runerr_el.title = 'Erro na requisição';
             run_el.style.display = "inline";
             running_el.style.display = "none";
           }
