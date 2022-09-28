@@ -52,6 +52,7 @@
               if (data['result'] == 'ERRO') {
                 console.log(data['state']);
                 runerr_el.style.display = "inline";
+                runerr_el.title = data['state'];
               } else {
                 console.log(data['state']);
                 runok_el.style.display = "inline";
@@ -61,6 +62,7 @@
               // alert('Sem retorno');
               console.log('Sem retorno');
               runerr_el.style.display = "inline";
+              runerr_el.title = 'Sem retorno';
             }
             run_el.style.display = "inline";
             running_el.style.display = "none";
@@ -69,6 +71,7 @@
             // alert('Erro na requisição');
             console.log('Erro na requisição');
             runerr_el.style.display = "inline";
+            runerr_el.title = data['msg_erro'];
             run_el.style.display = "inline";
             running_el.style.display = "none";
           }
