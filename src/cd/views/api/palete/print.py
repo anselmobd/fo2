@@ -15,7 +15,7 @@ from cd.queries.palete import query_palete
 class PaletePrint(PermissionRequiredMixin, View):
 
     def __init__(self) -> None:
-        self.permission_required = 'cd.can_admin_pallet'
+        self.permission_required = 'cd.imprime_etq_palete'
         self.impresso = 'etiqueta-de-palete'
 
     def verifica_impresso(self):

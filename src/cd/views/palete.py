@@ -7,6 +7,8 @@ from base.views import O2BaseGetView
 
 from fo2.connections import db_cursor_so
 
+from geral.functions import has_permission
+
 from cd.queries.palete import get_paletes
 
 
@@ -55,7 +57,10 @@ class Palete(O2BaseGetView):
             'lotes',
             'ultima_inclusao',
         ]
-        if self.request.user.is_authenticated:
+        if (
+            self.request.user.is_authenticated
+            and has_permission(self.request, 'cd.imprime_etq_palete')
+        ):
             headers.append('Imprime')
             fields.append('print')
         self.context.update({
