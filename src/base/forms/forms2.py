@@ -3,14 +3,15 @@ from pprint import pprint
 from base.forms.mount_forms import MountForm
 
 
-DepositoForm2 = MountForm(
-    'deposito',
-    autofocus_field='deposito',
-    required_fields=['deposito'],
-)
-
-
 class Forms2:
+
+    @property
+    def Deposito(self):
+        return MountForm(
+            'deposito',
+            autofocus_field='deposito',
+            required_fields=['deposito'],
+        )
 
     @property
     def Modelo(self):
