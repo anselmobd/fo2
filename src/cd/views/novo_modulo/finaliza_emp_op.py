@@ -12,7 +12,10 @@ from lotes.queries.op import op_aprod
 import cd.forms
 from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
 from cd.queries.novo_modulo.solicitacao import get_solicitacao
-from cd.queries.novo_modulo import finaliza_empenho
+from cd.queries.novo_modulo import (
+    empenho_hist,
+    finaliza_empenho,
+)
 
 
 class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
@@ -89,6 +92,7 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
                     pedido_destino=row['pedido_destino'],
                     grupo_destino=row['grupo_destino'],
                 )
+                # empenho_hist.insere_hist()
 
         self.context.update({
             'mensagem': (
