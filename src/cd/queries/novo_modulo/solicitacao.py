@@ -163,6 +163,9 @@ def get_solicitacao(
         if not row['codigo_estagio']:
             row['codigo_estagio'] = 'Finalizado'
         row['int_parc'] = 'inteiro' if row['qtde'] == row['qtd_ori'] else 'parcial'
+        row['grupo_destino_ori'] = row['grupo_destino']
+        row['sub_destino_ori'] = row['sub_destino']
+        row['cor_destino_ori'] = row['cor_destino']
         if row['grupo_destino'] == '00000':
             row['grupo_destino'] = row['ref']
         if row['sub_destino'] == '0':
