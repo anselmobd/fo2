@@ -15,14 +15,15 @@ ModeloForm2 = MountForm(
     required_fields=['modelo'],
 )
 
-PedidoForm2 = MountForm(
-    'pedido',
-    autofocus_field='pedido',
-    required_fields=['pedido'],
-)
-
-
 class Forms2:
+
+    @property
+    def Pedido(self):
+        return MountForm(
+            'pedido',
+            autofocus_field='pedido',
+            required_fields=['pedido'],
+        )
 
     @property
     def DepositoDatas(self):

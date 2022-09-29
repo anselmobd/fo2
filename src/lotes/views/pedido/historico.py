@@ -8,14 +8,14 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from base.forms.forms2 import PedidoForm2
+from base.forms.forms2 import Forms2
 
 import lotes.models as models
 import lotes.queries as queries
 
 
 class Historico(View):
-    Form_class = PedidoForm2
+    Form_class = Forms2().Pedido
     template_name = 'lotes/historico.html'
     title_name = 'Histórico de pedido'
 
