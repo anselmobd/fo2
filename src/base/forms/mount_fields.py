@@ -41,8 +41,12 @@ def MountDateFieldForm(name, **kwargs):
 
 def MountNumberFieldForm(name, attrs={}, widget_attrs={}):
     return MountTypeFieldForm(
-        name, **kwargs, type_field=forms.CharField,
-        widget=forms.NumberInput)
+        name,
+        type_field=forms.CharField,
+        attrs=attrs,
+        widget=forms.NumberInput,
+        widget_attrs=widget_attrs,
+    )
 
 
 def MountCharFieldForm(name, **kwargs):
