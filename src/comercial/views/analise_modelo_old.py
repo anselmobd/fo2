@@ -8,7 +8,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from fo2.connections import db_cursor_so
 
-from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetPostView
 from geral.functions import has_permission
 from utils.functions import dec_month, dec_months, safe_cast

@@ -9,13 +9,16 @@ DepositoForm2 = MountForm(
     required_fields=['deposito'],
 )
 
-ModeloForm2 = MountForm(
-    'modelo',
-    autofocus_field='modelo',
-    required_fields=['modelo'],
-)
 
 class Forms2:
+
+    @property
+    def Modelo(self):
+        return MountForm(
+            'modelo',
+            autofocus_field='modelo',
+            required_fields=['modelo'],
+        )
 
     @property
     def Pedido(self):

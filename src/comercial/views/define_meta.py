@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
-from base.forms.forms2 import ModeloForm2
+from base.forms.forms2 import Forms2
 from base.views import O2BaseGetPostView
 from geral.functions import has_permission
 from o2.views.base.custom import StopStepsException
@@ -28,7 +28,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(DefineMeta, self).__init__(*args, **kwargs)
-        self.Form_class = ModeloForm2
+        self.Form_class = Forms2().Modelo
         self.template_name = 'comercial/define_meta.html'
         self.title_name = 'Define meta de estoque'
         self.get_args = ['modelo']

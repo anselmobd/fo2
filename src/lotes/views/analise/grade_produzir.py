@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
-from base.forms.forms2 import ModeloForm2
+from base.forms.forms2 import Forms2
 from base.views import O2BaseGetPostView
 
 import comercial
@@ -28,7 +28,7 @@ class GradeProduzir(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(GradeProduzir, self).__init__(*args, **kwargs)
-        self.Form_class = ModeloForm2
+        self.Form_class = Forms2().Modelo
         self.template_name = 'lotes/analise/grade_produzir.html'
         self.title_name = 'A produzir, por grade, depósito (+Refs)'
         self.get_args = ['modelo']
