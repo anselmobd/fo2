@@ -120,9 +120,9 @@ def exec(
               {sql} --sql
             )
         """
-    result = debug_cursor_execute(cursor, sql)
+    debug_cursor_execute(cursor, sql)
     if executa:
-        return result
+        return cursor.rowcount
     else:
         dados = dictlist_lower(cursor)
         return dados
