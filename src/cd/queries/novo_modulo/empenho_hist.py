@@ -40,9 +40,9 @@ def insere_hist(
         , ALTER_DESTINO
         , SUB_DESTINO
         , COR_DESTINO
-        , FIELD
-        , OLD
-        , NEW
+        , CAMPO_ALTERADO
+        , ANTIGO_VALOR
+        , NOVO_VALOR
         , USUARIO_SYSTEXTIL
         )
         SELECT
