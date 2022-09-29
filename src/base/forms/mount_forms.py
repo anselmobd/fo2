@@ -7,7 +7,7 @@ from base.forms import (
 )
 
 
-def MountForm(*args, **kwargs):
+def MountForm(field=None, **kwargs):
     '''
         args: são os inputs do form
             - string: referência a uma classe em classes (abaixo)
@@ -21,10 +21,10 @@ def MountForm(*args, **kwargs):
         'referencia': fields2.O2FieldReferenciaForm2,
     }
 
-    if 'fields' in kwargs:
-        fields = kwargs.pop('fields')
+    if field:
+        fields = [{'name': field}]
     else:
-        fields = [{'name': name} for name in args]
+        fields = kwargs.pop('fields')
 
     order_fields = []
     superclasses = custom.O2BaseForm,
