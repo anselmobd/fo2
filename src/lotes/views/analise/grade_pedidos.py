@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
-from base.forms.forms2 import DepositoDatasForm2
+from base.forms.forms2 import Forms2
 from base.views import O2BaseGetPostView
 from utils.views import totalize_data
 
@@ -16,7 +16,7 @@ class GradePedidos(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(GradePedidos, self).__init__(*args, **kwargs)
-        self.Form_class = DepositoDatasForm2
+        self.Form_class = Forms2().DepositoDatas
         self.template_name = 'lotes/analise/grade_pedidos.html'
         self.title_name = 'Grade de pedidos a embarcar'
         self.get_args = ['deposito']

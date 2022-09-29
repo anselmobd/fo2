@@ -21,19 +21,24 @@ PedidoForm2 = MountForm(
     required_fields=['pedido'],
 )
 
-DepositoDatasForm2 = MountForm(
-    fields=[
-        {'name': 'deposito'},
-        {'name': 'data_de',
-         'type': 'date',
-         'label': 'Data de embarque - De:'},
-        {'name': 'data_ate',
-         'type': 'date',
-         'label': 'Até:'},
-    ],
-    autofocus_field='deposito',
-    required_fields=['deposito'],
-)
+
+class Forms2:
+
+    @property
+    def DepositoDatas(self):
+        return MountForm(
+            fields=[
+                {'name': 'deposito'},
+                {'name': 'data_de',
+                'type': 'date',
+                'label': 'Data de embarque - De:'},
+                {'name': 'data_ate',
+                'type': 'date',
+                'label': 'Até:'},
+            ],
+            autofocus_field='deposito',
+            required_fields=['deposito'],
+        )
 
 ReferenciaForm2 = MountForm(
     'referencia',
