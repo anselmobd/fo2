@@ -4,7 +4,9 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.connections import db_cursor_so
 
+from base.models import Colaborador
 from base.views import O2BaseGetPostView
+from systextil.models import Usuario as SystextilUsuario
 from utils.functions.strings import pluralize
 
 from lotes.queries.op import op_aprod
@@ -31,6 +33,24 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
+
+        try:
+            colab = Colaborador.objects.get(user=self.request.user)
+        except Colaborador.DoesNotExist as e:
+            self.context.update({
+                'mensagem': 'Não é possível utilizar um usuário que não '
+                    'está cadastrado como colaborador.'
+            })
+            return
+
+        try:
+            s_user = SystextilUsuario.objects.get(codigo_usuario=colab.matricula)
+        except SystextilUsuario.DoesNotExist as e:
+            self.context.update({
+                'mensagem': 'Não é possível utilizar um colaborador sem '
+                    'matrícula válida ou inativo.'
+            })
+            return
 
         data = op_aprod.query(cursor, self.op)
         row = data[0]
