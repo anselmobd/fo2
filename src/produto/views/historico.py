@@ -8,13 +8,13 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from base.forms.forms2 import ReferenciaForm2
+from base.forms.forms2 import Forms2
 
 import produto.queries as queries
 
 
 class HistNarrativa(View):
-    Form_class = ReferenciaForm2
+    Form_class = Forms2().Referencia
     template_name = 'produto/hist_narrativa.html'
     title_name = 'Histórico de narrativas'
 

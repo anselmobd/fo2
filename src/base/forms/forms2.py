@@ -40,8 +40,10 @@ class Forms2:
             required_fields=['deposito'],
         )
 
-ReferenciaForm2 = MountForm(
-    'referencia',
-    autofocus_field='referencia',
-    required_fields=['referencia'],
-)
+    @property
+    def Referencia(self):
+        return MountForm(
+            'referencia',
+            autofocus_field='referencia',
+            required_fields=['referencia'],
+        )
