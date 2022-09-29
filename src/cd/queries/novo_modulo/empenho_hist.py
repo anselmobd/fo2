@@ -75,6 +75,6 @@ def insere_hist(
     """
     try:
         debug_cursor_execute(cursor, sql)
-        return True
+        return cursor.rowcount
     except Exception as e:
-        return False
+        return -1
