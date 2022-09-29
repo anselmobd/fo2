@@ -130,15 +130,19 @@ class FaturamentoParaMetaForm(
         O2FieldClienteForm):
 
     ano = forms.IntegerField(
-        required=False, initial=ano_atual,
-        widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
+        required=False,
+        initial=ano_atual,
+        widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}),
+    )
 
     mes = forms.IntegerField(required=False, initial=mes_atual)
 
     colecao = forms.ModelChoiceField(
-        label='Coleção da referência', required=False,
-        queryset=Colecao.objects.all().order_by(
-            'colecao'), empty_label="(Todas)")
+        label='Coleção da referência',
+        required=False,
+        queryset=Colecao.objects.all().order_by('colecao'),
+        empty_label="(Todas)",
+    )
 
     CHOICES = [
         ('mes', 'Por mês'),
@@ -150,7 +154,10 @@ class FaturamentoParaMetaForm(
         ('colecao', '*Por coleção'),
     ]
     apresentacao = forms.ChoiceField(
-        choices=CHOICES, initial='mes', label='Apresentação')
+        label='Apresentação',
+        choices=CHOICES,
+        initial='mes',
+    )
 
     CHOICES = [
         ('apresentacao', 'Pela informação da apresentação'),
@@ -158,14 +165,18 @@ class FaturamentoParaMetaForm(
         ('qtd', '*Pela quantidade'),
     ]
     ordem = forms.ChoiceField(
-        choices=CHOICES, initial='apresentacao')
+        choices=CHOICES,
+        initial='apresentacao',
+    )
 
     CHOICES = [
         ('canceladas', 'Apenas canceladas'),
         ('devolvidas', 'Canceladas e devolvidas'),
     ]
     exclui = forms.ChoiceField(
-        choices=CHOICES, initial='canceladas')
+        choices=CHOICES,
+        initial='canceladas',
+    )
 
     class Meta:
         autofocus_field = 'ano'
