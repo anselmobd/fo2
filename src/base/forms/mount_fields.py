@@ -30,24 +30,35 @@ def MountTypeFieldForm(
 
 
 def MountIntegerFieldForm(name, **kwargs):
-    return MountTypeFieldForm(name, **kwargs, type_field=forms.IntegerField)
+    return MountTypeFieldForm(
+        name,
+        **kwargs,
+        type_field=forms.IntegerField,
+    )
 
 
 def MountDateFieldForm(name, **kwargs):
-    return MountTypeFieldForm(
-        name, **kwargs, type_field=forms.DateField,
-        widget=forms.DateInput, widget_attrs={'type': 'date'})
-
-
-def MountNumberFieldForm(name, attrs={}, widget_attrs={}):
+    kwargs['widget_attrs'] = {'type': 'date'}
     return MountTypeFieldForm(
         name,
+        **kwargs,
+        type_field=forms.DateField,
+        widget=forms.DateInput,
+    )
+
+
+def MountNumberFieldForm(name, **kwargs):
+    return MountTypeFieldForm(
+        name,
+        **kwargs,
         type_field=forms.CharField,
-        attrs=attrs,
         widget=forms.NumberInput,
-        widget_attrs=widget_attrs,
     )
 
 
 def MountCharFieldForm(name, **kwargs):
-    return MountTypeFieldForm(name, **kwargs, type_field=forms.CharField)
+    return MountTypeFieldForm(
+        name,
+        **kwargs,
+        type_field=forms.CharField
+    )
