@@ -4,8 +4,12 @@ from django import forms
 
 
 def MountTypeFieldForm(
-        name, attrs=None, widget_attrs={},
-        type_field=forms.CharField, widget=None):
+        name,
+        type_field=forms.CharField,
+        attrs=None,
+        widget=None,
+        widget_attrs={},
+    ):
 
     kwargs = {'required': False}
     if attrs is not None:
