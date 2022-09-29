@@ -83,7 +83,7 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
                 count += 1
 
         if not count:
-            self.context['mensagem'] = 'OP sem empenhos'
+            self.context['mensagem'] = 'OP sem empenhos (situacao < 5)'
             return
 
         for row in data:
@@ -103,7 +103,7 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
                     return
 
         count = 0
-        for row in data[:1]:
+        for row in data:
             if row['situacao'] < 5:
                 count_exec = finaliza_empenho.exec(
                     cursor,
