@@ -97,14 +97,15 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
                 )
                 if len(empenho) > 1:
                     self.context['mensagem'] = (
-                        'Ao verificar o que seria exluido, filtro de '
+                        'Ao verificar o que seria finalizado, filtro de '
                         'lote encontrou mais de um registro'
                     )
                     return
 
+        count = 0
         for row in data[:1]:
             if row['situacao'] < 5:
-                empenho = finaliza_empenho.exec(
+                count_exec = finaliza_empenho.exec(
                     cursor,
                     executa=True,
                     ordem_producao=row['ordem_producao'],
@@ -112,7 +113,35 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
                     pedido_destino=row['pedido_destino'],
                     grupo_destino=row['grupo_destino'],
                 )
-                # empenho_hist.insere_hist()
+                count += count_exec
+                if count_exec:
+                    count_insert = empenho_hist.insere_hist(
+                        cursor,
+                        usuario=s_user.usuario,
+                        alteracao={
+                            'situacao': {
+                                'old': row['situacao'],
+                                'new': 5,
+                            }
+                        },
+                        ordem_producao=row['ordem_producao'],
+                        ordem_confeccao=row['ordem_confeccao'],
+                        pedido_destino=row['pedido_destino'],
+                        op_destino=row['op_destino'],
+                        oc_destino=row['oc_destino'],
+                        dep_destino=row['dep_destino'],
+                        grupo_destino=row['grupo_destino_ori'],
+                        alter_destino=row['alter_destino'],
+                        sub_destino=row['sub_destino_ori'],
+                        cor_destino=row['cor_destino_ori'],
+                    )
+                    if count_insert < 1:
+                        self.context['mensagem'] = (
+                            "Erro ao gravar histórico de finalização do empenho "
+                            f"da OC {row['ordem_confeccao']} "
+                            f"da OP {row['ordem_producao']}."
+                        )
+                        return
 
         self.context.update({
             'mensagem': (
