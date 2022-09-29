@@ -74,22 +74,23 @@ def get_solicitacao(
             , sl.ORDEM_CONFECCAO
         """
 
+    # campos marcados com "--" são primary key
     sql = f"""
         SELECT DISTINCT
-          sl.ORDEM_PRODUCAO
-        , sl.ORDEM_CONFECCAO
-        , sl.PEDIDO_DESTINO
-        , sl.OP_DESTINO
-        , sl.OC_DESTINO
-        , sl.DEP_DESTINO
+          sl.ORDEM_PRODUCAO --
+        , sl.ORDEM_CONFECCAO --
+        , sl.PEDIDO_DESTINO --
+        , sl.OP_DESTINO --
+        , sl.OC_DESTINO --
+        , sl.DEP_DESTINO --
         , sl.QTDE
         , sl.SITUACAO
         , sl.SOLICITACAO
         , sl.PERIODO_OC
-        , sl.GRUPO_DESTINO
-        , sl.ALTER_DESTINO
-        , sl.SUB_DESTINO
-        , sl.COR_DESTINO
+        , sl.GRUPO_DESTINO --
+        , sl.ALTER_DESTINO --
+        , sl.SUB_DESTINO --
+        , sl.COR_DESTINO --
         , sl.INCLUSAO          
         , lest.CODIGO_ESTAGIO
         , l.PERIODO_PRODUCAO PERIODO
