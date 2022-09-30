@@ -143,7 +143,6 @@ class NotafiscalRel(View):
             for idx, value in enumerate(columns.values()):
                 if isinstance(value, tuple):
                     style[idx+1] = value[1]
-            pprint(style)
             context.update({
                 'headers': headers,
                 'fields': fields,
