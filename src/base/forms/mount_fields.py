@@ -62,3 +62,11 @@ def MountCharFieldForm(name, **kwargs):
         **kwargs,
         type_field=forms.CharField
     )
+
+
+def MountModelChoiceForm(name, **kwargs):
+    return MountTypeFieldForm(
+        name,
+        **kwargs,
+        type_field=forms.ModelChoiceField
+    )
