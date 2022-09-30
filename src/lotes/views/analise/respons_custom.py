@@ -47,6 +47,7 @@ def respons_custom(request, todos):
     empresas = {
         1: "D'UOMO",
         2: "Agator",
+        3: "Filial",
     }
     if todos in ['t', 'e']:
         context.update({'todos': True})
