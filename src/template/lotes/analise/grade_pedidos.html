@@ -16,9 +16,12 @@
   <input type="submit" name="busca" value="Busca"/>
 </form>
 {% if deposito is not None %}
-  <h3>Depósito: {{ deposito }}</h3>
+  <h4>Depósito: {{ deposito }}</h4>
+  {% if colecao %}
+    <h4>Coleção: {{ colecao }}</h4>
+  {% endif %}
   {% if data_de or data_ate %}
-    <h3>Data de embarque{% if data_de == data_ate %}:
+    <h4>Data de embarque{% if data_de == data_ate %}:
         {{ data_de }}
       {% else %}
         -
@@ -29,7 +32,7 @@
           Até: {{ data_ate }}
         {% endif %}
       {% endif %}
-    </h3>
+    </h4>
   {% endif %}
 
   {% if msg_erro %}

@@ -25,15 +25,20 @@ class GradePedidos(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
 
         deposito = self.form.cleaned_data['deposito']
+        colecao = self.form.cleaned_data['colecao']
         data_de = self.form.cleaned_data['data_de']
         data_ate = self.form.cleaned_data['data_ate']
         self.context.update({
             'deposito': deposito,
+            'colecao': colecao,
             'data_de': data_de,
             'data_ate': data_ate,
         })
 
-        data = pedido_faturavel_sortimento(cursor, deposito, data_de, data_ate)
+        codigo_colecao = colecao.colecao if colecao else None
+
+        data = pedido_faturavel_sortimento(
+            cursor, deposito, data_de, data_ate, colecao=codigo_colecao)
         if len(data) == 0:
             self.context.update({
                 'msg_erro': 'Pedidos não encontrados',
@@ -56,7 +61,7 @@ class GradePedidos(O2BaseGetPostView):
         })
 
         m_data = pedido_faturavel_sortimento(
-            cursor, deposito, data_de, data_ate, retorno='m')
+            cursor, deposito, data_de, data_ate, retorno='m', colecao=codigo_colecao)
 
         totalize_data(m_data, {
             'sum': ['qtd'],
@@ -74,7 +79,7 @@ class GradePedidos(O2BaseGetPostView):
         })
 
         p_data = pedido_faturavel_sortimento(
-            cursor, deposito, data_de, data_ate, retorno='p')
+            cursor, deposito, data_de, data_ate, retorno='p', colecao=codigo_colecao)
 
         for row in p_data:
             row['data'] = row['data'].date()
