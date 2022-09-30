@@ -139,7 +139,6 @@ class EtiquetasParciais(PermissionRequiredMixin, View):
                 self.context.update({
                     'msg': "Seleção para impressão inválida",
                 })
-            pprint(data_selecao)
 
             if data_selecao:
                 if self.imprime(data_selecao):

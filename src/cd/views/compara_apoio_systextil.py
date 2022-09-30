@@ -50,16 +50,12 @@ class ComparaApoioSystextil(O2BaseGetView):
             if row['local'] not in ends_importados:
                 ends_faltam.add(row['local'])
 
-        # pprint(ends_faltam)
-
         data = [
             {'end': end}
             for end in ends_faltam
         ]    
 
         data = sorted(data, key=itemgetter('end'))
-
-        pprint(data)
 
         # headers = ["Endereço", "Rota", "Palete", "end_antigo"]
         # fields = ['end', 'rota', 'palete', 'end_antigo']

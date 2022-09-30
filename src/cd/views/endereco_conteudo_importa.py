@@ -237,12 +237,9 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         else:
             self.lotes_s = lotes_em_local(self.cursor, endereco)
             palete = self.lotes_s[0]['palete']
-        print(endereco)
-        pprint(self.lotes_s)
 
         end_antigo = self.end_novo_para_antigo(
             endereco)
-        print(end_antigo)
 
         if not palete:
             return {endereco: 'sem palete'}
@@ -253,13 +250,10 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         # return {endereco: 'debug'}
         
         lotes_a = self.lotes_end_apoio(end_antigo)
-        pprint(lotes_a)
 
         result = {}
         for row_a in lotes_a:
             if not self.row_exist(row_a):
-                print('inclui em', palete)
-                pprint(row_a)
                 if add_lote_in_endereco(
                     self.cursor,
                     palete,
@@ -296,7 +290,6 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         self.final = self.inicial
 
         self.data = query_endereco(self.cursor, 'TO')
-        pprint(self.data[:2])
 
         self.primeiro = next(
             (
@@ -305,7 +298,6 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
             )
             , None
         )
-        pprint(self.primeiro)
         if self.primeiro is None:
             self.context.update({
                 'mensagem': 'Endereço inicial não existe',
@@ -319,7 +311,6 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
             )
             , None
         )
-        pprint(self.ultimo)
         if self.ultimo is None:
             self.context.update({
                 'mensagem': 'Endereço final não existe',

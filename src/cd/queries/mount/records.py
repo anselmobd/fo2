@@ -35,8 +35,6 @@ class Records():
                 self.query.add_select_field(field)
                 self.select.add_field(field)
 
-        print(self.select)
-
         if self.filters:
             for key in self.filters:
                 if self.filters[key] is not None:

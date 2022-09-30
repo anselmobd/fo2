@@ -255,7 +255,6 @@ class SqlEmEstoque():
 
         join_para_colecao = ""
         filter_colecao = ""
-        print('self.colecao', self.colecao)
         if self.colecao is not None:
             join_para_colecao = """
                 JOIN BASI_030 r

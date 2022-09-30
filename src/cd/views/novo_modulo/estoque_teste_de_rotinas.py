@@ -252,11 +252,6 @@ class NovoEstoque(O2BaseGetPostView):
             if len(self.rec_data) > 0:
                 self.mount_records_data()
 
-        # records = Records(
-        #     self.cursor,
-        # )
-        # pprint(records.data()[:10])
-
     def filter_inputs(self):
         self.lote = None if self.lote == '' else self.lote
         self.op = None if self.op == '' else self.op

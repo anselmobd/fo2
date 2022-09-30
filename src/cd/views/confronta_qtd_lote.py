@@ -79,7 +79,6 @@ class ConfrontaQtdLote(O2BaseGetPostView):
             for _ in range(self.quant_inconsist):
                 try:
                     row = next(iter_invent_lote)
-                    pprint(row)
                     lotes_parcial.append(row['lote'])
                     invent_parcial.append(row)
                 except StopIteration:
