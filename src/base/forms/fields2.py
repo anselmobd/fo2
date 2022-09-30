@@ -2,6 +2,8 @@ from pprint import pprint
 
 from base.forms import mount_fields
 
+from systextil.models import Colecao
+
 
 O2FieldModeloForm2 = mount_fields.MountIntegerFieldForm(
     'modelo',
@@ -30,6 +32,16 @@ O2FieldDepositoForm2 = mount_fields.MountIntegerFieldForm(
         'max_value': 999,
     },
     widget_attrs={'size': 3},
+)
+
+O2FieldColecaoForm2 = mount_fields.MountModelChoiceForm(
+    'colecao',
+    attrs={
+        'label': 'Coleção',
+        'required': False,
+        'queryset': Colecao.objects.all().order_by('colecao'),
+        'empty_label': "(Todas)",
+    },
 )
 
 O2FieldReferenciaForm2 = mount_fields.MountCharFieldForm(
