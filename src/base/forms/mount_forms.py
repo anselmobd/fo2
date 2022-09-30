@@ -9,13 +9,14 @@ from base.forms import (
 
 def MountForm(field=None, **kwargs):
     '''
-        args: são os inputs do form
-            - string: referência a uma classe em classes (abaixo)
+        field: caso o form tenha apenas um input, é o nome do campo
+            de outra forma os campos estão definidos no kwargs['fields']
         kwargs: são atributos da subclasse Meta do form
     '''
 
     field_classes = {
         'deposito': fields2.O2FieldDepositoForm2,
+        'colecao': fields2.O2FieldColecaoForm2,
         'modelo': fields2.O2FieldModeloForm2,
         'pedido': fields2.O2FieldPedidoForm2,
         'referencia': fields2.O2FieldReferenciaForm2,
