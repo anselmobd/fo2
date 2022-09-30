@@ -46,6 +46,23 @@ class Forms2:
         )
 
     @property
+    def DepositoColecaoDatas(self):
+        return MountForm(
+            fields=[
+                {'name': 'deposito'},
+                {'name': 'colecao'},
+                {'name': 'data_de',
+                'type': 'date',
+                'label': 'Data de embarque - De:'},
+                {'name': 'data_ate',
+                'type': 'date',
+                'label': 'Até:'},
+            ],
+            autofocus_field='deposito',
+            required_fields=['deposito'],
+        )
+
+    @property
     def Referencia(self):
         return MountForm(
             'referencia',
