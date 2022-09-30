@@ -5,12 +5,18 @@ from utils.functions.queries import debug_cursor_execute
 
 
 def pedido_faturavel_sortimento(
-        cursor, deposito, data_de, data_ate, retorno='r', empresa=1):
+        cursor, deposito, data_de, data_ate, retorno='r',
+        empresa=1, colecao=None):
 
     filtro_deposito = ''
-    if deposito is not None and data_de != '':
+    if deposito is not None and deposito != '':
         filtro_deposito = f''' --
             AND i.CODIGO_DEPOSITO = {deposito} '''
+
+    filtro_colecao = ''
+    if colecao is not None and colecao != '':
+        filtro_colecao = f''' --
+            AND r.COLECAO = {colecao} '''
 
     filtro_data_de = ''
     if data_de is not None and data_de != '':
@@ -59,11 +65,15 @@ def pedido_faturavel_sortimento(
           FROM ped_faturas pf -- pedidos e suas faturas
           JOIN PEDI_110 i -- item de pedido de venda
             ON i.PEDIDO_VENDA = pf.PEDIDO
+          JOIN basi_030 r
+            ON r.NIVEL_ESTRUTURA = 1
+           AND r.REFERENCIA = i.CD_IT_PE_GRUPO
           WHERE 1=1
              --
             AND pf.NFOK IS NULL
             AND i.CD_IT_PE_NIVEL99 = 1
             {filtro_deposito} -- filtro_deposito
+            {filtro_colecao} -- filtro_colecao
           GROUP BY
             pf.PEDIDO
           , i.CD_IT_PE_GRUPO
