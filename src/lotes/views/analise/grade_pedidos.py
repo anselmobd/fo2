@@ -16,7 +16,7 @@ class GradePedidos(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(GradePedidos, self).__init__(*args, **kwargs)
-        self.Form_class = Forms2().DepositoDatas
+        self.Form_class = Forms2().DepositoColecaoDatas
         self.template_name = 'lotes/analise/grade_pedidos.html'
         self.title_name = 'Grade de pedidos a embarcar'
         self.get_args = ['deposito']
