@@ -68,6 +68,9 @@ def gtin(cursor, ref=None, tam=None, cor=None, gtin=None):
 
 def set_gtin(cursor, niv, ref, tam, cor, gtin):
 
+    if gtin == '0000000000000':
+        gtin = None
+
     sql_select = f"""
         SELECT
           rtc.CODIGO_BARRAS GTIN
@@ -82,15 +85,25 @@ def set_gtin(cursor, niv, ref, tam, cor, gtin):
         data = dictlist(cursor)
         if len(data) != 1:
             return -1, 'Item não único'
-        if data[0]['GTIN'] == gtin:
-            return 1, None
+        if gtin:
+            if data[0]['GTIN'] == gtin:
+                return 1, None
+        else:
+            if data[0]['GTIN'] is None:
+                return 1, None
     except DatabaseError as error:
         return -2, error
+
+    set_gtin = f"""--
+          rtc.CODIGO_BARRAS = {gtin}
+    """ if gtin else """--
+          rtc.CODIGO_BARRAS = NULL
+    """
 
     sql_update = f"""
         UPDATE BASI_010 rtc -- item (ref+tam+cor)
         SET
-          rtc.CODIGO_BARRAS = {gtin}
+          {set_gtin} -- set_gtin
         WHERE rtc.NIVEL_ESTRUTURA = '{niv}'
           AND rtc.GRUPO_ESTRUTURA = '{ref}'
           AND rtc.SUBGRU_ESTRUTURA = '{tam}'
@@ -104,8 +117,12 @@ def set_gtin(cursor, niv, ref, tam, cor, gtin):
     try:
         debug_cursor_execute(cursor, sql_select)
         data = dictlist(cursor)
-        if data[0]['GTIN'] != gtin:
-            return -4, 'GTIN não atualizado'
+        if gtin:
+            if data[0]['GTIN'] != gtin:
+                return -4, 'GTIN não atualizado'
+        else:
+            if data[0]['GTIN'] is not None:
+                return -4, 'GTIN não atualizado'
     except DatabaseError as error:
         return -5, error
 
