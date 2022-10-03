@@ -127,33 +127,6 @@
         }
       }
 
-      // function load_dados_modelo(modelo) {
-      //   console.log('load_dados_modelo', modelo);
-
-      //   $.ajax({
-      //     type: 'GET',
-      //     url: '/lotes/ajax/produzir_modelo_grade/'+modelo+'/',
-      //     data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
-      //     success : function(data) {
-      //       count_passos += 1;
-      //       moveBar(count_passos, total_passos);
-      //       if (data) {
-      //         if (data['result'] == 'OK') {
-
-      //           for (var ic=0, lenc=campos.length|0; ic<lenc; ic=ic+1|0) {
-      //             set_valores(data, modelo, campos[ic]);
-      //           }
-                
-      //         } else {
-      //           console.log('Erro: '+data['descricao_erro']);
-      //         }
-      //       } else {
-      //         console.log('Sem retorno de modelo');
-      //       }
-      //     }
-      //   });
-      // }
-
       function proximo_modelo() {
         if ( count_passos < modelo_els.length ) {
           var modelo = modelo_els[count_passos].innerHTML;
@@ -190,27 +163,6 @@
           });
         }
       }
-
-      // $(document).ready(function() {
-      //   var modelo_els = document.querySelectorAll('.modelo');
-      //   total_passos = modelo_els.length
-      //   for (var i=0, len=modelo_els.length|0; i<len; i=i+1|0) {
-      //     load_dados_modelo(modelo_els[i].innerHTML);
-      //   }
-      // })
-     
-      // function sleep(ms) {
-      //   return new Promise(resolve => setTimeout(resolve, ms));
-      // }
-
-      // async function document_ready() {
-      //   var modelo_els = document.querySelectorAll('.modelo');
-      //   total_passos = modelo_els.length
-      //   for (var i=0, len=modelo_els.length|0; i<len; i=i+1|0) {
-      //     load_dados_modelo(modelo_els[i].innerHTML);
-      //     await sleep(2000);
-      //   }
-      // }
 
       function document_ready() {
         modelo_els = document.querySelectorAll('.modelo');
