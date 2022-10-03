@@ -61,6 +61,15 @@ def produzir_modelo_grade(request, modelo):
             context,
         )
 
+        context = {
+            'dados': get_grade_final(dados_produzir, 'gopp'),
+        }
+        context['dados']['titulo'] = modelo
+        data['grade_livres'] = render_to_string(
+            "layout/table_generic.html",
+            context,
+        )
+
     except Exception as e:
         data.update({
             'result': 'ERR',
