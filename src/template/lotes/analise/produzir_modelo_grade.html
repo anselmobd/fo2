@@ -29,7 +29,8 @@
   {% if data %}
     <ul class="nav nav-tabs" id="myTab">
       <li class="active"><a data-toggle="tab" href="#totais">Totais</a></li>
-      <li><a data-toggle="tab" href="#grades">Grades finais</a></li>
+      <li><a data-toggle="tab" href="#grades">Grades finais a produzir</a></li>
+      <li><a data-toggle="tab" href="#grades_livres">Grades em produção livres de pedidos</a></li>
     </ul>
 
     <div class="tab-content">
@@ -44,6 +45,9 @@
       </div>
       <div id="grades" class="tab-pane fade">
         <h4 style="text-align: right;">Total: <span id="grades_total">0</span></h4>
+      </div>
+      <div id="grades_livres" class="tab-pane fade">
+        <h4 style="text-align: right;">Total: <span id="grades_livres_total">0</span></h4>
       </div>
     </div>
       {% endif %}
@@ -74,8 +78,11 @@
       ];
 
       var grades = document.getElementById("grades");
+      var grades_livres = document.getElementById("grades_livres");
       var totais_total = document.querySelectorAll('.a_produzir_cor__total')[0];
+      var livres_total = document.querySelectorAll('.livres__total')[0];
       var grades_total = document.getElementById("grades_total");
+      var grades_livres_total = document.getElementById("grades_livres_total");
 
       function moveBar(i, tot) {
         var elem = document.getElementById("myBar");
@@ -167,6 +174,8 @@
                   set_destaque(modelo);
                   grades.insertAdjacentHTML('beforeend', data['grade']);
                   grades_total.innerHTML = totais_total.innerHTML;
+                  grades_livres.insertAdjacentHTML('beforeend', data['grade_livres']);
+                  grades_livres_total.innerHTML = livres_total.innerHTML;
                 } else {
                   console.log('Erro: '+data['descricao_erro']);
                 }
