@@ -126,6 +126,8 @@ N2LOL_ALLOWED_URLS = [
     '^/media/rh/.*$',
     '^/ack$',
     '^/meuip/$',
+    '^/encerrar_intranet/$',
+    '^/static/admin/.*$',
 ]
 N2LOL_ALLOWED_IP_BLOCKS = [r'^192\.168\.1\..+$', r'^127\.0\.0\.1$']
 
