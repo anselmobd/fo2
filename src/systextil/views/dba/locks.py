@@ -21,10 +21,7 @@ class Locks(PermissionRequiredMixin, O2BaseGetView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
-        raw_data = []
-        while not raw_data:
-            raw_data = locks.query(cursor)
-            pprint(raw_data)
+        raw_data = locks.query(cursor)
 
         data = []
         last_sid = -1
@@ -48,22 +45,18 @@ class Locks(PermissionRequiredMixin, O2BaseGetView):
 
         self.context.update({
             'headers': [
-                'audsid',
-                'sid',
-                'serial',
-                'lock_time_in_minutes',
-                'oracle_user',
-                'os_user',
-                'program',
-                'module',
-                'action',
-                'process',
-                'lock_mode_held',
-                'lock_mode_requested',
-                'lock_type',
-                'obj_type_owner_name',
-                'sql_id',
-                'piece',
+                'Audit Sid',
+                'Sid',
+                'Serial',
+                'Minutos',
+                'Program',
+                'Module',
+                'Action',
+                'Process',
+                'Lock Held',
+                'Lock Requested',
+                'Lock Type',
+                'Objeto',
                 'SQL'
             ],
             'data': data,

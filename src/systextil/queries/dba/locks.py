@@ -64,7 +64,7 @@ def query(cursor):
         , LISTAGG(
             DISTINCT
             objs.object_type || ':' || objs.owner || '-' || objs.object_name
-          , '|'
+          , ', '
           )
           WITHIN GROUP (ORDER BY objs.object_type, objs.owner, objs.object_name)
           obj_type_owner_name
@@ -82,15 +82,15 @@ def query(cursor):
         JOIN v$sqltext st
           ON st.address = vs.sql_address
         AND st.hash_value = vs.sql_hash_value
-        -- WHERE objs.owner != 'SYS'
+        WHERE objs.owner != 'SYS'
         --  AND locks.type = 'TM'
         GROUP BY
           vs.audsid
         , locks.sid
         , vs.serial#
         , locks.ctime
-        , vs.username
-        , vs.osuser
+        -- , vs.username
+        -- , vs.osuser
         , vs.program
         , vs.module
         , vs.action
