@@ -16,7 +16,7 @@ from estoque import forms, queries
 class ValorMp(View):
     Form_class = forms.ValorForm
     template_name = 'estoque/valor_mp.html'
-    title_name = 'Valor de estoque'
+    title_name = 'Valor de MP'
 
     def mount_context(
             self, cursor, nivel, positivos, zerados, negativos, preco_zerado,
@@ -62,16 +62,16 @@ class ValorMp(View):
             row['pedidos'] = round(row['pedidos'])
 
         context.update({
-            'headers': ('Nível', 'Referência', 'Tamanho', 'Cor',
+            'headers': ('Nível', 'Referência', 'Descr. Ref.', 'Tamanho', 'Cor',
                         'Conta estoque', 'Depósito', 'Pedidos',
                         'Estoque mínimo', 'Reposição',
                         'Quantidade', 'Preço', 'Total'),
-            'fields': ('nivel', 'ref', 'tam', 'cor',
+            'fields': ('nivel', 'ref', 'descr_ref', 'tam', 'cor',
                        'conta_estoque', 'deposito', 'pedidos',
                        'estoque_minimo', 'tempo_reposicao',
                        'qtd', 'preco', 'total'),
             'style': untuple_keys_concat({
-                (7, 8, 9, 10, 11, 12): 'text-align: right;',
+                (8, 9, 10, 11, 12, 13): 'text-align: right;',
             }),
             'data': data,
         })
