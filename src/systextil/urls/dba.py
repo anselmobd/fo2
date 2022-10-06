@@ -3,8 +3,9 @@ from django.urls import re_path
 from systextil.views.dba import (
     demorada,
     info_sessao,
-    travadora,
     kill_sessao,
+    locks,
+    travadora,
 )
 
 
@@ -22,5 +23,7 @@ urlpatterns = [
         kill_sessao.KillSessao, name='kill_sessao__get'),
 
     re_path(r'^travadora/$', travadora.Travadora.as_view(), name='travadora'),
+
+    re_path(r'^locks/$', locks.Locks.as_view(), name='locks'),
 
 ]
