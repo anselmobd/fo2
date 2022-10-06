@@ -1,4 +1,7 @@
+from pprint import pprint
+
 from utils.functions.models.dictlist import dictlist_lower
+from utils.functions.queries import debug_cursor_execute
 
 
 def valor_mp(
@@ -26,7 +29,7 @@ def valor_mp(
 
     filtro_deposito_compras = ''
     if deposito_compras == 'a':
-        filtro_deposito_compras = """
+        filtro_deposito_compras = """--
             AND 1 = (
               CASE WHEN r.NIVEL_ESTRUTURA = 2 THEN
              CASE WHEN e.DEPOSITO = 202 THEN 1
@@ -50,6 +53,7 @@ def valor_mp(
         SELECT
           e.cditem_nivel99 NIVEL
         , e.cditem_grupo REF
+        , r.DESCR_REFERENCIA DESCR_REF
         , e.cditem_subgrupo TAM
         , e.cditem_item COR
         , r.CONTA_ESTOQUE || ' - ' || ce.DESCR_CT_ESTOQUE CONTA_ESTOQUE
@@ -100,5 +104,5 @@ def valor_mp(
         filtro_preco_zerado=filtro_preco_zerado,
         filtro_deposito_compras=filtro_deposito_compras,
     )
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)
