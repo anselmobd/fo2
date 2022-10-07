@@ -6,6 +6,24 @@ from django.template.defaultfilters import slugify
 
 from base.models import Empresa
 
+__all__ = [
+    'ProxyUser',
+    'RecordTracking',
+    'Dispositivos',
+    'RoloBipado',
+    'Painel',
+    'PainelModulo',
+    'UsuarioPainelModulo',
+    'InformacaoModulo',
+    'PopGrupoAssunto',
+    'PopAssunto',
+    'Pop',
+    'UsuarioPopAssunto',
+    'TipoParametro',
+    'Parametro',
+    'Config',
+]
+
 
 class ProxyUser(User):
 
