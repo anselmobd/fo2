@@ -15,27 +15,30 @@ def query(cursor):
         --, vs.osuser os_user
         , vs.program
         , vs.module
-        , vs.action
+        , CASE WHEN vs.action IS NULL
+          THEN '-'
+          ELSE vs.action
+          END action
         , vs.process
         , decode(
             locks.lmode
-          , 1, NULL
+          , 1, '-'
           , 2, 'Row Share'
           , 3, 'Row Exclusive'
           , 4, 'Share'
           , 5, 'Share Row Exclusive'
           , 6, 'Exclusive'
-          , 'None'
+          , '-'
           ) lock_mode_held
         , decode(
             locks.request
-          , 1, NULL
+          , 1, '-'
           , 2, 'Row Share'
           , 3, 'Row Exclusive'
           , 4, 'Share'
           , 5, 'Share Row Exclusive'
           , 6, 'Exclusive'
-          , 'None'
+          , '-'
           ) lock_mode_requested
         , decode(
             locks.TYPE
@@ -60,10 +63,12 @@ def query(cursor):
           , 'TT', 'Temp Table'
           , locks.TYPE
           ) lock_type
-        --, objs.object_type || ':' || objs.owner || '-' || objs.object_name obj_type_owner_name
         , LISTAGG(
             DISTINCT
-            objs.object_type || ':' || objs.owner || '-' || objs.object_name
+            CASE WHEN objs.object_type = 'TABLE' AND objs.owner = 'SYSTEXTIL'
+            THEN objs.object_name
+            ELSE objs.object_type || ':' || objs.owner || '-' || objs.object_name
+            END
           , ', '
           )
           WITHIN GROUP (ORDER BY objs.object_type, objs.owner, objs.object_name)
@@ -89,8 +94,6 @@ def query(cursor):
         , locks.sid
         , vs.serial#
         , locks.ctime
-        -- , vs.username
-        -- , vs.osuser
         , vs.program
         , vs.module
         , vs.action
