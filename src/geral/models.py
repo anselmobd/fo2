@@ -7,6 +7,14 @@ from django.template.defaultfilters import slugify
 from base.models import Empresa
 
 
+class ProxyUser(User):
+
+    class Meta:
+        proxy = True
+        verbose_name = f"(Proxy) {User._meta.verbose_name}"
+        verbose_name_plural = f"(Proxy) {User._meta.verbose_name_plural}"
+
+
 class RecordTracking(models.Model):
     user = models.CharField(
         null=True, blank=True,
