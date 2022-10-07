@@ -68,9 +68,9 @@ class Produto(models.Model):
     composicao = models.ForeignKey(
         Composicao, on_delete=models.SET_NULL, null=True, blank=True,
         verbose_name='Composição')
-    imagem_tag = models.ForeignKey(
-        ImagemTag, on_delete=models.SET_NULL, null=True, blank=True,
-        verbose_name='Imagem no TAG')
+    # imagem_tag = models.ForeignKey(
+    #     ImagemTag, on_delete=models.SET_NULL, null=True, blank=True,
+    #     verbose_name='Imagem no TAG')
     cor_no_tag = models.BooleanField(
         default=True, verbose_name='Imprime cor no TAG')
     ncm = models.CharField(
