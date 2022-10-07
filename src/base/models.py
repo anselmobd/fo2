@@ -157,19 +157,19 @@ class Imagem(models.Model):
         super(Imagem, self).save(*args, **kwargs)
 
 
-class ImagemTagManager(models.Manager):
-    def get_queryset(self):
-        return super(ImagemTagManager, self).get_queryset().filter(
-            grupo_arquivo__nome='TAG')
+# class ImagemTagManager(models.Manager):
+#     def get_queryset(self):
+#         return super(ImagemTagManager, self).get_queryset().filter(
+#             grupo_arquivo__nome='TAG')
 
 
-class ImagemTag(Imagem):
-    objects = ImagemTagManager()
+# class ImagemTag(Imagem):
+#     objects = ImagemTagManager()
 
-    class Meta:
-        proxy = True
-        verbose_name = "Imagem para TAG"
-        verbose_name_plural = "Imagens para TAG"
+#     class Meta:
+#         proxy = True
+#         verbose_name = "Imagem para TAG"
+#         verbose_name_plural = "Imagens para TAG"
 
 
 def documento_upload_to(instance, filename):

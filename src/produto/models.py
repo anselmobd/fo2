@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from base.models import (
     Colaborador,
-    ImagemTag,
+    # ImagemTag,
     Tamanho,
 )
 from django.utils import timezone
