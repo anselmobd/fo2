@@ -94,7 +94,7 @@ class Layout(models.Model):
     slug = models.SlugField()
     template = models.CharField(
         max_length=64)
-    habilitado = models.NullBooleanField(
+    habilitado = models.BooleanField(
         default=False)
 
     def __str__(self):
