@@ -122,7 +122,7 @@ class Painel(models.Model):
     layout = models.CharField(
         null=True, blank=True, max_length=4096,
         verbose_name='receita')
-    habilitado = models.NullBooleanField(
+    habilitado = models.BooleanField(
         default=True)
 
     def __str__(self):
@@ -150,7 +150,7 @@ class PainelModulo(models.Model):
     tipo = models.CharField(
         max_length=1, choices=TIPOS_DE_MODULOS,
         default='I')
-    habilitado = models.NullBooleanField(
+    habilitado = models.BooleanField(
         default=True)
 
     def __str__(self):
@@ -196,7 +196,8 @@ class InformacaoModulo(models.Model):
     chamada = models.CharField(
         max_length=400, null=True, blank=True,
         verbose_name='chamada')
-    habilitado = models.NullBooleanField(default=True)
+    habilitado = models.BooleanField(
+        default=True)
     texto = models.CharField(
         null=True, blank=True, max_length=4096,
         verbose_name='receita')
@@ -263,7 +264,8 @@ class Pop(models.Model):
     pop = models.FileField(upload_to=pop_upload_to, verbose_name='Arquivo POP')
     uploaded_at = models.DateTimeField(
         auto_now_add=True, verbose_name='Inserido em')
-    habilitado = models.NullBooleanField(default=True)
+    habilitado = models.BooleanField(
+        default=True)
 
     class Meta:
         db_table = "fo2_ger_pop"
@@ -316,10 +318,10 @@ class Parametro(models.Model):
     ajuda = models.CharField(
         max_length=65535, null=True, blank=True)
 
-    habilitado = models.NullBooleanField(
+    habilitado = models.BooleanField(
         default=True)
 
-    usuario = models.NullBooleanField(
+    usuario = models.BooleanField(
         default=True, verbose_name='usuário')
 
     def __str__(self):
