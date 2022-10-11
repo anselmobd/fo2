@@ -376,3 +376,5 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 # . Tira do conserto todos os lotes que não pertencem a solicitações
 #   criadas antes de 2022-02-01 18h00
 DESLIGANDO_CD_FASE = 1
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
