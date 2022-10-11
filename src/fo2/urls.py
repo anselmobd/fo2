@@ -15,6 +15,7 @@ import fo2.views as views
 admin.site.site_header = "Apoio ao ERP - Administração"
 admin.site.site_title = "Apoio Admin"
 admin.site.index_title = "Cadastros"
+admin.site.enable_nav_sidebar = False
 
 
 urlpatterns = [

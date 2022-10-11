@@ -5,9 +5,12 @@ from django.contrib.admin import AdminSite
 
 
 class IntrAdmSite(AdminSite):
-    site_header = 'Apoio ao ERP (Tussor) - Cadastros'
-    site_title = 'Fo2 - Apoio ao ERP (Tussor) - Cadastros'
-    index_title = 'Cadastros'
+    def __init__(self, name: str) -> None:
+        super().__init__(name)
+        self.site_header = 'Apoio ao ERP (Tussor) - Cadastros'
+        self.site_title = 'Fo2 - Apoio ao ERP (Tussor) - Cadastros'
+        self.index_title = 'Cadastros'
+        self.enable_nav_sidebar = False
 
 
 intr_adm_site = IntrAdmSite(name='intradm')
