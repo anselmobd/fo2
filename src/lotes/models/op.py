@@ -36,7 +36,8 @@ class Caixa(models.Model):
     ordem = models.IntegerField(
         null=True, blank=True,
         verbose_name='ordem da caixa')
-    ativa = models.NullBooleanField(default=True)
+    ativa = models.BooleanField(
+        default=True)
     create_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='criada em')

@@ -15,7 +15,7 @@ class TableHeap(models.Model):
     origin_id = models.IntegerField(
         default=0,
         verbose_name='id de origem')
-    deleted = models.NullBooleanField(
+    deleted = models.BooleanField(
         default=False,
         verbose_name='apagado')
     version = models.IntegerField(

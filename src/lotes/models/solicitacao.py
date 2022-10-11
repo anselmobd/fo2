@@ -22,7 +22,8 @@ class SolicitaLote(models.Model):
     usuario = models.ForeignKey(
         User, on_delete=models.PROTECT, null=True, blank=True,
         verbose_name='usuário')
-    ativa = models.NullBooleanField(default=True)
+    ativa = models.BooleanField(
+        default=True)
     create_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='criado em')
@@ -127,7 +128,7 @@ class SolicitaLoteQtd(models.Model):
     origin_id = models.IntegerField(
         default=0,
         verbose_name='id de origem')
-    deleted = models.NullBooleanField(
+    deleted = models.BooleanField(
         default=False,
         verbose_name='apagado')
     version = models.IntegerField(
