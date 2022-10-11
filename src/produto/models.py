@@ -258,7 +258,7 @@ class FichaTecnica(models.Model):
     ficha = models.FileField(
         upload_to=ficha_tecnica_upload_to,
         verbose_name='Ficha técnica')
-    habilitada = models.NullBooleanField(
+    habilitada = models.BooleanField(
         default=True)
 
     def __str__(self):
