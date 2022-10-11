@@ -1,16 +1,13 @@
-import pytz
 import re
 import sys
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 from pprint import pprint
 
 from django.core.management.base import BaseCommand, CommandError
-from django.utils import timezone
 
 from fo2.connections import db_cursor_so
 
-import insumo.models as models
 from insumo.functions import mapa_por_insumo_dados
 from insumo.queries import insumos_cor_tamanho, insumos_cor_tamanho_usados
 

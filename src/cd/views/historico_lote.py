@@ -1,7 +1,4 @@
-import datetime
-import re
 from pprint import pprint
-from pytz import utc
 
 from django.db import connection
 from django.shortcuts import render

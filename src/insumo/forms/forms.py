@@ -1,4 +1,3 @@
-import pytz
 from pprint import pprint
 
 from django import forms
