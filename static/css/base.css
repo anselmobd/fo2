@@ -1,0 +1,66 @@
+/*
+--------------------------------------------------
+  Geral Intranet
+--------------------------------------------------
+*/
+
+.fo2.page-header{
+  margin: 0;
+}
+
+h1 { font-size: 3vw; }
+
+ul { margin-left: -1.5em }
+
+/*
+--------------------------------------------------
+  Print
+--------------------------------------------------
+*/
+
+@media print {
+  a[href]:after {
+    content: none
+  }
+
+  .noprint {
+    display: none;
+  }
+
+  @page {
+     margin: 2cm;
+  }
+}
+
+/*
+--------------------------------------------------
+  Systêxtil
+--------------------------------------------------
+*/
+
+.stnavbar{
+  text-decoration: none;
+  .stlogo{
+    font-family: "Roboto";
+    font-weight: 100;
+    color:#2764ae;
+  }
+  .stlogo b{
+    font-weight:900;
+  }
+}
+
+/* Thin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 100;
+  src: url("http://systextil.tussor.com.br/systextil/Static_Content/fonts/roboto/Roboto-Thin.ttf") format('truetype');
+}
+/* Black */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 900;
+  src: url("http://systextil.tussor.com.br/systextil/Static_Content/fonts/roboto/Roboto-Black.ttf") format('truetype');
+}
