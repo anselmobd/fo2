@@ -1,4 +1,3 @@
-import pytz
 import re
 import time
 from datetime import datetime, timedelta
