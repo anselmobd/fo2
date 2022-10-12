@@ -2,7 +2,6 @@ import datetime
 import re
 import yaml
 from pprint import pprint
-from pytz import utc
 
 from django.contrib.auth.models import User
 from django.urls import reverse
