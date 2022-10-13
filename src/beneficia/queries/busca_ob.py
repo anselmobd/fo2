@@ -2,7 +2,11 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
-from utils.functions.strings import split_non_empty
+from utils.functions.strings import split_non_empty, split_strip
+
+
+def append_ordem_test(lista, comp, ordem):
+    lista.append(" ".join(["b.ORDEM_PRODUCAO", comp, ordem]))
 
 
 def query(
@@ -27,40 +31,23 @@ def query(
         """
 
     filtra_ordens = ""
-    if ordens is not None and ordens != '':
-        filtro = ""
-        sep = ""
+    if ordens:
+        filtro_list = []
         for chunk in split_non_empty(ordens, ','):
             if '-' in chunk:
-                sub_filtro = ""
-                sub_sep = ""
-                limits = chunk.split('-')
-                
-                start = limits[0].strip()
-                if start:
-                    sub_filtro = f"""--
-                        b.ORDEM_PRODUCAO >= {start}
-                    """
-                    sub_sep = "AND"
-
-                end = limits[1].strip()
-                if end:
-                    sub_filtro += f"""--
-                        {sub_sep} b.ORDEM_PRODUCAO <= {end}
-                    """
-
-                if sub_filtro:
-                    filtro += f"""--
-                        {sep} ({sub_filtro})
-                    """
+                sub_list = []
+                limits = split_strip(chunk, '-')
+                if limits[0]:
+                    append_ordem_test(sub_list, ">=", limits[0])
+                if limits[1]:
+                    append_ordem_test(sub_list, "<=", limits[1])
+                if sub_list:
+                    sub_filtro = " AND ".join(sub_list)
+                    filtro_list.append(f"({sub_filtro})")
             else:    
-                filtro += f"""--
-                    {sep} b.ORDEM_PRODUCAO = {chunk}
-                """
-            sep = "OR"
-        filtra_ordens = f"""--
-            AND ({filtro})
-        """
+                append_ordem_test(filtro_list, "=", chunk)
+        filtro = " OR ".join(filtro_list)
+        filtra_ordens = f"AND ({filtro})"
 
     filtra_ot = ""
     if ot is not None and ot != '':
