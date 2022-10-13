@@ -85,6 +85,19 @@ def split_strip(text, sep):
     ]
 
 
+def split_numbers(text):
+    groups = []
+    number = ""
+    for c in f"{text} ":
+        if c.isdigit():
+            number = f"{number}{c}"
+        else:
+            if number:
+                groups.append(number)
+                number = ""
+    return groups
+
+
 def lm(string):
     """Left Margin
     Desidenta string de acordo com a identação da primeira linha.
