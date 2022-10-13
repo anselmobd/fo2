@@ -12,8 +12,8 @@ from utils.functions.views import (
 )
 
 from beneficia.forms.main import ObForm
+from beneficia.queries import busca_ob
 from beneficia.queries.ob import (
-    busca_ob,
     ob_destinos,
     ob_estagios,
     ob_tecidos,
@@ -35,7 +35,7 @@ class Ob(View):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        dados = busca_ob(self.cursor, self.context['ob'])
+        dados = busca_ob.query(self.cursor, self.context['ob'])
         if len(dados) == 0:
             return
 
