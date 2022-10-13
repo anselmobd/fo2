@@ -134,7 +134,10 @@ class Pedido(View):
             row['TEM_15']
             for row in o_data    
         ]):
-            dados_filial = pedidos_filial_na_data(cursor, fantasia=fantasia)
+            try:
+                dados_filial = pedidos_filial_na_data(cursor, fantasia=fantasia)
+            except KeyError:
+                dados_filial = None
 
         ops_tecidos = []
         for row in o_data:
