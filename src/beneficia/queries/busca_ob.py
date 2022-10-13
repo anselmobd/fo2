@@ -5,7 +5,11 @@ from utils.functions.queries import (
     debug_cursor_execute,
     sql_where_none_if,
 )
-from utils.functions.strings import split_non_empty, split_strip
+from utils.functions.strings import (
+    split_non_empty,
+    split_numbers,
+    split_strip,
+)
 
 __all__ = ['query']
 
@@ -35,13 +39,6 @@ def query(
     filtra_ob = sql_where_none_if("b.ORDEM_PRODUCAO", ob)
     filtra_periodo = sql_where_none_if("b.PERIODO_PRODUCAO", periodo)
 
-    # obs_like = f"%{obs}%" if obs else ""
-    # filtra_obs = sql_where_none_if(
-    #     "b.OBSERVACAO",
-    #     obs_like,
-    #     operation="LIKE",
-    #     full_transform='UPPER({})'
-    # )
     filtra_obs = f"""--
         AND UPPER(b.OBSERVACAO) LIKE UPPER('%{obs}%')
     """ if obs else ""
@@ -123,8 +120,13 @@ def query(
 
     for row in dados:
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
-        if row['obs'] is None:
-            row['obs'] = ''
+        row['os'] = ""
+        if row['obs']:
+            obs_list = split_numbers(row['obs'])
+            if obs_list:
+                row['os'] = obs_list[0]
+        else:
+            row['obs'] = ""
         row['sit'] = descr_sit[row['cod_sit']]
         if row['dt_canc'] is None:
             row['canc'] = '-'
