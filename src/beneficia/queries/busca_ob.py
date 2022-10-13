@@ -82,11 +82,6 @@ def query(
         , b.QTDE_QUILOS_PROG QUILOS
         , b.SITUACAO_ORDEM COD_SIT
         , b.OBSERVACAO OBS
-        , CASE
-            WHEN b.SITUACAO_ORDEM = 0 THEN 'A Emitir'
-            WHEN b.SITUACAO_ORDEM = 1 THEN 'Emitida'
-            ELSE '-'
-          END DESCR_SIT
         , b.COD_CANCELAMENTO COD_CANC
         , b.DT_CANCELAMENTO DT_CANC
         , canc.DESCRICAO DESCR_CANC 
@@ -119,11 +114,17 @@ def query(
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
 
+    descr_sit = {
+        0: "0-A Emitir",
+        1: "1-Emitida",
+        2: "2-Emitida",
+    }
+
     for row in dados:
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
         if row['obs'] is None:
             row['obs'] = ''
-        row['sit'] = f"{row['cod_sit']}-{row['descr_sit']}"
+        row['sit'] = descr_sit[row['cod_sit']]
         if row['dt_canc'] is None:
             row['canc'] = '-'
         else:
