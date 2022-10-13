@@ -5,8 +5,29 @@ from django.conf import settings
 from utils.functions import debug
 
 
-def sql_where(field, value, operation="=", conector="AND", quote = None):
+def sql_where(
+    field,
+    value,
+    operation="=",
+    conector="AND",
+    quote=None,
+    left_transform=None,
+    right_transform=None,
+    full_transform=None,
+):
+
+    def value_quoted(value):
+        value_quoted = f"{quote}{value}{quote}"
+        if right_transform:
+            value_quoted = right_transform.format(value_quoted)
+        return value_quoted
+
     if bool(field) and value is not None:
+        if full_transform:
+            left_transform = full_transform
+            right_transform = full_transform
+        if left_transform:
+            field = left_transform.format(field)
         if quote is None:
             if isinstance(value, tuple):
                 test_value = value[0]
@@ -19,7 +40,7 @@ def sql_where(field, value, operation="=", conector="AND", quote = None):
         if isinstance(value, tuple):
             if operation.upper() in ("=", "<>", "IN", "NOT IN"):
                 values = ", ".join([
-                    f"{quote}{item}{quote}"
+                    f"{value_quoted(item)}"
                     for item in value
                 ])
                 if "IN" not in operation.upper():
@@ -28,15 +49,14 @@ def sql_where(field, value, operation="=", conector="AND", quote = None):
                     else:
                         operation = "NOT IN"
                 return f"{conector} {field} {operation} ({values})"
-                
             else:
                 tests = []
                 for item in value:
-                    tests.append(f"{field} {operation} {quote}{item}{quote}")
+                    tests.append(f"{field} {operation} {value_quoted(item)}")
                 or_tests = ' OR '.join(tests) 
                 return f"{conector} ({or_tests})"
         else:
-            return f"{conector} {field} {operation} {quote}{value}{quote}"
+            return f"{conector} {field} {operation} {value_quoted(value)}"
     return ""
 
 
@@ -48,13 +68,26 @@ def coalesce(value, test):
     return test if value is None else value
 
 
-def sql_where_none_if(field, value, test, operation="=", conector="AND", quote = None):
+def sql_where_none_if(
+    field,
+    value,
+    test="",
+    operation="=",
+    conector="AND",
+    quote = None,
+    left_transform=None,
+    right_transform=None,
+    full_transform=None,
+):
     return sql_where(
         field,
         none_if(value, test),
         operation=operation,
         conector=conector,
         quote=quote,
+        left_transform=left_transform,
+        right_transform=right_transform,
+        full_transform=full_transform,
     )
 
 
