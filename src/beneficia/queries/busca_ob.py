@@ -4,31 +4,35 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import split_non_empty, split_strip
 
+__all__ = ['query']
+
 
 def append_ordem_test(lista, comp, ordem):
     lista.append(" ".join(["b.ORDEM_PRODUCAO", comp, ordem]))
 
 
 def query(
-        cursor, ob=None, periodo=None, obs=None, ordens=None, ot=None, ob2=None, ref=None):
+        cursor,
+        ob=None,
+        periodo=None,
+        obs=None,
+        ordens=None,
+        ot=None,
+        ob2=None,
+        ref=None,
+    ):
 
-    filtra_ob = ""
-    if ob is not None and ob != '':
-        filtra_ob = f"""--
-            AND b.ORDEM_PRODUCAO = {ob}
-        """
+    filtra_ob = f"""--
+        AND b.ORDEM_PRODUCAO = {ob}
+    """ if ob else ""
 
-    filtra_periodo = ""
-    if periodo is not None and periodo != '':
-        filtra_periodo = f"""--
-            AND b.PERIODO_PRODUCAO = {periodo}
-        """
+    filtra_periodo = f"""--
+        AND b.PERIODO_PRODUCAO = {periodo}
+    """ if periodo else ""
 
-    filtra_obs = ""
-    if obs is not None and obs != '':
-        filtra_obs = f"""--
-            AND UPPER(b.OBSERVACAO) LIKE UPPER('%{obs}%')
-        """
+    filtra_obs = f"""--
+        AND UPPER(b.OBSERVACAO) LIKE UPPER('%{obs}%')
+    """ if obs else ""
 
     filtra_ordens = ""
     if ordens:
@@ -49,29 +53,23 @@ def query(
         filtro = " OR ".join(filtro_list)
         filtra_ordens = f"AND ({filtro})"
 
-    filtra_ot = ""
-    if ot is not None and ot != '':
-        filtra_ot = f"""--
-            AND b.ORDEM_TINGIMENTO = {ot}
-        """
+    filtra_ot = f"""--
+        AND b.ORDEM_TINGIMENTO = {ot}
+    """ if ot else ""
 
-    filtra_ob2 = ""
-    if ob2 is not None and ob2 != '':
-        filtra_ob2 = f"""--
-            AND bd.ORDEM_PRODUCAO = {ob2}
-        """
+    filtra_ob2 = f"""--
+        AND bd.ORDEM_PRODUCAO = {ob2}
+    """ if ob2 else ""
 
-    filtra_ref = ""
-    if ref is not None and ref != '':
-        filtra_ref = f"""--
-            AND EXISTS (
-                SELECT DISTINCT 
-                t.ORDEM_PRODUCAO
-                FROM pcpb_020 t
-                WHERE t.ORDEM_PRODUCAO = b.ORDEM_PRODUCAO
-                AND t.PANO_SBG_GRUPO = '{ref}'
-            )
-        """
+    filtra_ref = f"""--
+        AND EXISTS (
+            SELECT DISTINCT 
+            t.ORDEM_PRODUCAO
+            FROM pcpb_020 t
+            WHERE t.ORDEM_PRODUCAO = b.ORDEM_PRODUCAO
+            AND t.PANO_SBG_GRUPO = '{ref}'
+        )
+    """ if ref else ""
 
     sql = f'''
         SELECT 
@@ -132,6 +130,5 @@ def query(
             row['canc'] = f"{row['dt_canc'].date()} {row['cod_canc']:03}-{row['descr_canc']}"
         if row['ref'] is None:
             row['ref'] = ''
-
 
     return dados
