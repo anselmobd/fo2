@@ -1,7 +1,10 @@
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
-from utils.functions.queries import debug_cursor_execute
+from utils.functions.queries import (
+    debug_cursor_execute,
+    sql_where_none_if,
+)
 from utils.functions.strings import split_non_empty, split_strip
 
 __all__ = ['query']
@@ -29,14 +32,16 @@ def query(
         ref=None,
     ):
 
-    filtra_ob = f"""--
-        AND b.ORDEM_PRODUCAO = {ob}
-    """ if ob else ""
+    filtra_ob = sql_where_none_if("b.ORDEM_PRODUCAO", ob)
+    filtra_periodo = sql_where_none_if("b.PERIODO_PRODUCAO", periodo)
 
-    filtra_periodo = f"""--
-        AND b.PERIODO_PRODUCAO = {periodo}
-    """ if periodo else ""
-
+    # obs_like = f"%{obs}%" if obs else ""
+    # filtra_obs = sql_where_none_if(
+    #     "b.OBSERVACAO",
+    #     obs_like,
+    #     operation="LIKE",
+    #     full_transform='UPPER({})'
+    # )
     filtra_obs = f"""--
         AND UPPER(b.OBSERVACAO) LIKE UPPER('%{obs}%')
     """ if obs else ""
@@ -60,13 +65,8 @@ def query(
         filtro = " OR ".join(filtro_list)
         filtra_ordens = f"AND ({filtro})"
 
-    filtra_ot = f"""--
-        AND b.ORDEM_TINGIMENTO = {ot}
-    """ if ot else ""
-
-    filtra_ob2 = f"""--
-        AND bd.ORDEM_PRODUCAO = {ob2}
-    """ if ob2 else ""
+    filtra_ot = sql_where_none_if("b.ORDEM_TINGIMENTO", ot)
+    filtra_ob2 = sql_where_none_if("bd.ORDEM_PRODUCAO", ob2)
 
     filtra_ref = f"""--
         AND EXISTS (
