@@ -7,6 +7,13 @@ from utils.functions.strings import split_non_empty, split_strip
 __all__ = ['query']
 
 
+descr_sit = {
+    0: "0-A Emitir",
+    1: "1-Emitida",
+    2: "2-Emitida",
+}
+
+
 def append_ordem_test(lista, comp, ordem):
     lista.append(" ".join(["b.ORDEM_PRODUCAO", comp, ordem]))
 
@@ -113,12 +120,6 @@ def query(
 
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
-
-    descr_sit = {
-        0: "0-A Emitir",
-        1: "1-Emitida",
-        2: "2-Emitida",
-    }
 
     for row in dados:
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
