@@ -78,6 +78,13 @@ def split_non_empty(text, sep):
     ]
 
 
+def split_strip(text, sep):
+    return [
+        t.strip()
+        for t in text.split(sep)
+    ]
+
+
 def lm(string):
     """Left Margin
     Desidenta string de acordo com a identação da primeira linha.
