@@ -145,16 +145,19 @@ def query(
     else:
         data_os = []
     dict_os = {
-        row['OS']: row
+        f"{row['OS']}": row
         for row in data_os
     }
     for row in dados:
         if row['os']:
             if row['os'] in dict_os:
-                row['op'] = dict_os[row['os']]['OP']
+                op = dict_os[row['os']]['OP']
+                if op:
+                    row['op'] = f"{op}"
+                else:
+                    row['op'] = ""
+                
             else:
                 row['os'] = "Não"
-
-    pprint(dados)            
 
     return dados
