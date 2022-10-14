@@ -58,6 +58,10 @@ class BuscaOb(View):
                 args=[row['ob']],
             )
             row['quilos|DECIMALS'] = 2
+            if row['os']:
+                row['os|TARGET'] = '_blank'
+                row['os|LINK'] = reverse(
+                    'producao:os__get', args=[row['os']])
 
         self.context.update({
             'headers': [
@@ -67,6 +71,7 @@ class BuscaOb(View):
                 'Rolos',
                 'Quilos',
                 'Obs.',
+                'OS',
                 'Situação',
                 'Cancelamento',
                 'Referência',
@@ -80,6 +85,7 @@ class BuscaOb(View):
                 'rolos',
                 'quilos',
                 'obs',
+                'os',
                 'sit',
                 'canc',
                 'ref',
