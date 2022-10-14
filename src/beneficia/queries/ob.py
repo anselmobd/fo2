@@ -20,9 +20,15 @@ def ob_estagios(cursor, ob=None):
         , e.DESCRICAO EST_DESCR
         , bt.DATA_INICIO DT_INI
         , bt.HORA_INICIO H_INI
+        , uini.USUARIO USUARIO_INI
         , bt.DATA_TERMINO DT_FIM
         , bt.HORA_TERMINO H_FIM
+        , ufim.USUARIO USUARIO_FIM
         FROM pcpb_015 bt
+        LEFT JOIN HDOC_030 uini -- usuários
+          ON uini.CODIGO_USUARIO = bt.OPERADOR_INICIO 
+        LEFT JOIN HDOC_030 ufim -- usuários
+          ON ufim.CODIGO_USUARIO = bt.OPERADOR_TERMINO 
         LEFT JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = bt.CODIGO_ESTAGIO
         WHERE 1=1
@@ -40,6 +46,8 @@ def ob_estagios(cursor, ob=None):
             )
         else:
             row['ini'] = ''
+        if not row['usuario_ini']:
+            row['usuario_ini'] = ''
         if row['dt_fim']:
             row['fim'] = datetime.datetime.combine(
                 row['dt_fim'].date(),
@@ -47,6 +55,8 @@ def ob_estagios(cursor, ob=None):
             )
         else:
             row['fim'] = ''
+        if not row['usuario_fim']:
+            row['usuario_fim'] = ''
 
     return dados
 
