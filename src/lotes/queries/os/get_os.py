@@ -69,6 +69,7 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
         , os.DATA_EMISSAO
         , os.DATA_ENTREGA
         , os.OBSERVACAO
+        , l.ORDEM_PRODUCAO OP
         FROM OBRF_080 os
         JOIN OBRF_070 s
           ON s.CODIGO_TERCEIRO = os.CODIGO_SERVICO
@@ -99,6 +100,7 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
         , os.DATA_EMISSAO
         , os.DATA_ENTREGA
         , os.OBSERVACAO
+        , l.ORDEM_PRODUCAO
         ORDER BY
           os.NUMERO_ORDEM
     """.format(
