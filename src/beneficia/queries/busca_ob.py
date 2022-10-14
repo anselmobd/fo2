@@ -140,7 +140,10 @@ def query(
         if row['ref'] is None:
             row['ref'] = ''
 
-    data_os = lotes.queries.os.os_inform(cursor, tuple(oss))
+    if oss:
+        data_os = lotes.queries.os.os_inform(cursor, tuple(oss))
+    else:
+        data_os = []
     dict_os = {
         row['OS']: row
         for row in data_os
