@@ -11,6 +11,8 @@ from utils.functions.strings import (
     split_strip,
 )
 
+import lotes.queries
+
 __all__ = ['query']
 
 
@@ -118,13 +120,16 @@ def query(
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
 
+    oss = set()
     for row in dados:
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
         row['os'] = ""
+        row['op'] = ""
         if row['obs']:
             obs_list = split_numbers(row['obs'])
             if obs_list:
                 row['os'] = obs_list[0]
+                oss.add(row['os'])
         else:
             row['obs'] = ""
         row['sit'] = descr_sit[row['cod_sit']]
@@ -134,5 +139,19 @@ def query(
             row['canc'] = f"{row['dt_canc'].date()} {row['cod_canc']:03}-{row['descr_canc']}"
         if row['ref'] is None:
             row['ref'] = ''
+
+    data_os = lotes.queries.os.os_inform(cursor, tuple(oss))
+    dict_os = {
+        row['OS']: row
+        for row in data_os
+    }
+    for row in dados:
+        if row['os']:
+            if row['os'] in dict_os:
+                row['op'] = dict_os[row['os']]['OP']
+            else:
+                row['os'] = "Não"
+
+    pprint(dados)            
 
     return dados
