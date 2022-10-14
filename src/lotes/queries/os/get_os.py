@@ -1,4 +1,9 @@
+from pprint import pprint
+
 from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import (
+    debug_cursor_execute,
+)
 
 
 def os_inform(cursor, os):
@@ -101,5 +106,5 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
         filtro_oc=filtro_oc,
         filtro_join=filtro_join,
     )
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
