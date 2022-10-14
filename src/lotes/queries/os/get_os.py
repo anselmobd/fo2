@@ -3,6 +3,7 @@ from pprint import pprint
 from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import (
     debug_cursor_execute,
+    sql_where_none_if,
 )
 
 
@@ -25,7 +26,8 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
     filtro_oc = ''
     filtro_join = ''
     if os is not None and os != '':
-        filtro_os = "AND os.NUMERO_ORDEM = '{}'".format(os)
+        # filtro_os = "AND os.NUMERO_ORDEM = '{}'".format(os)
+        filtro_os = sql_where_none_if("os.NUMERO_ORDEM", os)
     else:
         if op is not None and op != '':
             filtro_op = "AND l.ORDEM_PRODUCAO = '{}'".format(op)
