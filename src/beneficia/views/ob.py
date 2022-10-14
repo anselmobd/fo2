@@ -6,6 +6,7 @@ from django.views import View
 
 from fo2.connections import  db_cursor_so
 
+from utils.functions.strings import is_only_digits
 from utils.functions.views import (
     cleanned_fields_to_context,
     context_to_form_post,
@@ -40,7 +41,7 @@ class Ob(View):
             return
 
         for row in dados:
-            if row['os']:
+            if is_only_digits(row['os']):
                 row['os|TARGET'] = '_blank'
                 row['os|LINK'] = reverse(
                     'producao:os__get', args=[row['os']])
