@@ -55,7 +55,8 @@ class Ob(View):
                 'Situação',
                 'Cancelamento',
                 'Obs.',
-                'OS.',
+                'OS',
+                'OP',
             ],
             'fields': [
                 'periodo',
@@ -66,6 +67,7 @@ class Ob(View):
                 'canc',
                 'obs',
                 'os',
+                'op',
             ],
             'dados': dados,
         })
