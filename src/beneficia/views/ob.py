@@ -83,14 +83,18 @@ class Ob(View):
                 'Estágio',
                 'Descrição',
                 'Início',
+                'Operador Início',
                 'Término',
+                'Operador Término',
             ),
             'est_fields': (
                 'seq',
                 'est',
                 'est_descr',
                 'ini',
+                'usuario_ini',
                 'fim',
+                'usuario_fim',
             ),
             'est_dados': est_dados,
         })
