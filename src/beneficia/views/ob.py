@@ -45,6 +45,10 @@ class Ob(View):
                 row['os|TARGET'] = '_blank'
                 row['os|LINK'] = reverse(
                     'producao:os__get', args=[row['os']])
+            if is_only_digits(row['op']):
+                row['op|TARGET'] = '_blank'
+                row['op|LINK'] = reverse(
+                    'producao:op__get', args=[row['op']])
 
         self.context.update({
             'headers': [
