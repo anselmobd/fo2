@@ -149,7 +149,7 @@ class Ob(View):
             'tipo_ob': tipo_ob,
         })
 
-        if tipo_ob == 'OB1':
+        if tipo_tecido == 'INT':
             self.context['headers'].append('OB2')
             self.context['fields'].append('ob2')
             for row in dados:
@@ -159,7 +159,7 @@ class Ob(View):
                         args=[row['ob2']],
                     )
 
-        elif tipo_ob == 'OB2':
+        elif tipo_tecido == 'TIN':
             self.context['headers'].append('OT')
             self.context['fields'].append('ot')
             for row in dados:
