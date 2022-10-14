@@ -25,7 +25,7 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
     filtro_periodo = ''
     filtro_oc = ''
     filtro_join = ''
-    if os is not None and os != '':
+    if os:
         # filtro_os = "AND os.NUMERO_ORDEM = '{}'".format(os)
         filtro_os = sql_where_none_if("os.NUMERO_ORDEM", os)
     else:
