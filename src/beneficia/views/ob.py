@@ -39,24 +39,32 @@ class Ob(View):
         if len(dados) == 0:
             return
 
+        for row in dados:
+            if row['os']:
+                row['os|TARGET'] = '_blank'
+                row['os|LINK'] = reverse(
+                    'producao:os__get', args=[row['os']])
+
         self.context.update({
             'headers': [
                 'Período',
                 'Equipamento',
                 'Rolos',
                 'Quilos',
-                'Obs.',
                 'Situação',
                 'Cancelamento',
+                'Obs.',
+                'OS.',
             ],
             'fields': [
                 'periodo',
                 'maq',
                 'rolos',
                 'quilos',
-                'obs',
                 'sit',
                 'canc',
+                'obs',
+                'os',
             ],
             'dados': dados,
         })
