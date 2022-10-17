@@ -275,7 +275,7 @@ class Solicitacao(O2BaseGetView):
 
         def dt_embarque(info, pedido):
             try:
-                return info[pedido]['DT_EMBARQUE']
+                return info[pedido]['DT_EMBARQUE'].date()
             except Exception:
                 return "-"
 
