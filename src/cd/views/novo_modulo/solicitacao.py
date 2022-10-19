@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
+from base.paginator import paginator_basic
 from base.views import O2BaseGetView
 from utils.functions import untuple_keys_concat
 from utils.functions.dictlist.dictlist_to_grade import filter_dictlist_to_grade_qtd
@@ -68,7 +69,11 @@ class Solicitacao(O2BaseGetView):
         )
 
     def context_solicitados(self):
-        for row in self.dados_solicitados:
+
+        self.dados_solicitados = paginator_basic(
+            self.dados_solicitados, self.por_pagina, self.page_sol)
+
+        for row in self.dados_solicitados.object_list:
             row['ordem_producao|LINK'] = reverse(
                 'producao:op__get',
                 args=[row['ordem_producao']],
@@ -106,7 +111,7 @@ class Solicitacao(O2BaseGetView):
 
             row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
 
-        totalize_data(self.dados_solicitados, {
+        totalize_data(self.dados_solicitados.object_list, {
             'sum': [
                 'qtde',
             ],
@@ -164,7 +169,10 @@ class Solicitacao(O2BaseGetView):
         })
 
     def context_enderecos(self):
-        for row in self.dados_enderecados:
+        self.dados_enderecados = paginator_basic(
+            self.dados_enderecados, self.por_pagina, self.page_end)
+
+        for row in self.dados_enderecados.object_list:
             row['ordem_producao|LINK'] = reverse(
                 'producao:op__get',
                 args=[row['ordem_producao']],
@@ -198,7 +206,7 @@ class Solicitacao(O2BaseGetView):
             else:
                 row['inclusao_endereco'] = '-'
 
-        totalize_data(self.dados_enderecados, {
+        totalize_data(self.dados_enderecados.object_list, {
             'sum': [
                 'qtde',
             ],
@@ -432,6 +440,11 @@ class Solicitacao(O2BaseGetView):
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
+        self.por_pagina = 100
+        self.page_sol = self.request.GET.get('page_sol', 1)
+        self.context['page_end'] = self.request.GET.get('page_end', 0)
+        self.page_end = self.request.GET.get('page_end', 1)
+
         self.og = OperacoesGrade()
 
         self.sem_numero = self.context['solicitacao'] == 'sn'

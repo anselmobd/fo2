@@ -6,6 +6,7 @@
 {% block stylesheet %}
   <style>
     {% include 'layout/simple_table.css' %}
+    {% include "layout/paginator_stylesheet.css" %}
     hr.separador {
       border-top: 5px solid #eee;
     }
@@ -14,10 +15,10 @@
 
 {% block content %}
   {% if data %}
+    {% url 'cd:novo_solicitacao' solicitacao as link_solicitacao %}
     {% if sem_numero %}
       <h4>Solicitação: {{solicitacao}}</h4>
     {% else %}
-      {% url 'cd:novo_solicitacao' solicitacao as link_solicitacao %}
       <h4>Solicitação: {% include "layout/link.html" with link=link_solicitacao text=solicitacao only %}</h4>
     {% endif %}
     {% if pedido %}
@@ -36,29 +37,33 @@
       <h4>OP: {{op}}</h4>
     {% endif %}
     <ul class="nav nav-tabs" id="myTab">
-      <li class="active"><a data-toggle="tab" href="#lotes">Lotes</a></li>
-      <li><a data-toggle="tab" href="#enderecos">Endereços</a></li>
+      <li {% if not page_end %}class="active"{% endif %}><a data-toggle="tab" href="#lotes">Lotes</a></li>
+      <li {% if page_end %}class="active"{% endif %}><a data-toggle="tab" href="#enderecos">Endereços</a></li>
       <li><a data-toggle="tab" href="#pedidos">Pedidos</a></li>
       <li><a data-toggle="tab" href="#grade_solicitado">Grades das referências</a></li>
       <li><a data-toggle="tab" href="#grade_situacao">Grades por situação</a></li>
     </ul>
     <div class="tab-content">
-      <div id="lotes" class="tab-pane fade in active">
+      <div id="lotes" class="tab-pane fade{% if not page_end %} in active{% endif %}">
         <p>Lista registros em que a OP não tem estágio 63-CD (isso exclui OPs de expedição)<br/>
           Ordem Situação, Estágio, OP e Lote.</p>
+        {% include "layout/paginator_get.html" with data=data url_link=link_solicitacao var_page='page_sol' only %}
         <table>
           {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
           {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
         </table>
+        {% include "layout/paginator_get.html" with data=data url_link=link_solicitacao var_page='page_sol' only %}
       </div>
-      <div id="enderecos" class="tab-pane fade">
+      <div id="enderecos" class="tab-pane fade{% if page_end %} in active{% endif %}">
         <p>"Palete" é onde está atualmente o lote. "Inclusão P." é quando o lote foi incluido no palete.<br/>
           "Endereço" é onde está atualmente o Palete. "Inclusão E." é quando o palete foi incluido no endereço.<br/>
           Ordem decrescente de Rota, Endereço, Situação, OP e Lote.</p>
+        {% include "layout/paginator_get.html" with data=e_data url_link=link_solicitacao var_page='page_end' only %}
         <table>
           {% include "layout/thead_generic.html" with data=e_headers style=e_style thclass='sticky' only %}
           {% include "layout/tbody_generic.html" with fields=e_fields data=e_data style=e_style only %}
         </table>
+        {% include "layout/paginator_get.html" with data=e_data url_link=link_solicitacao var_page='page_end' only %}
       </div>
       <div id="pedidos" class="tab-pane fade">
         <table>
