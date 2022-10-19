@@ -152,12 +152,7 @@ class TermalPrint:
 
     def __init__(self, p='SuporteTI_SuporteTI', file_dir=None):
         self._print_started = False
-        self._write_file = file_dir is not None
-        if self._write_file:
-            if file_dir == '':
-                self._file_dir = file_dir
-            else:
-                self._file_dir = f"{file_dir}/"
+        self._file_dir = f"{file_dir}/" if file_dir else ''
         self.lp()
         self.printer(p)
         self.open_file()
@@ -173,7 +168,7 @@ class TermalPrint:
         self._p = copy.copy(p)
 
     def open_file(self):
-        if self._write_file:
+        if self._file_dir:
             self._filename = timezone.now().strftime(
                 f"{self._file_dir}%Y-%m-%d_%H.%M.%S_%f")
             Path(os.path.dirname(self._filename)).mkdir(
@@ -224,7 +219,7 @@ class TermalPrint:
     def printer_start(self):
         self._lpr = Popen([self._lp, "-d{}".format(self._p), "-"], stdin=PIPE)
 
-        if self._write_file:
+        if self._file_dir:
             self._file = open(self._filename, 'wb')
 
         self._print_started = True
@@ -233,7 +228,7 @@ class TermalPrint:
         self._lpr.stdin.close()
         self._lpr.wait()
 
-        if self._write_file:
+        if self._file_dir:
             self._file.close()
 
     def printer_send(self, count=1):
@@ -241,7 +236,7 @@ class TermalPrint:
         for _ in range(count):
             self._lpr.stdin.write(data)
 
-            if self._write_file:
+            if self._file_dir:
                 self._file.write(data)
 
     def printer_send1(self):
