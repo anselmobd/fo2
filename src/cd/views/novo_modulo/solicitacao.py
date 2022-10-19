@@ -450,6 +450,10 @@ class Solicitacao(O2BaseGetView):
         self.sem_numero = self.context['solicitacao'] == 'sn'
         if self.sem_numero:
             self.context['solicitacao'] = '# (sem número)'
+            self.por_pagina = 999999
+        else:
+            self.por_pagina = 100
+
         self.context['sem_numero'] = self.sem_numero
         self.context['pedido'] = self.request.GET.get('pedido', None)
         self.context['ref_destino'] = self.request.GET.get('ref_destino', None)
