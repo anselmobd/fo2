@@ -18,10 +18,13 @@ from lotes.queries.lote import get_lotes
 
 
 class ImprimeLotes(LoginRequiredMixin, View):
-    login_url = '/intradm/login/'
-    Form_class = ImprimeLotesForm
-    template_name = 'lotes/imprime_lotes.html'
-    title_name = 'Imprime "Cartela de Lote"'
+
+    def __init__(self) -> None:
+        super(ImprimeLotes).__init__()
+        self.login_url = '/intradm/login/'
+        self.Form_class = ImprimeLotesForm
+        self.template_name = 'lotes/imprime_lotes.html'
+        self.title_name = 'Imprime "Cartela de Lote"'
 
     def est_list(self, est):
         estagios = est.split(' & ')
