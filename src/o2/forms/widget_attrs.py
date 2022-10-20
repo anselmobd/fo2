@@ -5,11 +5,15 @@ class FormWidgetAttrs():
 
     number = {
         'type': 'number;',
-        }
+    }
 
     string = {
         'type': 'string;',
-        }
+    }
+
+    date = {
+        'type': 'date',
+    }
 
     string_upper = {
         'type': 'string',
