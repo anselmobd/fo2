@@ -29,10 +29,10 @@ class Form(forms.Form):
 
     CHOICES = [
         ('-', "Todos"),
-        ('1', "18h às 6h"),
-        ('2', "6h às 18h"),
-        ('3', "6h às 18h"),
-        ('4', "18h às 6h"),
+        ('1', "1 - 18h às 6h"),
+        ('2', "2 - 6h às 18h"),
+        ('3', "3 - 18h às 6h"),
+        ('4', "4 - 6h às 18h"),
     ]
     turno = forms.ChoiceField(
         choices=CHOICES,
