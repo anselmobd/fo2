@@ -14,7 +14,7 @@ def ob_estagios(cursor, ob=None):
         """
 
     sql = f'''
-        SELECT 
+        SELECT DISTINCT
           bt.SEQ_OPERACAO SEQ
         , bt.CODIGO_ESTAGIO EST
         , e.DESCRICAO EST_DESCR
@@ -33,6 +33,8 @@ def ob_estagios(cursor, ob=None):
           ON e.CODIGO_ESTAGIO = bt.CODIGO_ESTAGIO
         WHERE 1=1
           {filtra_ob} -- filtra_ob
+        ORDER BY
+          bt.SEQ_OPERACAO
     '''
 
     debug_cursor_execute(cursor, sql)
