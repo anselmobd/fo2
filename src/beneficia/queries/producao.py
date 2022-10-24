@@ -6,6 +6,7 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
+from utils.functions.strings import lm
 
 __all__ = ['query']
 
@@ -38,7 +39,7 @@ def query(
         )
     """
 
-    sql = f'''
+    sql = lm(f'''
         SELECT DISTINCT
           bt.ORDEM_PRODUCAO OB
         , bt.SEQ_ESTAGIO SEQ_EST
@@ -61,7 +62,7 @@ def query(
         , bt.TURNO_PRODUCAO
         , bt.ORDEM_PRODUCAO
         , bt.SEQ_ESTAGIO
-    '''
+    ''')
 
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
