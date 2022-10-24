@@ -47,7 +47,12 @@ class Producao(O2BaseGetPostView):
         }
 
     def get_producao(self):
-        data = producao_query(self.cursor, self.data_de, self.data_ate)
+        data = producao_query(
+            self.cursor,
+            self.data_de,
+            self.data_ate,
+            tipo='OB2',
+        )
         result = {
             'data': data,
             'vazio': "Sem produção",
