@@ -15,15 +15,22 @@ def query(
         cursor,
         data_de=None,
         data_ate=None,
+        tipo=None
     ):
-
+    """
+    Onde:
+        tipo:
+            None = todos
+            OB1
+            OB2
+    """
     if not data_de:
         data_de = date.today()
 
     data_ate_prox = data_ate if data_ate else data_de
     data_ate_prox = data_ate_prox + timedelta(days=1)
 
-    filtra_data_de = f"""--
+    filtra_data_de = f"""\
         AND ( 
           ( bt.DATA_TERMINO = DATE '{data_de}'
             AND bt.HORA_TERMINO >= TIMESTAMP '1989-11-16 06:00:00'
@@ -36,8 +43,21 @@ def query(
           ( bt.DATA_TERMINO = DATE '{data_ate_prox}'
             AND bt.HORA_TERMINO < TIMESTAMP '1989-11-16 06:00:00'
           )
-        )
+        ) \
     """
+
+    if tipo:
+        if tipo == 'OB1':
+            filtra_tipo = """\
+                AND t.PANO_SBG_SUBGRUPO = 'INT' -- OB1 \
+            """
+        elif tipo == 'OB2':
+            filtra_tipo = """\
+                AND t.PANO_SBG_SUBGRUPO = 'TIN' -- OB2 \
+            """
+    else:
+        filtra_tipo = ''
+
 
     sql = lm(f'''
         SELECT DISTINCT
@@ -55,8 +75,11 @@ def query(
         FROM pcpb_040 bt
         LEFT JOIN HDOC_030 ufim -- usuários
           ON ufim.CODIGO_USUARIO = bt.CODIGO_USUARIO
+        JOIN PCPB_020 t
+          ON t.ORDEM_PRODUCAO = bt.ORDEM_PRODUCAO
         WHERE 1=1
           {filtra_data_de} -- filtra_data_de
+          {filtra_tipo} -- filtra_tipo
         ORDER BY
           bt.DATA_TERMINO
         , bt.TURNO_PRODUCAO
