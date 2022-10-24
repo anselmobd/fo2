@@ -54,6 +54,7 @@ class Producao(O2BaseGetPostView):
             tipo='OB2',
         )
         result = {
+            'titulo': 'OB2',
             'data': data,
             'vazio': "Sem produção",
         }
@@ -70,7 +71,7 @@ class Producao(O2BaseGetPostView):
             TableDefsH({
                 'dt_fim': ["Data"],
                 'turno': ["Turno"],
-                'ob': ["OB"],
+                'ob': ["OB2"],
                 'est': ["Estágio"],
             }).hfs_dict(context=result)
         return result
