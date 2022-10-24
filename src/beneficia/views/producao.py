@@ -51,7 +51,7 @@ class Producao(O2BaseGetPostView):
             self.cursor,
             self.data_de,
             self.data_ate,
-            tipo='OB2',
+            tipo=2,
         )
         result = {
             'titulo': 'OB2',
