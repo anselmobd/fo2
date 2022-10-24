@@ -44,3 +44,13 @@ def yesterday(my_date):
 def yesterday_ymd():
     """Return yesterday in format YYYY-MM-DD"""
     return yesterday(datetime.date.today()).strftime('%Y-%m-%d')
+
+
+def dmy(data):
+    """Return data in format DD/MM/YYYY"""
+    return data.strftime('%d/%m/%Y')
+
+
+def dmy_or_empty(data):
+    """Return dmy or empty"""
+    return dmy(data) if data else ''
