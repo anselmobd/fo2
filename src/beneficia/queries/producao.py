@@ -47,11 +47,11 @@ def query(
     """
 
     if tipo:
-        if tipo == 'OB1':
+        if tipo in ['OB1', '1', 1]:
             filtra_tipo = """\
                 AND t.PANO_SBG_SUBGRUPO = 'INT' -- OB1 \
             """
-        elif tipo == 'OB2':
+        elif tipo in ['OB2', '2', 2]:
             filtra_tipo = """\
                 AND t.PANO_SBG_SUBGRUPO = 'TIN' -- OB2 \
             """
