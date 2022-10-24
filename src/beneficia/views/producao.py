@@ -36,4 +36,7 @@ class Producao(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
+        if not self.data_ate:
+            self.data_ate = self.data_de
+
         self.context['producao'] = self.get_producao()
