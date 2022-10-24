@@ -39,7 +39,7 @@ def query(
     """
 
     sql = f'''
-        SELECT
+        SELECT DISTINCT
           ORDEM_PRODUCAO OB
         , SEQ_ESTAGIO SEQ_EST
         , CODIGO_ESTAGIO EST
