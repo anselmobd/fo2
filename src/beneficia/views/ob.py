@@ -103,7 +103,7 @@ class Ob(View):
         self.context.update({
             'tec_headers': [
                 'Nível',
-                'Ref,',
+                'Ref.',
                 'Tam.',
                 'Cor',
                 'Alt.',
