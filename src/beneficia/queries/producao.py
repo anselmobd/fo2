@@ -1,4 +1,5 @@
 from datetime import (
+    date,
     timedelta,
 )
 from pprint import pprint
@@ -12,9 +13,14 @@ __all__ = ['query']
 def query(
         cursor,
         data_de=None,
+        data_ate=None,
     ):
 
-    data_ate = data_de + timedelta(days=1)
+    if not data_de:
+        data_de = date.today()
+
+    data_ate_prox = data_ate if data_ate else data_de
+    data_ate_prox = data_ate_prox + timedelta(days=1)
 
     filtra_data_de = f"""--
         AND ( 
@@ -23,10 +29,10 @@ def query(
           )
           OR 
           ( bt.DATA_TERMINO > DATE '{data_de}'
-          AND bt.DATA_TERMINO < DATE '{data_ate}'
+          AND bt.DATA_TERMINO < DATE '{data_ate_prox}'
           )
           OR 
-          ( bt.DATA_TERMINO = DATE '{data_ate}'
+          ( bt.DATA_TERMINO = DATE '{data_ate_prox}'
             AND bt.HORA_TERMINO < TIMESTAMP '1989-11-16 06:00:00'
           )
         )
