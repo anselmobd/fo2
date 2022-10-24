@@ -40,15 +40,15 @@ def query(
 
     sql = f'''
         SELECT DISTINCT
-          ORDEM_PRODUCAO OB
-        , SEQ_ESTAGIO SEQ_EST
-        , CODIGO_ESTAGIO EST
-        , SEQ_OPERACAO SEQ_OP
-        , DATA_INICIO DT_INI
-        , HORA_INICIO H_INI
-        , DATA_TERMINO DT_FIM
-        , HORA_TERMINO H_FIM
-        , TURNO_PRODUCAO TURNO
+          bt.ORDEM_PRODUCAO OB
+        , bt.SEQ_ESTAGIO SEQ_EST
+        , bt.CODIGO_ESTAGIO EST
+        , bt.SEQ_OPERACAO SEQ_OP
+        , bt.DATA_INICIO DT_INI
+        , bt.HORA_INICIO H_INI
+        , bt.DATA_TERMINO DT_FIM
+        , bt.HORA_TERMINO H_FIM
+        , bt.TURNO_PRODUCAO TURNO
         , bt.CODIGO_USUARIO COD_USU
         , ufim.USUARIO USUARIO
         FROM pcpb_040 bt
@@ -57,10 +57,10 @@ def query(
         WHERE 1=1
           {filtra_data_de} -- filtra_data_de
         ORDER BY
-          DATA_TERMINO
-        , TURNO_PRODUCAO
-        , ORDEM_PRODUCAO
-        , SEQ_ESTAGIO
+          bt.DATA_TERMINO
+        , bt.TURNO_PRODUCAO
+        , bt.ORDEM_PRODUCAO
+        , bt.SEQ_ESTAGIO
     '''
 
     debug_cursor_execute(cursor, sql)
