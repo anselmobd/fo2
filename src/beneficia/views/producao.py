@@ -3,6 +3,8 @@ from pprint import pprint
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from utils.functions.strings import min_max_string
+from utils.functions.date import dmy_or_empty
 from utils.table_defs import TableDefsH
 
 from beneficia.forms.producao import Form as ProducaoForm
@@ -18,6 +20,29 @@ class Producao(O2BaseGetPostView):
         self.title_name = 'Producao'
         self.form_class_has_initial = True
         self.cleaned_data2self = True
+
+    def form_report(self):
+        form_report_lines = []
+        
+        filtro = min_max_string(
+            self.data_de,
+            self.data_ate,
+            process_input=(
+                dmy_or_empty,
+            ),
+            msg_format="Data {}",
+            mm='de_ate',
+        )
+        if filtro:
+            form_report_lines.append(filtro)
+
+        return {
+            'form_report_lines': form_report_lines,
+            'form_report_excludes': [
+                'data_de',
+                'data_ate',
+            ],
+        }
 
     def get_producao(self):
         data = producao_query(self.cursor, self.data_de, self.data_ate)
@@ -38,5 +63,7 @@ class Producao(O2BaseGetPostView):
 
         if not self.data_ate:
             self.data_ate = self.data_de
+
+        self.context.update(self.form_report())
 
         self.context['producao'] = self.get_producao()
