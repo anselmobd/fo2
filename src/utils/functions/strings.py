@@ -115,7 +115,19 @@ def lm(string):
     return textwrap.dedent(string)
 
 
-def min_max_string(min, max, process_input=noneifempty, msg_format="{}"):
+def min_max_string(min, max, process_input=noneifempty, msg_format="{}", mm='min_max'):
+    mm_string = {
+        'min_max': {
+            'entre': "entre {min} e {max}",
+            'min': "no mínimo {min}",
+            'max': "no máximo {max}",
+        },
+        'de_ate': {
+            'entre': "de {min} até {max}",
+            'min': "de {min}",
+            'max': "até {max}",
+        },
+    }
     if process_input:
         min_max = min, max
         if not isinstance(process_input, tuple):
@@ -127,9 +139,9 @@ def min_max_string(min, max, process_input=noneifempty, msg_format="{}"):
         if min == max:
             filtro = f"igual a {min}"
         elif min and max:
-            filtro = f"entre {min} e {max}"
+            filtro = mm_string[mm]['entre'].format(min=min, max=max)
         elif min:
-            filtro = f"no mínimo {min}"
+            filtro = mm_string[mm]['min'].format(min=min)
         elif max:
-            filtro = f"no máximo {max}"
+            filtro = mm_string[mm]['max'].format(max=max)
         return msg_format.format(filtro)
