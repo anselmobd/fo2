@@ -46,13 +46,18 @@ class Producao(O2BaseGetPostView):
 
     def get_producao(self):
         data = producao_query(self.cursor, self.data_de, self.data_ate)
-        # pprint(data)
         result = {
             'data': data,
             'vazio': "Sem produção",
         }
         if data:
+            for row in data:
+                if row['dt_fim']:
+                    row['dt_fim'] = row['dt_fim'].date()
+
             TableDefsH({
+                'dt_fim': ["Data"],
+                'turno': ["Turno"],
                 'ob': ["OB"],
                 'est': ["Estágio"],
             }).hfs_dict(context=result)
