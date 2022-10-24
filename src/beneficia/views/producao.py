@@ -7,7 +7,7 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetPostView
 from utils.functions.strings import min_max_string
 from utils.functions.date import dmy_or_empty
-from utils.table_defs import TableDefsH
+from utils.table_defs import TableDefsHpSD
 
 from beneficia.forms.producao import Form as ProducaoForm
 from beneficia.queries.producao import query as producao_query
@@ -68,11 +68,12 @@ class Producao(O2BaseGetPostView):
                     args=[row['ob']],
                 )
 
-            TableDefsH({
+            TableDefsHpSD({
                 'dt_fim': ["Data"],
                 'turno': ["Turno"],
                 'ob': ["OB2"],
                 'est': ["Estágio"],
+                'quilos': ["Quilos", 'r', 3],
             }).hfs_dict(context=result)
         return result
 
