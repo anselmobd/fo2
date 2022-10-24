@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
@@ -54,6 +56,11 @@ class Producao(O2BaseGetPostView):
             for row in data:
                 if row['dt_fim']:
                     row['dt_fim'] = row['dt_fim'].date()
+                row['ob|TARGET'] = '_blank'
+                row['ob|LINK'] = reverse(
+                    'beneficia:ob__get',
+                    args=[row['ob']],
+                )
 
             TableDefsH({
                 'dt_fim': ["Data"],
