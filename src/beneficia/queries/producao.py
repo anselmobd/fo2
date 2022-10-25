@@ -83,6 +83,7 @@ def query(
         , bt.CODIGO_USUARIO COD_USU
         , ufim.USUARIO USUARIO
         , t.QTDE_QUILOS_REAL QUILOS
+        , t.PANO_SBG_ITEM COR
         FROM pcpb_040 bt
         LEFT JOIN HDOC_030 ufim -- usuários
           ON ufim.CODIGO_USUARIO = bt.CODIGO_USUARIO

@@ -90,6 +90,7 @@ class Producao(O2BaseGetPostView):
                 'turno': ["Turno"],
                 'ob': ["OB2"],
                 'est': ["Estágio"],
+                'cor': ["Cor"],
                 'quilos': ["Quilos", 'r', 3],
             }).hfs_dict(context=result)
         return result
