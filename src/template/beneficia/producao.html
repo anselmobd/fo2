@@ -15,7 +15,10 @@
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
   </form>
-  <p>Filtro por data considera que o dia inicia 06h00 e termina 06h00 dia seguinte.</p>
+  <p>Filtro por data:<br>
+    - considera que o dia inicia 06h00 e termina 06h00 dia seguinte;<br>
+    - filtra data e hora de finalização de estágio.
+  </p>
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=4 excludes=form_report_excludes lines=form_report_lines only %}
     {% if erro %}
