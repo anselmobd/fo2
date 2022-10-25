@@ -8,6 +8,7 @@ from base.views import O2BaseGetPostView
 from utils.functions.strings import min_max_string
 from utils.functions.date import dmy_or_empty
 from utils.table_defs import TableDefsHpSD
+from utils.views import totalize_data
 
 from beneficia.forms.producao import Form as ProducaoForm
 from beneficia.queries.producao import query as producao_query
@@ -72,6 +73,17 @@ class Producao(O2BaseGetPostView):
                     args=[row['ob']],
                 )
 
+            totalize_data(
+                data,
+                {
+                    'sum': ['quilos'],
+                    'descr': {'dt_fim': 'Total:'},
+                    'row_style':
+                        "font-weight: bold;"
+                        "background-image: linear-gradient(#DDD, white);",
+                    'flags': ['NO_TOT_1'],
+                }
+            )
             TableDefsHpSD({
                 'dt_fim': ["Data"],
                 'h_fim': ["Hora"],
