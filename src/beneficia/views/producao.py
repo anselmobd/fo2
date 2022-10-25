@@ -49,8 +49,9 @@ class Producao(O2BaseGetPostView):
     def get_producao(self):
         data = producao_query(
             self.cursor,
-            self.data_de,
-            self.data_ate,
+            data_de=self.data_de,
+            data_ate=self.data_ate,
+            turno=self.turno,
             tipo=2,
         )
         result = {
