@@ -64,6 +64,8 @@ class Producao(O2BaseGetPostView):
             for row in data:
                 if row['dt_fim']:
                     row['dt_fim'] = row['dt_fim'].date()
+                if row['h_fim']:
+                    row['h_fim'] = row['h_fim'].strftime('%H:%M')
                 row['ob|TARGET'] = '_blank'
                 row['ob|LINK'] = reverse(
                     'beneficia:ob__get',
@@ -72,6 +74,7 @@ class Producao(O2BaseGetPostView):
 
             TableDefsHpSD({
                 'dt_fim': ["Data"],
+                'h_fim': ["Hora"],
                 'turno': ["Turno"],
                 'ob': ["OB2"],
                 'est': ["Estágio"],
