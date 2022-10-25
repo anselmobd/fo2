@@ -83,6 +83,8 @@ def query(
         , bt.CODIGO_USUARIO COD_USU
         , ufim.USUARIO USUARIO
         , t.QTDE_QUILOS_REAL QUILOS
+        , SUBSTR(t.PANO_SBG_GRUPO, 1, 2) TIPO_REF
+        , t.PANO_SBG_GRUPO REF
         , t.PANO_SBG_ITEM COR
         , b.GRUPO_MAQUINA GRUP_MAQ
         , b.SUBGRUPO_MAQUINA SUB_MAQ 
@@ -102,12 +104,18 @@ def query(
         ORDER BY
           bt.DATA_TERMINO
         , bt.TURNO_PRODUCAO
+        , SUBSTR(t.PANO_SBG_GRUPO, 1, 2)
         , bt.ORDEM_PRODUCAO
         , bt.SEQ_ESTAGIO
     ''')
 
+    dict_tipo_tecido = {
+        'TP': "Poliamida",
+        'TA': "Algodão",
+    }
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
     for row in dados:
         row['maq'] = f"{row['grup_maq']}.{row['sub_maq']}.{row['num_maq']:05}"
+        row['tipo_tecido'] = dict_tipo_tecido.get(row['tipo_ref'], "Desconhecido")
     return dados
