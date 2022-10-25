@@ -85,12 +85,14 @@ class Producao(O2BaseGetPostView):
                 }
             )
             TableDefsHpSD({
+                'ob': ["OB2"],
+                'maq': ["Máquina"],
+                'est': ["Estágio"],
+                'usuario': ["Usuário"],
                 'dt_fim': ["Data"],
                 'h_fim': ["Hora"],
-                'usuario': ["Usuário"],
                 'turno': ["Turno"],
-                'ob': ["OB2"],
-                'est': ["Estágio"],
+                'tipo_tecido': ["Tipo tecido"],
                 'cor': ["Cor"],
                 'quilos': ["Quilos", 'r', 3],
             }).hfs_dict(context=result)
