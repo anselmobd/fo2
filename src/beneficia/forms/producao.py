@@ -3,6 +3,8 @@ from django import forms
 from o2.forms.widget_attrs import FormWidgetAttrs
 from utils.functions.date import today_ymd
 
+from systextil.models import Estagio
+
 __all__ = ['Form']
 
 
@@ -29,12 +31,20 @@ class Form(forms.Form):
 
     CHOICES = [
         ('-', "Todos"),
-        ('1', "1 - 18h às 6h"),
-        ('2', "2 - 6h às 18h"),
-        ('3', "3 - 18h às 6h"),
-        ('4', "4 - 6h às 18h"),
+        ('1', "1"),
+        ('2', "2"),
+        ('3', "3"),
+        ('4', "4"),
     ]
     turno = forms.ChoiceField(
         choices=CHOICES,
         initial='-',
+    )
+
+    estagio = forms.ModelChoiceField(
+        label='Estágio',
+        queryset=Estagio.objects.filter(codigo_estagio__gte=70).order_by(
+            'codigo_estagio'
+        ),
+        initial=76,
     )
