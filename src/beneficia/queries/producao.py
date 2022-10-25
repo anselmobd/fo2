@@ -84,9 +84,14 @@ def query(
         , ufim.USUARIO USUARIO
         , t.QTDE_QUILOS_REAL QUILOS
         , t.PANO_SBG_ITEM COR
+        , b.GRUPO_MAQUINA GRUP_MAQ
+        , b.SUBGRUPO_MAQUINA SUB_MAQ 
+        , b.NUMERO_MAQUINA NUM_MAQ
         FROM pcpb_040 bt
         LEFT JOIN HDOC_030 ufim -- usuários
           ON ufim.CODIGO_USUARIO = bt.CODIGO_USUARIO
+        JOIN PCPB_010 b
+          ON b.ORDEM_PRODUCAO = bt.ORDEM_PRODUCAO
         JOIN PCPB_020 t
           ON t.ORDEM_PRODUCAO = bt.ORDEM_PRODUCAO
         WHERE 1=1
@@ -103,4 +108,6 @@ def query(
 
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
+    for row in dados:
+        row['maq'] = f"{row['grup_maq']}.{row['sub_maq']}.{row['num_maq']:05}"
     return dados
