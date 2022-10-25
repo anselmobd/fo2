@@ -16,6 +16,7 @@ def query(
         data_de=None,
         data_ate=None,
         turno=None,
+        estagio=None,
         tipo=None
     ):
     """
@@ -50,6 +51,10 @@ def query(
     filtra_turno = f"""\
         AND bt.TURNO_PRODUCAO = {turno} \
     """ if turno else ''
+
+    filtra_estagio = f"""\
+        AND bt.CODIGO_ESTAGIO = {estagio} \
+    """ if estagio else ''
 
     if tipo:
         if tipo in ['OB1', '1', 1]:
@@ -86,6 +91,7 @@ def query(
         WHERE 1=1
           {filtra_data_de} -- filtra_data_de
           {filtra_turno} -- filtra_turno
+          {filtra_estagio} -- filtra_estagio
           {filtra_tipo} -- filtra_tipo
         ORDER BY
           bt.DATA_TERMINO
