@@ -87,6 +87,7 @@ class Producao(O2BaseGetPostView):
             TableDefsHpSD({
                 'dt_fim': ["Data"],
                 'h_fim': ["Hora"],
+                'usuario': ["Usuário"],
                 'turno': ["Turno"],
                 'ob': ["OB2"],
                 'est': ["Estágio"],
