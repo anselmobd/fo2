@@ -15,6 +15,7 @@ def query(
         cursor,
         data_de=None,
         data_ate=None,
+        turno=None,
         tipo=None
     ):
     """
@@ -45,6 +46,10 @@ def query(
           )
         ) \
     """
+
+    filtra_turno = f"""\
+        AND bt.TURNO_PRODUCAO = {turno} \
+    """ if turno else ''
 
     if tipo:
         if tipo in ['OB1', '1', 1]:
@@ -80,6 +85,7 @@ def query(
           ON t.ORDEM_PRODUCAO = bt.ORDEM_PRODUCAO
         WHERE 1=1
           {filtra_data_de} -- filtra_data_de
+          {filtra_turno} -- filtra_turno
           {filtra_tipo} -- filtra_tipo
         ORDER BY
           bt.DATA_TERMINO
