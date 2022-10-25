@@ -30,7 +30,7 @@ class Form(forms.Form):
     )
 
     CHOICES = [
-        ('-', "Todos"),
+        ('', "Todos"),
         ('1', "1"),
         ('2', "2"),
         ('3', "3"),
@@ -38,7 +38,8 @@ class Form(forms.Form):
     ]
     turno = forms.ChoiceField(
         choices=CHOICES,
-        initial='-',
+        required=False,
+        initial='',
     )
 
     estagio = forms.ModelChoiceField(
