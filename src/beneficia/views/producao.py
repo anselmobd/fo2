@@ -52,6 +52,7 @@ class Producao(O2BaseGetPostView):
             data_de=self.data_de,
             data_ate=self.data_ate,
             turno=self.turno,
+            estagio=self.estagio.codigo_estagio if self.estagio else None,
             tipo=2,
         )
         result = {
