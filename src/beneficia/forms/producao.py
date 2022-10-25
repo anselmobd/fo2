@@ -47,5 +47,7 @@ class Form(forms.Form):
         queryset=Estagio.objects.filter(codigo_estagio__gte=70).order_by(
             'codigo_estagio'
         ),
+        required=False,
+        empty_label="Todos",
         initial=76,
     )
