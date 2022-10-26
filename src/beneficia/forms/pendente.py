@@ -33,5 +33,5 @@ class Form(forms.Form):
         queryset=Estagio.objects.filter(codigo_estagio__gt=70).order_by(
             'codigo_estagio'
         ),
-        initial=70,
+        initial=74,
     )
