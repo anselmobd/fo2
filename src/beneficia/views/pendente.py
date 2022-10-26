@@ -11,7 +11,7 @@ from utils.table_defs import TableDefsHpSD
 from utils.views import totalize_data
 
 from beneficia.forms.pendente import Form as PendenteForm
-from beneficia.queries.producao import query as producao_query
+from beneficia.queries.pendente import query as pendente_query
 
 
 class Pendente(O2BaseGetPostView):
@@ -24,49 +24,21 @@ class Pendente(O2BaseGetPostView):
         self.form_class_has_initial = True
         self.cleaned_data2self = True
 
-    def form_report(self):
-        form_lines_before = []
-        
-        filtro = min_max_string(
-            self.data_de,
-            self.data_ate,
-            process_input=(
-                dmy_or_empty,
-            ),
-            msg_format="Data {}",
-            mm='de_ate',
-        )
-        if filtro:
-            form_lines_before.append(filtro)
-
-        return {
-            'form_lines_before': form_lines_before,
-            'form_excludes': [
-                'data_de',
-                'data_ate',
-            ],
-        }
-
     def get_producao(self):
-        data = producao_query(
+        data = pendente_query(
             self.cursor,
             data_de=self.data_de,
             data_ate=self.data_ate,
-            turno=self.turno,
             estagio=self.estagio.codigo_estagio if self.estagio else None,
             tipo=2,
         )
         result = {
             'titulo': 'OB2',
             'data': data,
-            'vazio': "Sem produção",
+            'vazio': "Sem pendente",
         }
         if data:
             for row in data:
-                if row['dt_fim']:
-                    row['dt_fim'] = row['dt_fim'].date()
-                if row['h_fim']:
-                    row['h_fim'] = row['h_fim'].strftime('%H:%M')
                 row['ob|TARGET'] = '_blank'
                 row['ob|LINK'] = reverse(
                     'beneficia:ob__get',
@@ -77,7 +49,7 @@ class Pendente(O2BaseGetPostView):
                 data,
                 {
                     'sum': ['quilos'],
-                    'descr': {'dt_fim': 'Total:'},
+                    'descr': {'ob': 'Total:'},
                     'row_style':
                         "font-weight: bold;"
                         "background-image: linear-gradient(#DDD, white);",
@@ -86,12 +58,6 @@ class Pendente(O2BaseGetPostView):
             )
             TableDefsHpSD({
                 'ob': ["OB2"],
-                'maq': ["Máquina"],
-                'est': ["Estágio"],
-                'usuario': ["Usuário"],
-                'dt_fim': ["Data"],
-                'h_fim': ["Hora"],
-                'turno': ["Turno"],
                 'tipo_tecido': ["Tipo tecido"],
                 'cor': ["Cor"],
                 'quilos': ["Quilos", 'r', 3],
@@ -101,9 +67,4 @@ class Pendente(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        if not self.data_ate:
-            self.data_ate = self.data_de
-
-        self.context.update(self.form_report())
-
-        self.context['producao'] = self.get_producao()
+        self.context['pendente'] = self.get_producao()

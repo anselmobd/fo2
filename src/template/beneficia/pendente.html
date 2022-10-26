@@ -20,10 +20,10 @@
     - filtra data e hora de finalização do último estágio registrado.
   </p>
   {% if request.POST %}
-    {% include "layout/form_inputs_report.html" with form=form h=4 excludes=form_excludes lines_before=form_lines_before only %}
+    {% include "layout/form_inputs_report.html" with form=form h=4 only %}
     {% if erro %}
       <h4>Erro: {{ erro }}</h4>
     {% endif %}
-    {% include "layout/table_generic.html" with dados=producao only %}
+    {% include "layout/table_generic.html" with dados=pendente only %}
   {% endif %}
 {% endblock %}

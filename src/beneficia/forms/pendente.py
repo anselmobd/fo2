@@ -26,15 +26,12 @@ class Form(forms.Form):
         label="Data final",
         required=False,
         widget=forms.DateInput(attrs={'type': 'date'}),
-        help_text="(se não definida, considerada igual a inicial)"
     )
 
     estagio = forms.ModelChoiceField(
         label='Estágio',
-        queryset=Estagio.objects.filter(codigo_estagio__gte=70).order_by(
+        queryset=Estagio.objects.filter(codigo_estagio__gt=70).order_by(
             'codigo_estagio'
         ),
-        required=False,
-        empty_label="Todos",
-        initial=76,
+        initial=70,
     )
