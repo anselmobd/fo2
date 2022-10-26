@@ -17,7 +17,7 @@
     <input type="submit" name="busca" value="Busca" onclick="o2SetPage1AndSubmit()"/>
   </form>
   <br/>
-  {% include "layout/form_inputs_report.html" with form=form h=4 excludes=form_report_excludes lines=form_report_lines only %}
+  {% include "layout/form_inputs_report.html" with form=form h=4 excludes=form_report_excludes lines=form_report_lines_after only %}
   {% if data %}
     <h4>{{qtd_solicit}} solicitaç{{qtd_solicit|pluralize:"ão,ões"}} encontrada{{qtd_solicit|pluralize}}</h4>
     {% if qtd_solicit > por_pagina %}

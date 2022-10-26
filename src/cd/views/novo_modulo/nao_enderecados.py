@@ -73,7 +73,7 @@ class NaoEnderecados(O2BaseGetPostView):
             if not row['sol']:
                 row['sol'] = '#'
 
-        form_report_lines = []
+        form_report_lines_after = []
         
         filtro = min_max_string(
             self.sol_de,
@@ -85,7 +85,7 @@ class NaoEnderecados(O2BaseGetPostView):
             msg_format="Solicitação {}",
         )
         if filtro:
-            form_report_lines.append(filtro)
+            form_report_lines_after.append(filtro)
 
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
@@ -94,7 +94,7 @@ class NaoEnderecados(O2BaseGetPostView):
             'por_pagina': self.por_pagina,
             'nao_end_len': nao_end_len,
             'lotes_len': lotes_len,
-            'form_report_lines': form_report_lines,
+            'form_report_lines_after': form_report_lines_after,
             'form_report_excludes': [
                 'sol_de',
                 'sol_ate',

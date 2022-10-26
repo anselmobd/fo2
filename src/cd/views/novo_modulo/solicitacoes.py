@@ -114,7 +114,7 @@ class Solicitacoes(O2BaseGetPostView):
             row['solicitacao|TARGET'] = '_blank'
             row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
 
-        form_report_lines = []
+        form_report_lines_after = []
         
         filtro = min_max_string(
             self.com_lotes_situacao_de,
@@ -126,7 +126,7 @@ class Solicitacoes(O2BaseGetPostView):
             msg_format="Com lotes em situação {}",
         )
         if filtro:
-            form_report_lines.append(filtro)
+            form_report_lines_after.append(filtro)
 
         fields = {
             'solicitacao': 'Solicitação',
@@ -162,5 +162,5 @@ class Solicitacoes(O2BaseGetPostView):
                 'com_lotes_situacao_de',
                 'com_lotes_situacao_ate',
             ],
-            'form_report_lines': form_report_lines,
+            'form_report_lines_after': form_report_lines_after,
         })

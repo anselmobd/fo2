@@ -25,7 +25,7 @@ class Producao(O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def form_report(self):
-        form_report_lines = []
+        form_report_lines_after = []
         
         filtro = min_max_string(
             self.data_de,
@@ -37,10 +37,10 @@ class Producao(O2BaseGetPostView):
             mm='de_ate',
         )
         if filtro:
-            form_report_lines.append(filtro)
+            form_report_lines_after.append(filtro)
 
         return {
-            'form_report_lines': form_report_lines,
+            'form_report_lines_after': form_report_lines_after,
             'form_report_excludes': [
                 'data_de',
                 'data_ate',
