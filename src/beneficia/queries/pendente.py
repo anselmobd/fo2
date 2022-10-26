@@ -84,8 +84,6 @@ def query(
             {filtra_tipo} -- filtra_tipo
           GROUP BY 
             bt.ORDEM_PRODUCAO
-          ORDER BY 
-            bt.ORDEM_PRODUCAO
         )
         , bt_prox_op AS 
         ( SELECT 
@@ -97,9 +95,6 @@ def query(
             ON bt.ORDEM_PRODUCAO = bmo.ORDEM_PRODUCAO
            AND bt.SEQ_OPERACAO > bmo.MAX_SEQ_OPERACAO
           GROUP BY 
-            bmo.ORDEM_PRODUCAO
-          , bmo.MAX_SEQ_OPERACAO
-          ORDER BY 
             bmo.ORDEM_PRODUCAO
           , bmo.MAX_SEQ_OPERACAO
         )
@@ -119,6 +114,8 @@ def query(
           ON t.ORDEM_PRODUCAO = bt.ORDEM_PRODUCAO
         WHERE 1=1
           {filtra_estagio} -- filtra_estagio
+        ORDER BY 
+          bt.ORDEM_PRODUCAO
     ''')
 
     dict_tipo_tecido = {
