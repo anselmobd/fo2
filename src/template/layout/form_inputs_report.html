@@ -1,3 +1,8 @@
+{% if lines_before %}
+  {% for line in lines_before %}
+    <h{{h}}>{{line}}</h{{h}}>
+  {% endfor %}
+{% endif %}
 {% for input in form %}
   {% if input.field.widget.input_type != 'hidden' %}
     {% if excludes %}
