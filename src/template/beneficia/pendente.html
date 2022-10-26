@@ -1,0 +1,29 @@
+{% extends 'beneficia/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'beneficia:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'beneficia:producao' %}" method="post" name="myForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
+  </form>
+  <p>Filtro por data:<br>
+    - considera que o dia inicia 06h00 e termina 05h59 dia seguinte;<br>
+    - filtra data e hora de finalização do último estágio registrado.
+  </p>
+  {% if request.POST %}
+    {% include "layout/form_inputs_report.html" with form=form h=4 excludes=form_report_excludes lines=form_report_lines only %}
+    {% if erro %}
+      <h4>Erro: {{ erro }}</h4>
+    {% endif %}
+    {% include "layout/table_generic.html" with dados=producao only %}
+  {% endif %}
+{% endblock %}
