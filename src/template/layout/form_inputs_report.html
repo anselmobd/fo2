@@ -9,8 +9,8 @@
     {% endif %}
   {% endif %}
 {% endfor %}
-{% if lines %}
-  {% for line in lines %}
+{% if lines_after %}
+  {% for line in lines_after %}
     <h{{h}}>{{line}}</h{{h}}>
   {% endfor %}
 {% endif %}
