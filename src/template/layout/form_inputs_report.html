@@ -2,10 +2,10 @@
   {% if input.field.widget.input_type != 'hidden' %}
     {% if excludes %}
       {% if input.name not in excludes %}
-        {% include "layout/form_inputs_report_value.html" %}
+        {% include "layout/form_inputs_report_value.html" with input=input h=h only%}
       {% endif %}
     {% else %}
-      {% include "layout/form_inputs_report_value.html" %}
+      {% include "layout/form_inputs_report_value.html" with input=input h=h only%}
     {% endif %}
   {% endif %}
 {% endfor %}
