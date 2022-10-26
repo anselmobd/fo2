@@ -107,12 +107,15 @@ def query(
         , t.PANO_SBG_GRUPO REF
         , t.PANO_SBG_ITEM COR
         FROM bt_prox_op bpo
+        JOIN pcpb_010 ob
+          ON ob.ORDEM_PRODUCAO = bpo.ORDEM_PRODUCAO
         JOIN pcpb_040 bt
           ON bt.ORDEM_PRODUCAO = bpo.ORDEM_PRODUCAO
          AND bt.SEQ_OPERACAO = bpo.PROX_SEQ_OPERACAO
         JOIN PCPB_020 t
           ON t.ORDEM_PRODUCAO = bt.ORDEM_PRODUCAO
         WHERE 1=1
+          AND ob.COD_CANCELAMENTO = 0
           {filtra_estagio} -- filtra_estagio
         ORDER BY 
           bt.ORDEM_PRODUCAO
