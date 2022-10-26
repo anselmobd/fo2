@@ -25,7 +25,7 @@ class Pendente(O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def form_report(self):
-        form_report_lines_before = []
+        form_lines_before = []
         
         filtro = min_max_string(
             self.data_de,
@@ -37,11 +37,11 @@ class Pendente(O2BaseGetPostView):
             mm='de_ate',
         )
         if filtro:
-            form_report_lines_before.append(filtro)
+            form_lines_before.append(filtro)
 
         return {
-            'form_report_lines_before': form_report_lines_before,
-            'form_report_excludes': [
+            'form_lines_before': form_lines_before,
+            'form_excludes': [
                 'data_de',
                 'data_ate',
             ],
