@@ -14,6 +14,24 @@ __atividade = {
     3: "(Des)Endereçando palete",  # não utilizado em movimentos de lotes
 }
 
+__apex_tela = {
+    '49': "duom_fa01",
+    '50': "duom_fa02",
+    '51': "duom_fa03",
+    '52': "duom_fa04",
+    '53': "duom_fa05",
+    '54': "duom_fa06",
+    '55': "duom_fa07",
+    '56': "duom_fa08",
+    '57': "duom_fa09",
+    '58': "duom_fa10",
+    '59': "duom_fa11",
+    '60': "duom_fa12",
+    '61': "duom_fa13",
+    '62': "duom_fa14",
+    '63': "duom_fa15",
+}
+
 
 def query(cursor, lote):
 
@@ -73,6 +91,11 @@ def query(cursor, lote):
                 row['usuario'].startswith('SYSTEXTIL/APEX:APP ')
             ):
                 row['sistema'] = 'APEX'
+                try:
+                    pagina = row['usuario'].split()[1].split(':')[1]
+                    row['tela'] = __apex_tela[pagina]
+                except Exception:
+                    pass
             elif row['usuario_systextil']:
                 row['login'] = row['usuario_systextil']
         else:
