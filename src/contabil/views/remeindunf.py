@@ -95,7 +95,7 @@ class RemessaIndustrNF(View):
                     row['NF|LINK'] = reverse(
                         'contabil:remeindunf__get', args=[row['NF'], 'I'])
                     row['NF|TARGET'] = '_BLANK'
-                    if row['SITUACAO'] == 1:
+                    if row['SITUACAO'] in (1, 4):
                         if row['NF_DEVOLUCAO'] is None:
                             row['ATIVA'] = 'Ativa'
                         else:
