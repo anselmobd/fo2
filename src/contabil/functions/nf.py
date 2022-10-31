@@ -17,13 +17,10 @@ def nf_situacao_descr(situacao, status):
         6: 'INCOMPLETA',  # porém foi calculada a duplicata
     }
 
-    try:
-        descr = situacao_descr[situacao]
-    except KeyError:
-        descr = 'desconhecido'
+    descr = situacao_descr.get(situacao, "DESCONHECIDO")
     if isinstance(descr, dict):
         try:
-            descr = situacao_descr[situacao][status]
+            descr = descr[status]
         except KeyError:
-            descr = situacao_descr[situacao][None]
-    return descr.capitalize()
+            descr = descr[None]
+    return descr
