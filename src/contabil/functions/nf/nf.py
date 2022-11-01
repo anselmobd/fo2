@@ -6,16 +6,17 @@ __author__ = 'Oxigenai'
 
 
 _SITUACAO_DESCR = {
-    0: "CALCULADA",
-    1: {
-        100: "ATIVA",  # EMITIDA
-        None: "REJEITADA",
+    0: "Calculada",
+    9: {
+        101: "Ativa",  # emitida
+        None: "Rejeitada",
     },
-    2: "CANCELADA",
-    3: "VERIFICAR",
-    4: "CONFIRMADA",
-    5: "INCOMPLETA",
-    6: "INCOMPLETA",  # porém foi calculada a duplicata
+    2: "Cancelada",
+    3: "Verificar",
+    4: "Confirmada",
+    5: "Incompleta",
+    6: "Incompleta",  # porém foi calculada a duplicata
+    None: "Desconhecida"
 }
 
 
