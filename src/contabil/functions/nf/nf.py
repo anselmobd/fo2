@@ -10,8 +10,8 @@ __author__ = 'Oxigenai'
 
 _SITUACAO_DESCR = {
     0: "Calculada",
-    9: {
-        101: "Ativa",  # emitida
+    1: {
+        100: "Ativa",  # emitida
         None: "Rejeitada",
     },
     2: "Cancelada",
