@@ -1,5 +1,8 @@
 from pprint import pprint
 
+from utils.functions.dict import dict_get_none
+
+
 __all__ = ['nf_situacao_descr']
 __version__ = '0.1 220131.1443'
 __author__ = 'Oxigenai'
@@ -21,11 +24,7 @@ _SITUACAO_DESCR = {
 
 
 def nf_situacao_descr(situacao, status):
-
-    descr = _SITUACAO_DESCR.get(situacao, "DESCONHECIDO")
+    descr = dict_get_none(_SITUACAO_DESCR, situacao)
     if isinstance(descr, dict):
-        try:
-            descr = descr[status]
-        except KeyError:
-            descr = descr[None]
+        descr = dict_get_none(descr, status)
     return descr
