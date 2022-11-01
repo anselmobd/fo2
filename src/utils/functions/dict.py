@@ -36,3 +36,11 @@ def dict_firsts(adict, firsts):
         return adict
     else:
         return dict(adict)
+
+
+def dict_get_none(dic, key):
+    try:
+        value = dic[key]
+    except KeyError:
+        value = dic.get(None)
+    return value
