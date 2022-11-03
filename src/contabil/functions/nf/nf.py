@@ -8,7 +8,7 @@ __version__ = '0.1 220131.1443'
 __author__ = 'Oxigenai'
 
 
-_SITUACAO_DESCR = {
+SITUACAO_DESCR = {
     0: "Calculada",
     1: {
         100: "Ativa",  # emitida
@@ -24,7 +24,7 @@ _SITUACAO_DESCR = {
 
 
 def nf_situacao_descr(situacao, status):
-    descr = dict_get_none(_SITUACAO_DESCR, situacao)
+    descr = dict_get_none(SITUACAO_DESCR, situacao)
     if isinstance(descr, dict):
         descr = dict_get_none(descr, status)
     return descr
