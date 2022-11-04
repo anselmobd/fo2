@@ -2,6 +2,7 @@ import re
 
 from django.shortcuts import render
 from django.views import View
+from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
@@ -58,12 +59,15 @@ class DtCorteAlter(View):
                 else:
                     if row['DATA_CORTE'] is None:
                         row['DATA_CORTE'] = 'Não definida'
+                op_link = reverse(
+                    'producao:op__get', args=['99999']
+                ).replace("99999", r"\1")
                 row['OPS'] = re.sub(
-                    r'([1234567890]+)',
-                    r'<a href="/lotes/op/\1">\1&nbsp;<span '
+                    r'([^, ]+)',
+                    fr'<a href="{op_link}">\1<span '
                     'class="glyphicon glyphicon-link" '
                     'aria-hidden="true"></span></a>',
-                    row['OPS'])
+                    str(row['OPS']))
 
             data_tot = [total[key] for key in sorted(total)]
             context.update({
