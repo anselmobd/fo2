@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.shortcuts import render
 from django.views import View
+from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
@@ -65,7 +66,7 @@ class OpPendente(View):
                 })
             link = ('OP')
             for row in data:
-                row['LINK'] = '/lotes/op/{}'.format(row['OP'])
+                row['LINK'] = reverse('producao:op__get', args=[row['OP']])
                 row['DATA_INI'] = row['DATA_INI'].date()
                 row['DATA_FIM'] = row['DATA_FIM'].date()
                 if row['DT_CORTE'] is None:
