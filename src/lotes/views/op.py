@@ -201,7 +201,7 @@ class OpConserto(View):
             return context
 
         for row in data:
-            row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+            row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
 
         context.update({
@@ -239,7 +239,7 @@ class OpPerda(View):
             return context
 
         for row in data:
-            row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+            row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             row['PERC'] = row['QTD'] / row['QTDOP'] * 100
             row['PERC|DECIMALS'] = 2
@@ -321,7 +321,7 @@ class ListaLotes(View):
         for row in data:
             row['N'] = '{}/{}'.format(i, len(data))
             i += 1
-            row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+            row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
         context.update({
             'headers': ('OP', 'Rerefência', 'Tamanho', 'Cor', 'Período', 'OC',
