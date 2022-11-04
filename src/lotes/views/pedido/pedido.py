@@ -143,15 +143,15 @@ class Pedido(View):
         for row in o_data:
             if row['QTD_ROLOS_ALOC'] != 0:
                 ops_tecidos.append(row['ORDEM_PRODUCAO'])
-            row['ORDEM_PRODUCAO|LINK'] = '/lotes/op/{}'.format(
-                row['ORDEM_PRODUCAO'])
+            row['ORDEM_PRODUCAO|LINK'] = reverse(
+                'producao:op__get', args=[row['ORDEM_PRODUCAO']])
             row['REFERENCIA_PECA|LINK'] = reverse(
                 'produto:ref__get', args=[row['REFERENCIA_PECA']])
             if row['ORDEM_PRINCIPAL'] == 0:
                 row['ORDEM_PRINCIPAL'] == ''
             else:
-                row['ORDEM_PRINCIPAL|LINK'] = '/lotes/op/{}'.format(
-                    row['ORDEM_PRINCIPAL'])
+                row['ORDEM_PRINCIPAL|LINK'] = reverse(
+                    'producao:op__get', args=[row['ORDEM_PRINCIPAL']])
             row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
             if row['DT_CORTE'] is None:
                 row['DT_CORTE'] = '-'
