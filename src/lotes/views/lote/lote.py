@@ -18,7 +18,7 @@ from lotes.forms import LoteForm
 from lotes.queries.lote import get_lotes
 
 
-class Posicao(View):
+class Lote(View):
     Form_class = LoteForm
     template_name = 'lotes/posicao.html'
     title_name = 'Lote/OC'

@@ -1,2 +1,2 @@
 from .conserto_lote import *
-from .lote import Posicao
+from .lote import Lote
