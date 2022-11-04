@@ -1,12 +1,7 @@
 {% with field|add:'|LINK' as field_link %}{% spaceless %}
   {% if row|get_item:field_link %}
     <a href="{{ row|get_item:field_link }}"
-    {% with field|add:'|TARGET' as field_target %}
-      {% if row|get_item:field_target %}
-        target="{{ row|get_item:field_target }}"
-      {% endif %}
-    {% endwith %}
-    >
+    {% include "layout/field_target.html" with row=row field=field only %}>
     {% if row|get_item:field %}
       {% include "layout/field_decimals.html" with row=row field=field count=count decimals=decimals safe=safe only %}
     {% endif %}

@@ -1,0 +1,7 @@
+{% spaceless %}
+  {% with field|add:'|TARGET' as field_target %}
+    {% if row|get_item:field_target %}
+      target="{{ row|get_item:field_target }}"
+    {% endif %}
+  {% endwith %}
+{% endspaceless %}
