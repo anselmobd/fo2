@@ -70,7 +70,7 @@ urlpatterns = [
 
     re_path(r'^logistica/', include('logistica.urls')),
 
-    re_path(r'^lotes/', include('lotes.urls')),
+    re_path(r'^producao/', include('lotes.urls')),
 
     re_path(r'^manutencao/', include('manutencao.urls')),
 
