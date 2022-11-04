@@ -1,4 +1,6 @@
-{% with field|add:'|LINK' as field_link %}{% spaceless %}
+{% spaceless %}
+{% with field|add:'|LINK' as field_link %}
+{% with field|add:'|A' as field_a %}
   {% if row|get_item:field_link %}
     <a href="{{ row|get_item:field_link }}"
     {% include "layout/field_target.html" with row=row field=field only %}>
@@ -6,7 +8,15 @@
       {% include "layout/field_decimals.html" with row=row field=field count=count decimals=decimals safe=safe only %}
     {% endif %}
     {% include "layout/field_glyphicon.html" with row=row field=field only %}</a>
+  {% elif row|get_item:field_a %}
+    <a href="{{ row|get_item:field_a }}"
+    {% include "layout/field_target.html" with row=row field=field only %}>
+    {% if row|get_item:field %}
+      {% include "layout/field_decimals.html" with row=row field=field count=count decimals=decimals safe=safe only %}
+    {% endif %}
   {% else %}
     {% include "layout/field_decimals.html" with row=row field=field count=count decimals=decimals safe=safe only %}
   {% endif %}
-{% endspaceless %}{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endspaceless %}
