@@ -98,7 +98,7 @@ class BuscaOP(View):
             row['QTD_END'] = qtd_end
             row['QTD_NEND'] = row['QTD'] - qtd_end
 
-            row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+            row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
             if row['OP_REL'] == '0':
                 row['OP_REL'] = '-'
             else:
