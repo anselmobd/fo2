@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.urls import reverse
+
 
 class CaixasDeLotes:
 
@@ -78,7 +80,8 @@ class CaixasDeLotes:
                             'qtd_caixa': sum(
                                 item['qtd'] for item in caixa['lotes']),
                             'lote': lote_num,
-                            'lote|LINK': '/lotes/posicao/{}'.format(lote_num),
+                            'lote|LINK': reverse(
+                                'producao:posicao__get', args=[lote_num]),
                             'qtd': lote['qtd'],
                             'peso': ' ',
                         }
