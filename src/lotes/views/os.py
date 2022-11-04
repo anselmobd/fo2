@@ -51,7 +51,7 @@ class Os(View):
             o_data = lotes.queries.os.os_op(cursor, os)
             if len(o_data) != 0:
                 for row in o_data:
-                    row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+                    row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
                     if row['PED_CLIENTE'] is None:
                         row['PED_CLIENTE'] = '-'
                     if row['PEDIDO'] == 0:
@@ -132,7 +132,7 @@ class Os(View):
             l_link = ('LOTE')
             for row in l_data:
                 row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
-                row['LINK'] = '/lotes/posicao/{}'.format(row['LOTE'])
+                row['LINK'] = reverse('producao:posicao__get', args=[row['LOTE']])
             context.update({
                 'l_headers': ('OP', 'Referência', 'Cor', 'Tamanho',
                               'Estágio', 'Período', 'OC', 'Quant.', 'Lote'),
