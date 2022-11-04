@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
 
-from lotes.views.lote.conserto_lote import dict_conserto_lote
+from lotes.views.lote import dict_conserto_lote
 
 import cd.forms
 import cd.views.gerais

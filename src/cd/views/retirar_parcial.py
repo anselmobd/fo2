@@ -7,7 +7,7 @@ from django.views import View
 
 import lotes.models
 import lotes.queries
-from lotes.views.lote.conserto_lote import dict_conserto_lote
+from lotes.views.lote import dict_conserto_lote
 
 import cd.forms
 import cd.views.gerais

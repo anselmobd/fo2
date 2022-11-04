@@ -17,6 +17,8 @@ import lotes.queries.lote
 from lotes.forms import LoteForm
 from lotes.queries.lote import get_lotes
 
+__all__ = ['Lote']
+
 
 class Lote(View):
     Form_class = LoteForm

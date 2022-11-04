@@ -9,6 +9,13 @@ from base.models import Colaborador
 from geral.functions import request_user
 from systextil.models import Usuario
 
+__all__ = [
+    'ajax_conserto_lote',
+    'dict_conserto_lote',
+    'dict_conserto_lote_custom',
+]
+
+
 
 def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
     cursor = db_cursor_so(request)
