@@ -81,7 +81,7 @@ class CaixasDeLotes:
                                 item['qtd'] for item in caixa['lotes']),
                             'lote': lote_num,
                             'lote|LINK': reverse(
-                                'producao:posicao__get', args=[lote_num]),
+                                'producao:lote__get', args=[lote_num]),
                             'qtd': lote['qtd'],
                             'peso': ' ',
                         }

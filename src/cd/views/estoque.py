@@ -305,7 +305,7 @@ class Estoque(View):
             row['op|LINK'] = reverse(
                 'producao:op__get', args=[row['op']])
             row['lote|LINK'] = reverse(
-                'producao:posicao__get', args=[row['lote']])
+                'producao:lote__get', args=[row['lote']])
             row['local|LINK'] = reverse(
                 'cd:estoque_filtro', args=['E', row['local']])
             if row['estagio'] == 999:

@@ -82,7 +82,7 @@ class Solicitacao(O2BaseGetView):
             row['ordem_producao|TARGET'] = '_blank'
 
             row['lote|LINK'] = reverse(
-                'producao:posicao__get',
+                'producao:lote__get',
                 args=[row['lote']],
             )
             row['lote|GLYPHICON'] = '_'
@@ -181,7 +181,7 @@ class Solicitacao(O2BaseGetView):
             row['ordem_producao|TARGET'] = '_blank'
 
             row['lote|LINK'] = reverse(
-                'producao:posicao__get',
+                'producao:lote__get',
                 args=[row['lote']],
             )
             row['lote|GLYPHICON'] = '_'

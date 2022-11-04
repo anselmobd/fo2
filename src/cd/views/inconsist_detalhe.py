@@ -47,7 +47,7 @@ class InconsistenciasDetalhe(View):
                 row['qtd'] = '-'
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             row['lote|LINK'] = reverse(
-                'producao:posicao__get', args=[row['lote']])
+                'producao:lote__get', args=[row['lote']])
         context.update({
             'headers': headers,
             'fields': fields,
@@ -61,7 +61,7 @@ class InconsistenciasDetalhe(View):
                 row['qtd'] = '-'
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             row['lote|LINK'] = reverse(
-                'producao:posicao__get', args=[row['lote']])
+                'producao:lote__get', args=[row['lote']])
         context.update({
             'headers63': headers,
             'fields63': fields,

@@ -69,7 +69,7 @@ def lotes_em_caixa(view_obj, cursor, op):
     tam_ant = '!!!!'
     for lote in data:
         lote['lote'] = f"{lote['periodo']}{lote['oc']:05}"
-        lote['lote|LINK'] = reverse('producao:posicao__get', args=[lote['lote']])
+        lote['lote|LINK'] = reverse('producao:lote__get', args=[lote['lote']])
         lote['peso'] = " "
         
         if lote['cor'] != cor_ant or lote['tam'] != tam_ant:

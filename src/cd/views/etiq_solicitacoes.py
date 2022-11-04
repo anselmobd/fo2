@@ -134,7 +134,7 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
             row['n'] = n + 1
             row['numero'] = numero
             row['lote__lote|LINK'] = reverse(
-                'producao:posicao__get',
+                'producao:lote__get',
                 args=[row['lote__lote']])
             row['lote__lote|TARGET'] = '_BLANK'
 

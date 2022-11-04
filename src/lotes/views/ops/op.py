@@ -44,7 +44,7 @@ class Op(View):
 
             for row in data:
                 row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
-                row['LOTE|LINK'] = reverse('producao:posicao__get', args=[row['LOTE']])
+                row['LOTE|LINK'] = reverse('producao:lote__get', args=[row['LOTE']])
             context.update({
                 'headers': ('Estágio', 'OS', 'Referência', 'Cor', 'Tamanho',
                             'Período', 'OC', 'Quant.', 'Lote/OC'),

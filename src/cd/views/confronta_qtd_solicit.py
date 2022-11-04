@@ -43,7 +43,7 @@ class ConfrontaQtdSolicit(O2BaseGetView):
 
         for row in data.object_list:
             row['lote|LINK'] = reverse(
-                'producao:posicao__get', args=[row['lote']])
+                'producao:lote__get', args=[row['lote']])
 
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({

@@ -132,7 +132,7 @@ class Os(View):
             l_link = ('LOTE')
             for row in l_data:
                 row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
-                row['LINK'] = reverse('producao:posicao__get', args=[row['LOTE']])
+                row['LINK'] = reverse('producao:lote__get', args=[row['LOTE']])
             context.update({
                 'l_headers': ('OP', 'Referência', 'Cor', 'Tamanho',
                               'Estágio', 'Período', 'OC', 'Quant.', 'Lote'),

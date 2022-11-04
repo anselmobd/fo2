@@ -178,9 +178,9 @@ urlpatterns = [
     re_path(r'^perda/$',
         views.OpPerda.as_view(), name='perda'),
 
-    re_path(r'^posicao/$', lote.Lote.as_view(), name='posicao'),
-    re_path(r'^posicao/(?P<lote>\d+)/$', lote.Lote.as_view(),
-        name='posicao__get'),
+    re_path(r'^lote/$', lote.Lote.as_view(), name='lote'),
+    re_path(r'^lote/(?P<lote>\d+)/$', lote.Lote.as_view(),
+        name='lote__get'),
 
     re_path(r'^por_celula/$',
         por_celula.PorCelula.as_view(), name='por_celula'),

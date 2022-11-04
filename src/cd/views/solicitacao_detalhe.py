@@ -84,7 +84,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 args=[solicitacao.id, 'd', row['id']])
             row['delete|GLYPHICON'] = 'glyphicon-remove'
             row['lote__lote|LINK'] = reverse(
-                'producao:posicao__get',
+                'producao:lote__get',
                 args=[row['lote__lote']])
             row['lote__lote|TARGET'] = '_BLANK'
             self.link_endereco(row)
@@ -122,7 +122,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
 
         for row in solicit_qtds_inat:
             row['lote__lote|LINK'] = reverse(
-                'producao:posicao__get',
+                'producao:lote__get',
                 args=[row['lote__lote']])
             row['lote__lote|TARGET'] = '_BLANK'
 
@@ -158,7 +158,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             if row['qtdsum'] > row['lote__qtd']:
                 row['inteira_parcial'] += "*"
             row['lote__lote|LINK'] = reverse(
-                'producao:posicao__get',
+                'producao:lote__get',
                 args=[row['lote__lote']])
             row['lote__lote|TARGET'] = '_BLANK'
             self.link_endereco(row)
@@ -194,7 +194,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             else:
                 row['inteira_parcial'] = 'Parcial'
             row['lote__lote|LINK'] = reverse(
-                'producao:posicao__get',
+                'producao:lote__get',
                 args=[row['lote__lote']])
             row['lote__lote|TARGET'] = '_BLANK'
             if row['lote__estagio'] == 999:
