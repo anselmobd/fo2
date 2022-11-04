@@ -44,7 +44,7 @@ class Op(View):
 
             for row in data:
                 row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
-                row['LOTE|LINK'] = '/lotes/posicao/{}'.format(row['LOTE'])
+                row['LOTE|LINK'] = reverse('producao:posicao__get', args=[row['LOTE']])
             context.update({
                 'headers': ('Estágio', 'OS', 'Referência', 'Cor', 'Tamanho',
                             'Período', 'OC', 'Quant.', 'Lote/OC'),
@@ -162,7 +162,7 @@ class Op(View):
             p.prt('op_relacionamentos')
 
             for row in r_data:
-                row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
+                row['OP_REL|LINK'] = reverse('producao:op__get', args=[row['OP_REL']])
                 if row['CANC'] == 0:
                     row['CANC'] = 'Ativa'
                 else:
@@ -313,7 +313,7 @@ class Op(View):
 
             if len(os_data) != 0:
                 for row in os_data:
-                    row['OS|LINK'] = '/lotes/os/{}'.format(row['OS'])
+                    row['OS|LINK'] = reverse('producao:os__get', args=[row['OS']])
                     cnpj = '{:08d}/{:04d}-{:02d}'.format(
                         row['CNPJ9'],
                         row['CNPJ4'],
@@ -338,7 +338,7 @@ class Op(View):
 
                 for row in o_data:
                     if row['OS']:
-                        row['OS|LINK'] = '/lotes/os/{}'.format(row['OS'])
+                        row['OS|LINK'] = reverse('producao:os__get', args=[row['OS']])
                 context.update({
                     'o_headers': ('OS', 'Referência', 'Tamanho', 'Cor',
                                 'Qtd. Lotes', 'Quant. Itens'),
