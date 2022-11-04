@@ -35,9 +35,12 @@
   var link_change  = link.replace('{conteudo}', glyph_change);
 
   function ChangeFunction(id) {
+    var link_id = '{% url 'producao:altera_direito_estagio' 99999 %}';
+    link_id = link_id.replace('99999', id);
+
     $.ajax({
       type: 'GET',
-      url: '/lotes/ajax/altera_direito_estagio/'+id+'/',
+      url: link_id,
       data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
       success : function(data) {
         if (data) {

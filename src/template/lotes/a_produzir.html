@@ -161,9 +161,13 @@
 
               if (class_split[0] == 'total_op') {
                 total_passos += 1;
+
+                var link_op_prod_mod = '{% url 'producao:op_producao_modelo' 99999 %}';
+                link_op_prod_mod = link_op_prod_mod.replace('99999', class_split[1]);
+
                 $.ajax({
                   type: 'GET',
-                  url: '/lotes/ajax/op_producao_modelo/'+class_split[1]+'/',
+                  url: link_op_prod_mod,
                   data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
                   success : function(data) {
                     count_passos += 1;
@@ -189,9 +193,13 @@
 
               if (class_split[0] == 'total_est') {
                 total_passos += 1;
+
+                var link_stq_dep_mod = '{% url 'producao:estoque_depositos_modelo' 99999 %}';
+                link_stq_dep_mod = link_stq_dep_mod.replace('99999', class_split[1]);
+
                 $.ajax({
                   type: 'GET',
-                  url: '/lotes/ajax/estoque_depositos_modelo/'+class_split[1]+'/',
+                  url: link_stq_dep_mod,
                   data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
                   success : function(data) {
                     count_passos += 1;
@@ -217,9 +225,13 @@
 
               if (class_split[0] == 'total_ped') {
                 total_passos += 1;
+
+                var link_ped_lead_mod = '{% url 'producao:pedido_lead_modelo' 99999 %}';
+                link_ped_lead_mod = link_ped_lead_mod.replace('99999', class_split[1]);
+
                 $.ajax({
                   type: 'GET',
-                  url: '/lotes/ajax/pedido_lead_modelo/'+class_split[1]+'/',
+                  url: link_ped_lead_mod,
                   data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
                   success : function(data) {
                     count_passos += 1;

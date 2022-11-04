@@ -133,9 +133,12 @@
           count_passos += 1;
           console.log('proximo_modelo', modelo);
   
+          var link_modelo = '{% url 'producao:ajax_produzir_modelo_grade' '99999' %}';
+          link_modelo = link_modelo.replace('99999', modelo);
+
           $.ajax({
             type: 'GET',
-            url: '/lotes/ajax/produzir_modelo_grade/'+modelo+'/',
+            url: link_modelo,
             data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
             success : function(data) {
               moveBar(count_passos, total_passos);
