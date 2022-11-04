@@ -350,19 +350,23 @@ class Necessidade(View):
 
         for row in data:
             row['REF|A'] = reverse('insumo:ref__get', args=[row['REF']])
+
+            op_link = reverse(
+                'producao:op__get', args=['99999']
+            ).replace("99999", r"\1")
             row['OPS'] = re.sub(
-                r'([1234567890]+)',
-                r'<a href="/lotes/op/\1">\1&nbsp;<span '
-                'class="glyphicon glyphicon-link" '
-                'aria-hidden="true"></span></a>',
+                r'([^, ]+)',
+                fr'<a href="{op_link}">\1</a>',
                 str(row['OPS']))
+
+            ref_link = reverse(
+                'produto:ref__get', args=['99999']
+            ).replace("99999", r"\1")
             row['REFS'] = re.sub(
                 r'([^, ]+)',
-                r'<a href="{produto_ref}\1">\1&nbsp;<span '
-                'class="glyphicon glyphicon-link" '
-                'aria-hidden="true"></span></a>'.format(
-                    produto_ref=reverse('produto:ref')),
+                fr'<a href="{ref_link}">\1</a>',
                 str(row['REFS']))
+
         context.update({
             'headers': ('Nível', 'Insumo', 'Descrição',
                         'Cor', 'Tamanho',
