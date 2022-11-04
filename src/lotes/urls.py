@@ -2,6 +2,7 @@ from django.urls import re_path
 
 from . import views
 from lotes.views import (
+    lote,
     por_celula,
     prepara_pedido_corte,
     prepara_pedido_compra_matriz,
@@ -177,8 +178,8 @@ urlpatterns = [
     re_path(r'^perda/$',
         views.OpPerda.as_view(), name='perda'),
 
-    re_path(r'^posicao/$', views.Posicao.as_view(), name='posicao'),
-    re_path(r'^posicao/(?P<lote>\d+)/$', views.Posicao.as_view(),
+    re_path(r'^posicao/$', lote.Posicao.as_view(), name='posicao'),
+    re_path(r'^posicao/(?P<lote>\d+)/$', lote.Posicao.as_view(),
         name='posicao__get'),
 
     re_path(r'^por_celula/$',
