@@ -49,7 +49,7 @@ class Posicao(View):
         if len(op_data) != 0:
             link = ('OP')
             for row in op_data:
-                row['LINK'] = '/lotes/op/{}'.format(row['OP'])
+                row['LINK'] = reverse('producao:op__get', args=[row['OP']])
             context.update({
                 'o_headers': ('OP', 'Situação', 'Programa',
                               'Data digitação', 'Data de corte'),
@@ -71,7 +71,7 @@ class Posicao(View):
         if len(os_data) != 0:
             os_link = ('OS')
             for row in os_data:
-                row['LINK'] = '/lotes/os/{}'.format(row['OS'])
+                row['LINK'] = reverse('producao:os__get', args=[row['OS']])
                 cnpj = '{:08d}/{:04d}-{:02d}'.format(
                     row['CNPJ9'],
                     row['CNPJ4'],
