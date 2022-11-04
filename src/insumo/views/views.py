@@ -349,7 +349,7 @@ class Necessidade(View):
             return context
 
         for row in data:
-            row['REF|LINK'] = reverse('insumo:ref__get', args=[row['REF']])
+            row['REF|A'] = reverse('insumo:ref__get', args=[row['REF']])
             row['OPS'] = re.sub(
                 r'([1234567890]+)',
                 r'<a href="/lotes/op/\1">\1&nbsp;<span '
