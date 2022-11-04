@@ -11,7 +11,7 @@
 
 {% block content %}
 <div class="noprint">
-<form action="/lotes/op_caixa/" method="post">
+<form action="{% url 'producao:op_caixa' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>

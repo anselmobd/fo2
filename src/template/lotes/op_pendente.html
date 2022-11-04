@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="/lotes/op_pendente/" method="post">
+<form action="{% url 'producao:op_pendente' %}" method="post">
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
     {% csrf_token %}
