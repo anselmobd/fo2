@@ -23,3 +23,11 @@ def count_at_end(str, test):
 
 def empty(alist):
     return not alist
+
+
+def lists(*lists):
+    """Concatenate n lists"""
+    result = []
+    for list1 in lists:
+        result.append(list1)
+    return result
