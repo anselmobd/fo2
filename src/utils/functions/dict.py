@@ -39,8 +39,15 @@ def dict_firsts(adict, firsts):
 
 
 def dict_get_none(dic, key):
+    tpl = "{v}"
+    default = dic.get(None)
+    if isinstance(default, dict):
+        tpl = default.get('tpl', tpl)
+        default = default.get(None)
+
     try:
         value = dic[key]
     except KeyError:
-        value = dic.get(None)
-    return value
+        value = default
+
+    return tpl.format(k=key, v=value)
