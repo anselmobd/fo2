@@ -3,6 +3,7 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
+from utils.functions.dict import dict_get_none
 
 
 def busca_ot(cursor, ot=None):
@@ -47,13 +48,17 @@ def busca_ot(cursor, ot=None):
     }
 
     situacao = {
-        '0': '0-Digitada',
-        '1': '1-Impressa',
-        '2': '2-A produzir',
-        '3': '3-Em producao',
-        '4': '4-Produzida',
-        '5': '5-Ordem alterada na producao',
-        '': '-',
+        None: {
+            None: 'Desconhecida',
+            'tpl': '{k}-{v}',
+        },
+        '0': 'Digitada',
+        '1': 'Impressa',
+        '2': 'A produzir',
+        '3': 'Em producao',
+        '4': 'Produzida',
+        '5': 'Ordem alterada na producao',
+        '': '',
     }
 
     situacao_receita = {
@@ -71,7 +76,7 @@ def busca_ot(cursor, ot=None):
     for row in dados:
         row['tipo'] = tipo_ordem[row['tipo_ordem']]
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
-        row['sit'] = situacao[row['situacao']]
+        row['sit'] = dict_get_none(situacao, row['situacao'])
         row['sit_receita'] = situacao_receita[row['situacao_receita']]
 
     return dados
