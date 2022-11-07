@@ -35,14 +35,18 @@ def busca_ot(cursor, ot=None):
     dados = dictlist_lower(cursor)
 
     tipo_ordem = {
-        '1': "1-Ordem tingimento",
-        '2': "2-Ordem lavação",
-        '3': "3-Ordem estamparia",
-        '4': "4-Ordem reprocesso",
-        '5': "5-Ordem retração",
-        '6': "6-Processo contínuo",
-        '7': "7-Ordem revestimento",
-        '': "-",
+        None: {
+            None: "Desconhecida",
+            'tpl': '{k}-{v}',
+        },
+        '1': "Ordem tingimento",
+        '2': "Ordem lavação",
+        '3': "Ordem estamparia",
+        '4': "Ordem reprocesso",
+        '5': "Ordem retração",
+        '6': "Processo contínuo",
+        '7': "Ordem revestimento",
+        '': '',
     }
 
     situacao = {
@@ -72,7 +76,7 @@ def busca_ot(cursor, ot=None):
     }
 
     for row in dados:
-        row['tipo'] = tipo_ordem[row['tipo_ordem']]
+        row['tipo'] = dict_get_none(tipo_ordem, row['tipo_ordem'])
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
         row['sit'] = dict_get_none(situacao, row['situacao'])
         row['sit_receita'] = situacao_receita[row['situacao_receita']]
