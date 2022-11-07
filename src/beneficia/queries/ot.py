@@ -8,11 +8,9 @@ from utils.functions.dict import dict_get_none
 
 def busca_ot(cursor, ot=None):
 
-    filtra_ot = ""
-    if ot is not None and ot != '':
-        filtra_ot = f"""--
-            AND t.ORDEM_AGRUPAMENTO = {ot}
-        """
+    filtra_ot = f"""--
+        AND t.ORDEM_AGRUPAMENTO = {ot}
+    """ if ot else ''
 
     sql = f'''
         SELECT 
@@ -37,40 +35,40 @@ def busca_ot(cursor, ot=None):
     dados = dictlist_lower(cursor)
 
     tipo_ordem = {
-        '1': '1-Ordem tingimento',
-        '2': '2-Ordem lavação',
-        '3': '3-Ordem estamparia',
-        '4': '4-Ordem reprocesso',
-        '5': '5-Ordem retração',
-        '6': '6-Processo contínuo',
-        '7': '7-Ordem revestimento',
-        '': '-',
+        '1': "1-Ordem tingimento",
+        '2': "2-Ordem lavação",
+        '3': "3-Ordem estamparia",
+        '4': "4-Ordem reprocesso",
+        '5': "5-Ordem retração",
+        '6': "6-Processo contínuo",
+        '7': "7-Ordem revestimento",
+        '': "-",
     }
 
     situacao = {
         None: {
-            None: 'Desconhecida',
+            None: "Desconhecida",
             'tpl': '{k}-{v}',
         },
-        '0': 'Digitada',
-        '1': 'Impressa',
-        '2': 'A produzir',
-        '3': 'Em producao',
-        '4': 'Produzida',
-        '5': 'Ordem alterada na producao',
-        '': '',
+        '0': "Digitada",
+        '1': "Impressa",
+        '2': "A produzir",
+        '3': "Em producao",
+        '4': "Produzida",
+        '5': "Ordem alterada na producao",
+        '': "-",
     }
 
     situacao_receita = {
-            '0': '0-A imprimir',
-            '1': '1-Impressa',
-            '2': '2-Revisada/confirmada',
-            '3': '3-Teste de desenvolvimento',
-            '4': '4-Estoque insuficiente',
-            '5': '5-Exportar - link outro software',
-            '6': '6-Exportado - link outro software',
-            '7': '7-Bloqueada manualmente',
-        '': '-',
+        '0': "0-A imprimir",
+        '1': "1-Impressa",
+        '2': "2-Revisada/confirmada",
+        '3': "3-Teste de desenvolvimento",
+        '4': "4-Estoque insuficiente",
+        '5': "5-Exportar - link outro software",
+        '6': "6-Exportado - link outro software",
+        '7': "7-Bloqueada manualmente",
+        '': "-",
     }
 
     for row in dados:
