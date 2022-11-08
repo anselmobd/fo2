@@ -16,9 +16,9 @@ from beneficia.forms.main import ObForm
 from beneficia.queries import (
     busca_ob,
     ob_destinos,
+    ob_estagios,
 )
 from beneficia.queries.ob import (
-    ob_estagios,
     ob_tecidos,
 )
 
@@ -78,7 +78,7 @@ class Ob(View):
             'dados': dados,
         })
 
-        est_dados = ob_estagios(self.cursor, self.context['ob'])
+        est_dados = ob_estagios.query(self.cursor, self.context['ob'])
         self.context.update({
             'est_headers': (
                 'Sequência',
