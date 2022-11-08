@@ -81,8 +81,10 @@ def busca_ot(cursor, ot=None):
 
     for row in dados:
         row['tipo'] = dict_get_none(tipo_ordem, row['tipo_ordem'])
-        # row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
-        row['maq'] = "{grup_maq} {sub_maq} {num_maq:05}".format(**row)
+        grup_maq = row['grup_maq']
+        sub_maq = row['sub_maq']
+        num_maq = row['num_maq']
+        row['maq'] = f"{grup_maq} {sub_maq} {num_maq:05}"
         row['sit'] = dict_get_none(situacao, row['situacao'])
         row['sit_receita'] = dict_get_none(
             situacao_receita, row['situacao_receita'])
