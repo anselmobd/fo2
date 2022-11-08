@@ -1,18 +1,16 @@
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
-from utils.functions.queries import debug_cursor_execute
+from utils.functions.queries import (
+    debug_cursor_execute,
+    sql_where_none_if,
+)
 
 from beneficia.queries import busca_ob
 
 
 def query(cursor, ob=None):
-
-    filtra_ob = ""
-    if ob is not None and ob != '':
-        filtra_ob = f"""--
-            AND b.ORDEM_PRODUCAO = {ob}
-        """
+    filtra_ob = sql_where_none_if("b.ORDEM_PRODUCAO", ob)
 
     sql = f'''
         SELECT 
@@ -21,6 +19,7 @@ def query(cursor, ob=None):
         , b.CODIGO_DEPOSITO DEP
         , b.QTDE_ROLOS_PROG ROLOS
         , b.QTDE_QUILOS_PROG QUILOS
+        , b.ORDEM_PRODUCAO OB
         FROM pcpb_030 b
         WHERE 1=1
           {filtra_ob} -- filtra_ob
