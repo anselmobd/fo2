@@ -1,12 +1,12 @@
-from datetime import (
-    date,
-    timedelta,
-)
+from datetime import timedelta
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import lm
+
+from beneficia.queries import ob_destinos
+
 
 __all__ = ['query']
 
@@ -127,6 +127,27 @@ def query(
     }
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
+
+    ob2s = set()
     for row in dados:
         row['tipo_tecido'] = dict_tipo_tecido.get(row['tipo_ref'], "Desconhecido")
+        ob2s.add(row['ob'])
+
+    if ob2s:
+        dest_ob2s = ob_destinos.query(cursor, ob=tuple(ob2s))
+
+        ob2_ops = {}
+        for row in dest_ob2s:
+            ob = row['ob']
+            op = row['op']
+            try:
+                ob2_ops[ob].add(op)
+            except KeyError:
+                ob2_ops[ob] = {op}
+
+        for row in dados:
+            ops = ob2_ops.get(row['ob'])
+            if ops:
+                row['op'] = ', '.join(tuple(ops))
+
     return dados
