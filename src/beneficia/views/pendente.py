@@ -24,47 +24,57 @@ class Pendente(O2BaseGetPostView):
         self.form_class_has_initial = True
         self.cleaned_data2self = True
 
-    def get_producao(self):
-        data = pendente_query(
-            self.cursor,
-            data_de=self.data_de,
-            data_ate=self.data_ate,
-            estagio=self.estagio.codigo_estagio if self.estagio else None,
-            tipo=2,
-        )
-        result = {
+    def get_pendente(self):
+        return {
             'titulo': 'OB2',
-            'data': data,
+            'data': pendente_query(
+                self.cursor,
+                data_de=self.data_de,
+                data_ate=self.data_ate,
+                estagio=(self.estagio.codigo_estagio 
+                    if self.estagio else None),
+                tipo=2,
+            ),
             'vazio': "Sem pendente",
         }
-        if data:
-            for row in data:
-                row['ob|TARGET'] = '_blank'
-                row['ob|LINK'] = reverse(
-                    'beneficia:ob__get',
-                    args=[row['ob']],
-                )
 
-            totalize_data(
-                data,
-                {
-                    'sum': ['quilos'],
-                    'descr': {'ob': 'Total:'},
-                    'row_style':
-                        "font-weight: bold;"
-                        "background-image: linear-gradient(#DDD, white);",
-                    'flags': ['NO_TOT_1'],
-                }
+    def mount_link(self, pendente):
+        for row in pendente['data']:
+            row['ob|TARGET'] = '_blank'
+            row['ob|LINK'] = reverse(
+                'beneficia:ob__get',
+                args=[row['ob']],
             )
-            TableDefsHpSD({
-                'ob': ["OB2"],
-                'tipo_tecido': ["Tipo tecido"],
-                'cor': ["Cor"],
-                'quilos': ["Quilos", 'r', 3],
-            }).hfs_dict(context=result)
-        return result
+
+    def mount_total(self, pendente):
+        totalize_data(
+            pendente['data'],
+            {
+                'sum': ['quilos'],
+                'descr': {'ob': 'Total:'},
+                'row_style':
+                    "font-weight: bold;"
+                    "background-image: linear-gradient(#DDD, white);",
+                'flags': ['NO_TOT_1'],
+            }
+        )
+
+    def mount_hfs(self, pendente):
+        TableDefsHpSD({
+            'ob': ["OB2"],
+            'tipo_tecido': ["Tipo tecido"],
+            'cor': ["Cor"],
+            'quilos': ["Quilos", 'r', 3],
+        }).hfs_dict(context=pendente)
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        self.context['pendente'] = self.get_producao()
+        pendente = self.get_pendente()
+
+        if pendente['data']:
+            self.mount_link(pendente)
+            self.mount_total(pendente)
+            self.mount_hfs(pendente)
+
+        self.context['pendente'] = pendente
