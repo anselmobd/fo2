@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 
 from django.urls import reverse
@@ -48,6 +49,18 @@ class Pendente(O2BaseGetPostView):
                 'beneficia:ob__get',
                 args=[row['ob']],
             )
+            if row.get('op'):
+                op_link = reverse(
+                    'producao:op__get', args=['99999']
+                ).replace("99999", r"\1")
+                row['op'] = re.sub(
+                    r'([^, ]+)',
+                    fr'<a href="{op_link}" target="_blank">\1<span '
+                    'class="glyphicon glyphicon-link" '
+                    'aria-hidden="true"></span></a>',
+                    str(row['op']))
+            else:
+                row['op'] = '-'
 
     def mount_total(self, pendente):
         totalize_data(
@@ -65,10 +78,14 @@ class Pendente(O2BaseGetPostView):
     def mount_hfs(self, pendente):
         TableDefsHpSD({
             'ob': ["OB2"],
+            'op': ["OP"],
             'tipo_tecido': ["Tipo tecido"],
             'cor': ["Cor"],
             'quilos': ["Quilos", 'r', 3],
         }).hfs_dict(context=pendente)
+        pendente.update({
+            'safe': ['op'],
+        })
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
