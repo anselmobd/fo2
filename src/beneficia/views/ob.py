@@ -17,8 +17,6 @@ from beneficia.queries import (
     busca_ob,
     ob_destinos,
     ob_estagios,
-)
-from beneficia.queries.ob import (
     ob_tecidos,
 )
 
@@ -101,7 +99,7 @@ class Ob(View):
             'est_dados': est_dados,
         })
 
-        tec_dados = ob_tecidos(self.cursor, self.context['ob'])
+        tec_dados = ob_tecidos.query(self.cursor, self.context['ob'])
         self.context.update({
             'tec_headers': [
                 'Nível',

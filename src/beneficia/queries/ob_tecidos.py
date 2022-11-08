@@ -5,7 +5,7 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def ob_tecidos(cursor, ob=None):
+def query(cursor, ob=None):
 
     filtra_ob = ""
     if ob is not None and ob != '':
