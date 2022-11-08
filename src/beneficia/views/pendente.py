@@ -25,16 +25,19 @@ class Pendente(O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def get_pendente(self):
+        return pendente_query(
+            self.cursor,
+            data_de=self.data_de,
+            data_ate=self.data_ate,
+            estagio=(self.estagio.codigo_estagio 
+                if self.estagio else None),
+            tipo=2,
+        )
+
+    def mount_titulo(self, data):
         return {
             'titulo': 'OB2',
-            'data': pendente_query(
-                self.cursor,
-                data_de=self.data_de,
-                data_ate=self.data_ate,
-                estagio=(self.estagio.codigo_estagio 
-                    if self.estagio else None),
-                tipo=2,
-            ),
+            'data': data,
             'vazio': "Sem pendente",
         }
 
@@ -70,9 +73,10 @@ class Pendente(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        pendente = self.get_pendente()
+        pendente_data = self.get_pendente()
+        pendente = self.mount_titulo(pendente_data)
 
-        if pendente['data']:
+        if pendente_data:
             self.mount_link(pendente)
             self.mount_total(pendente)
             self.mount_hfs(pendente)
