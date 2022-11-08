@@ -4,6 +4,8 @@ from pprint import pprint
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
+from beneficia.queries import busca_ob
+
 
 def ob_estagios(cursor, ob=None):
 
@@ -121,4 +123,21 @@ def ob_destinos(cursor, ob=None):
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
 
+    if dados:
+        ob1_list = tuple([
+            row['numero']
+            for row in dados
+            if row['numero'] != 0
+        ])
+        if ob1_list:
+            dados_ob1_list = busca_ob.query(cursor, ob=ob1_list)
+            dict_ob1 = {
+                row['ob']: row
+                for row in dados_ob1_list
+            }
+
+            for row in dados:
+                ob1_row = dict_ob1.get(row['numero'])
+                row['op'] = ob1_row['op']
+  
     return dados
