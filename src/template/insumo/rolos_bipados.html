@@ -1,5 +1,5 @@
 {% extends 'insumo/index.html' %}
-{% load staticfiles %}
+{% load static %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
 {% block header.content %}{{ titulo }} - <a href="{% url 'insumo:index' %}">{{ block.super }}</a>{% endblock header.content %}
