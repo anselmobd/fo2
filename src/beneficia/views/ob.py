@@ -13,9 +13,11 @@ from utils.functions.views import (
 )
 
 from beneficia.forms.main import ObForm
-from beneficia.queries import busca_ob
-from beneficia.queries.ob import (
+from beneficia.queries import (
+    busca_ob,
     ob_destinos,
+)
+from beneficia.queries.ob import (
     ob_estagios,
     ob_tecidos,
 )
@@ -173,7 +175,7 @@ class Ob(View):
                         args=[row['ot']],
                     )
 
-        dest_dados = ob_destinos(self.cursor, self.context['ob'])
+        dest_dados = ob_destinos.query(self.cursor, self.context['ob'])
 
         for row in dest_dados:
             if row['numero']:
