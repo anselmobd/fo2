@@ -181,6 +181,13 @@ class Ob(View):
                     'beneficia:ob__get',
                     args=[row['numero']],
                 )
+            if row.get('op'):
+                row['op|LINK'] = reverse(
+                    'producao:op__get',
+                    args=[row['op']],
+                )
+            else:
+                row['op'] = '-'
 
         self.context.update({
             'dest_headers': [
@@ -188,12 +195,14 @@ class Ob(View):
                 'Depósito',
                 'Rolos',
                 'Quilos',
+                'OP',
             ],
             'dest_fields': [
                 'numero',
                 'dep',
                 'rolos',
                 'quilos',
+                'op',
             ],
             'dest_dados': dest_dados,
         })
