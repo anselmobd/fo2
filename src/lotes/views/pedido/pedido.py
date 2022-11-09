@@ -175,6 +175,13 @@ class Pedido(View):
                     if f"{row['ORDEM_PRODUCAO']}" in ops:
                         row['NF_FILIAL'] = nf['nf'] if nf['nf'] else '-'
                         break
+            if row['NF_FILIAL'] != '-':
+                row['NF_FILIAL|TARGET'] = "_blank"
+                row['NF_FILIAL|LINK'] = reverse(
+                    'contabil:nota_fiscal__get',
+                    args=['3', row['NF_FILIAL']],
+                )
+
             if row['TEM_15']:
                 row['TEM_15'] = 'S'
             else:
