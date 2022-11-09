@@ -1,4 +1,7 @@
+from pprint import pprint
+
 from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import debug_cursor_execute
 
 
 def op_perda(cursor, data_de, data_ate, detalhe):
@@ -17,7 +20,7 @@ def op_perda(cursor, data_de, data_ate, detalhe):
         , ( SELECT
               SUM( l.QTDE_PECAS_PROG )
             FROM pcpc_040 l
-            WHERE l.ORDEM_PRODUCAO = 9242
+            WHERE l.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
               AND l.SEQ_OPERACAO = (
                 SELECT
                   MIN( ls.SEQ_OPERACAO )
@@ -57,5 +60,5 @@ def op_perda(cursor, data_de, data_ate, detalhe):
     sql += """
         , lote.ORDEM_PRODUCAO
     """
-    cursor.execute(sql, [data_de, data_ate])
+    debug_cursor_execute(cursor, sql, [data_de, data_ate])
     return dictlist(cursor)
