@@ -45,6 +45,9 @@ def query(cursor, ob=None):
 
             for row in dados:
                 ob1_row = dict_ob1.get(row['numero'])
-                row['op'] = ob1_row['op']
-  
+                if ob1_row:
+                    row['op'] = ob1_row['op']
+                else:
+                    row['erro'] = 'OB não existe'
+
     return dados
