@@ -138,12 +138,13 @@ def query(
 
         ob2_ops = {}
         for row in dest_ob2s:
-            ob = row['ob']
-            op = row['op']
-            try:
-                ob2_ops[ob].add(op)
-            except KeyError:
-                ob2_ops[ob] = {op}
+            op = row.get('op')
+            if op:
+                ob = row['ob']
+                try:
+                    ob2_ops[ob].add(op)
+                except KeyError:
+                    ob2_ops[ob] = {op}
 
         for row in dados:
             ops = ob2_ops.get(row['ob'])
