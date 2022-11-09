@@ -175,6 +175,7 @@ class Ob(View):
 
         dest_dados = ob_destinos.query(self.cursor, self.context['ob'])
 
+        dest_erro = False
         for row in dest_dados:
             if row['numero']:
                 row['numero|LINK'] = reverse(
@@ -188,22 +189,32 @@ class Ob(View):
                 )
             else:
                 row['op'] = '-'
+            if row.get('erro'):
+                dest_erro = True
+            else:
+                row['erro'] = '-'
+
+        dest_headers = [
+            'Número',
+            'Depósito',
+            'Rolos',
+            'Quilos',
+            'OP',
+        ]
+        dest_fields = [
+            'numero',
+            'dep',
+            'rolos',
+            'quilos',
+            'op',
+        ]
+        if dest_erro:
+            dest_headers.insert(1, 'Erro')
+            dest_fields.insert(1, 'erro')
 
         self.context.update({
-            'dest_headers': [
-                'Número',
-                'Depósito',
-                'Rolos',
-                'Quilos',
-                'OP',
-            ],
-            'dest_fields': [
-                'numero',
-                'dep',
-                'rolos',
-                'quilos',
-                'op',
-            ],
+            'dest_headers': dest_headers,
+            'dest_fields': dest_fields,
             'dest_dados': dest_dados,
         })
 
