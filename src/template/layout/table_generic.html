@@ -3,7 +3,7 @@
 {% endif %}
 {% if dados.data or data %}
   <table>
-    {% include "layout/thead_generic.html" with data=dados.headers style=dados.style only %}
+    {% include "layout/thead_generic.html" with data=dados.headers style=dados.style thclass='sticky' only %}
     {% if dados.data %}
       {% include "layout/tbody_generic.html" with fields=dados.fields data=dados.data style=dados.style decimals=dados.decimals safe=dados.safe group=dados.group only %}
     {% else %}
