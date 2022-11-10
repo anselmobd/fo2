@@ -25,3 +25,14 @@ class Form(forms.Form):
         required=False,
         widget=forms.DateInput(attrs={'type': 'date'}),
     )
+
+    CHOICES = [
+        ('', "--Não filtra--"),
+        ('s', "Sim"),
+        ('n', "Não"),
+    ]
+    faturado = forms.ChoiceField(
+        choices=CHOICES,
+        required=False,
+        initial='',
+    )

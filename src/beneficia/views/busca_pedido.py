@@ -26,10 +26,16 @@ class BuscaPedido(O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def get_pedidos(self):
+        faturado_dict = {
+            '': None,
+            's': True,
+            'n': False,
+        }
         return busca_pedido_query(
             self.cursor,
             emissao_de=self.data_de,
             emissao_ate=self.data_ate,
+            faturado=faturado_dict[self.faturado],
         )
 
     def config_bloco(self, data):
