@@ -115,6 +115,10 @@ def lm(string):
     return textwrap.dedent(string)
 
 
+def lms(string):
+    return lm(string).strip("\n")
+
+
 def min_max_string(min, max, process_input=noneifempty, msg_format="{}", mm='min_max'):
     mm_string = {
         'min_max': {
