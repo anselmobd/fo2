@@ -27,7 +27,17 @@ def query(
           ped.PEDIDO_VENDA PEDIDO
         , ped.DATA_EMIS_VENDA DT_EMISSAO
         , ped.OBSERVACAO OBS
+        , CASE WHEN nfe.DOCUMENTO IS NULL
+          THEN nf.NUM_NOTA_FISCAL
+          ELSE NULL
+          END NF
         FROM PEDI_100 ped -- pedido de venda
+        LEFT JOIN FATU_050 nf -- capa de NF
+          ON nf.PEDIDO_VENDA = ped.PEDIDO_VENDA
+         AND nf.SITUACAO_NFISC = 1 -- Nota Emitida
+        LEFT JOIN OBRF_010 nfe -- nota fiscal de entrada/devolução
+          ON nfe.NOTA_DEV = nf.NUM_NOTA_FISCAL
+         AND nfe.SITUACAO_ENTRADA in (1, 4) -- Nota Emitida, Nota de Fornecedor
         WHERE 1=1
           AND ped.CODIGO_EMPRESA = {empresa}
           {filtra_emissao_de} -- filtra_emissao_de
