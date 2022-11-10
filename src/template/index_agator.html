@@ -32,11 +32,14 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
-        <li><a href="{% url 'producao:index' %}">Produção</a></li>
-        {% include 'lotes/menu.html' with empresa='agator' %}
+        <li><a href="{% url 'logistica:index' %}">Logistica</a></li>
+        {% include 'logistica/menu.html' with empresa='agator' %}
+        <!-- <li><a href="{% url 'producao:index' %}">Produção</a></li>
+        { % include 'lotes/menu.html' with empresa='agator' %}
+        <br />
         <br />
         <li><a href="{% url 'contabil:index' %}">Contabilidade</a></li>
-        {% include 'contabil/menu.html' with empresa='agator' %}
+        { % include 'contabil/menu.html' with empresa='agator' %} -->
       </ul>
     </td>
     <td>&nbsp;</td>
@@ -45,9 +48,6 @@
       <ul>
         <li><a href="{% url 'geral:index' %}">Informações gerais</a></li>
         {% include 'geral/menu.html' with empresa='agator' %}
-        <br />
-        <li><a href="{% url 'logistica:index' %}">Logistica</a></li>
-        {% include 'logistica/menu.html' with empresa='agator' %}
       </ul>
     </td>
     <td>&nbsp;</td>
