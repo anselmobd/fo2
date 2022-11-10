@@ -42,12 +42,20 @@ class BuscaPedido(O2BaseGetPostView):
     def prep_rows(self, bloco):
         for row in bloco['data']:
             row['pedido|TARGET'] = '_blank'
-            row['pedido|LINK'] = reverse(
+            row['pedido|A'] = reverse(
                 'producao:pedido__get',
                 args=[row['pedido']],
             )
             row['dt_emissao'] = (
                 row['dt_emissao'].date() if row['dt_emissao'] else '-')
+            if row['nf']:
+                row['nf|TARGET'] = '_blank'
+                row['nf|A'] = reverse(
+                    'contabil:nota_fiscal__get',
+                    args=[2, row['nf']]
+                )
+            else:
+                row['nf'] = '-'
             if not row['obs']:
                 row['obs'] = '-'
 
@@ -55,6 +63,7 @@ class BuscaPedido(O2BaseGetPostView):
         TableDefsHpSD({
             'pedido': ["Pedido"],
             'dt_emissao': ["Emissão"],
+            'nf': ["NF"],
             'obs': ["Observação"],
         }).hfs_dict(context=bloco)
 
