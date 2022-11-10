@@ -2,6 +2,7 @@ from django.urls import re_path
 
 from . import views
 from .views import (
+    busca_pedido,
     pendente,
     producao,
 )
@@ -15,6 +16,12 @@ urlpatterns = [
     re_path(r'^ob/(?P<ob>\d+)/$', views.Ob.as_view(), name='ob__get'),
 
     re_path(r'^busca_ob/$', views.BuscaOb.as_view(), name='busca_ob'),
+
+    re_path(
+        r'^busca_pedido/$',
+        busca_pedido.BuscaPedido.as_view(),
+        name='busca_pedido'
+    ),
 
     re_path(r'^ot/$', views.Ot.as_view(), name='ot'),
     re_path(r'^ot/(?P<ot>\d+)/$', views.Ot.as_view(), name='ot__get'),
