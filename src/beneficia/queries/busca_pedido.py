@@ -9,9 +9,10 @@ __all__ = ['query']
 
 def query(
     cursor,
+    empresa=2,
     emissao_de=None,
     emissao_ate=None,
-    empresa=2,
+    faturado=None,
 ):
 
     filtra_emissao_de = lms(f"""\
@@ -21,6 +22,22 @@ def query(
     filtra_emissao_ate = lms(f"""\
         AND ped.DATA_EMIS_VENDA <= DATE '{emissao_ate}' 
     """) if emissao_ate else ''
+
+    filtra_faturado = ''
+    if faturado is not None:
+        if faturado:
+            filtra_faturado = lms(f"""\
+                AND nf.NUM_NOTA_FISCAL IS NOT NULL 
+                AND nfe.DOCUMENTO IS NULL 
+            """)
+        else:
+            filtra_faturado = lms(f"""\
+                AND (
+                  nf.NUM_NOTA_FISCAL IS NULL 
+                  OR nfe.DOCUMENTO IS NOT NULL 
+                )
+            """)
+
 
     sql = lms(f"""\
         SELECT
@@ -42,6 +59,7 @@ def query(
           AND ped.CODIGO_EMPRESA = {empresa}
           {filtra_emissao_de} -- filtra_emissao_de
           {filtra_emissao_ate} -- filtra_emissao_ate
+          {filtra_faturado} -- filtra_faturado
         ORDER BY
           ped.PEDIDO_VENDA
     """)
