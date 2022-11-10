@@ -32,35 +32,34 @@ class BuscaPedido(O2BaseGetPostView):
             emissao_ate=self.data_ate,
         )
 
-    def mount_titulo(self, data):
+    def mount_pedidos(self):
         return {
             'titulo': 'Pedidos',
-            'data': data,
+            'data': self.get_pedidos(),
             'vazio': "Sem pedidos",
         }
 
-    def mount_link(self, pendente):
-        for row in pendente['data']:
+    def prepara_campos(self, dados):
+        for row in dados['data']:
             row['pedido|TARGET'] = '_blank'
             row['pedido|LINK'] = reverse(
                 'producao:pedido__get',
                 args=[row['pedido']],
             )
 
-    def mount_hfs(self, pendente):
+    def define_hfs(self, dados):
         TableDefsHpSD({
             'pedido': ["Pedido"],
             'dt_emissao': ["Emissão"],
-        }).hfs_dict(context=pendente)
+        }).hfs_dict(context=dados)
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        pedidos_data = self.get_pedidos()
-        pedidos = self.mount_titulo(pedidos_data)
+        pedidos = self.mount_pedidos()
 
-        if pedidos_data:
-            self.mount_link(pedidos)
-            self.mount_hfs(pedidos)
+        if pedidos['data']:
+            self.prepara_campos(pedidos)
+            self.define_hfs(pedidos)
 
         self.context['pedidos'] = pedidos
