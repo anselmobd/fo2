@@ -10,7 +10,7 @@ class Form(forms.Form):
     a = FormWidgetAttrs()
 
     data_de = forms.DateField(
-        label="Data inicial",
+        label="Data de emissão - De",
         initial=today_ymd,
         widget=forms.DateInput(
             attrs={
@@ -21,7 +21,7 @@ class Form(forms.Form):
     )
 
     data_ate = forms.DateField(
-        label="Data final",
+        label="Até",
         required=False,
         widget=forms.DateInput(attrs={'type': 'date'}),
     )
