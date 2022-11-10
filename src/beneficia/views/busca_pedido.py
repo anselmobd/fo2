@@ -11,7 +11,7 @@ from utils.functions.date import dmy_or_empty
 from utils.table_defs import TableDefsHpSD
 from utils.views import totalize_data
 
-from beneficia.forms.pendente import Form as PendenteForm
+from beneficia.forms.busca_pedido import Form as BuscaPedidoForm
 from beneficia.queries.pendente import query as pendente_query
 
 
@@ -19,7 +19,7 @@ class BuscaPedido(O2BaseGetPostView):
 
     def __init__(self):
         super(BuscaPedido, self).__init__()
-        self.Form_class = PendenteForm
+        self.Form_class = BuscaPedidoForm
         self.template_name = 'beneficia/busca_pedido.html'
         self.title_name = 'Busca Pedido'
         self.form_class_has_initial = True
@@ -98,4 +98,4 @@ class BuscaPedido(O2BaseGetPostView):
             self.mount_total(pendente)
             self.mount_hfs(pendente)
 
-        self.context['pendente'] = pendente
+        self.context['dados'] = pendente
