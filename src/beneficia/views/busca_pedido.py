@@ -46,11 +46,16 @@ class BuscaPedido(O2BaseGetPostView):
                 'producao:pedido__get',
                 args=[row['pedido']],
             )
+            row['dt_emissao'] = (
+                row['dt_emissao'].date() if row['dt_emissao'] else '-')
+            if not row['obs']:
+                row['obs'] = '-'
 
     def define_hfs(self, bloco):
         TableDefsHpSD({
             'pedido': ["Pedido"],
             'dt_emissao': ["Emissão"],
+            'obs': ["Observação"],
         }).hfs_dict(context=bloco)
 
     def mount_context(self):

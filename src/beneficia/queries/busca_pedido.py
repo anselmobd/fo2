@@ -26,6 +26,7 @@ def query(
         SELECT
           ped.PEDIDO_VENDA PEDIDO
         , ped.DATA_EMIS_VENDA DT_EMISSAO
+        , ped.OBSERVACAO OBS
         FROM PEDI_100 ped -- pedido de venda
         WHERE 1=1
           AND ped.CODIGO_EMPRESA = {empresa}
