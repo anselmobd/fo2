@@ -10,7 +10,7 @@ class Form(forms.Form):
     a = FormWidgetAttrs()
 
     data_de = forms.DateField(
-        label="Data de emissão - De",
+        label="Data de emissão do pedido: De",
         initial=today_ymd,
         widget=forms.DateInput(
             attrs={
