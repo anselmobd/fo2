@@ -62,6 +62,8 @@ class BuscaPedido(O2BaseGetPostView):
                 )
             else:
                 row['nf'] = '-'
+            if not row['dt_nf']:
+                row['dt_nf'] = '-'
             if not row['obs']:
                 row['obs'] = '-'
 
@@ -70,6 +72,7 @@ class BuscaPedido(O2BaseGetPostView):
             'pedido': ["Pedido"],
             'dt_emissao': ["Emissão"],
             'nf': ["NF"],
+            'dt_nf': ["NF emissão"],
             'obs': ["Observação"],
         }).hfs_dict(context=bloco)
 
