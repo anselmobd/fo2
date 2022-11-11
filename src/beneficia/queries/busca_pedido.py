@@ -13,6 +13,7 @@ def query(
     emissao_de=None,
     emissao_ate=None,
     faturado=None,
+    obs=None,
 ):
 
     filtra_emissao_de = lms(f"""\
@@ -38,6 +39,9 @@ def query(
                 )
             """)
 
+    # filtra_obs = lms(f"""\
+    #     AND ped.OBSERVACAO LIKE '%{obs}%' 
+    # """) if obs else ''
 
     sql = lms(f"""\
         SELECT
@@ -61,6 +65,7 @@ def query(
           {filtra_emissao_de} -- filtra_emissao_de
           {filtra_emissao_ate} -- filtra_emissao_ate
           {filtra_faturado} -- filtra_faturado
+          -- filtra_obs -- filtra_obs
         ORDER BY
           ped.PEDIDO_VENDA
     """)
@@ -73,5 +78,11 @@ def query(
             row['dt_nf'] = None
         if row['dt_nf']:
             row['dt_nf'] = row['dt_nf'].date()
-        
+
+    if obs:
+        return [
+            row for row in dados
+            if row['obs'] and obs.casefold() in row['obs'].casefold()
+        ]
+
     return dados
