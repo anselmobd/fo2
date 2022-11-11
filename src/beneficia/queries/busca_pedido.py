@@ -48,6 +48,7 @@ def query(
           THEN nf.NUM_NOTA_FISCAL
           ELSE NULL
           END NF
+        , nf.DATA_EMISSAO DT_NF
         FROM PEDI_100 ped -- pedido de venda
         LEFT JOIN FATU_050 nf -- capa de NF
           ON nf.PEDIDO_VENDA = ped.PEDIDO_VENDA
@@ -67,4 +68,10 @@ def query(
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
 
+    for row in dados:
+        if not row['nf']:
+            row['dt_nf'] = None
+        if row['dt_nf']:
+            row['dt_nf'] = row['dt_nf'].date()
+        
     return dados
