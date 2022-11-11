@@ -25,5 +25,12 @@
       <h4>Erro: {{ erro }}</h4>
     {% endif %}
     {% include "layout/table_generic.html" with dados=producao only %}
+    {% if grade.data %}
+      <h4>Grade</h4>
+      <table style="width: auto;">
+        {% include "layout/thead_generic.html" with data=grade.headers style=grade.style only %}
+        {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data group=grade.group style=grade.style only %}
+      </table>
+    {% endif %}
   {% endif %}
 {% endblock %}

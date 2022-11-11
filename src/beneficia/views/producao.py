@@ -5,8 +5,9 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
-from utils.functions.strings import min_max_string
 from utils.functions.date import dmy_or_empty
+from utils.functions.dictlist.dictlist_to_grade import dictlist_to_grade_qtd
+from utils.functions.strings import min_max_string
 from utils.table_defs import TableDefsHpSD
 from utils.views import totalize_data
 
@@ -61,8 +62,26 @@ class Producao(O2BaseGetPostView):
             'data': data,
             'vazio': "Sem produção",
         }
+        grade = {
+            'data': None,
+        }
         if data:
+
+            grade = dictlist_to_grade_qtd(
+                dados=data,
+                field_linha='cor',
+                field_coluna='tipo_tecido',
+                facade_coluna='Tecido',
+                field_quantidade='quilos',
+            )
+
+            for row in grade['data']:
+                for field in grade['fields'][1:]:
+                    row[f'{field}|DECIMALS'] = 3
+
             for row in data:
+                if not row['usuario']:
+                    row['usuario'] = '-'
                 if row['dt_fim']:
                     row['dt_fim'] = row['dt_fim'].date()
                 if row['h_fim']:
@@ -96,7 +115,8 @@ class Producao(O2BaseGetPostView):
                 'cor': ["Cor"],
                 'quilos': ["Quilos", 'r', 3],
             }).hfs_dict(context=result)
-        return result
+
+        return result, grade
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -106,4 +126,4 @@ class Producao(O2BaseGetPostView):
 
         self.context.update(self.form_report())
 
-        self.context['producao'] = self.get_producao()
+        self.context['producao'], self.context['grade'] = self.get_producao()
