@@ -36,3 +36,9 @@ class Form(forms.Form):
         required=False,
         initial='',
     )
+
+    obs = forms.CharField(
+        label='Observação contém',
+        required=False,
+        widget=forms.TextInput(),
+    )

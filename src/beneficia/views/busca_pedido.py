@@ -36,6 +36,7 @@ class BuscaPedido(O2BaseGetPostView):
             emissao_de=self.data_de,
             emissao_ate=self.data_ate,
             faturado=faturado_dict[self.faturado],
+            obs=self.obs,
         )
 
     def config_bloco(self, data):
