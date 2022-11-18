@@ -35,7 +35,7 @@ def query(
     filtra_data_de = f"""\
         AND ( 
           ( bt.DATA_TERMINO = DATE '{data_de}'
-            AND bt.HORA_TERMINO >= TIMESTAMP '1989-11-16 08:00:00'
+            AND bt.HORA_TERMINO >= TIMESTAMP '1989-11-16 07:00:00'
           )
           OR 
           ( bt.DATA_TERMINO > DATE '{data_de}'
@@ -43,7 +43,7 @@ def query(
           )
           OR 
           ( bt.DATA_TERMINO = DATE '{data_ate_prox}'
-            AND bt.HORA_TERMINO < TIMESTAMP '1989-11-16 08:00:00'
+            AND bt.HORA_TERMINO < TIMESTAMP '1989-11-16 07:00:00'
           )
         ) \
     """
