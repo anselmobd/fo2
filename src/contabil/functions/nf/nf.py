@@ -24,7 +24,7 @@ SITUACAO_DESCR = {
 
 
 def nf_situacao_descr(situacao, status):
-    descr = dict_get_none(SITUACAO_DESCR, situacao)
+    descr = dict_get_none(SITUACAO_DESCR, situacao, tpl=None)
     if isinstance(descr, dict):
         descr = dict_get_none(descr, status)
     return descr
