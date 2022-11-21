@@ -38,8 +38,7 @@ def dict_firsts(adict, firsts):
         return dict(adict)
 
 
-def dict_get_none(dic, key):
-    tpl = "{v}"
+def dict_get_none(dic, key, tpl="{v}"):
     default = dic.get(None)
     if isinstance(default, dict):
         tpl = default.get('tpl', tpl)
@@ -50,4 +49,7 @@ def dict_get_none(dic, key):
     except KeyError:
         value = default
 
-    return tpl.format(k=key, v=value)
+    if tpl:
+        return tpl.format(k=key, v=value)
+    else:
+        return value
