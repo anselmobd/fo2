@@ -143,7 +143,7 @@ def ped_expedicao(
         FROM PEDI_100 ped -- pedido de venda
         LEFT JOIN FATU_050 f -- fatura
           ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
-         AND f.NUMERO_CAIXA_ECF = 0
+         -- AND f.NUMERO_CAIXA_ECF = 0  -- NF especial
         JOIN PEDI_110 i -- item de pedido de venda
           ON i.PEDIDO_VENDA = ped.PEDIDO_VENDA
         JOIN BASI_030 r -- ref
