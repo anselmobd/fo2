@@ -1,45 +1,29 @@
+#!/usr/bin/env python3
+
 import glob
-from pprint import pprint
-from xml.dom import minidom
 import xml.etree.ElementTree as ET
+from pprint import pprint
 
-# # parse an xml file by name
-# file = minidom.parse('33220902485300000133550010000020911000961304_74e8628326d2e84daf901dc222c9967a6451e23f.xml')
 
-# dets = file.getElementsByTagName('det')
+_NS = {'nfe': 'http://www.portalfiscal.inf.br/nfe'}
+_CNPJ_IGN = [
+    '07681643000278',  # tussor
+    '33966120000105',  # agator
+]
 
-# pprint(dets)
 
-# for det in dets[:1]:
-#     prod = det.getElementsByTagName('prod')
-#     # cProd = prod.getElementsByTagName('cProd')
-#     pprint(prod)
-#     # help(prod)
-#     # cProd = prod.getChieldByTagName('cProd')
-#     # pprint(prod[0].firstChild.data)
-#     pprint(prod[0].childNodes)
-#     for node in prod[0].childNodes[:1]:
-#         pprint(node)
-#         # pprint(f"{node}")
-#         print("node.tagName")
-#         pprint(node.tagName)
-#         # help(node)
-#     # models[1].childNodes[0].data)
-#     # for prod in prod:
-#     #     print(elem.firstChild.data)
+def get_in(level, node):
+    return level.findall(f'nfe:{node}', _NS)
 
-def parse_file(file_name, prods):
+
+def get0_in(level, node):
+    return get_in(level, node)[0]
+
+
+def parse_nfe(file_name, prods):
 
     tree = ET.parse(file_name)
     root = tree.getroot()
-
-    ns = {'nfe': 'http://www.portalfiscal.inf.br/nfe'}
-
-    def get_in(level, node):
-        return level.findall(f'nfe:{node}', ns)
-
-    def get0_in(level, node):
-        return get_in(level, node)[0]
 
     # pprint(root)
     try:
@@ -70,10 +54,7 @@ def parse_file(file_name, prods):
     # CNPJ = emit.findall('nfe:CNPJ', ns)[0]
     CNPJ = get0_in(emit, 'CNPJ')
     cnpj = CNPJ.text
-    if cnpj in [
-        '07681643000278',  # tussor
-        '33966120000105',  # agator
-    ]:
+    if cnpj in _CNPJ_IGN:
         return
     # pprint(CNPJ)
     # pprint(CNPJ.text)
@@ -84,13 +65,16 @@ def parse_file(file_name, prods):
     # pprint(dets)
 
     for det in dets:
-        prod = det.findall('nfe:prod', ns)[0]
+        # prod = det.findall('nfe:prod', ns)[0]
+        prod = get0_in(det, 'prod')
         # pprint(prod)
-        cProd = prod.findall('nfe:cProd', ns)[0]
+        # cProd = prod.findall('nfe:cProd', ns)[0]
+        cProd = get0_in(prod, 'cProd')
         # pprint(cProd)
         # print(cProd.text)
 
-        xProd = prod.findall('nfe:xProd', ns)[0]
+        # xProd = prod.findall('nfe:xProd', ns)[0]
+        xProd = get0_in(prod, 'xProd')
         # pprint(cProd)
         # print(xProd.text)
 
@@ -114,44 +98,41 @@ def parse_file(file_name, prods):
 
         prod_cnpj_x = prod_cnpj[x_prod]
 
-        # prods[cProd.text].add(
-        #     f"{xProd.text} | "
-        #     # f"NF {cNF.text} | "
-        #     # f"serie {serie.text} | "
-        #     f"CNPJ {CNPJ.text}"
-        # )
-        
         prod_cnpj_x.add(c_nf)
 
-files = glob.iglob('./*.xml')
-# pprint(files)
 
-prods = {}
+if __name__ == '__main__':
 
-# files = [
-#     "33220902485300000133550010000020911000961304_74e8628326d2e84daf901dc222c9967a6451e23f.xml",
-#     "33220904951454000107550010000089101082460214_2747be59341b99fcc31e78e244a1c77beeb67535.xml",
-# ]
-for file in files:
-    parse_file(file, prods)
+    # files = [
+    #     "33220902485300000133550010000020911000961304_74e8628326d2e84daf901dc222c9967a6451e23f.xml",
+    #     "33220904951454000107550010000089101082460214_2747be59341b99fcc31e78e244a1c77beeb67535.xml",
+    # ]
 
-prods2 = {
-    k: prods[k]
-    for k in prods
-    if len(prods[k]['x_prod']) > 1
-    # and not k.startswith("1.M")
-    # and not k.startswith("1.0")
-    # and not k.startswith("1.C")
-    # and not k.startswith("1.F")
-    # and not k.endswith("33966120000105")
-}
+    files = glob.iglob('./*.xml')
+    # pprint(files)
 
-# pprint(prods2)
-for k in prods2:
-    print('código:', k)
-    for cnpj in prods2[k]['cnpj']:
-        print('  cnpj:', cnpj)
-        prod_cnpj = prods2[k]['cnpj'][cnpj]
-        for x_prod in prod_cnpj:
-            print('    x_prod:', x_prod)
-            print('      nf:', ', '.join(prod_cnpj[x_prod]))
+    produtos = {}
+
+    for file in files:
+        parse_nfe(file, produtos)
+
+    prods = {
+        k: produtos[k]
+        for k in produtos
+        if len(produtos[k]['x_prod']) > 1
+        # and not k.startswith("1.M")
+        # and not k.startswith("1.0")
+        # and not k.startswith("1.C")
+        # and not k.startswith("1.F")
+        # and not k.endswith("33966120000105")
+    }
+
+    # pprint(prods2)
+    for k in prods:
+        print(f"código: '{k}'")
+        for cnpj in prods[k]['cnpj']:
+            print(f"  cnpj: {cnpj}")
+            prod_cnpj = prods[k]['cnpj'][cnpj]
+            for x_prod in prod_cnpj:
+                print(f"    x_prod: '{x_prod}'")
+                print("      nf:", ", ".join(prod_cnpj[x_prod]))
