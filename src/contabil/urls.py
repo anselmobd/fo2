@@ -2,6 +2,7 @@ from django.urls import re_path, path
 
 from . import views
 from contabil.views import (
+    nasajon,
     nf_rec_busca,
     nf_recebida,
 )
@@ -16,7 +17,7 @@ urlpatterns = [
 
     re_path(r'^converte/$', views.Converte.as_view(), name='converte'),
 
-    re_path(r'^nasajon/$', views.nasajon, name='nasajon'),
+    re_path(r'^nasajon/$', nasajon.view, name='nasajon'),
 
     path(
         'nf_rec_busca/',
