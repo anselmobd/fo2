@@ -10,10 +10,12 @@
 {% endblock %}
 
 {% block content %}
-  <h3>Vídeos</h3>
-  {% for video in videos %}
-    <p>{{video.file}}</p>
-    <video controls width="250"><source src="/media/videos/nasajon/{{video.file}}" type="video/mp4"></video>
+  <h4>Agenda</h4>
+  {% for evento in agenda %}
     <hr>  
+    <p>{{evento.titulo}}</p>
+    {% for file in evento.files %}
+      <p><a href="/media/videos/nasajon/{{evento.files|get_item:file}}" target="_blank">{{file}}</a></p>
+    {% endfor %}
   {% endfor %}
 {% endblock %}
