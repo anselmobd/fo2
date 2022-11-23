@@ -8,7 +8,8 @@ from db_password import (
     DBPASS_F1,
 )
 
-DATABASES = {
+
+_DATABASES = {
     'f1': {  # F1 e SCC
         'ENGINE': 'firebird',
         'NAME': '/dados/db/f1/f1.cdb',
@@ -33,18 +34,18 @@ class Main():
         super(Main, self).__init__(*args, **kwargs)
         self.context = {}
 
-    def connect_fdb(self, db_id, return_error=False):
+    def connect_fdb(self, id, return_error=False):
         try:
-            dbsett = DATABASES[db_id]
+            db = _DATABASES[id]
 
             self.conn = fdb.connect(
-                host=dbsett['HOST'],
-                port=dbsett['PORT'],
-                database=dbsett['NAME'],
-                user=dbsett['USER'],
-                password=dbsett['PASSWORD'],
-                sql_dialect=dbsett['DIALECT'],
-                charset=dbsett['OPTIONS']['charset'],
+                host=db['HOST'],
+                port=db['PORT'],
+                database=db['NAME'],
+                user=db['USER'],
+                password=db['PASSWORD'],
+                sql_dialect=db['DIALECT'],
+                charset=db['OPTIONS']['charset'],
             )
 
         except Exception as e:
