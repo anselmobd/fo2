@@ -9,6 +9,7 @@ from base.views import O2BaseGetPostView
 from utils.table_defs import TableDefsHpSD
 
 from lotes.queries.pedido.rastreabilidade import rastreabilidade_query
+from lotes.queries.pedido.ped_inform import ped_inform_lower
 
 
 class RastreabilidadeView(O2BaseGetPostView):
@@ -22,7 +23,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def get_pedidos(self):
-        return rastreabilidade_query(
+        return ped_inform_lower(
             self.cursor,
             pedido=self.pedido,
         )
@@ -36,21 +37,21 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows(self, bloco):
         for row in bloco['data']:
-            row['pedido|TARGET'] = '_blank'
-            row['pedido|A'] = reverse(
+            row['pedido_venda|TARGET'] = '_blank'
+            row['pedido_venda|A'] = reverse(
                 'producao:pedido__get',
-                args=[row['pedido']],
+                args=[row['pedido_venda']],
             )
             row['dt_emissao'] = (
                 row['dt_emissao'].date() if row['dt_emissao'] else '-')
-            if not row['obs']:
-                row['obs'] = '-'
+            if not row['observacao']:
+                row['observacao'] = '-'
 
     def define_hfs(self, bloco):
         TableDefsHpSD({
-            'pedido': ["Pedido"],
+            'pedido_venda': ["Pedido"],
             'dt_emissao': ["Emissão"],
-            'obs': ["Observação"],
+            'observacao': ["Observação"],
         }).hfs_dict(context=bloco)
 
     def mount_context(self):
