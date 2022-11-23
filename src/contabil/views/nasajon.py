@@ -148,6 +148,14 @@ def view(request):
                         "Ordem de Servico - 4663.pdf",
                 },
             },
+            {
+                'titulo': "23/11/2022 - Setup Scritta",
+                'subdir': "2022-11-23 Setup Scritta",
+                'docs': {
+                    'Ordem de Servico - 4680':
+                        "Ordem de Servico - 4680.pdf",
+                },
+            },
         ]
     }
     return render(request, template_name, context)
