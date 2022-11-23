@@ -14,8 +14,12 @@
   {% for evento in agenda %}
     <hr>  
     <p>{{evento.titulo}}</p>
-    {% for file in evento.files %}
-      <p><a href="/media/videos/nasajon/{{evento.files|get_item:file}}" target="_blank">{{file}}</a></p>
-    {% endfor %}
+    {% if evento.files %}
+      {% for file in evento.files %}
+        <p><a href="/media/videos/nasajon/{{evento.files|get_item:file}}" target="_blank">{{file}}</a></p>
+      {% endfor %}
+    {% else %}
+      <p>Sem vídeo</p>
+    {% endif %}
   {% endfor %}
 {% endblock %}
