@@ -10,6 +10,17 @@ def view(request):
         'agenda': [
             {
                 'titulo': "10/10/2022 - Kickoff",
+                'subdir': "2022-10-10 kickoff",
+                'docs': {
+                    'MAIS001 - Kickoff ERP - Tussor - GP Sérgio Santos':
+                        "MAIS001 - KICKOFF ERP - TUSSOR CONFECCOES LTDA - GP SERGIO SANTOS.pdf",
+                    'MAIS002 - Tussor - Termo de Abertura do Projeto (TAP)':
+                        "MAIS002 - TUSSOR CONFECCOES LTDA- Termo de Abertura do Projeto (TAP).docx.pdf",
+                    'Ordem de Servico - 4181':
+                        "Ordem de Servico - 4181.pdf",
+                    'Cronograma Versão 1':
+                        "TUSSOR CONFECCOES LTDA - Cronograma V1.pdf",
+                }
             },
             {
                 'titulo': "19/10/2022 - Levantamento fiscal",

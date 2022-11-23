@@ -14,6 +14,13 @@
   {% for evento in agenda %}
     <hr>  
     <p>{{evento.titulo}}</p>
+    {% if evento.docs %}
+      {% for doc in evento.docs %}
+        <p><a href="/media/documentos_nasajon/{{evento.subdir}}/{{evento.docs|get_item:doc}}" target="_blank">{{doc}}</a></p>
+      {% endfor %}
+    {% else %}
+      <p>Sem documentos</p>
+    {% endif %}
     {% if evento.files %}
       {% for file in evento.files %}
         <p><a href="/media/videos/nasajon/{{evento.files|get_item:file}}" target="_blank">{{file}}</a></p>
