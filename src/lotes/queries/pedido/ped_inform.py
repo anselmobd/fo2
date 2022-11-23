@@ -1,10 +1,19 @@
 from pprint import pprint
 
-from utils.functions.models.dictlist import dictlist
+from utils.functions.models.dictlist import (
+    dictlist,
+    dictlist_lower,
+)
 from utils.functions.queries import debug_cursor_execute
 
+__all__ = ['ped_inform_lower', 'ped_inform']
 
-def ped_inform(cursor, pedido, empresa=1):
+
+def ped_inform_lower(cursor, pedido, empresa=1, f_dictlist=dictlist_lower):
+    return ped_inform(cursor, pedido, empresa, f_dictlist)
+
+
+def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
 
     filtro_empresa = ""
     if empresa:
@@ -104,4 +113,4 @@ def ped_inform(cursor, pedido, empresa=1):
           {filtro_empresa} -- filtro_empresa
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    return f_dictlist(cursor)
