@@ -38,7 +38,7 @@ class Main():
         try:
             db = _DATABASES[id]
 
-            self.conn = fdb.connect(
+            self.con = fdb.connect(
                 host=db['HOST'],
                 port=db['PORT'],
                 database=db['NAME'],
@@ -54,6 +54,18 @@ class Main():
             else:
                 raise e
 
+    def get_cursor(self):
+        self.cursor = self.con.cursor()
+
+    def close(self):
+        self.con.close()
+
+    def execute(self, sql):
+        self.cursor.execute(sql)
+
+    def fetchall(self):
+        return self.cursor.fetchall()
+
     def conecta_fdb_db(self, db_id):
         error = self.connect_fdb(db_id, return_error=True)
 
@@ -61,8 +73,8 @@ class Main():
             return False, error
         else:
             try:
-                cursor = self.conn.cursor()
-                self.conn.close()
+                self.get_cursor()
+                self.close()
                 return True, None
             except Exception as e:
                 return False, e
@@ -92,7 +104,26 @@ class Main():
 
         self.acessa_fdb_db('f1')
 
+    def rotina(self):
+        self.connect_fdb('f1')
+        self.get_cursor()
+        
+        sql = """
+            select
+            pc.*
+            from SCC_PLANOCONTASNOVO pc
+        """
+        self.execute(sql)
+
+        data = self.fetchall()
+
+        pprint(data[:3])
+
+        self.close()
+
+
 if __name__ == '__main__':
     main = Main()
-    main.test()
-    pprint(main.context)
+    # main.test()
+    # pprint(main.context)
+    main.rotina()
