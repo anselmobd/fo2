@@ -8,7 +8,7 @@ from base.forms.forms2 import Forms2
 from base.views import O2BaseGetPostView
 from utils.table_defs import TableDefsHpSD
 
-from beneficia.queries.rastreabilidade import pedido_query
+from lotes.queries.pedido.rastreabilidade import rastreabilidade_query
 
 
 class RastreabilidadeView(O2BaseGetPostView):
@@ -22,7 +22,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def get_pedidos(self):
-        return pedido_query(
+        return rastreabilidade_query(
             self.cursor,
             pedido=self.pedido,
         )

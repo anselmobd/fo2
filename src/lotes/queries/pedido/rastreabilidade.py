@@ -4,10 +4,10 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import lms
 
-__all__ = ['pedido_query']
+__all__ = ['rastreabilidade_query']
 
 
-def pedido_query(
+def rastreabilidade_query(
     cursor,
     empresa=1,
     pedido=None,
