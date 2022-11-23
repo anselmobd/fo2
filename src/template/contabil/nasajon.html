@@ -11,22 +11,32 @@
 
 {% block content %}
   <h4>Agenda de implantação</h4>
+  <ul>
   {% for evento in agenda %}
-    <hr>  
-    <p>{{evento.titulo}}</p>
-    {% if evento.docs %}
-      {% for doc in evento.docs %}
-        <p><a href="/media/documentos_nasajon/{{evento.subdir}}/{{evento.docs|get_item:doc}}" target="_blank">{{doc}}</a></p>
-      {% endfor %}
-    {% else %}
-      <p>Sem documentos</p>
-    {% endif %}
-    {% if evento.files %}
-      {% for file in evento.files %}
-        <p><a href="/media/videos/nasajon/{{evento.files|get_item:file}}" target="_blank">{{file}}</a></p>
-      {% endfor %}
-    {% else %}
-      <p>Sem vídeo</p>
-    {% endif %}
+    <hr>
+    <li>{{evento.titulo}}</li>
+    <ul>
+      <li>Documentos</li>
+      <ul>
+      {% if evento.docs %}
+        {% for doc in evento.docs %}
+          <li><a href="/media/documentos_nasajon/{{evento.subdir}}/{{evento.docs|get_item:doc}}" target="_blank">{{doc}}</a></li>
+        {% endfor %}
+      {% else %}
+        <li>Nenhum</li>
+      {% endif %}
+      </ul>
+      <li>Vídeos</li>
+      <ul>
+      {% if evento.files %}
+        {% for file in evento.files %}
+          <li><a href="/media/videos/nasajon/{{evento.files|get_item:file}}" target="_blank">{{file}}</a></li>
+        {% endfor %}
+      {% else %}
+        <li>Nenhum</li>
+      {% endif %}
+      </ul>
+    </ul>
   {% endfor %}
+  </ul>
 {% endblock %}
