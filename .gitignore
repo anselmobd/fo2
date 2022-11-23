@@ -11,6 +11,9 @@ media/upload/
 # Media Original
 media/00_Original
 
+# Medias específicas
+media/documentos_nasajon
+
 # Development Environment DB
 src/db.sqlite3
 src/db.sqlite3-journal
