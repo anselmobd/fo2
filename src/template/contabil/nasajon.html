@@ -11,4 +11,9 @@
 
 {% block content %}
   <h3>Vídeos</h3>
+  {% for video in videos %}
+    <p>{{video.file}}</p>
+    <video controls width="250"><source src="/media/videos/nasajon/{{video.file}}" type="video/mp4"></video>
+    <hr>  
+  {% endfor %}
 {% endblock %}
