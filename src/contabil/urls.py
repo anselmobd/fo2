@@ -16,6 +16,8 @@ urlpatterns = [
 
     re_path(r'^converte/$', views.Converte.as_view(), name='converte'),
 
+    re_path(r'^nasajon/$', views.nasajon, name='nasajon'),
+
     path(
         'nf_rec_busca/',
         nf_rec_busca.BuscaNFRecebida.as_view(),

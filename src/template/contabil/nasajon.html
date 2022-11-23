@@ -1,0 +1,14 @@
+{% extends 'contabil/index_agator.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'contabil:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h3>Vídeos</h3>
+{% endblock %}

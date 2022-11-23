@@ -8,3 +8,9 @@ def index(request):
         return render(request, 'contabil/index_agator.html')
     else:
         return render(request, 'contabil/index.html')
+
+
+def nasajon(request):
+    template_name = 'contabil/nasajon.html'
+    context = {'titulo': "Nasajon"}
+    return render(request, template_name, context)
