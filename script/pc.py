@@ -33,11 +33,11 @@ class Main():
         super(Main, self).__init__(*args, **kwargs)
         self.context = {}
 
-    def connect_fdb(self, databases, db_id, return_error=False):
+    def connect_fdb(self, db_id, return_error=False):
         try:
-            dbsett = databases[db_id]
+            dbsett = DATABASES[db_id]
 
-            conn = fdb.connect(
+            self.conn = fdb.connect(
                 host=dbsett['HOST'],
                 port=dbsett['PORT'],
                 database=dbsett['NAME'],
@@ -46,7 +46,6 @@ class Main():
                 sql_dialect=dbsett['DIALECT'],
                 charset=dbsett['OPTIONS']['charset'],
             )
-            return conn
 
         except Exception as e:
             if return_error:
@@ -54,24 +53,24 @@ class Main():
             else:
                 raise e
 
-    def conecta_fdb_db(self, databases, db_id):
-        conn = self.connect_fdb(databases, db_id, return_error=True)
+    def conecta_fdb_db(self, db_id):
+        error = self.connect_fdb(db_id, return_error=True)
 
-        if isinstance(conn, Exception):
-            return False, conn
+        if isinstance(error, Exception):
+            return False, error
         else:
             try:
-                cursor = conn.cursor()
-                conn.close()
+                cursor = self.conn.cursor()
+                self.conn.close()
                 return True, None
             except Exception as e:
                 return False, e
 
-    def acessa_fdb_db(self, databases, db_id):
+    def acessa_fdb_db(self, db_id):
         count = 0
 
         while count < 20:
-            result, e = self.conecta_fdb_db(databases, db_id)
+            result, e = self.conecta_fdb_db(db_id)
             if result:
                 self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
                 break
@@ -90,7 +89,7 @@ class Main():
             'msgs_erro': [],
         })
 
-        self.acessa_fdb_db(DATABASES, 'f1')
+        self.acessa_fdb_db('f1')
 
 if __name__ == '__main__':
     main = Main()
