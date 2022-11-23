@@ -15,6 +15,8 @@ from lotes.views.corte import (
 from lotes.views.ops import seq_erro
 from lotes.views.analise import produzir_grade_empenho
 from lotes.views.ajax import produzir_modelo_grade as ajax_produzir_modelo_grade
+from lotes.views.pedido.rastreabilidade import Rastreabilidade
+
 
 app_name = 'producao'
 urlpatterns = [
@@ -189,6 +191,12 @@ urlpatterns = [
         views.analise.QuantEstagio.as_view(), name='quant_estagio'),
     re_path(r'^quant_estagio/(?P<estagio>\d+)/$',
         views.analise.QuantEstagio.as_view(), name='quant_estagio__get'),
+
+    re_path(
+        r'^rastreabilidade/$', 
+        Rastreabilidade.as_view(),
+        name='rastreabilidade'
+    ),
 
     re_path(r'^regras_lote_caixa/$',
         views.RegrasLoteCaixa.as_view(), name='regras_lote_caixa'),
