@@ -15,7 +15,7 @@ from lotes.views.corte import (
 from lotes.views.ops import seq_erro
 from lotes.views.analise import produzir_grade_empenho
 from lotes.views.ajax import produzir_modelo_grade as ajax_produzir_modelo_grade
-from lotes.views.pedido.rastreabilidade import Rastreabilidade
+from lotes.views.pedido.rastreabilidade import RastreabilidadeView
 
 
 app_name = 'producao'
@@ -194,7 +194,7 @@ urlpatterns = [
 
     re_path(
         r'^rastreabilidade/$', 
-        Rastreabilidade.as_view(),
+        RastreabilidadeView.as_view(),
         name='rastreabilidade'
     ),
 
