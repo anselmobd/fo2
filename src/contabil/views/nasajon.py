@@ -58,7 +58,7 @@ def view(request):
                 },
             },
             {
-                'titulo': "17/11/2022 - Contábil 3 de 3",
+                'titulo': "16/11/2022 - Contábil 3 de 3",
             },
             {
                 'titulo': "21/11/2022 - Simulação scritta",
