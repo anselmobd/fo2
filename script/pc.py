@@ -2,12 +2,14 @@
 
 import csv
 import fdb
+import psycopg2
 import time
 import unicodedata 
 from pprint import pprint
 
 from db_password import (
     DBPASS_F1,
+    DBPASS_PERSONA,
 )
 
 
@@ -27,7 +29,38 @@ _DATABASES = {
         'AUTOCOMMIT': None,
         'DIALECT': 3,
     },
+    'persona': {  # Nasajon
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "nasajon_db",
+        'USER': "postgres",
+        'PASSWORD': DBPASS_PERSONA,
+        'HOST': 'localhost',
+        'PORT': '25433',
+    },
 }
+
+
+def dictlist_zip_columns(cursor, columns):
+    return [
+        dict(zip(columns, row))
+        for row in cursor
+    ]
+
+
+def custom_dictlist(cursor, name_case=None):
+    if name_case is None:
+        columns = [i[0] for i in cursor.description]
+    else:
+        columns = [name_case(i[0]) for i in cursor.description]
+    return dictlist_zip_columns(cursor, columns)
+
+
+def dictlist(cursor):
+    return custom_dictlist(cursor)
+
+
+def dictlist_lower(cursor):
+    return custom_dictlist(cursor, name_case=str.lower)
 
 
 class Main():
@@ -234,10 +267,50 @@ class Main():
 
         return data
 
+    def connect_pg(self, id):
+        db = _DATABASES[id]
+
+        self.pgcon = psycopg2.connect(
+            host=db['HOST'],
+            port=db['PORT'],
+            database=db['NAME'],
+            user=db['USER'],
+            password=db['PASSWORD'],
+        )
+
+    def set_cursor_pg(self):
+        self.pgcursor = self.pgcon.cursor()
+
+    def exec_pg(self, sql):
+        self.connect_pg('persona')
+        self.set_cursor_pg()
+
+        self.pgcursor.execute(sql)
+        # data = self.pgcursor.fetchall()
+
+        data = dictlist_lower(self.pgcursor)
+
+        self.pgcon.close()
+
+        return data
+
+    def testa_pg(self):
+        data = main.exec_pg("""
+            select 
+            p.codigo
+            , p.descricao 
+            from contabil.planosauxiliares p
+            where p.codigo = 'SCC ANSELMO'
+        """)
+        pprint(data)
+
 
 if __name__ == '__main__':
     main = Main()
+
     # main.test_connection()
     # main.test_output()
     # main.pc_csv()
-    main.get_nivel1()
+    # main.get_nivel1()
+
+    main.testa_pg()
