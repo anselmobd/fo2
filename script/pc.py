@@ -32,7 +32,10 @@ class Main():
 
     def __init__(self, *args, **kwargs):
         super(Main, self).__init__(*args, **kwargs)
-        self.context = {}
+        self.test_context = {
+            'msgs_ok': [],
+            'msgs_erro': [],
+        }
 
     def connect_fdb(self, id, return_error=False):
         try:
@@ -47,15 +50,17 @@ class Main():
                 sql_dialect=db['DIALECT'],
                 charset=db['OPTIONS']['charset'],
             )
-
+            # help(self.con)
         except Exception as e:
             if return_error:
                 return e
             else:
                 raise e
 
-    def get_cursor(self):
+    def set_cursor(self):
         self.cursor = self.con.cursor()
+        # help(self.cursor)
+        # raise SystemExit
 
     def close(self):
         self.con.close()
@@ -63,8 +68,24 @@ class Main():
     def execute(self, sql):
         self.cursor.execute(sql)
 
+    def executemany(self, sql, list_tuples):
+        # "insert into languages (name, year_released) values (?, ?)"
+        self.cursor.executemany(sql, list_tuples)
+
     def fetchall(self):
         return self.cursor.fetchall()
+
+    def fetchone(self):
+        return self.cursor.fetchone()
+
+    def itermap(self):
+        return self.cursor.itermap()
+
+    def commit(self):
+        return self.con.commit()
+
+    def rollback(self):
+        return self.con.rollback()
 
     def conecta_fdb_db(self, db_id):
         error = self.connect_fdb(db_id, return_error=True)
@@ -73,7 +94,7 @@ class Main():
             return False, error
         else:
             try:
-                self.get_cursor()
+                self.set_cursor()
                 self.close()
                 return True, None
             except Exception as e:
@@ -85,7 +106,7 @@ class Main():
         while count < 20:
             result, e = self.conecta_fdb_db(db_id)
             if result:
-                self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
+                self.test_context['msgs_ok'].append(f'Banco "{db_id}" acessível')
                 break
             else:
                 error = e
@@ -93,20 +114,16 @@ class Main():
             time.sleep(0.5)
 
         if count != 0:
-            self.context['msgs_erro'].append(
+            self.test_context['msgs_erro'].append(
                 f'({count}) Erro ao acessar banco "{db_id}" [{error}]')
 
-    def test(self):
-        self.context.update({
-            'msgs_ok': [],
-            'msgs_erro': [],
-        })
-
+    def test_connection(self):
         self.acessa_fdb_db('f1')
+        pprint(self.test_context)
 
-    def rotina(self):
+    def test_output(self):
         self.connect_fdb('f1')
-        self.get_cursor()
+        self.set_cursor()
         
         sql = """
             select
@@ -114,16 +131,38 @@ class Main():
             from SCC_PLANOCONTASNOVO pc
         """
         self.execute(sql)
+        print(
+            ''.join([
+                field[fdb.DESCRIPTION_NAME].ljust(field[fdb.DESCRIPTION_DISPLAY_SIZE])
+                for field in self.cursor.description
+            ])
+        )
 
         data = self.fetchall()
+        pprint(data[:2])
 
-        pprint(data[:3])
+        self.execute(sql)
+        data = self.itermap()
+        for row in data:
+            pprint(dict(row))
+            break
+
+        self.execute(sql)
+        data = self.cursor.fetchallmap()
+        pprint(data[:2])
+
+        # self.executemany(
+        #     "insert into languages (name, year_released) values (?, ?)",
+        #     [
+        #         ('Lisp',  1958),
+        #         ('Dylan', 1995),
+        #     ],
+        # )
 
         self.close()
 
 
 if __name__ == '__main__':
     main = Main()
-    # main.test()
-    # pprint(main.context)
-    main.rotina()
+    main.test_connection()
+    main.test_output()
