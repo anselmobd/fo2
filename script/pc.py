@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import csv
 import fdb
 import time
 from pprint import pprint
@@ -161,8 +162,42 @@ class Main():
 
         self.close()
 
+    def pc_csv(self):
+        self.connect_fdb('f1')
+        self.set_cursor()
+
+        sql = """
+            select
+            pc.*
+            from SCC_PLANOCONTASNOVO pc
+        """
+        self.execute(sql)
+        data = self.cursor.itermap()
+        # pprint(data)
+
+        # pprint(csv.list_dialects())
+        with open('pc.csv', 'w', newline='') as csvfile:
+            cwriter = csv.writer(
+                csvfile,
+                dialect='unix',
+                delimiter=';',
+                quotechar='"',
+                quoting=csv.QUOTE_MINIMAL
+            )
+            for row in data:
+                # pprint(row)
+                cwriter.writerow([
+                    row['CONTA'],
+                    row['DESCRICAO'],
+                ])
+                break
+
+
+        self.close()
+
 
 if __name__ == '__main__':
     main = Main()
-    main.test_connection()
-    main.test_output()
+    # main.test_connection()
+    # main.test_output()
+    main.pc_csv()
