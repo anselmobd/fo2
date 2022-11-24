@@ -3,6 +3,7 @@
 import csv
 import fdb
 import time
+import unicodedata 
 from pprint import pprint
 
 from db_password import (
@@ -168,7 +169,7 @@ class Main():
 
         sql = """
             select
-            pc.*
+              pc.*
             from SCC_PLANOCONTASNOVO pc
         """
         self.execute(sql)
@@ -192,12 +193,51 @@ class Main():
                 ])
                 break
 
+        self.close()
+
+    def exec(self, sql):
+        self.connect_fdb('f1')
+        self.set_cursor()
+
+        self.execute(sql)
+        data = self.cursor.fetchallmap()
 
         self.close()
+
+        return data
+    
+    def tira_acento_upper(self, texto):
+        return self.tira_acento(texto).upper()
+
+    def tira_acento(self, texto):
+        process = unicodedata.normalize("NFD", texto)
+        process = process.encode("ascii", "ignore")
+        return process.decode("utf-8")
+
+
+    def get_nivel1(self):
+        data = main.exec(
+            """
+                select
+                  pc.*
+                from SCC_PLANOCONTASNOVO pc
+                where pc.conta not like '0%'
+                  and pc.conta like '%.0.00'
+                  and pc.conta > '1.0.00'
+            """
+        )
+        for record in data:
+            row = dict(record)
+            row['CONTA'] = row['CONTA'].rstrip('.0')
+            row['DESCRICAO'] = main.tira_acento_upper(row['DESCRICAO'])
+            print("{CONTA};{DESCRICAO}".format(**row))
+
+        return data
 
 
 if __name__ == '__main__':
     main = Main()
     # main.test_connection()
     # main.test_output()
-    main.pc_csv()
+    # main.pc_csv()
+    main.get_nivel1()
