@@ -248,8 +248,8 @@ class Main():
         return process.decode("utf-8")
 
 
-    def get_nivel1(self):
-        data = main.exec(
+    def print_nivel1(self):
+        data = self.exec(
             """
                 select
                   pc.*
@@ -259,10 +259,10 @@ class Main():
                   and pc.conta > '1.0.00'
             """
         )
-        for record in data:
-            row = dict(record)
+        for row in data:
+            row = dict(row)
             row['CONTA'] = row['CONTA'].rstrip('.0')
-            row['DESCRICAO'] = main.tira_acento_upper(row['DESCRICAO'])
+            row['DESCRICAO'] = self.tira_acento_upper(row['DESCRICAO'])
             print("{CONTA};{DESCRICAO}".format(**row))
 
         return data
@@ -281,7 +281,7 @@ class Main():
     def set_cursor_pg(self):
         self.pgcursor = self.pgcon.cursor()
 
-    def exec_pg(self, sql):
+    def fetch_pg(self, sql):
         self.connect_pg('persona')
         self.set_cursor_pg()
 
@@ -295,7 +295,7 @@ class Main():
         return data
 
     def testa_pg(self):
-        data = main.exec_pg("""
+        data = self.fetch_pg("""
             select 
             p.codigo
             , p.descricao 
@@ -304,6 +304,83 @@ class Main():
         """)
         pprint(data)
 
+    def exec_pg(self, sql, dados):
+        self.connect_pg('persona')
+        self.set_cursor_pg()
+
+        self.pgcursor.execute(sql, dados)
+
+        self.pgcon.commit()
+        self.pgcursor.close()
+        self.pgcon.close()
+
+    def testa_insert_pg(self):
+        self.exec_pg(
+            """
+                insert into contabil.contasauxiliares (planoauxiliar, codigo, tenant)
+                select 
+                  p.planoauxiliar 
+                , %s
+                , p.tenant  
+                from contabil.planosauxiliares p
+                where p.codigo = 'SCC ANSELMO'
+            """,
+            (
+                "9",
+            ),
+        )
+
+    def lista_ca(self):
+        data = self.fetch_pg("""
+            select 
+              ca.*
+            from contabil.contasauxiliares ca
+            where ca.contamae is null
+        """)
+        pprint(data)
+
+    def pg_insert_ca_nivel1(self, dados):
+        self.exec_pg(
+            """
+                insert into contabil.contasauxiliares (planoauxiliar, codigo, tenant)
+                select 
+                  p.planoauxiliar 
+                , %s
+                , p.tenant  
+                from contabil.planosauxiliares p
+                where p.codigo = 'SCC ANSELMO'
+            """,
+            dados,
+        )
+
+    def exec_dictlist_lower(self, sql):
+        self.connect_fdb('f1')
+        self.set_cursor()
+
+        self.execute(sql)
+        data = dictlist_lower(self.cursor)
+
+        self.close()
+        return data
+    
+    def fb_get_pc_nivel1(self, maior_que=' '):
+        data = self.exec_dictlist_lower(
+            f"""
+                select
+                  pc.*
+                from SCC_PLANOCONTASNOVO pc
+                where pc.conta not like '0%'
+                  and pc.conta like '%.0.00'
+                  and pc.conta > '{maior_que}'
+                order by
+                  pc.conta
+            """
+        )
+        for row in data:
+            row['conta'] = row['conta'].rstrip('.0')
+            row['descricao'] = self.tira_acento_upper(row['descricao'])
+        return data
+
 
 if __name__ == '__main__':
     main = Main()
@@ -311,6 +388,18 @@ if __name__ == '__main__':
     # main.test_connection()
     # main.test_output()
     # main.pc_csv()
-    # main.get_nivel1()
+    # dados = main.print_nivel1()
 
-    main.testa_pg()
+    # main.testa_pg()
+    # main.testa_insert_pg()
+
+    main.lista_ca()
+
+    dados = main.fb_get_pc_nivel1(maior_que='1.0.00')
+    for row in dados:
+        values = (
+            row['conta'],
+        )
+        main.pg_insert_ca_nivel1(values)
+
+    main.lista_ca()
