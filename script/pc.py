@@ -92,184 +92,21 @@ class FB():
 
 class Main():
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, fb, *args, **kwargs):
         super(Main, self).__init__(*args, **kwargs)
+        self.fb = fb
         self.test_context = {
             'msgs_ok': [],
             'msgs_erro': [],
         }
 
-    def connect_fdb(self, id, return_error=False):
-        try:
-            db = _DATABASES[id]
-
-            self.con = fdb.connect(
-                host=db['HOST'],
-                port=db['PORT'],
-                database=db['NAME'],
-                user=db['USER'],
-                password=db['PASSWORD'],
-                sql_dialect=db['DIALECT'],
-                charset=db['OPTIONS']['charset'],
-            )
-            # help(self.con)
-        except Exception as e:
-            if return_error:
-                return e
-            else:
-                raise e
-
-    def set_cursor(self):
-        self.cursor = self.con.cursor()
-        # help(self.cursor)
-        # raise SystemExit
-
     def close(self):
-        self.con.close()
+        self.fb.con.close()
 
-    def execute(self, sql):
-        self.cursor.execute(sql)
-
-    def executemany(self, sql, list_tuples):
-        # "insert into languages (name, year_released) values (?, ?)"
-        self.cursor.executemany(sql, list_tuples)
-
-    def fetchall(self):
-        return self.cursor.fetchall()
-
-    def fetchone(self):
-        return self.cursor.fetchone()
-
-    def itermap(self):
-        return self.cursor.itermap()
-
-    def commit(self):
-        return self.con.commit()
-
-    def rollback(self):
-        return self.con.rollback()
-
-    def conecta_fdb_db(self, db_id):
-        error = self.connect_fdb(db_id, return_error=True)
-
-        if isinstance(error, Exception):
-            return False, error
-        else:
-            try:
-                self.set_cursor()
-                self.close()
-                return True, None
-            except Exception as e:
-                return False, e
-
-    def acessa_fdb_db(self, db_id):
-        count = 0
-
-        while count < 20:
-            result, e = self.conecta_fdb_db(db_id)
-            if result:
-                self.test_context['msgs_ok'].append(f'Banco "{db_id}" acessível')
-                break
-            else:
-                error = e
-            count += 1
-            time.sleep(0.5)
-
-        if count != 0:
-            self.test_context['msgs_erro'].append(
-                f'({count}) Erro ao acessar banco "{db_id}" [{error}]')
-
-    def test_connection(self):
-        self.acessa_fdb_db('f1')
-        pprint(self.test_context)
-
-    def test_output(self):
-        self.connect_fdb('f1')
-        self.set_cursor()
-        
-        sql = """
-            select
-            pc.*
-            from SCC_PLANOCONTASNOVO pc
-        """
-        self.execute(sql)
-        print(
-            ''.join([
-                field[fdb.DESCRIPTION_NAME].ljust(field[fdb.DESCRIPTION_DISPLAY_SIZE])
-                for field in self.cursor.description
-            ])
-        )
-
-        data = self.fetchall()
-        pprint(data[:2])
-
-        self.execute(sql)
-        data = self.itermap()
-        for row in data:
-            pprint(dict(row))
-            break
-
-        self.execute(sql)
-        data = self.cursor.fetchallmap()
-        pprint(data[:2])
-
-        # self.executemany(
-        #     "insert into languages (name, year_released) values (?, ?)",
-        #     [
-        #         ('Lisp',  1958),
-        #         ('Dylan', 1995),
-        #     ],
-        # )
-
-        self.close()
-
-    def pc_csv(self):
-        self.connect_fdb('f1')
-        self.set_cursor()
-
-        sql = """
-            select
-              pc.*
-            from SCC_PLANOCONTASNOVO pc
-        """
-        self.execute(sql)
-        data = self.cursor.itermap()
-        # pprint(data)
-
-        # pprint(csv.list_dialects())
-        with open('pc.csv', 'w', newline='') as csvfile:
-            cwriter = csv.writer(
-                csvfile,
-                dialect='unix',
-                delimiter=';',
-                quotechar='"',
-                quoting=csv.QUOTE_MINIMAL
-            )
-            for row in data:
-                # pprint(row)
-                cwriter.writerow([
-                    row['CONTA'],
-                    row['DESCRICAO'],
-                ])
-                break
-
-        self.close()
-
-    def exec(self, sql):
-        self.connect_fdb('f1')
-        self.set_cursor()
-
-        self.execute(sql)
-        data = self.cursor.fetchallmap()
-
-        self.close()
-
-        return data
-    
     def fb_print_nivel1(self):
         data = self.fb_get_pc_nivel1()
+
         for row in data:
-            row = dict(row)
             row['conta'] = row['conta'].rstrip('.0')
             row['descricao'] = tira_acento_upper(row['descricao'])
             print("{conta};{descricao}".format(**row))
@@ -374,29 +211,20 @@ class Main():
             """
             self.exec_pg(sql, (codigo, ))
 
-    def exec_dictlist_lower(self, sql):
-        self.connect_fdb('f1')
-        self.set_cursor()
-
-        self.execute(sql)
-        data = dictlist_lower(self.cursor)
-
-        self.close()
-        return data
-    
     def fb_get_pc_nivel1(self, maior_que=' '):
-        data = self.exec_dictlist_lower(
-            f"""
-                select
-                  pc.*
-                from SCC_PLANOCONTASNOVO pc
-                where pc.conta not like '0%'
-                  and pc.conta like '%.0.00'
-                  and pc.conta > '{maior_que}'
-                order by
-                  pc.conta
-            """
-        )
+        sql = f"""
+            select
+                pc.*
+            from SCC_PLANOCONTASNOVO pc
+            where pc.conta not like '0%'
+                and pc.conta like '%.0.00'
+                and pc.conta > '{maior_que}'
+            order by
+                pc.conta
+        """
+        self.fb.cur.execute(sql)
+        data = dictlist_lower(self.fb.cur)
+
         for row in data:
             row['conta'] = row['conta'].rstrip('.0')
             row['descricao'] = tira_acento_upper(row['descricao'])
@@ -404,11 +232,11 @@ class Main():
 
 
 if __name__ == '__main__':
-    main = Main()
 
-    # main.test_connection()
-    # main.test_output()
-    # main.pc_csv()
+    fb = FB()
+
+    main = Main(fb=fb)
+
     dados = main.fb_print_nivel1()
 
     # main.testa_pg()
@@ -423,3 +251,9 @@ if __name__ == '__main__':
         main.pg_insert_ca_nivel1(codigo=row['conta'])
 
     main.pg_print_ca()
+
+    dados = main.fb_get_pc_nivel1(maior_que='6.0.00')
+    fb.con.close()
+    pprint(dados)
+
+    main.close()
