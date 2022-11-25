@@ -293,6 +293,17 @@ class Main():
 
         self.pg_print_caa(plano_auxiliar, ano)
 
+    def insere_nivel2(self, plano_auxiliar, ano):
+        dados = self.fb_get_pc(nivel=2)
+        for row in dados:
+            self.pg_print_caa(plano_auxiliar, ano, row['conta'])
+            if self.pg_insert_ca(
+                    plano_auxiliar, nivel=2, codigo=row['conta']):
+                break
+            # self.pg_print_to_insert_caa(
+            #     plano_auxiliar, ano, row['conta'], row['descricao'])
+            # self.pg_print_caa(plano_auxiliar, ano, row['conta'])
+
 
 if __name__ == '__main__':
 
@@ -303,8 +314,9 @@ if __name__ == '__main__':
 
     # main.fb_print_nivel1()
     # main.pg_print_caa('SCC ANSELMO', 2022, '1')
-    # main.pg_print_caa('SCC ANSELMO', 2022, '2')
+    # main.pg_print_caa('SCC ANSELMO', 2022)
 
-    main.insere_nivel1('SCC ANSELMO', 2022)
+    # main.insere_nivel1('SCC ANSELMO', 2022)
+    main.insere_nivel2('SCC ANSELMO', 2022)
 
     main.close()
