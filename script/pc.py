@@ -132,8 +132,6 @@ class Main():
             row['descricao'] = tira_acento_upper(row['descricao'])
             print("{conta};{descricao}".format(**row))
 
-        return data
-
     def connect_pg(self, id):
         db = _DATABASES[id]
 
@@ -182,22 +180,6 @@ class Main():
         self.pgcon.commit()
         self.pgcursor.close()
         self.pgcon.close()
-
-    def testa_insert_pg(self):
-        self.exec_pg(
-            """
-                insert into contabil.contasauxiliares (planoauxiliar, codigo, tenant)
-                select 
-                  p.planoauxiliar 
-                , %s
-                , p.tenant  
-                from contabil.planosauxiliares p
-                where p.codigo = 'SCC ANSELMO'
-            """,
-            (
-                "9",
-            ),
-        )
 
     def pg_get_ca(self, codigo=None):
         filtra_codigo = (
@@ -259,10 +241,9 @@ if __name__ == '__main__':
 
     main = Main(fb=fb, pg=pg)
 
-    dados = main.fb_print_nivel1()
+    main.fb_print_nivel1()
 
-    # main.testa_pg()
-    # main.testa_insert_pg()
+    main.testa_pg()
 
     ### inserindo nível 1
 
