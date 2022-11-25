@@ -90,11 +90,31 @@ class FB():
             charset=db['OPTIONS']['charset'],
         )
 
+
+class PG():
+
+    def __init__(self, *args, **kwargs):
+        super(PG, self).__init__(*args, **kwargs)
+        self.con = self.connect('persona')
+        self.cur = self.con.cursor()
+
+    def connect(self, id):
+        db = _DATABASES[id]
+        return psycopg2.connect(
+            host=db['HOST'],
+            port=db['PORT'],
+            database=db['NAME'],
+            user=db['USER'],
+            password=db['PASSWORD'],
+        )
+
+
 class Main():
 
-    def __init__(self, fb, *args, **kwargs):
+    def __init__(self, fb, pg, *args, **kwargs):
         super(Main, self).__init__(*args, **kwargs)
         self.fb = fb
+        self.pg = pg
         self.test_context = {
             'msgs_ok': [],
             'msgs_erro': [],
@@ -102,6 +122,7 @@ class Main():
 
     def close(self):
         self.fb.con.close()
+        self.pg.con.close()
 
     def fb_print_nivel1(self):
         data = self.fb_get_pc_nivel1()
@@ -234,8 +255,9 @@ class Main():
 if __name__ == '__main__':
 
     fb = FB()
+    pg = PG()
 
-    main = Main(fb=fb)
+    main = Main(fb=fb, pg=pg)
 
     dados = main.fb_print_nivel1()
 
@@ -252,7 +274,7 @@ if __name__ == '__main__':
 
     main.pg_print_ca()
 
-    dados = main.fb_get_pc_nivel1(maior_que='6.0.00')
+    dados = main.fb_get_pc_nivel1(maior_que='7.0.00')
     fb.con.close()
     pprint(dados)
 
