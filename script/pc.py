@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-import csv
 import fdb
 import psycopg2
-import time
 import unicodedata 
 from pprint import pprint
 
@@ -62,13 +60,13 @@ def dictlist(cursor):
 def dictlist_lower(cursor):
     return custom_dictlist(cursor, name_case=str.lower)
 
-def tira_acento(texto):
+def no_accent(texto):
     process = unicodedata.normalize("NFD", texto)
     process = process.encode("ascii", "ignore")
     return process.decode("utf-8")
 
-def tira_acento_upper(texto):
-    return tira_acento(texto).upper()
+def no_accent_up(texto):
+    return no_accent(texto).upper()
 
 
 class FB():
@@ -120,19 +118,19 @@ class Main():
             'msgs_erro': [],
         }
 
-    def close(self):
+    def close_dbs(self):
         self.fb.con.close()
         self.pg.con.close()
 
-    def fb_print(self, nivel=0):
+    def fb_print_pc(self, nivel=0):
         data = self.fb_get_pc(nivel=nivel)
         for row in data:
             print("{conta};{descricao}".format(**row))
 
-    def pg_insert_ca(self, plano_auxiliar=None, nivel=1, codigo=None):
+    def pg_insert_pc_codigo(self, plano_auxiliar=None, nivel=1, codigo=None):
         if not (plano_auxiliar and codigo):
             return
-        if self.pg_get_caa(plano_auxiliar, codigo=codigo):
+        if self.pg_get_pc(plano_auxiliar, codigo=codigo):
             return False
         len_mae = {
             1: 0,
@@ -193,10 +191,10 @@ class Main():
 
         for row in data:
             row['conta'] = row['conta'].rstrip('.0').replace('.', '')
-            row['descricao'] = tira_acento_upper(row['descricao'])
+            row['descricao'] = no_accent_up(row['descricao'])
         return data
 
-    def pg_select_to_insert_caa(
+    def pg_select_to_insert_pc_nome(
             self, plano_auxiliar, ano, codigo, nome):
         return f"""
             select 
@@ -221,17 +219,17 @@ class Main():
               and ca.codigo = '{codigo}'
         """
 
-    def pg_print_to_insert_caa(
+    def pg_print_to_insert_pc_nome(
             self, plano_auxiliar, ano, codigo, nome):
-        sql = self.pg_select_to_insert_caa(
+        sql = self.pg_select_to_insert_pc_nome(
             plano_auxiliar, ano, codigo, nome)
         self.pg.cur.execute(sql)
         data = dictlist_lower(self.pg.cur)
         pprint(data)
 
-    def pg_insert_caa(
+    def pg_insert_pc_nome(
             self, plano_auxiliar, ano, codigo, nome):
-        verifica = self.pg_get_caa(plano_auxiliar, ano, codigo)
+        verifica = self.pg_get_pc(plano_auxiliar, ano, codigo)
         if verifica and verifica[0]['nome']:
             return False
         sql = f"""
@@ -242,13 +240,13 @@ class Main():
             , tenant
             , reduzido
             )
-        """ + self.pg_select_to_insert_caa(
+        """ + self.pg_select_to_insert_pc_nome(
             plano_auxiliar, ano, codigo, nome)
         self.pg.cur.execute(sql)
         self.pg.con.commit()
         return True
 
-    def pg_get_caa(self, plano_auxiliar, ano=0, codigo=None):
+    def pg_get_pc(self, plano_auxiliar, ano=0, codigo=None):
         filtra_codigo = (
             f"AND ca.codigo = '{codigo}'"
             if codigo else ''
@@ -272,31 +270,31 @@ class Main():
         data = dictlist_lower(self.pg.cur)
         return data
 
-    def pg_print_caa(self, plano_auxiliar, ano, codigo=None):
-        data = self.pg_get_caa(plano_auxiliar, ano, codigo=codigo)
+    def pg_print_pc(self, plano_auxiliar, ano, codigo=None):
+        data = self.pg_get_pc(plano_auxiliar, ano, codigo=codigo)
         if data:
             for row in data:
                 print(row['codigo'].ljust(4), row['nome'])
         else:
             print(codigo.ljust(4), "[]")
 
-    def pg_insert_all(self, plano_auxiliar, ano):
+    def pg_insert_pc(self, plano_auxiliar, ano):
         for nivel in range(1, 4):
-            self.pg_insert(
+            self.pg_insert_pc_nivel(
                 plano_auxiliar=plano_auxiliar, nivel=nivel, ano=ano)
 
-    def pg_insert(self, plano_auxiliar, nivel=1, ano=0):
+    def pg_insert_pc_nivel(self, plano_auxiliar, nivel=1, ano=0):
         dados = self.fb_get_pc(nivel=nivel)
         for row in dados:
-            self.pg_print_caa(plano_auxiliar, ano, row['conta'])
-            inseriu = self.pg_insert_ca(
+            self.pg_print_pc(plano_auxiliar, ano, row['conta'])
+            inseriu = self.pg_insert_pc_codigo(
                 plano_auxiliar, nivel=nivel, codigo=row['conta'])
             if inseriu:
-                self.pg_print_caa(plano_auxiliar, ano, row['conta'])
-            inseriu = self.pg_insert_caa(
+                self.pg_print_pc(plano_auxiliar, ano, row['conta'])
+            inseriu = self.pg_insert_pc_nome(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
             if inseriu:
-                self.pg_print_caa(plano_auxiliar, ano, row['conta'])
+                self.pg_print_pc(plano_auxiliar, ano, row['conta'])
 
 if __name__ == '__main__':
 
@@ -305,13 +303,13 @@ if __name__ == '__main__':
 
     main = Main(fb=fb, pg=pg)
 
-    # main.fb_print(nivel=2)
-    # main.pg_print_caa('SCC ANSELMO', 2022, '1')
-    # main.pg_print_caa('SCC ANSELMO', 2022)
+    # main.fb_print_pc(nivel=2)
+    # main.pg_print_pc('SCC ANSELMO', 2022, '1')
+    # main.pg_print_pc('SCC ANSELMO', 2022)
 
-    # main.pg_insert('SCC ANSELMO', nivel=1, ano=2022)
-    # main.pg_insert('SCC ANSELMO', nivel=2, ano=2022)
-    # main.pg_insert('SCC ANSELMO', nivel=3, ano=2022)
-    # main.pg_insert_all('SCC ANSELMO', ano=2022)
+    # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=1, ano=2022)
+    # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=2, ano=2022)
+    # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=3, ano=2022)
+    main.pg_insert_pc('SCC ANSELMO', ano=2022)
 
-    main.close()
+    main.close_dbs()
