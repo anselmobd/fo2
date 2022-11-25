@@ -230,7 +230,7 @@ class Main():
         data = dictlist_lower(self.pg.cur)
         pprint(data)
 
-    def pg_insert_caa_nivel1(
+    def pg_insert_caa(
             self, plano_auxiliar, ano, codigo, nome):
         verifica = self.pg_get_caa(plano_auxiliar, ano, codigo)
         if verifica and verifica[0]['nome']:
@@ -289,7 +289,7 @@ class Main():
             self.pg_insert_ca(plano_auxiliar, codigo=row['conta'])
             self.pg_print_to_insert_caa(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
-            self.pg_insert_caa_nivel1(
+            self.pg_insert_caa(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
 
         self.pg_print_caa(plano_auxiliar, ano)
@@ -302,7 +302,7 @@ class Main():
                 plano_auxiliar, nivel=2, codigo=row['conta'])
             if inseriu:
                 self.pg_print_caa(plano_auxiliar, ano, row['conta'])
-            inseriu = self.pg_insert_caa_nivel1(
+            inseriu = self.pg_insert_caa(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
             if inseriu:
                 self.pg_print_caa(plano_auxiliar, ano, row['conta'])
