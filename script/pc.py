@@ -248,7 +248,7 @@ class Main():
         return process.decode("utf-8")
 
 
-    def print_nivel1(self):
+    def fb_print_nivel1(self):
         data = self.exec(
             """
                 select
@@ -330,14 +330,19 @@ class Main():
             ),
         )
 
-    def lista_ca(self):
-        data = self.fetch_pg("""
+    def pg_get_ca(self):
+        return self.fetch_pg("""
             select 
               ca.*
             from contabil.contasauxiliares ca
             where ca.contamae is null
         """)
-        pprint(data)
+
+    def pg_print_ca(self):
+        data = self.pg_get_ca()
+        # pprint(data)
+        for row in data:
+            print(row['codigo'])
 
     def pg_insert_ca_nivel1(self, dados):
         self.exec_pg(
@@ -388,18 +393,20 @@ if __name__ == '__main__':
     # main.test_connection()
     # main.test_output()
     # main.pc_csv()
-    # dados = main.print_nivel1()
+    dados = main.fb_print_nivel1()
 
     # main.testa_pg()
     # main.testa_insert_pg()
 
-    main.lista_ca()
+    ### inserindo nível 1
 
-    dados = main.fb_get_pc_nivel1(maior_que='1.0.00')
-    for row in dados:
-        values = (
-            row['conta'],
-        )
-        main.pg_insert_ca_nivel1(values)
+    # main.lista_ca()
 
-    main.lista_ca()
+    # dados = main.fb_get_pc_nivel1(maior_que='1.0.00')
+    # for row in dados:
+    #     values = (
+    #         row['conta'],
+    #     )
+    #     main.pg_insert_ca_nivel1(values)
+
+    main.pg_print_ca()
