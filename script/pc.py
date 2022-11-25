@@ -145,20 +145,24 @@ class Main():
         codigo_mae = codigo[:len_mae[nivel]]
         sql = f"""
             insert into contabil.contasauxiliares (
-                planoauxiliar
+              planoauxiliar
             , contamae
             , codigo
             , tenant
             )
             select 
+              p.planoauxiliar 
                 p.planoauxiliar 
+              p.planoauxiliar 
             , ca.contaauxiliar contamae
             , '{codigo}' codigo
             , p.tenant
             from contabil.planosauxiliares p
             left join contabil.contasauxiliares ca
+              on ca.planoauxiliar = p.planoauxiliar 
                 on ca.planoauxiliar = p.planoauxiliar 
-                and ca.codigo = '{codigo_mae}'
+              on ca.planoauxiliar = p.planoauxiliar 
+              and ca.codigo = '{codigo_mae}'
             where p.codigo = '{plano_auxiliar}'
         """
         self.pg.cur.execute(sql)
@@ -204,8 +208,7 @@ class Main():
             , '{nome}' nome
             , ca.contaauxiliar
             , ca.tenant 
-            , (
-                select 
+            , ( select 
                   TO_CHAR((max(caa2.reduzido)::integer + 1), 'fm000000')
                 from contabil.planosauxiliares p2
                 join contabil.contasauxiliares ca2
