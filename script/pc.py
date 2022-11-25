@@ -137,20 +137,30 @@ class Main():
             return
         if self.pg_get_caa(plano_auxiliar, codigo=codigo):
             return False
-        if nivel == 1:
-            sql = f"""
-                insert into contabil.contasauxiliares (
-                  planoauxiliar
-                , codigo
-                , tenant
-                )
-                select 
-                  p.planoauxiliar
-                , '{codigo}'
-                , p.tenant  
-                from contabil.planosauxiliares p
-                where p.codigo = '{plano_auxiliar}'
-            """
+        len_mae = {
+            1: 0,
+            2: 1,
+            3: 2,
+        }
+        codigo_mae = codigo[:len_mae[nivel]]
+        sql = f"""
+            insert into contabil.contasauxiliares (
+                planoauxiliar
+            , contamae
+            , codigo
+            , tenant
+            )
+            select 
+                p.planoauxiliar 
+            , ca.contaauxiliar contamae
+            , '{codigo}' codigo
+            , p.tenant
+            from contabil.planosauxiliares p
+            left join contabil.contasauxiliares ca
+                on ca.planoauxiliar = p.planoauxiliar 
+                and ca.codigo = '{codigo_mae}'
+            where p.codigo = '{plano_auxiliar}'
+        """
         self.pg.cur.execute(sql)
         self.pg.con.commit()
         return True
