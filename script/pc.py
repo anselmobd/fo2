@@ -267,8 +267,8 @@ class Main():
               on ca.planoauxiliar = p.planoauxiliar 
             left join contabil.contasauxiliaresanuais caa
               on caa.contaauxiliar = ca.contaauxiliar 
-            where p.codigo = '{plano_auxiliar}'
               and caa.ano = {ano}
+            where p.codigo = '{plano_auxiliar}'
               {filtra_codigo} -- filtra_codigo
             order by
               ca.codigo
