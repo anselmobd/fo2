@@ -62,6 +62,14 @@ def dictlist(cursor):
 def dictlist_lower(cursor):
     return custom_dictlist(cursor, name_case=str.lower)
 
+def tira_acento(texto):
+    process = unicodedata.normalize("NFD", texto)
+    process = process.encode("ascii", "ignore")
+    return process.decode("utf-8")
+
+def tira_acento_upper(texto):
+    return tira_acento(texto).upper()
+
 
 class Main():
 
@@ -239,34 +247,13 @@ class Main():
 
         return data
     
-    def tira_acento_upper(self, texto):
-        return self.tira_acento(texto).upper()
-
-    def tira_acento(self, texto):
-        process = unicodedata.normalize("NFD", texto)
-        process = process.encode("ascii", "ignore")
-        return process.decode("utf-8")
-
-
-    def fb_get_pc_n1(self):
-        return self.exec(
-            """
-                select
-                  pc.*
-                from SCC_PLANOCONTASNOVO pc
-                where pc.conta not like '0%'
-                  and pc.conta like '%.0.00'
-                  and pc.conta > '1.0.00'
-            """
-        )
-
     def fb_print_nivel1(self):
-        data = self.fb_get_pc_n1()
+        data = self.fb_get_pc_nivel1()
         for row in data:
             row = dict(row)
-            row['CONTA'] = row['CONTA'].rstrip('.0')
-            row['DESCRICAO'] = self.tira_acento_upper(row['DESCRICAO'])
-            print("{CONTA};{DESCRICAO}".format(**row))
+            row['conta'] = row['conta'].rstrip('.0')
+            row['descricao'] = tira_acento_upper(row['descricao'])
+            print("{conta};{descricao}".format(**row))
 
         return data
 
@@ -393,7 +380,7 @@ class Main():
         )
         for row in data:
             row['conta'] = row['conta'].rstrip('.0')
-            row['descricao'] = self.tira_acento_upper(row['descricao'])
+            row['descricao'] = tira_acento_upper(row['descricao'])
         return data
 
 
