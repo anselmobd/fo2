@@ -202,7 +202,7 @@ class Main():
             , '{nome}' nome
             , ca.contaauxiliar
             , ca.tenant 
-            , ( select 
+            , coalesce(( select 
                   TO_CHAR((max(caa2.reduzido)::integer + 1), 'fm000000')
                 from contabil.planosauxiliares p2
                 join contabil.contasauxiliares ca2
@@ -211,7 +211,7 @@ class Main():
                   on caa2.contaauxiliar = ca2.contaauxiliar 
                 where p2.planoauxiliar = p.planoauxiliar
                   and caa2.ano = {ano}
-              ) reduzido
+              ), '000001') reduzido
             from contabil.planosauxiliares p
             join contabil.contasauxiliares ca
               on ca.planoauxiliar = p.planoauxiliar 
@@ -291,6 +291,7 @@ class Main():
                 plano_auxiliar, nivel=nivel, codigo=row['conta'])
             if inseriu:
                 self.pg_print_pc(plano_auxiliar, ano, row['conta'])
+                raise SystemExit
             inseriu = self.pg_insert_pc_nome(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
             if inseriu:
