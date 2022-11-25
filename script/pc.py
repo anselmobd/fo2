@@ -152,17 +152,13 @@ class Main():
             )
             select 
               p.planoauxiliar 
-                p.planoauxiliar 
-              p.planoauxiliar 
             , ca.contaauxiliar contamae
             , '{codigo}' codigo
             , p.tenant
             from contabil.planosauxiliares p
             left join contabil.contasauxiliares ca
               on ca.planoauxiliar = p.planoauxiliar 
-                on ca.planoauxiliar = p.planoauxiliar 
-              on ca.planoauxiliar = p.planoauxiliar 
-              and ca.codigo = '{codigo_mae}'
+             and ca.codigo = '{codigo_mae}'
             where p.codigo = '{plano_auxiliar}'
         """
         self.pg.cur.execute(sql)
@@ -175,6 +171,9 @@ class Main():
             2: """--
                 and pc.conta not like '%.0.00'
                 and pc.conta like '%.00'
+            """,
+            3: """--
+                and pc.conta not like '%.00'
             """,
         }
         filtro_maior_que = (
@@ -266,7 +265,7 @@ class Main():
               on ca.planoauxiliar = p.planoauxiliar 
             left join contabil.contasauxiliaresanuais caa
               on caa.contaauxiliar = ca.contaauxiliar 
-              and caa.ano = {ano}
+             and caa.ano = {ano}
             where p.codigo = '{plano_auxiliar}'
               {filtra_codigo} -- filtra_codigo
             order by
@@ -309,6 +308,7 @@ if __name__ == '__main__':
     # main.pg_print_caa('SCC ANSELMO', 2022)
 
     main.pg_insert('SCC ANSELMO', nivel=1, ano=2022)
-    # main.pg_insert('SCC ANSELMO', nivel=2, ano=2022)
+    main.pg_insert('SCC ANSELMO', nivel=2, ano=2022)
+    main.pg_insert('SCC ANSELMO', nivel=3, ano=2022)
 
     main.close()
