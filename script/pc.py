@@ -71,6 +71,25 @@ def tira_acento_upper(texto):
     return tira_acento(texto).upper()
 
 
+class FB():
+
+    def __init__(self, *args, **kwargs):
+        super(FB, self).__init__(*args, **kwargs)
+        self.con = self.connect('f1')
+        self.cur = self.con.cursor()
+
+    def connect(self, id):
+        db = _DATABASES[id]
+        return fdb.connect(
+            host=db['HOST'],
+            port=db['PORT'],
+            database=db['NAME'],
+            user=db['USER'],
+            password=db['PASSWORD'],
+            sql_dialect=db['DIALECT'],
+            charset=db['OPTIONS']['charset'],
+        )
+
 class Main():
 
     def __init__(self, *args, **kwargs):
