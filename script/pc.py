@@ -281,32 +281,18 @@ class Main():
         else:
             print(codigo.ljust(4), "[]")
 
-    def insere_nivel1(self, plano_auxiliar, ano):
-        self.pg_print_caa(plano_auxiliar, ano)
-
-        dados = self.fb_get_pc(nivel=1)
-        for row in dados:
-            self.pg_insert_ca(plano_auxiliar, codigo=row['conta'])
-            self.pg_print_to_insert_caa(
-                plano_auxiliar, ano, row['conta'], row['descricao'])
-            self.pg_insert_caa(
-                plano_auxiliar, ano, row['conta'], row['descricao'])
-
-        self.pg_print_caa(plano_auxiliar, ano)
-
-    def insere_nivel2(self, plano_auxiliar, ano):
-        dados = self.fb_get_pc(nivel=2)
+    def pg_insert(self, plano_auxiliar, nivel=1, ano=0):
+        dados = self.fb_get_pc(nivel=nivel)
         for row in dados:
             self.pg_print_caa(plano_auxiliar, ano, row['conta'])
             inseriu = self.pg_insert_ca(
-                plano_auxiliar, nivel=2, codigo=row['conta'])
+                plano_auxiliar, nivel=nivel, codigo=row['conta'])
             if inseriu:
                 self.pg_print_caa(plano_auxiliar, ano, row['conta'])
             inseriu = self.pg_insert_caa(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
             if inseriu:
                 self.pg_print_caa(plano_auxiliar, ano, row['conta'])
-
 
 if __name__ == '__main__':
 
@@ -319,7 +305,7 @@ if __name__ == '__main__':
     # main.pg_print_caa('SCC ANSELMO', 2022, '1')
     # main.pg_print_caa('SCC ANSELMO', 2022)
 
-    # main.insere_nivel1('SCC ANSELMO', 2022)
-    main.insere_nivel2('SCC ANSELMO', 2022)
+    main.pg_insert('SCC ANSELMO', nivel=1, ano=2022)
+    # main.pg_insert('SCC ANSELMO', nivel=2, ano=2022)
 
     main.close()
