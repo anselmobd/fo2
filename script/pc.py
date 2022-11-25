@@ -291,7 +291,6 @@ class Main():
                 plano_auxiliar, nivel=nivel, codigo=row['conta'])
             if inseriu:
                 self.pg_print_pc(plano_auxiliar, ano, row['conta'])
-                raise SystemExit
             inseriu = self.pg_insert_pc_nome(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
             if inseriu:
