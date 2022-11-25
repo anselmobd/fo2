@@ -234,7 +234,7 @@ class Main():
             self, plano_auxiliar, ano, codigo, nome):
         verifica = self.pg_get_caa(plano_auxiliar, ano, codigo)
         if verifica and verifica[0]['nome']:
-            return
+            return False
         sql = f"""
             insert into contabil.contasauxiliaresanuais (
               ano
@@ -247,6 +247,7 @@ class Main():
             plano_auxiliar, ano, codigo, nome)
         self.pg.cur.execute(sql)
         self.pg.con.commit()
+        return True
 
     def pg_get_caa(self, plano_auxiliar, ano=0, codigo=None):
         filtra_codigo = (
