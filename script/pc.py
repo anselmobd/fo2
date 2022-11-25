@@ -170,9 +170,13 @@ class Main():
         self.pg.cur.execute(sql, (codigo, ))
         self.pg.con.commit()
 
-    def fb_get_pc(self, nivel=1, maior_que=None):
+    def fb_get_pc(self, nivel=2, maior_que=None):
         filtro_nivel = {
             1: "and pc.conta like '%.0.00'" ,
+            2: """--
+                and pc.conta not like '%.0.00'
+                and pc.conta like '%.00'
+            """,
         }
         filtro_maior_que = (
             f"and pc.conta > '{maior_que}'"
@@ -189,7 +193,6 @@ class Main():
             order by
               pc.conta
         """
-
         self.fb.cur.execute(sql)
         data = dictlist_lower(self.fb.cur)
 
