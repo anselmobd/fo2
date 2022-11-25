@@ -125,7 +125,7 @@ class Main():
         self.pg.con.close()
 
     def fb_print_nivel1(self):
-        data = self.fb_get_pc_nivel1()
+        data = self.fb_get_pc(nivel=1)
 
         for row in data:
             row['conta'] = row['conta'].rstrip('.0')
@@ -170,17 +170,26 @@ class Main():
         self.pg.cur.execute(sql, (codigo, ))
         self.pg.con.commit()
 
-    def fb_get_pc_nivel1(self, maior_que=' '):
+    def fb_get_pc(self, nivel=1, maior_que=None):
+        filtro_nivel = {
+            1: "and pc.conta like '%.0.00'" ,
+        }
+        filtro_maior_que = (
+            f"and pc.conta > '{maior_que}'"
+            if maior_que else ''
+        )
         sql = f"""
             select
-                pc.*
+              pc.*
             from SCC_PLANOCONTASNOVO pc
-            where pc.conta not like '0%'
-                and pc.conta like '%.0.00'
-                and pc.conta > '{maior_que}'
+            where 1=1
+              and pc.conta not like '0%'
+              {filtro_nivel[nivel]} -- filtro_nivel
+              {filtro_maior_que} -- filtro_maior_que
             order by
-                pc.conta
+              pc.conta
         """
+
         self.fb.cur.execute(sql)
         data = dictlist_lower(self.fb.cur)
 
@@ -272,7 +281,7 @@ class Main():
     def insere_nivel1(self, plano_auxiliar, ano):
         self.pg_print_caa()
 
-        dados = self.fb_get_pc_nivel1()
+        dados = self.fb_get_pc(nivel=1)
         for row in dados:
             self.pg_insert_ca_nivel1(codigo=row['conta'])
             self.pg_print_test(
