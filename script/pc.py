@@ -165,7 +165,7 @@ class Main():
         self.pg.con.commit()
         return True
 
-    def fb_get_pc(self, nivel=2, maior_que=None):
+    def fb_get_pc(self, nivel=0, maior_que=None):
         filtro_nivel = {
             1: "and pc.conta like '%.0.00'" ,
             2: """--
@@ -283,6 +283,11 @@ class Main():
         else:
             print(codigo.ljust(4), "[]")
 
+    def pg_insert_all(self, plano_auxiliar, ano):
+        for nivel in range(1, 4):
+            self.pg_insert(
+                plano_auxiliar=plano_auxiliar, nivel=nivel, ano=ano)
+
     def pg_insert(self, plano_auxiliar, nivel=1, ano=0):
         dados = self.fb_get_pc(nivel=nivel)
         for row in dados:
@@ -307,8 +312,9 @@ if __name__ == '__main__':
     # main.pg_print_caa('SCC ANSELMO', 2022, '1')
     # main.pg_print_caa('SCC ANSELMO', 2022)
 
-    main.pg_insert('SCC ANSELMO', nivel=1, ano=2022)
-    main.pg_insert('SCC ANSELMO', nivel=2, ano=2022)
-    main.pg_insert('SCC ANSELMO', nivel=3, ano=2022)
+    # main.pg_insert('SCC ANSELMO', nivel=1, ano=2022)
+    # main.pg_insert('SCC ANSELMO', nivel=2, ano=2022)
+    # main.pg_insert('SCC ANSELMO', nivel=3, ano=2022)
+    main.pg_insert_all('SCC ANSELMO', ano=2022)
 
     main.close()
