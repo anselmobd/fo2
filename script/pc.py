@@ -132,71 +132,25 @@ class Main():
             row['descricao'] = tira_acento_upper(row['descricao'])
             print("{conta};{descricao}".format(**row))
 
-    def connect_pg(self, id):
-        db = _DATABASES[id]
-
-        self.pgcon = psycopg2.connect(
-            host=db['HOST'],
-            port=db['PORT'],
-            database=db['NAME'],
-            user=db['USER'],
-            password=db['PASSWORD'],
-        )
-
-    def set_cursor_pg(self):
-        self.pgcursor = self.pgcon.cursor()
-
-    def fetch_pg(self, sql):
-        self.connect_pg('persona')
-        self.set_cursor_pg()
-
-        self.pgcursor.execute(sql)
-        # data = self.pgcursor.fetchall()
-
-        data = dictlist_lower(self.pgcursor)
-
-        self.pgcon.close()
-
-        return data
-
-    def testa_pg(self):
-        data = self.fetch_pg("""
-            select 
-            p.codigo
-            , p.descricao 
-            from contabil.planosauxiliares p
-            where p.codigo = 'SCC ANSELMO'
-        """)
-        pprint(data)
-
-    def exec_pg(self, sql, dados):
-        # pprint(sql)
-        # pprint(dados)
-        self.connect_pg('persona')
-        self.set_cursor_pg()
-
-        self.pgcursor.execute(sql, dados)
-
-        self.pgcon.commit()
-        self.pgcursor.close()
-        self.pgcon.close()
-
     def pg_get_ca(self, codigo=None):
         filtra_codigo = (
             f"AND ca.codigo = '{codigo}'"
             if codigo else ''
         )
-        return self.fetch_pg(f"""
+        sql = f"""
             select 
               ca.*
             from contabil.contasauxiliares ca
             where ca.contamae is null
               {filtra_codigo} -- filtra_codigo
-        """)
+        """
+        self.pg.cur.execute(sql)
+        data = dictlist_lower(self.pg.cur)
+        return data
+
 
     def pg_print_ca(self):
         data = self.pg_get_ca()
-        # pprint(data)
         for row in data:
             print(row['codigo'])
 
@@ -212,7 +166,9 @@ class Main():
                 from contabil.planosauxiliares p
                 where p.codigo = 'SCC ANSELMO'
             """
-            self.exec_pg(sql, (codigo, ))
+            self.pg.cur.execute(sql, (codigo, ))
+
+            self.pg.con.commit()
 
     def fb_get_pc_nivel1(self, maior_que=' '):
         sql = f"""
@@ -243,9 +199,7 @@ if __name__ == '__main__':
 
     main.fb_print_nivel1()
 
-    main.testa_pg()
-
-    ### inserindo nível 1
+    ### inicio - inserindo nível 1
 
     main.pg_print_ca()
 
@@ -254,6 +208,8 @@ if __name__ == '__main__':
         main.pg_insert_ca_nivel1(codigo=row['conta'])
 
     main.pg_print_ca()
+
+    ### fim - inserindo nível 1
 
     dados = main.fb_get_pc_nivel1(maior_que='7.0.00')
     fb.con.close()
