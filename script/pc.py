@@ -248,8 +248,8 @@ class Main():
         return process.decode("utf-8")
 
 
-    def fb_print_nivel1(self):
-        data = self.exec(
+    def fb_get_pc_n1(self):
+        return self.exec(
             """
                 select
                   pc.*
@@ -259,6 +259,9 @@ class Main():
                   and pc.conta > '1.0.00'
             """
         )
+
+    def fb_print_nivel1(self):
+        data = self.fb_get_pc_n1()
         for row in data:
             row = dict(row)
             row['CONTA'] = row['CONTA'].rstrip('.0')
@@ -305,6 +308,8 @@ class Main():
         pprint(data)
 
     def exec_pg(self, sql, dados):
+        # pprint(sql)
+        # pprint(dados)
         self.connect_pg('persona')
         self.set_cursor_pg()
 
@@ -330,12 +335,17 @@ class Main():
             ),
         )
 
-    def pg_get_ca(self):
-        return self.fetch_pg("""
+    def pg_get_ca(self, codigo=None):
+        filtra_codigo = (
+            f"AND ca.codigo = '{codigo}'"
+            if codigo else ''
+        )
+        return self.fetch_pg(f"""
             select 
               ca.*
             from contabil.contasauxiliares ca
             where ca.contamae is null
+              {filtra_codigo} -- filtra_codigo
         """)
 
     def pg_print_ca(self):
@@ -344,19 +354,19 @@ class Main():
         for row in data:
             print(row['codigo'])
 
-    def pg_insert_ca_nivel1(self, dados):
-        self.exec_pg(
-            """
-                insert into contabil.contasauxiliares (planoauxiliar, codigo, tenant)
+    def pg_insert_ca_nivel1(self, codigo):
+        if not self.pg_get_ca(codigo):
+            sql = """
+                insert into contabil.contasauxiliares
+                  (planoauxiliar, codigo, tenant)
                 select 
                   p.planoauxiliar 
                 , %s
                 , p.tenant  
                 from contabil.planosauxiliares p
                 where p.codigo = 'SCC ANSELMO'
-            """,
-            dados,
-        )
+            """
+            self.exec_pg(sql, (codigo, ))
 
     def exec_dictlist_lower(self, sql):
         self.connect_fdb('f1')
@@ -400,13 +410,10 @@ if __name__ == '__main__':
 
     ### inserindo nível 1
 
-    # main.lista_ca()
+    main.pg_print_ca()
 
-    # dados = main.fb_get_pc_nivel1(maior_que='1.0.00')
-    # for row in dados:
-    #     values = (
-    #         row['conta'],
-    #     )
-    #     main.pg_insert_ca_nivel1(values)
+    dados = main.fb_get_pc_nivel1(maior_que='1.0.00')
+    for row in dados:
+        main.pg_insert_ca_nivel1(codigo=row['conta'])
 
     main.pg_print_ca()
