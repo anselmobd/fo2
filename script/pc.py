@@ -297,7 +297,7 @@ class Main():
 
         dados = self.fb_get_pc(nivel=1)
         for row in dados:
-            self.pg_insert_ca(codigo=row['conta'])
+            self.pg_insert_ca(plano_auxiliar, codigo=row['conta'])
             self.pg_print_to_insert_caa(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
             self.pg_insert_caa_nivel1(
