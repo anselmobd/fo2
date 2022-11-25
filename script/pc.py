@@ -154,29 +154,28 @@ class Main():
         for row in data:
             print(row['codigo'])
 
-    def pg_insert_ca(self, codigo, nivel=1):
-        if self.pg_get_ca(codigo):
+    def pg_insert_ca(self, plano_auxiliar=None, nivel=1, codigo=None):
+        if not plano_auxiliar or codigo:
             return
+        if self.pg_get_ca(codigo):
+            return False
         if nivel == 1:
             sql = f"""
                 insert into contabil.contasauxiliares (
-                planoauxiliar
+                  planoauxiliar
                 , codigo
                 , tenant
                 )
                 select 
-            select 
-                select 
-                p.planoauxiliar
+                  p.planoauxiliar
                 , '{codigo}'
                 , p.tenant  
-            , p.tenant  
-                , p.tenant  
                 from contabil.planosauxiliares p
-                where p.codigo = 'SCC ANSELMO'
+                where p.codigo = '{plano_auxiliar}'
             """
         self.pg.cur.execute(sql)
         self.pg.con.commit()
+        return True
 
     def fb_get_pc(self, nivel=2, maior_que=None):
         filtro_nivel = {
