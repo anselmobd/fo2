@@ -124,12 +124,9 @@ class Main():
         self.fb.con.close()
         self.pg.con.close()
 
-    def fb_print_nivel1(self):
-        data = self.fb_get_pc(nivel=1)
-
+    def fb_print(self, nivel=0):
+        data = self.fb_get_pc(nivel=nivel)
         for row in data:
-            row['conta'] = row['conta'].rstrip('.0')
-            row['descricao'] = tira_acento_upper(row['descricao'])
             print("{conta};{descricao}".format(**row))
 
     def pg_insert_ca(self, plano_auxiliar=None, nivel=1, codigo=None):
@@ -308,13 +305,13 @@ if __name__ == '__main__':
 
     main = Main(fb=fb, pg=pg)
 
-    # main.fb_print_nivel1()
+    # main.fb_print(nivel=2)
     # main.pg_print_caa('SCC ANSELMO', 2022, '1')
     # main.pg_print_caa('SCC ANSELMO', 2022)
 
     # main.pg_insert('SCC ANSELMO', nivel=1, ano=2022)
     # main.pg_insert('SCC ANSELMO', nivel=2, ano=2022)
     # main.pg_insert('SCC ANSELMO', nivel=3, ano=2022)
-    main.pg_insert_all('SCC ANSELMO', ano=2022)
+    # main.pg_insert_all('SCC ANSELMO', ano=2022)
 
     main.close()
