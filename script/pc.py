@@ -234,7 +234,7 @@ class Main():
               and ca.codigo = '{codigo}'
         """
 
-    def pg_print_test(
+    def pg_print_to_insert_caa(
             self, plano_auxiliar, ano, codigo, nome):
         sql = self.pg_select_to_insert_caa(
             plano_auxiliar, ano, codigo, nome)
@@ -298,7 +298,7 @@ class Main():
         dados = self.fb_get_pc(nivel=1)
         for row in dados:
             self.pg_insert_ca(codigo=row['conta'])
-            self.pg_print_test(
+            self.pg_print_to_insert_caa(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
             self.pg_insert_caa_nivel1(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
