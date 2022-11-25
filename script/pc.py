@@ -197,7 +197,7 @@ class Main():
         data = dictlist_lower(self.fb.cur)
 
         for row in data:
-            row['conta'] = row['conta'].rstrip('.0')
+            row['conta'] = row['conta'].rstrip('.0').replace('.', '')
             row['descricao'] = tira_acento_upper(row['descricao'])
         return data
 
