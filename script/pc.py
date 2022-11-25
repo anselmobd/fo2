@@ -276,8 +276,11 @@ class Main():
 
     def pg_print_caa(self, plano_auxiliar, ano, codigo=None):
         data = self.pg_get_caa(plano_auxiliar, ano, codigo=codigo)
-        for row in data:
-            print(row['codigo'].ljust(4), row['nome'])
+        if data:
+            for row in data:
+                print(row['codigo'].ljust(4), row['nome'])
+        else:
+            print(codigo.ljust(4), "[]")
 
     def insere_nivel1(self, plano_auxiliar, ano):
         self.pg_print_caa(plano_auxiliar, ano)
