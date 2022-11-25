@@ -127,10 +127,10 @@ class Main():
         for row in data:
             print("{conta};{descricao}".format(**row))
 
-    def pg_insert_pc_codigo(self, plano_auxiliar=None, nivel=1, codigo=None):
-        if not (plano_auxiliar and codigo):
+    def pg_insert_pc_codigo(self, nome_pc=None, nivel=1, codigo=None):
+        if not (nome_pc and codigo):
             return
-        if self.pg_get_pc(plano_auxiliar, codigo=codigo):
+        if self.pg_get_pc(nome_pc, codigo=codigo):
             return False
         len_mae = {
             1: 0,
@@ -154,7 +154,7 @@ class Main():
             left join contabil.contasauxiliares ca
               on ca.planoauxiliar = p.planoauxiliar 
              and ca.codigo = '{codigo_mae}'
-            where p.codigo = '{plano_auxiliar}'
+            where p.codigo = '{nome_pc}'
         """
         self.pg.cur.execute(sql)
         self.pg.con.commit()
@@ -195,7 +195,7 @@ class Main():
         return data
 
     def pg_select_to_insert_pc_nome(
-            self, plano_auxiliar, ano, codigo, nome):
+            self, nome_pc, ano, codigo, nome):
         return f"""
             select 
               {ano} ano
@@ -215,21 +215,21 @@ class Main():
             from contabil.planosauxiliares p
             join contabil.contasauxiliares ca
               on ca.planoauxiliar = p.planoauxiliar 
-            where p.codigo = '{plano_auxiliar}'
+            where p.codigo = '{nome_pc}'
               and ca.codigo = '{codigo}'
         """
 
     def pg_print_to_insert_pc_nome(
-            self, plano_auxiliar, ano, codigo, nome):
+            self, nome_pc, ano, codigo, nome):
         sql = self.pg_select_to_insert_pc_nome(
-            plano_auxiliar, ano, codigo, nome)
+            nome_pc, ano, codigo, nome)
         self.pg.cur.execute(sql)
         data = dictlist_lower(self.pg.cur)
         pprint(data)
 
     def pg_insert_pc_nome(
-            self, plano_auxiliar, ano, codigo, nome):
-        verifica = self.pg_get_pc(plano_auxiliar, ano, codigo)
+            self, nome_pc, ano, codigo, nome):
+        verifica = self.pg_get_pc(nome_pc, ano, codigo)
         if verifica and verifica[0]['nome']:
             return False
         sql = f"""
@@ -241,12 +241,12 @@ class Main():
             , reduzido
             )
         """ + self.pg_select_to_insert_pc_nome(
-            plano_auxiliar, ano, codigo, nome)
+            nome_pc, ano, codigo, nome)
         self.pg.cur.execute(sql)
         self.pg.con.commit()
         return True
 
-    def pg_get_pc(self, plano_auxiliar, ano=0, codigo=None):
+    def pg_get_pc(self, nome_pc, ano=0, codigo=None):
         filtra_codigo = (
             f"AND ca.codigo = '{codigo}'"
             if codigo else ''
@@ -261,7 +261,7 @@ class Main():
             left join contabil.contasauxiliaresanuais caa
               on caa.contaauxiliar = ca.contaauxiliar 
              and caa.ano = {ano}
-            where p.codigo = '{plano_auxiliar}'
+            where p.codigo = '{nome_pc}'
               {filtra_codigo} -- filtra_codigo
             order by
               ca.codigo
@@ -270,31 +270,31 @@ class Main():
         data = dictlist_lower(self.pg.cur)
         return data
 
-    def pg_print_pc(self, plano_auxiliar, ano, codigo=None):
-        data = self.pg_get_pc(plano_auxiliar, ano, codigo=codigo)
+    def pg_print_pc(self, nome_pc, ano, codigo=None):
+        data = self.pg_get_pc(nome_pc, ano, codigo=codigo)
         if data:
             for row in data:
                 print(row['codigo'].ljust(4), row['nome'])
         else:
             print(codigo.ljust(4), "[]")
 
-    def pg_insert_pc(self, plano_auxiliar, ano):
+    def pg_insert_pc(self, nome_pc, ano):
         for nivel in range(1, 4):
             self.pg_insert_pc_nivel(
-                plano_auxiliar=plano_auxiliar, nivel=nivel, ano=ano)
+                nome_pc=nome_pc, nivel=nivel, ano=ano)
 
-    def pg_insert_pc_nivel(self, plano_auxiliar, nivel=1, ano=0):
+    def pg_insert_pc_nivel(self, nome_pc, nivel=1, ano=0):
         dados = self.fb_get_pc(nivel=nivel)
         for row in dados:
-            self.pg_print_pc(plano_auxiliar, ano, row['conta'])
+            self.pg_print_pc(nome_pc, ano, row['conta'])
             inseriu = self.pg_insert_pc_codigo(
-                plano_auxiliar, nivel=nivel, codigo=row['conta'])
+                nome_pc, nivel=nivel, codigo=row['conta'])
             if inseriu:
-                self.pg_print_pc(plano_auxiliar, ano, row['conta'])
+                self.pg_print_pc(nome_pc, ano, row['conta'])
             inseriu = self.pg_insert_pc_nome(
-                plano_auxiliar, ano, row['conta'], row['descricao'])
+                nome_pc, ano, row['conta'], row['descricao'])
             if inseriu:
-                self.pg_print_pc(plano_auxiliar, ano, row['conta'])
+                self.pg_print_pc(nome_pc, ano, row['conta'])
 
 if __name__ == '__main__':
 
