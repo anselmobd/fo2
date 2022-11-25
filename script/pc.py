@@ -132,32 +132,10 @@ class Main():
             row['descricao'] = tira_acento_upper(row['descricao'])
             print("{conta};{descricao}".format(**row))
 
-    def pg_get_ca(self, codigo=None):
-        filtra_codigo = (
-            f"AND ca.codigo = '{codigo}'"
-            if codigo else ''
-        )
-        sql = f"""
-            select 
-              ca.*
-            from contabil.contasauxiliares ca
-            where ca.contamae is null
-              {filtra_codigo} -- filtra_codigo
-        """
-        self.pg.cur.execute(sql)
-        data = dictlist_lower(self.pg.cur)
-        return data
-
-
-    def pg_print_ca(self):
-        data = self.pg_get_ca()
-        for row in data:
-            print(row['codigo'])
-
     def pg_insert_ca(self, plano_auxiliar=None, nivel=1, codigo=None):
         if not (plano_auxiliar and codigo):
             return
-        if self.pg_get_ca(codigo):
+        if self.pg_get_caa(plano_auxiliar, codigo=codigo):
             return False
         if nivel == 1:
             sql = f"""
@@ -260,7 +238,7 @@ class Main():
         self.pg.cur.execute(sql)
         self.pg.con.commit()
 
-    def pg_get_caa(self, plano_auxiliar, ano, codigo=None):
+    def pg_get_caa(self, plano_auxiliar, ano=0, codigo=None):
         filtra_codigo = (
             f"AND ca.codigo = '{codigo}'"
             if codigo else ''
