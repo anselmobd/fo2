@@ -155,20 +155,20 @@ class Main():
             print(row['codigo'])
 
     def pg_insert_ca_nivel1(self, codigo):
-        if not self.pg_get_ca(codigo):
-            sql = """
-                insert into contabil.contasauxiliares
-                  (planoauxiliar, codigo, tenant)
-                select 
-                  p.planoauxiliar 
-                , %s
-                , p.tenant  
-                from contabil.planosauxiliares p
-                where p.codigo = 'SCC ANSELMO'
-            """
-            self.pg.cur.execute(sql, (codigo, ))
-
-            self.pg.con.commit()
+        if self.pg_get_ca(codigo):
+            return
+        sql = """
+            insert into contabil.contasauxiliares
+                (planoauxiliar, codigo, tenant)
+            select 
+                p.planoauxiliar 
+            , %s
+            , p.tenant  
+            from contabil.planosauxiliares p
+            where p.codigo = 'SCC ANSELMO'
+        """
+        self.pg.cur.execute(sql, (codigo, ))
+        self.pg.con.commit()
 
     def fb_get_pc_nivel1(self, maior_que=' '):
         sql = f"""
@@ -189,6 +189,99 @@ class Main():
             row['descricao'] = tira_acento_upper(row['descricao'])
         return data
 
+    def pg_select_to_insert_caa(
+            self, plano_auxiliar, ano, codigo, nome):
+        return f"""
+            select 
+              {ano} ano
+            , '{nome}' nome
+            , ca.contaauxiliar
+            , ca.tenant 
+            , (
+                select 
+                  TO_CHAR((max(caa2.reduzido)::integer + 1), 'fm000000')
+                from contabil.planosauxiliares p2
+                join contabil.contasauxiliares ca2
+                  on ca2.planoauxiliar = p2.planoauxiliar 
+                join contabil.contasauxiliaresanuais caa2
+                  on caa2.contaauxiliar = ca2.contaauxiliar 
+                where p2.planoauxiliar = p.planoauxiliar
+                  and caa2.ano = {ano}
+              ) reduzido
+            from contabil.planosauxiliares p
+            join contabil.contasauxiliares ca
+              on ca.planoauxiliar = p.planoauxiliar 
+            where p.codigo = '{plano_auxiliar}'
+              and ca.codigo = '{codigo}'
+        """
+
+    def pg_print_test(
+            self, plano_auxiliar, ano, codigo, nome):
+        sql = self.pg_select_to_insert_caa(
+            plano_auxiliar, ano, codigo, nome)
+        self.pg.cur.execute(sql)
+        data = dictlist_lower(self.pg.cur)
+        pprint(data)
+
+    def pg_insert_caa_nivel1(
+            self, plano_auxiliar, ano, codigo, nome):
+        verifica = self.pg_get_caa(codigo)
+        if verifica and verifica[0]['nome']:
+            return
+        sql = f"""
+            insert into contabil.contasauxiliaresanuais (
+              ano
+            , nome
+            , contaauxiliar
+            , tenant
+            , reduzido
+            )
+        """ + self.pg_select_to_insert_caa(
+            plano_auxiliar, ano, codigo, nome)
+        self.pg.cur.execute(sql)
+        self.pg.con.commit()
+
+    def pg_get_caa(self, codigo=None):
+        filtra_codigo = (
+            f"AND ca.codigo = '{codigo}'"
+            if codigo else ''
+        )
+        sql = f"""
+            select 
+              ca.codigo 
+            , caa.*
+            from contabil.planosauxiliares p
+            join contabil.contasauxiliares ca
+              on ca.planoauxiliar = p.planoauxiliar 
+            left join contabil.contasauxiliaresanuais caa
+              on caa.contaauxiliar = ca.contaauxiliar 
+            where p.codigo = 'SCC ANSELMO'
+              {filtra_codigo} -- filtra_codigo
+            order by
+              ca.codigo
+        """
+        self.pg.cur.execute(sql)
+        data = dictlist_lower(self.pg.cur)
+        return data
+
+    def pg_print_caa(self, codigo=None):
+        data = self.pg_get_caa(codigo=codigo)
+        for row in data:
+            print(row['codigo'].ljust(4), row['nome'])
+
+    def insere_nivel1(self, plano_auxiliar, ano):
+        self.pg_print_caa()
+
+        dados = self.fb_get_pc_nivel1()
+        for row in dados:
+            self.pg_insert_ca_nivel1(codigo=row['conta'])
+            self.pg_print_test(
+                plano_auxiliar, ano, row['conta'], row['descricao'])
+            self.pg_insert_caa_nivel1(
+                plano_auxiliar, ano, row['conta'], row['descricao'])
+
+        self.pg_print_caa()
+
 
 if __name__ == '__main__':
 
@@ -197,22 +290,10 @@ if __name__ == '__main__':
 
     main = Main(fb=fb, pg=pg)
 
-    main.fb_print_nivel1()
+    # main.fb_print_nivel1()
+    # main.pg_print_caa('1')
+    # main.pg_print_caa('2')
 
-    ### inicio - inserindo nível 1
-
-    main.pg_print_ca()
-
-    dados = main.fb_get_pc_nivel1(maior_que='1.0.00')
-    for row in dados:
-        main.pg_insert_ca_nivel1(codigo=row['conta'])
-
-    main.pg_print_ca()
-
-    ### fim - inserindo nível 1
-
-    dados = main.fb_get_pc_nivel1(maior_que='7.0.00')
-    fb.con.close()
-    pprint(dados)
+    main.insere_nivel1('SCC ANSELMO', 2022)
 
     main.close()
