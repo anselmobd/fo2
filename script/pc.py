@@ -298,12 +298,14 @@ class Main():
         dados = self.fb_get_pc(nivel=2)
         for row in dados:
             self.pg_print_caa(plano_auxiliar, ano, row['conta'])
-            if self.pg_insert_ca(
-                    plano_auxiliar, nivel=2, codigo=row['conta']):
-                break
-            # self.pg_print_to_insert_caa(
-            #     plano_auxiliar, ano, row['conta'], row['descricao'])
-            # self.pg_print_caa(plano_auxiliar, ano, row['conta'])
+            inseriu = self.pg_insert_ca(
+                plano_auxiliar, nivel=2, codigo=row['conta'])
+            if inseriu:
+                self.pg_print_caa(plano_auxiliar, ano, row['conta'])
+            inseriu = self.pg_insert_caa_nivel1(
+                plano_auxiliar, ano, row['conta'], row['descricao'])
+            if inseriu:
+                self.pg_print_caa(plano_auxiliar, ano, row['conta'])
 
 
 if __name__ == '__main__':
