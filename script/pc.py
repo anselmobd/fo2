@@ -155,7 +155,7 @@ class Main():
             print(row['codigo'])
 
     def pg_insert_ca(self, plano_auxiliar=None, nivel=1, codigo=None):
-        if not plano_auxiliar or codigo:
+        if not (plano_auxiliar and codigo):
             return
         if self.pg_get_ca(codigo):
             return False
