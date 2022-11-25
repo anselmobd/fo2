@@ -234,7 +234,7 @@ class Main():
 
     def pg_insert_caa_nivel1(
             self, plano_auxiliar, ano, codigo, nome):
-        verifica = self.pg_get_caa(codigo)
+        verifica = self.pg_get_caa(plano_auxiliar, ano, codigo)
         if verifica and verifica[0]['nome']:
             return
         sql = f"""
@@ -250,7 +250,7 @@ class Main():
         self.pg.cur.execute(sql)
         self.pg.con.commit()
 
-    def pg_get_caa(self, codigo=None):
+    def pg_get_caa(self, plano_auxiliar, ano, codigo=None):
         filtra_codigo = (
             f"AND ca.codigo = '{codigo}'"
             if codigo else ''
@@ -264,7 +264,8 @@ class Main():
               on ca.planoauxiliar = p.planoauxiliar 
             left join contabil.contasauxiliaresanuais caa
               on caa.contaauxiliar = ca.contaauxiliar 
-            where p.codigo = 'SCC ANSELMO'
+            where p.codigo = '{plano_auxiliar}'
+              and caa.ano = {ano}
               {filtra_codigo} -- filtra_codigo
             order by
               ca.codigo
@@ -273,13 +274,13 @@ class Main():
         data = dictlist_lower(self.pg.cur)
         return data
 
-    def pg_print_caa(self, codigo=None):
-        data = self.pg_get_caa(codigo=codigo)
+    def pg_print_caa(self, plano_auxiliar, ano, codigo=None):
+        data = self.pg_get_caa(plano_auxiliar, ano, codigo=codigo)
         for row in data:
             print(row['codigo'].ljust(4), row['nome'])
 
     def insere_nivel1(self, plano_auxiliar, ano):
-        self.pg_print_caa()
+        self.pg_print_caa(plano_auxiliar, ano)
 
         dados = self.fb_get_pc(nivel=1)
         for row in dados:
@@ -289,7 +290,7 @@ class Main():
             self.pg_insert_caa_nivel1(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
 
-        self.pg_print_caa()
+        self.pg_print_caa(plano_auxiliar, ano)
 
 
 if __name__ == '__main__':
@@ -300,8 +301,8 @@ if __name__ == '__main__':
     main = Main(fb=fb, pg=pg)
 
     # main.fb_print_nivel1()
-    # main.pg_print_caa('1')
-    # main.pg_print_caa('2')
+    # main.pg_print_caa('SCC ANSELMO', 2022, '1')
+    # main.pg_print_caa('SCC ANSELMO', 2022, '2')
 
     main.insere_nivel1('SCC ANSELMO', 2022)
 
