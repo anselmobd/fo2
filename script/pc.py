@@ -154,20 +154,28 @@ class Main():
         for row in data:
             print(row['codigo'])
 
-    def pg_insert_ca_nivel1(self, codigo):
+    def pg_insert_ca(self, codigo, nivel=1):
         if self.pg_get_ca(codigo):
             return
-        sql = """
-            insert into contabil.contasauxiliares
-                (planoauxiliar, codigo, tenant)
+        if nivel == 1:
+            sql = f"""
+                insert into contabil.contasauxiliares (
+                planoauxiliar
+                , codigo
+                , tenant
+                )
+                select 
             select 
-                p.planoauxiliar 
-            , %s
+                select 
+                p.planoauxiliar
+                , '{codigo}'
+                , p.tenant  
             , p.tenant  
-            from contabil.planosauxiliares p
-            where p.codigo = 'SCC ANSELMO'
-        """
-        self.pg.cur.execute(sql, (codigo, ))
+                , p.tenant  
+                from contabil.planosauxiliares p
+                where p.codigo = 'SCC ANSELMO'
+            """
+        self.pg.cur.execute(sql)
         self.pg.con.commit()
 
     def fb_get_pc(self, nivel=2, maior_que=None):
@@ -290,7 +298,7 @@ class Main():
 
         dados = self.fb_get_pc(nivel=1)
         for row in dados:
-            self.pg_insert_ca_nivel1(codigo=row['conta'])
+            self.pg_insert_ca(codigo=row['conta'])
             self.pg_print_test(
                 plano_auxiliar, ano, row['conta'], row['descricao'])
             self.pg_insert_caa_nivel1(
