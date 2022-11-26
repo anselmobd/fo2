@@ -132,7 +132,7 @@ class Main():
         for row in data:
             print("{estrutura};{descricao}".format(**row))
 
-    def pg_insert_pc_codigo(self, nome_pc=None, nivel=1, codigo=None):
+    def pg_insert_pc_codigo(self, nome_pc=None, ano=0, nivel=1, codigo=None):
         if not (nome_pc and codigo):
             return
         if self.pg_get_pc(nome_pc, codigo=codigo):
@@ -354,7 +354,7 @@ class Main():
         for row in dados:
             self.pg_print_pc(nome_pc, ano, row['conta'])
             inseriu = self.pg_insert_pc_codigo(
-                nome_pc, nivel=nivel, codigo=row['conta'])
+                nome_pc, ano=ano, nivel=nivel, codigo=row['conta'])
             if inseriu:
                 self.pg_print_pc(nome_pc, ano, row['conta'])
             inseriu = self.pg_insert_pc_nome(
