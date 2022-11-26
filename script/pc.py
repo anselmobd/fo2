@@ -135,7 +135,7 @@ class Main():
     def pg_insert_pc_codigo(self, nome_pc=None, ano=0, nivel=1, codigo=None):
         if not (nome_pc and codigo):
             return
-        if self.pg_get_pc(nome_pc, codigo=codigo):
+        if self.pg_get_pc(nome_pc, ano=ano, codigo=codigo):
             return False
         len_mae = {
             1: 0,
@@ -280,7 +280,7 @@ class Main():
         self.pg.con.commit()
         return True
 
-    def pg_get_pc(self, nome_pc, ano=0, codigo=None):
+    def pg_get_pc(self, nome_pc, ano, codigo=None):
         filtra_codigo = (
             f"AND ca.codigo = '{codigo}'"
             if codigo else ''
