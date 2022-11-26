@@ -165,11 +165,11 @@ class Main():
         self.pg.con.commit()
         return True
 
-    def convert_codigo(self, codigo):
+    def parte_significativa(self, codigo):
         estr_partes = codigo.split(".")
         while estr_partes and int(estr_partes[-1]) == 0:
             del(estr_partes[-1])
-        return ''.join(estr_partes)
+        return estr_partes
 
     def valores_filtro_nivel(self, nivel, mascara="0.0.00"):
         partes = mascara.split(".")
@@ -203,7 +203,7 @@ class Main():
         data = dictlist_lower(self.fb.cur)
 
         for row in data:
-            row['conta'] = self.convert_codigo(row['conta'])
+            row['conta'] = ''.join(self.parte_significativa(row['conta']))
             row['descricao'] = no_accent_up(row['descricao'])
         return data
 
@@ -224,7 +224,7 @@ class Main():
         data = dictlist_lower(self.fb.cur)
 
         for row in data:
-            row['estrutura'] = self.convert_codigo(row['estrutura'])
+            row['estrutura'] = '.'.join(self.parte_significativa(row['estrutura']))
             row['descricao'] = no_accent_up(row['descricao'])
         return data
 
