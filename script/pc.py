@@ -393,6 +393,26 @@ class Main():
             if inseriu:
                 self.pg_print_pc(nome_pc, ano, row['conta'])
 
+    def pg_insert_cc(self, empresa, ano):
+        for nivel in range(1, 3):
+            self.pg_insert_cc_nivel(
+                empresa=empresa, nivel=nivel, ano=ano)
+
+    def pg_insert_cc_nivel(self, empresa, nivel=1, ano=0):
+        dados = self.fb_get_cc(nivel=nivel)
+        for row in dados:
+            self.pg_print_cc(empresa, ano, row['estrutura'])
+            inseriu = self.pg_insert_cc_codigo(
+                empresa, ano=ano, nivel=nivel, codigo=row['estrutura'])
+            if inseriu:
+                self.pg_print_cc(empresa, ano, row['estrutura'])
+                raise SystemExit
+            # inseriu = self.pg_insert_pc_nome(
+            #     empresa, ano, row['conta'], row['descricao'])
+            # if inseriu:
+            #     self.pg_print_cc(empresa, ano, row['conta'])
+
+
 if __name__ == '__main__':
 
     fb = FB()
@@ -401,16 +421,18 @@ if __name__ == '__main__':
     main = Main(fb=fb, pg=pg)
 
     # main.fb_print_pc(nivel=2)
-    main.fb_print_cc(nivel=3)
+    # main.fb_print_cc(nivel=3)
     # main.pg_print_pc('SCC ANSELMO', 2022, '1')
     # main.pg_print_pc('SCC ANSELMO', 2022)
-    # main.pg_print_cc('DUOMO', 2022, '1')
-    main.pg_print_cc('DUOMO', 2022)
+    # main.pg_print_cc('DUOMO', 2022, '2')
+    # main.pg_print_cc('DUOMO', 2022)
 
     # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=1, ano=2022)
     # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=2, ano=2022)
     # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=3, ano=2022)
     # main.pg_insert_pc('SCC ANSELMO', ano=2022)
+
+    main.pg_insert_cc('DUOMO', ano=2022)
 
     # pprint(main.valores_filtro_nivel(1))
     # pprint(main.valores_filtro_nivel(2))
