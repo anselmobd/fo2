@@ -165,6 +165,37 @@ class Main():
         self.pg.con.commit()
         return True
 
+    def pg_insert_cc_codigo(self, empresa=None, ano=0, nivel=1, codigo=None):
+        if not (empresa and codigo):
+            return
+        if self.pg_get_cc(empresa, ano=ano, codigo=codigo):
+            return False
+        codigo_mae=".".join(codigo.split(".")[:-1])
+        sql = f"""
+            insert into contabil.centrosdecusto (
+              empresa 
+            , centrodecustomae 
+            , codigo
+            , tenant
+            )
+            select 
+              e.empresa 
+            , cc.centrodecusto centrodecustomae
+            , '{codigo}' codigo
+            , ( select 
+                  max(t.tenant)
+                from ns.tenants t  
+              ) tenant
+            from ns.empresas e
+            left join contabil.centrosdecusto cc
+              on cc.empresa = e.empresa 
+             and cc.codigo = '{codigo_mae}'
+            where e.codigo = '{empresa}'
+        """
+        self.pg.cur.execute(sql)
+        self.pg.con.commit()
+        return True
+
     def parte_significativa(self, codigo):
         estr_partes = codigo.split(".")
         while estr_partes and int(estr_partes[-1]) == 0:
