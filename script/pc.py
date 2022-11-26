@@ -336,8 +336,8 @@ class Main():
         data = dictlist_lower(self.pg.cur)
         return data
 
-    def pg_print_cc(self, nome_pc, ano, codigo=None):
-        data = self.pg_get_cc(nome_pc, ano, codigo=codigo)
+    def pg_print_cc(self, empresa, ano, codigo=None):
+        data = self.pg_get_cc(empresa, ano, codigo=codigo)
         if data:
             for row in data:
                 print(row['codigo'].ljust(9), row['nome'])
