@@ -312,6 +312,38 @@ class Main():
         else:
             print(codigo.ljust(4), "[]")
 
+    def pg_get_cc(self, empresa, ano=0, codigo=None):
+        filtra_codigo = (
+            f"AND cc.codigo = '{codigo}'"
+            if codigo else ''
+        )
+        sql = f"""
+            select 
+              cc.codigo
+            , cca.*
+            from ns.empresas e
+            join contabil.centrosdecusto cc
+              on cc.empresa = e.empresa 
+            join contabil.centrosdecustoanuais cca
+              on cca.centrodecusto = cc.centrodecusto 
+             and cca.ano = {ano}
+            where e.codigo = '{empresa}'
+              {filtra_codigo} -- filtra_codigo
+            order by
+              cc.codigo
+        """
+        self.pg.cur.execute(sql)
+        data = dictlist_lower(self.pg.cur)
+        return data
+
+    def pg_print_cc(self, nome_pc, ano, codigo=None):
+        data = self.pg_get_cc(nome_pc, ano, codigo=codigo)
+        if data:
+            for row in data:
+                print(row['codigo'].ljust(9), row['nome'])
+        else:
+            print(codigo.ljust(9), "[]")
+
     def pg_insert_pc(self, nome_pc, ano):
         for nivel in range(1, 4):
             self.pg_insert_pc_nivel(
@@ -337,18 +369,20 @@ if __name__ == '__main__':
 
     main = Main(fb=fb, pg=pg)
 
-    # main.fb_print_pc(nivel=3)
-    # main.fb_print_cc(nivel=1)
+    # main.fb_print_pc(nivel=2)
+    main.fb_print_cc(nivel=3)
     # main.pg_print_pc('SCC ANSELMO', 2022, '1')
     # main.pg_print_pc('SCC ANSELMO', 2022)
+    # main.pg_print_cc('DUOMO', 2022, '1')
+    main.pg_print_cc('DUOMO', 2022)
 
     # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=1, ano=2022)
     # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=2, ano=2022)
     # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=3, ano=2022)
     # main.pg_insert_pc('SCC ANSELMO', ano=2022)
 
-    pprint(main.valores_filtro_nivel(1))
-    pprint(main.valores_filtro_nivel(2))
-    pprint(main.valores_filtro_nivel(3))
+    # pprint(main.valores_filtro_nivel(1))
+    # pprint(main.valores_filtro_nivel(2))
+    # pprint(main.valores_filtro_nivel(3))
 
     main.close_dbs()
