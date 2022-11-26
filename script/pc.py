@@ -171,22 +171,19 @@ class Main():
             del(estr_partes[-1])
         return ''.join(estr_partes)
 
-    def valores_filtro_nivel(self, nivel, conta_raiz="0.0.00"):
-        conta_partes = conta_raiz.split(".")
-        if nivel < 1 or nivel > len(conta_partes):
+    def valores_filtro_nivel(self, nivel, mascara="0.0.00"):
+        partes = mascara.split(".")
+        if nivel < 1 or nivel > len(partes):
             return None, None
-        partes_zeradas = conta_partes[nivel-1:]
-        if nivel == 1:
-            is_not_like = conta_raiz
-        else:
-            is_not_like = ".".join(partes_zeradas)
-            is_not_like = f"%.{is_not_like}"
-        partes_zeradas[0] = "%"
-        is_like = ".".join(partes_zeradas)
-        return is_not_like, is_like
+        partes_filtro = partes[nivel-1:]
+        not_like = ".".join(partes_filtro)
+        not_like = f"%.{not_like}"[-len(mascara):]
+        partes_filtro[0] = "%"
+        is_like = ".".join(partes_filtro)
+        return not_like, is_like
 
     def fb_get_pc(self, nivel=0, maior_que=None):
-        is_not_like, is_like = self.valores_filtro_nivel(nivel)
+        not_like, is_like = self.valores_filtro_nivel(nivel)
         filtro_maior_que = (
             f"and pc.conta > '{maior_que}'"
             if maior_que else ''
@@ -196,7 +193,7 @@ class Main():
               pc.*
             from SCC_PLANOCONTASNOVO pc
             where 1=1
-              and pc.conta not like '{is_not_like}'
+              and pc.conta not like '{not_like}'
               and pc.conta like '{is_like}'
               {filtro_maior_que} -- filtro_maior_que
             order by
@@ -211,14 +208,14 @@ class Main():
         return data
 
     def fb_get_cc(self, nivel=0):
-        is_not_like, is_like = self.valores_filtro_nivel(
-            nivel, conta_raiz="0.0.00.00")
+        not_like, is_like = self.valores_filtro_nivel(
+            nivel, mascara="0.0.00.00")
         sql = f"""
             select
               cc.*
             from SCC_CENTROCUSTO cc
             where 1=1
-              and cc.estrutura not like '{is_not_like}'
+              and cc.estrutura not like '{not_like}'
               and cc.estrutura like '{is_like}'
             order by
               cc.estrutura
@@ -340,8 +337,8 @@ if __name__ == '__main__':
 
     main = Main(fb=fb, pg=pg)
 
-    main.fb_print_pc(nivel=1)
-    main.fb_print_cc(nivel=1)
+    # main.fb_print_pc(nivel=3)
+    # main.fb_print_cc(nivel=1)
     # main.pg_print_pc('SCC ANSELMO', 2022, '1')
     # main.pg_print_pc('SCC ANSELMO', 2022)
 
@@ -350,8 +347,8 @@ if __name__ == '__main__':
     # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=3, ano=2022)
     # main.pg_insert_pc('SCC ANSELMO', ano=2022)
 
-    # pprint(main.valores_filtro_nivel(1))
-    # pprint(main.valores_filtro_nivel(2))
-    # pprint(main.valores_filtro_nivel(3))
+    pprint(main.valores_filtro_nivel(1))
+    pprint(main.valores_filtro_nivel(2))
+    pprint(main.valores_filtro_nivel(3))
 
     main.close_dbs()
