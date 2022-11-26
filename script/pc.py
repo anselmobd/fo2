@@ -160,6 +160,12 @@ class Main():
         self.pg.con.commit()
         return True
 
+    def convert_codigo(self, codigo):
+        estr_partes = codigo.split(".")
+        while estr_partes and int(estr_partes[-1]) == 0:
+            del(estr_partes[-1])
+        return ''.join(estr_partes)
+
     def valores_filtro_nivel(self, nivel, conta_raiz="0.0.00"):
         conta_partes = conta_raiz.split(".")
         if nivel < 1 or nivel > len(conta_partes):
@@ -195,7 +201,7 @@ class Main():
         data = dictlist_lower(self.fb.cur)
 
         for row in data:
-            row['conta'] = row['conta'].rstrip('.0').replace('.', '')
+            row['conta'] = self.convert_codigo(row['conta'])
             row['descricao'] = no_accent_up(row['descricao'])
         return data
 
