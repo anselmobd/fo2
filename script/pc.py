@@ -127,6 +127,11 @@ class Main():
         for row in data:
             print("{conta};{descricao}".format(**row))
 
+    def fb_print_cc(self, nivel=0):
+        data = self.fb_get_cc(nivel=nivel)
+        for row in data:
+            print("{estrutura};{descricao}".format(**row))
+
     def pg_insert_pc_codigo(self, nome_pc=None, nivel=1, codigo=None):
         if not (nome_pc and codigo):
             return
@@ -202,6 +207,27 @@ class Main():
 
         for row in data:
             row['conta'] = self.convert_codigo(row['conta'])
+            row['descricao'] = no_accent_up(row['descricao'])
+        return data
+
+    def fb_get_cc(self, nivel=0):
+        is_not_like, is_like = self.valores_filtro_nivel(
+            nivel, conta_raiz="0.0.00.00")
+        sql = f"""
+            select
+              cc.*
+            from SCC_CENTROCUSTO cc
+            where 1=1
+              and cc.estrutura not like '{is_not_like}'
+              and cc.estrutura like '{is_like}'
+            order by
+              cc.estrutura
+        """
+        self.fb.cur.execute(sql)
+        data = dictlist_lower(self.fb.cur)
+
+        for row in data:
+            row['estrutura'] = self.convert_codigo(row['estrutura'])
             row['descricao'] = no_accent_up(row['descricao'])
         return data
 
@@ -315,6 +341,7 @@ if __name__ == '__main__':
     main = Main(fb=fb, pg=pg)
 
     main.fb_print_pc(nivel=1)
+    main.fb_print_cc(nivel=1)
     # main.pg_print_pc('SCC ANSELMO', 2022, '1')
     # main.pg_print_pc('SCC ANSELMO', 2022)
 
