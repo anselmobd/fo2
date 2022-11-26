@@ -324,7 +324,7 @@ class Main():
             from ns.empresas e
             join contabil.centrosdecusto cc
               on cc.empresa = e.empresa 
-            join contabil.centrosdecustoanuais cca
+            left join contabil.centrosdecustoanuais cca
               on cca.centrodecusto = cc.centrodecusto 
              and cca.ano = {ano}
             where e.codigo = '{empresa}'
