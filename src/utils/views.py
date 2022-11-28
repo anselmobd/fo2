@@ -38,6 +38,11 @@ def coalesce(value, default):
 
 
 @register.filter
+def complements(text, sufix):
+    return f"{text}{sufix}" if text else ''
+
+
+@register.filter
 def gets_without(gets, var):
     list_gets = gets.split("&")
     clean_gets = [
