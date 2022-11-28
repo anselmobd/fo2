@@ -33,6 +33,18 @@ def get_item(dictionary, key):
 
 
 @register.filter
+def list_append(list1, value):
+    if list1:
+        if not isinstance(list1, list):
+            list1 = [list1]
+    else:
+        list1 = []
+    if value:
+        list1.append(value)
+    return list1
+
+
+@register.filter
 def if_text_sufix(text, sufix):
     return f"{text}{sufix}" if text else ''
 
