@@ -444,6 +444,7 @@ class Solicitacao(O2BaseGetView):
         self.page_sol = self.request.GET.get('page_sol', 1)
         self.context['page_end'] = self.request.GET.get('page_end', 0)
         self.page_end = self.request.GET.get('page_end', 1)
+        self.context['aba'] = self.request.GET.get('aba', 'default')
 
         self.og = OperacoesGrade()
 

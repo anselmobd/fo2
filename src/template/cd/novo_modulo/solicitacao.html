@@ -37,8 +37,8 @@
       <h4>OP: {{op}}</h4>
     {% endif %}
     <ul class="nav nav-tabs" id="myTab">
-      <li {% if not page_end %}class="active"{% endif %}><a data-toggle="tab" href="#lotes">Lotes</a></li>
-      <li {% if page_end %}class="active"{% endif %}><a data-toggle="tab" href="#enderecos">Endereços</a></li>
+      <li {% if aba == 'default' or aba == 'lotes' %}class="active"{% endif %}><a data-toggle="tab" href="#lotes">Lotes</a></li>
+      <li {% if aba == 'enderecos' %}class="active"{% endif %}><a data-toggle="tab" href="#enderecos">Endereços</a></li>
       <li><a data-toggle="tab" href="#pedidos">Pedidos</a></li>
       <li><a data-toggle="tab" href="#grade_solicitado">Grades das referências</a></li>
       <li><a data-toggle="tab" href="#grade_situacao">Grades por situação</a></li>
