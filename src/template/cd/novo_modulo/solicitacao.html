@@ -47,23 +47,23 @@
       <div id="lotes" class="tab-pane fade{% if not page_end %} in active{% endif %}">
         <p>Lista registros em que a OP não tem estágio 63-CD (isso exclui OPs de expedição)<br/>
           Ordem Situação, Estágio, OP e Lote.</p>
-        {% include "layout/paginator_get.html" with data=data url_link=link_solicitacao var_page='page_sol' only %}
+        {% include "layout/paginator_get.html" with data=data url_link=link_solicitacao url_gets=request.GET.urlencode var_page='page_sol' extra_var='aba' extra_value='lotes' only %}
         <table>
           {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
           {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
         </table>
-        {% include "layout/paginator_get.html" with data=data url_link=link_solicitacao var_page='page_sol' only %}
+        {% include "layout/paginator_get.html" with data=data url_link=link_solicitacao url_gets=request.GET.urlencode var_page='page_sol' extra_var='aba' extra_value='lotes' only %}
       </div>
       <div id="enderecos" class="tab-pane fade{% if page_end %} in active{% endif %}">
         <p>"Palete" é onde está atualmente o lote. "Inclusão P." é quando o lote foi incluido no palete.<br/>
           "Endereço" é onde está atualmente o Palete. "Inclusão E." é quando o palete foi incluido no endereço.<br/>
           Ordem decrescente de Rota, Endereço, Situação, OP e Lote.</p>
-        {% include "layout/paginator_get.html" with data=e_data url_link=link_solicitacao var_page='page_end' only %}
+        {% include "layout/paginator_get.html" with data=e_data url_link=link_solicitacao url_gets=request.GET.urlencode var_page='page_end' extra_var='aba' extra_value='enderecos' only %}
         <table>
           {% include "layout/thead_generic.html" with data=e_headers style=e_style thclass='sticky' only %}
           {% include "layout/tbody_generic.html" with fields=e_fields data=e_data style=e_style only %}
         </table>
-        {% include "layout/paginator_get.html" with data=e_data url_link=link_solicitacao var_page='page_end' only %}
+        {% include "layout/paginator_get.html" with data=e_data url_link=link_solicitacao url_gets=request.GET.urlencode var_page='page_end' extra_var='aba' extra_value='enderecos' only %}
       </div>
       <div id="pedidos" class="tab-pane fade">
         <table>
