@@ -466,15 +466,15 @@ if __name__ == '__main__':
 
     # main.fb_print_pc(nivel=2)
     # main.fb_print_cc(nivel=3)
-    # main.pg_print_pc('SCC ANSELMO', 2022, '1')
-    # main.pg_print_pc('SCC ANSELMO', 2022)
+    # main.pg_print_pc('F1SCC', 2022, '1')
+    # main.pg_print_pc('F1SCC', 2022)
     # main.pg_print_cc('DUOMO', 2022, '2')
     # main.pg_print_cc('DUOMO', 2022)
 
-    # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=1, ano=2022)
-    # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=2, ano=2022)
-    # main.pg_insert_pc_nivel('SCC ANSELMO', nivel=3, ano=2022)
-    # main.pg_insert_pc('SCC ANSELMO', ano=2022)
+    # main.pg_insert_pc_nivel('F1SCC', nivel=1, ano=2022)
+    # main.pg_insert_pc_nivel('F1SCC', nivel=2, ano=2022)
+    # main.pg_insert_pc_nivel('F1SCC', nivel=3, ano=2022)
+    # main.pg_insert_pc('F1SCC', ano=2022)
 
     main.pg_insert_cc('DUOMO', ano=2022)
 
