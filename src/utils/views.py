@@ -33,11 +33,6 @@ def get_item(dictionary, key):
 
 
 @register.filter
-def coalesce(value, default):
-    return value if value else default
-
-
-@register.filter
 def if_text_sufix(text, sufix):
     return f"{text}{sufix}" if text else ''
 

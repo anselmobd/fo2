@@ -1,7 +1,7 @@
 {% if url_name %}
   {% url url_name as url_name_link %}
 {% endif %}
-{% with var_page_name=var_page|coalesce:'page' pag_neib=data.paginator.pag_neib|stringformat:"i" %}
+{% with var_page_name=var_page|default:'page' pag_neib=data.paginator.pag_neib|stringformat:"i" %}
 {% with clean_url_gets=url_gets|gets_without:var_page_name pag_neibn="-"|add:pag_neib %}
 {% if data.paginator.num_pages != 1 %}
   <ul class="pagination">
