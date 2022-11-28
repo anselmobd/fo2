@@ -38,7 +38,7 @@ def coalesce(value, default):
 
 
 @register.filter
-def complements(text, sufix):
+def if_text_sufix(text, sufix):
     return f"{text}{sufix}" if text else ''
 
 
