@@ -1,11 +1,11 @@
-{% with var_page=var_page|coalesce:'page' %}
-{% with clean_url_gets=url_gets|gets_without:var_page %}
+{% with var_page_name=var_page|coalesce:'page' %}
+{% with clean_url_gets=url_gets|gets_without:var_page_name %}
 {% with pag_neib=data.paginator.pag_neib|stringformat:"i" %}
 {% with pag_neibn="-"|add:pag_neib %}
 {% if data.paginator.num_pages != 1 %}
   <ul class="pagination">
     {% if data.number > 1 %}
-      <li title="Anterior {{ data.number|add:-1 }}"><a href="{% if url_link %}{{ url_link }}{% else %}{% url url_name %}{% endif %}?{{clean_url_gets|complements:'&'}}{{ var_page|coalesce:'page' }}={{ data.number|add:-1 }}">
+      <li title="Anterior {{ data.number|add:-1 }}"><a href="{% if url_link %}{{ url_link }}{% else %}{% url url_name %}{% endif %}?{{clean_url_gets|complements:'&'}}{{ var_page_name }}={{ data.number|add:-1 }}">
         <span class="glyphicon glyphicon-chevron-left"></span>
       </a></li>
     {% else %}
@@ -14,7 +14,7 @@
       </a></li>
     {% endif %}
     {% if data.number < data.paginator.num_pages %}
-      <li title="Próxima {{ data.number|add:1 }}"><a href="{% if url_link %}{{ url_link }}{% else %}{% url url_name %}{% endif %}?{{clean_url_gets|complements:'&'}}{{ var_page|coalesce:'page' }}={{ data.number|add:1 }}">
+      <li title="Próxima {{ data.number|add:1 }}"><a href="{% if url_link %}{{ url_link }}{% else %}{% url url_name %}{% endif %}?{{clean_url_gets|complements:'&'}}{{ var_page_name }}={{ data.number|add:1 }}">
         <span class="glyphicon glyphicon-chevron-right"></span>
       </a></li>
     {% else %}
@@ -42,14 +42,14 @@
             {% if i == 1 %}
               <li><a href="{% if url_link %}{{ url_link }}{% else %}{% url url_name %}{% endif %}?{{clean_url_gets}}">{{ i }}</a></li>
             {% else %}
-              <li><a href="{% if url_link %}{{ url_link }}{% else %}{% url url_name %}{% endif %}?{{clean_url_gets|complements:'&'}}{{ var_page|coalesce:'page' }}={{ i }}">{{ i }}</a></li>
+              <li><a href="{% if url_link %}{{ url_link }}{% else %}{% url url_name %}{% endif %}?{{clean_url_gets|complements:'&'}}{{ var_page_name }}={{ i }}">{{ i }}</a></li>
             {% endif %}
           {% endif %}
         {% endif %}
       {% endif %}
     {% endfor %}
     {% if data.number < data.paginator.num_pages|add:pag_neibn %}
-      <li><a href="{% if url_link %}{{ url_link }}{% else %}{% url url_name %}{% endif %}?{{clean_url_gets|complements:'&'}}{{ var_page|coalesce:'page' }}={{ data.paginator.num_pages }}">
+      <li><a href="{% if url_link %}{{ url_link }}{% else %}{% url url_name %}{% endif %}?{{clean_url_gets|complements:'&'}}{{ var_page_name }}={{ data.paginator.num_pages }}">
         <span>
           {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
             <span class="glyphicon glyphicon-chevron-right" style="text-shadow: lightblue -4px 0px;"></span>
