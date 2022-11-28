@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import debug_cursor_execute
 
 
 def posicoes_lote(cursor, periodo, ordem_confeccao):
@@ -103,5 +104,5 @@ def posicoes_lote(cursor, periodo, ordem_confeccao):
         WHERE l.QTDE_PERDAS <> 0
         )
     '''
-    cursor.execute(sql, [periodo, ordem_confeccao])
+    debug_cursor_execute(cursor, sql, [periodo, ordem_confeccao])
     return dictlist(cursor)
