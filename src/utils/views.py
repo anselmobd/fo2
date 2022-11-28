@@ -33,6 +33,11 @@ def get_item(dictionary, key):
 
 
 @register.filter
+def coalesce(value, default):
+    return value if value else default
+
+
+@register.filter
 def get_obj_attr(obj, attr):
     return getattr(obj, attr)
 
