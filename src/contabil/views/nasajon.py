@@ -156,6 +156,17 @@ def view(request):
                         "Ordem de Servico - 4680.pdf",
                 },
             },
+            {
+                'titulo': "24/11/2022 - Setup Contábil",
+                'subdir': "2022-11-24 Setup Contábil",
+                'docs': {
+                    'Ordem de Servico - 4687':
+                        "Ordem de Servico - 4687.pdf",
+                },
+                'files': {
+                    '09h23': "kkq-rieh-qxp (2022-11-24 09 23 GMT-3).mp4",
+                },
+            },
         ]
     }
     return render(request, template_name, context)
