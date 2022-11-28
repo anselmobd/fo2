@@ -343,6 +343,49 @@ class Main():
         else:
             print(codigo.ljust(4), "[]")
 
+    def pg_select_to_insert_cc_nome(
+            self, empresa, ano, codigo, nome):
+        return f"""
+            select 
+              {ano} ano
+            , '{nome}' nome
+            , 0 natureza
+            , cc.centrodecusto
+            , cc.tenant 
+            from ns.empresas e
+            join contabil.centrosdecusto cc
+              on cc.empresa = e.empresa 
+            where e.codigo = '{empresa}'
+              AND cc.codigo = '{codigo}'
+        """
+
+    def pg_print_to_insert_cc_nome(
+            self, empresa, ano, codigo, nome):
+        sql = self.pg_select_to_insert_cc_nome(
+            empresa, ano, codigo, nome)
+        self.pg.cur.execute(sql)
+        data = dictlist_lower(self.pg.cur)
+        pprint(data)
+
+    def pg_insert_cc_nome(
+            self, empresa, ano, codigo, nome):
+        verifica = self.pg_get_cc(empresa, ano, codigo)
+        if verifica and verifica[0]['nome']:
+            return False
+        sql = f"""
+            insert into contabil.centrosdecustoanuais (
+              ano
+            , nome
+            , natureza 
+            , centrodecusto
+            , tenant
+            )
+        """ + self.pg_select_to_insert_cc_nome(
+            empresa, ano, codigo, nome)
+        self.pg.cur.execute(sql)
+        self.pg.con.commit()
+        return True
+
     def pg_get_cc(self, empresa, ano=0, codigo=None):
         filtra_codigo = (
             f"AND cc.codigo = '{codigo}'"
@@ -394,7 +437,7 @@ class Main():
                 self.pg_print_pc(nome_pc, ano, row['conta'])
 
     def pg_insert_cc(self, empresa, ano):
-        for nivel in range(1, 3):
+        for nivel in range(1, 5):
             self.pg_insert_cc_nivel(
                 empresa=empresa, nivel=nivel, ano=ano)
 
@@ -406,11 +449,12 @@ class Main():
                 empresa, ano=ano, nivel=nivel, codigo=row['estrutura'])
             if inseriu:
                 self.pg_print_cc(empresa, ano, row['estrutura'])
-                raise SystemExit
-            # inseriu = self.pg_insert_pc_nome(
-            #     empresa, ano, row['conta'], row['descricao'])
-            # if inseriu:
-            #     self.pg_print_cc(empresa, ano, row['conta'])
+                # raise SystemExit
+            inseriu = self.pg_insert_cc_nome(
+                empresa, ano, row['estrutura'], row['descricao'])
+            if inseriu:
+                self.pg_print_cc(empresa, ano, row['estrutura'])
+                # raise SystemExit
 
 
 if __name__ == '__main__':
