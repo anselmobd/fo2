@@ -207,20 +207,26 @@ urlpatterns = [
     re_path(r'^palete/$',
         palete.Palete.as_view(), name='palete'),
 
-    re_path(r'^novo/solicitacoes/$',
-        solicitacoes.Solicitacoes.as_view(), name='novo_solicitacoes'),
-
-    re_path(r'^novo/finaliza_emp_op/$',
-        finaliza_emp_op.FinalizaEmpenhoOp.as_view(), name='finaliza_emp_op'),
-
     re_path(r'^novo/solicitacao/(?P<solicitacao>[^/]+)$',
         solicitacao.Solicitacao.as_view(), name='novo_solicitacao'),
+
+    re_path(r'^novo/solicitacoes/$',
+        solicitacoes.Solicitacoes.as_view(), name='novo_solicitacoes'),
 
     re_path(r'^novo/estoque/$',
         estoque.NovoEstoque.as_view(), name='novo_estoque'),
 
     re_path(r'^novo/estoque_ficticio/$',
         estoque_ficticio.NovoEstoqueFicticio.as_view(), name='novo_estoque_ficticio'),
+
+    re_path(r'^novo/finaliza_emp_op/$',
+        finaliza_emp_op.FinalizaEmpenhoOp.as_view(), name='finaliza_emp_op'),
+
+    re_path(r'^novo/visao_bloco/(?P<bloco>[^/]+)$',
+        visao_bloco.VisaoBloco.as_view(), name='novo_visao_bloco__get'),
+
+    re_path(r'^novo/visao_cd/$',
+        visao_cd.VisaoCd.as_view(), name='novo_visao_cd'),
 
     re_path(r'^qtd_em_lote/$',
         qtd_em_lote.QtdEmLote.as_view(),
@@ -233,12 +239,6 @@ urlpatterns = [
     re_path(r'^lista_lotes_invent/$',
         lista_lotes_invent.ListaLoteInvent.as_view(),
         name='lista_lotes_invent'),
-
-    re_path(r'^novo/visao_cd/$',
-        visao_cd.VisaoCd.as_view(), name='novo_visao_cd'),
-
-    re_path(r'^novo/visao_bloco/(?P<bloco>[^/]+)$',
-        visao_bloco.VisaoBloco.as_view(), name='novo_visao_bloco__get'),
 
     re_path(r'^confronta_qtd_solicit/(?P<up>.+)?/?$',
         confronta_qtd_solicit.ConfrontaQtdSolicit.as_view(),
