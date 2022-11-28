@@ -38,6 +38,17 @@ def coalesce(value, default):
 
 
 @register.filter
+def gets_without(gets, var):
+    list_gets = gets.split("&")
+    clean_gets = [
+        get
+        for get in list_gets
+        if not get.startswith(f"{var}=")
+    ]
+    return "&".join(clean_gets)
+
+
+@register.filter
 def get_obj_attr(obj, attr):
     return getattr(obj, attr)
 
