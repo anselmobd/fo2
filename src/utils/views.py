@@ -43,6 +43,11 @@ def if_text_sufix(text, sufix):
 
 
 @register.filter
+def if_text_prefix(text, prefix):
+    return f"{prefix}{text}" if text else ''
+
+
+@register.filter
 def gets_without(gets, var):
     list_gets = gets.split("&")
     clean_gets = [

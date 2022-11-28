@@ -26,7 +26,7 @@
   </ul>
   <ul class="pagination">
     {% if data.number > pag_neib|add:1 %}
-      <li><a href="{% firstof url_link url_name_link %}?{{clean_url_gets}}">
+      <li><a href="{% firstof url_link url_name_link %}{{clean_url_gets|if_text_prefix:'?'}}">
         <span>1
           {% if data.number > pag_neib|add:2 %}
             <span class="glyphicon glyphicon-chevron-left" style="text-shadow: lightblue 4px 0px;"></span>
@@ -41,7 +41,7 @@
             <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
           {% else %}
             {% if i == 1 %}
-              <li><a href="{% firstof url_link url_name_link %}?{{clean_url_gets}}">{{ i }}</a></li>
+              <li><a href="{% firstof url_link url_name_link %}{{clean_url_gets|if_text_prefix:'?'}}">{{ i }}</a></li>
             {% else %}
               <li><a href="{% firstof url_link url_name_link %}?{{clean_url_gets|if_text_sufix:'&'}}{{ var_page_name }}={{ i }}">{{ i }}</a></li>
             {% endif %}
