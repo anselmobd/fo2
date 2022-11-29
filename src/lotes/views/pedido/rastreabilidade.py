@@ -6,6 +6,10 @@ from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import Forms2
 from base.views import O2BaseGetPostView
+from utils.functions.models.dictlist import (
+    row_field_date,
+    row_field_empty,
+)
 from utils.table_defs import TableDefsHpSD
 
 from lotes.queries.pedido.rastreabilidade import rastreabilidade_query
@@ -35,13 +39,6 @@ class RastreabilidadeView(O2BaseGetPostView):
             'vazio': "Sem pedidos",
         }
 
-    def row_field_date(self, row, field, empty='-'):
-        row[field] = row[field].date() if row[field] else empty
-
-    def row_field_empty(self, row, field, empty='-'):
-        if not row[field] or not row[field].strip():
-            row[field] = empty
-
     def prep_rows(self, bloco):
         for row in bloco['data']:
             # row['pedido_venda|TARGET'] = '_blank'
@@ -49,11 +46,11 @@ class RastreabilidadeView(O2BaseGetPostView):
             #     'producao:pedido__get',
             #     args=[row['pedido_venda']],
             # )
-            self.row_field_empty(row, 'fantasia')
-            self.row_field_empty(row, 'pedido_cliente')
-            self.row_field_date(row, 'dt_emissao')
-            self.row_field_date(row, 'dt_embarque')
-            self.row_field_empty(row, 'observacao')
+            row_field_empty(row, 'fantasia')
+            row_field_empty(row, 'pedido_cliente')
+            row_field_date(row, 'dt_emissao')
+            row_field_date(row, 'dt_embarque')
+            row_field_empty(row, 'observacao')
 
     def define_hfs(self, bloco):
         TableDefsHpSD({
