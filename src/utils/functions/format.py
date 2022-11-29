@@ -8,13 +8,8 @@ def format_cnpj(row, cnpj4=None, cnpj2=None, tamanho=14, sep=True, contain=None)
         if isinstance(row, dict):
             for k in row:
                 ku = k.upper()
-                if contain:
-                    contain = contain.upper()
-                    can_be= contain in ku
-                else:
-                    can_be = True
-                if can_be:
-                    can_be = "CNPJ" in ku or "CGC" in ku
+                parts = (contain.upper(), ) if contain else ('CNPJ', 'CGC')
+                can_be = any(part in ku for part in parts)
                 if can_be:
                     if "4" in k:
                         cnpj4 = row[k]
