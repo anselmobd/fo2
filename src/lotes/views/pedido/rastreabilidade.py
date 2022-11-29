@@ -30,32 +30,46 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def config_bloco(self, data):
         return {
-            'titulo': 'Pedidos',
+            # 'titulo': 'Pedidos',
             'data': data,
             'vazio': "Sem pedidos",
         }
 
+    def row_field_date(self, row, field, empty='-'):
+        row[field] = row[field].date() if row[field] else empty
+
+    def row_field_empty(self, row, field, empty='-'):
+        if not row[field] or not row[field].strip():
+            row[field] = empty
+
     def prep_rows(self, bloco):
         for row in bloco['data']:
-            row['pedido_venda|TARGET'] = '_blank'
-            row['pedido_venda|A'] = reverse(
-                'producao:pedido__get',
-                args=[row['pedido_venda']],
-            )
-            row['dt_emissao'] = (
-                row['dt_emissao'].date() if row['dt_emissao'] else '-')
-            if not row['observacao']:
-                row['observacao'] = '-'
+            # row['pedido_venda|TARGET'] = '_blank'
+            # row['pedido_venda|A'] = reverse(
+            #     'producao:pedido__get',
+            #     args=[row['pedido_venda']],
+            # )
+            self.row_field_empty(row, 'fantasia')
+            self.row_field_empty(row, 'pedido_cliente')
+            self.row_field_date(row, 'dt_emissao')
+            self.row_field_date(row, 'dt_embarque')
+            self.row_field_empty(row, 'observacao')
 
     def define_hfs(self, bloco):
         TableDefsHpSD({
-            'pedido_venda': ["Pedido"],
+            'deposito': ["Depósito"],
             'dt_emissao': ["Emissão"],
+            'dt_embarque': ["Embarque"],
+            'cliente': ["cliente"],
+            'fantasia': ["Fantasia"],
+            'pedido_cliente': ["Pedido Cliente"],
             'observacao': ["Observação"],
         }).hfs_dict(context=bloco)
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
+
+        self.context['pedido'] = self.pedido
 
         dados_pedidos = self.get_pedidos()
         bloco_pedidos = self.config_bloco(dados_pedidos)
