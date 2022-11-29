@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from utils.functions.dict import dict_get_none
+from utils.functions.format import format_cnpj
 from utils.functions.models.dictlist import (
     dictlist,
     dictlist_lower,
@@ -99,12 +100,10 @@ def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
         , ped.DATA_ENTR_VENDA DT_EMBARQUE
         , ped.OBSERVACAO
         , c.NOME_CLIENTE
-          || ' (' || lpad(c.CGC_9, 8, '0')
-          || '/' || lpad(c.CGC_4, 4, '0')
-          || '-' || lpad(c.CGC_2, 2, '0')
-          || ')' CLIENTE
         , c.FANTASIA_CLIENTE FANTASIA
         , c.CGC_9 CLIENTE_9
+        , c.CGC_4 CLIENTE_4
+        , c.CGC_2 CLIENTE_2
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PEDIDO_CLIENTE
         , ped.STATUS_PEDIDO STATUS_PEDIDO_CODIGO
         , ped.COD_CANCELAMENTO
@@ -150,5 +149,9 @@ def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
             _DICT_EMPRESA,
             row[f_case('CODIGO_EMPRESA')],
         )
+        row[f_case('CNPJ')] = format_cnpj(row, contain=f_case('CLIENTE_'))
+        cnpj = row[f_case('CNPJ')]
+        nome_cliente = row[f_case('NOME_CLIENTE')]
+        row[f_case('CLIENTE')] = f"{nome_cliente} ({cnpj})"
 
     return data
