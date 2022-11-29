@@ -9,11 +9,26 @@ from utils.functions.queries import debug_cursor_execute
 __all__ = ['ped_inform_lower', 'ped_inform']
 
 
+_DICT_STATUS_PEDIDO = {
+    0: '0-Digitado',
+    1: '1-Financeiro',
+    2: '2-Liberado Financeiro',
+    3: '3-Faturamento',
+    4: '4-A cancelar',
+    5: '5-Cancelado',
+    9: '9-Aberto na web',
+}
+
+
 def ped_inform_lower(cursor, pedido, empresa=1, f_dictlist=dictlist_lower):
     return ped_inform(cursor, pedido, empresa, f_dictlist)
 
 
 def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
+    if f_dictlist == dictlist:
+        f_case = str.upper
+    else:
+        f_case = str.lower
 
     filtro_empresa = ""
     if empresa:
@@ -66,15 +81,6 @@ def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
         , c.CGC_9 CLIENTE_9
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PEDIDO_CLIENTE
         , ped.STATUS_PEDIDO STATUS_PEDIDO_CODIGO
-        , CASE ped.STATUS_PEDIDO
-          WHEN 0 THEN '0-Digitado'
-          WHEN 1 THEN '1-Financeiro'
-          WHEN 2 THEN '2-Liberado Financeiro'
-          WHEN 3 THEN '3-Faturamento'
-          WHEN 4 THEN '4-A cancelar'
-          WHEN 5 THEN '5-Cancelado'
-          WHEN 9 THEN '9-Aberto na web'
-          END STATUS_PEDIDO
         , ped.COD_CANCELAMENTO
         , ped.COD_CANCELAMENTO
             || '-' || canc.DESC_CANC_PEDIDO
@@ -113,4 +119,11 @@ def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
           {filtro_empresa} -- filtro_empresa
     """
     debug_cursor_execute(cursor, sql)
-    return f_dictlist(cursor)
+    data = f_dictlist(cursor)
+
+    for row in data:
+        row[f_case('STATUS_PEDIDO')] = _DICT_STATUS_PEDIDO[
+            row[f_case('STATUS_PEDIDO_CODIGO')]
+        ]
+
+    return data
