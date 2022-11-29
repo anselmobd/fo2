@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from utils.functions.dict import dict_get_none
 from utils.functions.models.dictlist import (
     dictlist,
     dictlist_lower,
@@ -10,13 +11,38 @@ __all__ = ['ped_inform_lower', 'ped_inform']
 
 
 _DICT_STATUS_PEDIDO = {
-    0: '0-Digitado',
-    1: '1-Financeiro',
-    2: '2-Liberado Financeiro',
-    3: '3-Faturamento',
-    4: '4-A cancelar',
-    5: '5-Cancelado',
-    9: '9-Aberto na web',
+    None: {
+        None: "Desconhecido",
+        'tpl': '{k}-{v}',
+    },
+    0: 'Digitado',
+    1: 'Financeiro',
+    2: 'Liberado Financeiro',
+    3: 'Faturamento',
+    4: 'A cancelar',
+    5: 'Cancelado',
+    9: 'Aberto na web',
+}
+
+_DICT_SITUACAO_VENDA = {
+    None: {
+        None: "Desconhecido",
+        'tpl': '{k}-{v}',
+    },
+    0: 'Pedido liberado',
+    5: 'Pedido suspenso',
+    10: 'Faturado total',
+    15: 'Pedido com NF cancelada',
+}
+
+_DICT_EMPRESA = {    
+    None: {
+        None: "Desconhecida",
+        'tpl': '{k}-{v}',
+    },
+    1: 'Tussor matriz',
+    2: 'Agator',
+    3: 'Tussor filial corte',
 }
 
 
@@ -85,18 +111,8 @@ def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
         , ped.COD_CANCELAMENTO
             || '-' || canc.DESC_CANC_PEDIDO
           CANCELAMENTO_DESCR
-        , CASE ped.SITUACAO_VENDA
-          WHEN 0  THEN '0-Pedido liberado'
-          WHEN 5  THEN '5-Pedido suspenso'
-          WHEN 10 THEN '10-Faturado total'
-          WHEN 15 THEN '15-Pedido com NF cancelada'
-          END SITUACAO_VENDA
+        , ped.SITUACAO_VENDA SITUACAO_VENDA_CODIGO
         , ped.CODIGO_EMPRESA
-        , CASE ped.CODIGO_EMPRESA
-          WHEN 1 THEN '1-Tussor matriz'
-          WHEN 2 THEN '2-Agator'
-          WHEN 3 THEN '3-Tussor filial corte'
-          END EMPRESA
         , ( SELECT
               f.NUM_NOTA_FISCAL 
             FROM FATU_050 f
@@ -122,8 +138,17 @@ def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
     data = f_dictlist(cursor)
 
     for row in data:
-        row[f_case('STATUS_PEDIDO')] = _DICT_STATUS_PEDIDO[
-            row[f_case('STATUS_PEDIDO_CODIGO')]
-        ]
+        row[f_case('STATUS_PEDIDO')] = dict_get_none(
+            _DICT_STATUS_PEDIDO,
+            row[f_case('STATUS_PEDIDO_CODIGO')],
+        )
+        row[f_case('SITUACAO_VENDA')] = dict_get_none(
+            _DICT_SITUACAO_VENDA,
+            row[f_case('SITUACAO_VENDA_CODIGO')],
+        )
+        row[f_case('EMPRESA')] = dict_get_none(
+            _DICT_EMPRESA,
+            row[f_case('CODIGO_EMPRESA')],
+        )
 
     return data
