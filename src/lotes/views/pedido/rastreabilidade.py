@@ -32,11 +32,11 @@ class RastreabilidadeView(O2BaseGetPostView):
             pedido=self.pedido,
         )
 
-    def create_bloco_cliente(self, data):
+    def create_bloco(self, data, vazio=None):
         return {
             # 'titulo': 'Pedidos',
             'data': data,
-            'vazio': "Pedido não encontrado",
+            'vazio': vazio,
         }
 
     def prep_rows(self, bloco):
@@ -52,16 +52,20 @@ class RastreabilidadeView(O2BaseGetPostView):
             row_field_date(row, 'dt_embarque')
             row_field_empty(row, 'observacao')
 
-    def define_hfs(self, bloco):
+    def hfs_cliente(self, bloco):
         TableDefsHpSD({
             'deposito': ["Depósito"],
-            'status_pedido': ["Status pedido"],
-            'dt_emissao': ["Emissão"],
-            'dt_embarque': ["Embarque"],
             'cliente': ["cliente"],
             'fantasia': ["Fantasia"],
             'pedido_cliente': ["Pedido Cliente"],
             'observacao': ["Observação"],
+        }).hfs_dict(context=bloco)
+
+    def hfs_status(self, bloco):
+        TableDefsHpSD({
+            'status_pedido': ["Status pedido"],
+            'dt_emissao': ["Emissão"],
+            'dt_embarque': ["Embarque"],
         }).hfs_dict(context=bloco)
 
     def mount_context(self):
@@ -70,10 +74,19 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.context['pedido'] = self.pedido
 
         dados_pedido = self.get_pedido()
-        bloco_cliente = self.create_bloco_cliente(dados_pedido)
+        bloco_cliente = self.create_bloco(
+            dados_pedido,
+            vazio="Pedido não encontrado",
+        )
+        self.context['cliente'] = bloco_cliente
 
         if dados_pedido:
             self.prep_rows(bloco_cliente)
-            self.define_hfs(bloco_cliente)
 
-        self.context['cliente'] = bloco_cliente
+            self.hfs_cliente(bloco_cliente)
+
+            bloco_status = self.create_bloco(dados_pedido)
+            self.hfs_status(bloco_status)
+            self.context['status'] = bloco_status
+
+

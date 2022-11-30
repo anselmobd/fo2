@@ -26,5 +26,6 @@
       <h4>Erro: {{ erro }}</h4>
     {% endif %}
     {% include "layout/table_generic.html" with dados=cliente only %}
+    {% include "layout/table_generic.html" with dados=status only %}
   {% endif %}
 {% endblock %}
