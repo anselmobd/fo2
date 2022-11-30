@@ -12,7 +12,9 @@ from utils.functions.models.dictlist import (
 )
 from utils.table_defs import TableDefsHpSD
 
-from lotes.queries.pedido.rastreabilidade import rastreabilidade_query
+from lotes.queries.rastreabilidade import (
+    pedido_op,
+)
 from lotes.queries.pedido.ped_inform import ped_inform_lower
 
 
@@ -26,15 +28,21 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.form_class_has_initial = True
         self.cleaned_data2self = True
 
-    def get_pedido(self):
+    def get_dados_pedido(self):
         return ped_inform_lower(
             self.cursor,
             pedido=self.pedido,
         )
 
-    def create_bloco(self, data, vazio=None):
+    def get_dados_ops(self):
+        return pedido_op.query(
+            self.cursor,
+            pedido=self.pedido,
+        )
+
+    def create_bloco(self, data, titulo=None, vazio=None):
         return {
-            # 'titulo': 'Pedidos',
+            'titulo': titulo,
             'data': data,
             'vazio': vazio,
         }
@@ -74,12 +82,17 @@ class RastreabilidadeView(O2BaseGetPostView):
             'observacao': ["Observação"],
         }).hfs_dict(context=bloco)
 
+    def hfs_op(self, bloco):
+        TableDefsHpSD({
+            'op': ["OP"],
+        }).hfs_dict(context=bloco)
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
         self.context['pedido'] = self.pedido
 
-        dados_pedido = self.get_pedido()
+        dados_pedido = self.get_dados_pedido()
         bloco_cliente = self.create_bloco(
             dados_pedido,
             vazio="Pedido não encontrado",
@@ -100,3 +113,8 @@ class RastreabilidadeView(O2BaseGetPostView):
         bloco_obs = self.create_bloco(dados_pedido)
         self.hfs_obs(bloco_obs)
         self.context['obs'] = bloco_obs
+
+        dados_ops = self.get_dados_ops()
+        bloco_ops = self.create_bloco(dados_ops, titulo="OPs")
+        self.hfs_op(bloco_ops)
+        self.context['ops'] = bloco_ops
