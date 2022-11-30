@@ -107,9 +107,7 @@ def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PEDIDO_CLIENTE
         , ped.STATUS_PEDIDO STATUS_PEDIDO_CODIGO
         , ped.COD_CANCELAMENTO
-        , ped.COD_CANCELAMENTO
-            || '-' || canc.DESC_CANC_PEDIDO
-          CANCELAMENTO_DESCR
+        , canc.DESC_CANC_PEDIDO
         , ped.SITUACAO_VENDA SITUACAO_VENDA_CODIGO
         , ped.CODIGO_EMPRESA
         , ( SELECT
@@ -149,9 +147,17 @@ def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
             _DICT_EMPRESA,
             row[f_case('CODIGO_EMPRESA')],
         )
+
         row[f_case('CNPJ')] = format_cnpj(row, contain=f_case('CLIENTE_'))
         cnpj = row[f_case('CNPJ')]
         nome_cliente = row[f_case('NOME_CLIENTE')]
         row[f_case('CLIENTE')] = f"{nome_cliente} ({cnpj})"
+
+        cod_cancelamento = row[f_case('COD_CANCELAMENTO')]
+        desc_canc_pedido = row[f_case('DESC_CANC_PEDIDO')]
+        if cod_cancelamento:
+            row[f_case('CANCELAMENTO_DESCR')] = f"{cod_cancelamento}-{desc_canc_pedido}"
+        else:
+            row[f_case('CANCELAMENTO_DESCR')] = "-"
 
     return data
