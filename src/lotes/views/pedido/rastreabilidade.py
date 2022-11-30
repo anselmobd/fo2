@@ -58,7 +58,6 @@ class RastreabilidadeView(O2BaseGetPostView):
             'cliente': ["cliente"],
             'fantasia': ["Fantasia"],
             'pedido_cliente': ["Pedido Cliente"],
-            'observacao': ["Observação"],
         }).hfs_dict(context=bloco)
 
     def hfs_status(self, bloco):
@@ -66,6 +65,11 @@ class RastreabilidadeView(O2BaseGetPostView):
             'status_pedido': ["Status pedido"],
             'dt_emissao': ["Emissão"],
             'dt_embarque': ["Embarque"],
+        }).hfs_dict(context=bloco)
+
+    def hfs_obs(self, bloco):
+        TableDefsHpSD({
+            'observacao': ["Observação"],
         }).hfs_dict(context=bloco)
 
     def mount_context(self):
@@ -88,5 +92,9 @@ class RastreabilidadeView(O2BaseGetPostView):
             bloco_status = self.create_bloco(dados_pedido)
             self.hfs_status(bloco_status)
             self.context['status'] = bloco_status
+
+            bloco_obs = self.create_bloco(dados_pedido)
+            self.hfs_obs(bloco_obs)
+            self.context['obs'] = bloco_obs
 
 
