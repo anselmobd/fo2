@@ -45,4 +45,9 @@ def query(
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
 
+    for row in dados:
+        cod_canc = row['cod_canc']
+        descr_canc = row['descr_canc']
+        row['canc'] = f"{cod_canc}-{descr_canc}" if cod_canc else '-'
+
     return dados

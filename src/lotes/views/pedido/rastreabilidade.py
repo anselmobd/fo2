@@ -109,9 +109,10 @@ class RastreabilidadeView(O2BaseGetPostView):
         bloco = self.create_table(dados)
         TableDefsHpSD({
             'dep': ["Depósito"],
-            'cod_canc': ["cod_canc"],
-            'descr_canc': ["descr_canc"],
-            'dt_canc': ["dt_canc"],
+            # 'cod_canc': ["cod_canc"],
+            # 'descr_canc': ["descr_canc"],
+            'canc': ["Cancelamento"],
+            'dt_canc': ["Data Canc."],
             'ref': ["Referência"],
             'alt': ["Alternativa"],
             'qtd': ["Quant."],
