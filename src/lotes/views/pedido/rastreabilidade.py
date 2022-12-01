@@ -120,11 +120,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             'qtd': ["Quant."],
             'dep': ["Depósito"],
             'dt_corte': ["Data corte"],
-            # 'op_origem': ["op_origem"],
             'op_princ': ["OP mãe"],
-            # 'op_assoc': ["op_assoc"],
-            # 'cod_canc': ["cod_canc"],
-            # 'descr_canc': ["descr_canc"],
             'canc': ["Cancelamento"],
             'dt_canc': ["Data Canc."],
         }).hfs_dict(context=bloco)
