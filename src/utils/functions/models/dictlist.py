@@ -147,3 +147,7 @@ def row_field_date(row, field, empty='-'):
 def row_field_empty(row, field, empty='-'):
     if not row[field] or not row[field].strip():
         row[field] = empty
+
+
+def row_field_str(row, field, empty='-'):
+    row[field] = empty if row[field] is None else str(row[field])
