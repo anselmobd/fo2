@@ -104,7 +104,8 @@ class RastreabilidadeView(O2BaseGetPostView):
             row_field_date(row, 'dt_corte')
             row_field_date(row, 'dt_canc')
 
-    def hfs_op(self, bloco):
+    def table_op(self, dados):
+        bloco = self.create_table(dados)
         TableDefsHpSD({
             'dep': ["Depósito"],
             'cod_canc': ["cod_canc"],
@@ -120,18 +121,16 @@ class RastreabilidadeView(O2BaseGetPostView):
             'obs': ["Observação"],
             'obs2': ["Observação 2"],
         }).hfs_dict(context=bloco)
+        return bloco
 
     def info_ops(self):
         self.dados_ops = self.get_dados_ops()
         self.prep_rows_ops()
         ops = []
         for row in self.dados_ops:
-            dados_op = [row]
-            bloco_ops = self.create_table(dados_op)
-            self.hfs_op(bloco_ops)
             ops.append({
                 'op': row['op'],
-                'bloco': bloco_ops,
+                'dados': self.table_op([row]),
             })
         self.context['ops'] = ops
 
