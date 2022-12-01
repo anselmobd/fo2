@@ -20,8 +20,23 @@ def query(
     sql = lms(f"""\
         SELECT 
           op.ORDEM_PRODUCAO OP
-        -- , op.*
+        , op.DEPOSITO_ENTRADA DEP
+        , op.COD_CANCELAMENTO COD_CANC
+        , canc.DESCRICAO DESCR_CANC
+        , op.DT_CANCELAMENTO DT_CANC
+        , op.REFERENCIA_PECA REF
+        , op.ALTERNATIVA_PECA ALT
+        , op.QTDE_PROGRAMADA QTD
+        , op.DATA_ENTRADA_CORTE DT_CORTE
+        , op.ORDEM_ORIGEM OP_ORIGEM
+        , op.ORDEM_PRINCIPAL OP_PRINC
+        , op.ORDEM_ASSOCIADA OP_ASSOC
+        , op.OBSERVACAO OBS
+        , op.OBSERVACAO2 OBS2
+        --, op.*
         FROM PCPC_020 op
+        LEFT JOIN pcpt_050 canc
+          ON canc.COD_CANCELAMENTO = op.COD_CANCELAMENTO
         WHERE 1=1
           {filtra_pedido} -- filtra_pedido
           AND op.PEDIDO_VENDA = 33710
