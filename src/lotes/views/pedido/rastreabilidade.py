@@ -47,13 +47,13 @@ class RastreabilidadeView(O2BaseGetPostView):
             'vazio': vazio,
         }
 
-    def prep_rows(self, bloco):
-        for row in bloco['data']:
-            # row['pedido_venda|TARGET'] = '_blank'
-            # row['pedido_venda|A'] = reverse(
-            #     'producao:pedido__get',
-            #     args=[row['pedido_venda']],
-            # )
+    def prep_rows(self, data):
+        for row in data:
+            row['pedido_venda|TARGET'] = '_blank'
+            row['pedido_venda|A'] = reverse(
+                'producao:pedido__get',
+                args=[row['pedido_venda']],
+            )
             row_field_empty(row, 'fantasia')
             row_field_empty(row, 'pedido_cliente')
             row_field_date(row, 'dt_emissao')
@@ -62,6 +62,7 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def hfs_cliente(self, bloco):
         TableDefsHpSD({
+            'pedido_venda': ["Pedido"],
             'deposito': ["Depósito"],
             'fantasia': ["Fantasia"],
             'cliente': ["Cliente"],
@@ -105,18 +106,15 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.context['pedido'] = self.pedido
 
         dados_pedido = self.get_dados_pedido()
-        bloco_cliente = self.create_bloco(
-            dados_pedido,
-            vazio="Pedido não encontrado",
-        )
-        self.context['cliente'] = bloco_cliente
-
         if not dados_pedido:
+            self.context['mensagem'] = "Pedido não encontrado"
             return
 
-        self.prep_rows(bloco_cliente)
+        self.prep_rows(dados_pedido)
 
+        bloco_cliente = self.create_bloco(dados_pedido)
         self.hfs_cliente(bloco_cliente)
+        self.context['cliente'] = bloco_cliente
 
         bloco_status = self.create_bloco(dados_pedido)
         self.hfs_status(bloco_status)
