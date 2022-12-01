@@ -29,24 +29,18 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.form_class_has_initial = True
         self.cleaned_data2self = True
 
-    def get_dados_pedido(self):
-        return ped_inform_lower(
-            self.cursor,
-            pedido=self.pedido,
-        )
-
-    def get_dados_ops(self):
-        return pedido_op.query(
-            self.cursor,
-            pedido=self.pedido,
-        )
-
     def create_table(self, data, titulo=None, vazio=None):
         return {
             'titulo': titulo,
             'data': data,
             'vazio': vazio,
         }
+
+    def get_dados_pedido(self):
+        return ped_inform_lower(
+            self.cursor,
+            pedido=self.pedido,
+        )
 
     def prep_rows_pedido(self):
         for row in self.dados_pedido:
@@ -90,6 +84,20 @@ class RastreabilidadeView(O2BaseGetPostView):
         }).hfs_dict(context=bloco)
         return bloco
 
+    def info_pedido(self):
+        self.prep_rows_pedido()
+        self.context.update({
+            'cliente': self.table_cliente(),
+            'status': self.table_status(),
+            'obs': self.table_obs(),
+        })
+
+    def get_dados_ops(self):
+        return pedido_op.query(
+            self.cursor,
+            pedido=self.pedido,
+        )
+
     def prep_rows_ops(self):
         for row in self.dados_ops:
             row_field_str(row, 'op')
@@ -112,14 +120,6 @@ class RastreabilidadeView(O2BaseGetPostView):
             'obs': ["Observação"],
             'obs2': ["Observação 2"],
         }).hfs_dict(context=bloco)
-
-    def info_pedido(self):
-        self.prep_rows_pedido()
-        self.context.update({
-            'cliente': self.table_cliente(),
-            'status': self.table_status(),
-            'obs': self.table_obs(),
-        })
 
     def info_ops(self):
         self.dados_ops = self.get_dados_ops()
