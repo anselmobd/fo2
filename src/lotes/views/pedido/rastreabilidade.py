@@ -9,6 +9,7 @@ from base.views import O2BaseGetPostView
 from utils.functions.models.dictlist import (
     row_field_date,
     row_field_empty,
+    row_field_str,
 )
 from utils.table_defs import TableDefsHpSD
 
@@ -89,6 +90,12 @@ class RastreabilidadeView(O2BaseGetPostView):
         }).hfs_dict(context=bloco)
         return bloco
 
+    def prep_rows_ops(self):
+        for row in self.dados_ops:
+            row_field_str(row, 'op')
+            row_field_date(row, 'dt_corte')
+            row_field_date(row, 'dt_canc')
+
     def hfs_op(self, bloco):
         TableDefsHpSD({
             'dep': ["Depósito"],
@@ -115,9 +122,10 @@ class RastreabilidadeView(O2BaseGetPostView):
         })
 
     def info_ops(self):
-        dados_ops = self.get_dados_ops()
+        self.dados_ops = self.get_dados_ops()
+        self.prep_rows_ops()
         ops = []
-        for row in dados_ops:
+        for row in self.dados_ops:
             dados_op = [row]
             bloco_ops = self.create_table(dados_op)
             self.hfs_op(bloco_ops)
