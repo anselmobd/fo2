@@ -40,15 +40,15 @@ class RastreabilidadeView(O2BaseGetPostView):
             pedido=self.pedido,
         )
 
-    def create_bloco(self, data, titulo=None, vazio=None):
+    def create_table(self, data, titulo=None, vazio=None):
         return {
             'titulo': titulo,
             'data': data,
             'vazio': vazio,
         }
 
-    def prep_rows(self, data):
-        for row in data:
+    def prep_rows_pedido(self):
+        for row in self.dados_pedido:
             row['pedido_venda|TARGET'] = '_blank'
             row['pedido_venda|A'] = reverse(
                 'producao:pedido__get',
@@ -60,7 +60,8 @@ class RastreabilidadeView(O2BaseGetPostView):
             row_field_date(row, 'dt_embarque')
             row_field_empty(row, 'observacao')
 
-    def hfs_cliente(self, bloco):
+    def table_cliente(self):
+        bloco = self.create_table(self.dados_pedido)
         TableDefsHpSD({
             'pedido_venda': ["Pedido"],
             'deposito': ["Depósito"],
@@ -68,8 +69,10 @@ class RastreabilidadeView(O2BaseGetPostView):
             'cliente': ["Cliente"],
             'pedido_cliente': ["Pedido Cliente"],
         }).hfs_dict(context=bloco)
+        return bloco
 
-    def hfs_status(self, bloco):
+    def table_status(self):
+        bloco = self.create_table(self.dados_pedido)
         TableDefsHpSD({
             'dt_embarque': ["Embarque"],
             'dt_emissao': ["Emissão"],
@@ -77,11 +80,14 @@ class RastreabilidadeView(O2BaseGetPostView):
             'cancelamento_descr': ["Cancelamento"],
             'situacao_venda': ["Situação venda"],
         }).hfs_dict(context=bloco)
+        return bloco
 
-    def hfs_obs(self, bloco):
+    def table_obs(self):
+        bloco = self.create_table(self.dados_pedido)
         TableDefsHpSD({
             'observacao': ["Observação"],
         }).hfs_dict(context=bloco)
+        return bloco
 
     def hfs_op(self, bloco):
         TableDefsHpSD({
@@ -100,37 +106,19 @@ class RastreabilidadeView(O2BaseGetPostView):
             'obs2': ["obs2"],
         }).hfs_dict(context=bloco)
 
-    def info_cliente(self):
-        self.prep_rows(self.dados_pedido)
+    def info_pedido(self):
+        self.prep_rows_pedido()
+        self.context.update({
+            'cliente': self.table_cliente(),
+            'status': self.table_status(),
+            'obs': self.table_obs(),
+        })
 
-        bloco_cliente = self.create_bloco(self.dados_pedido)
-        self.hfs_cliente(bloco_cliente)
-        self.context['cliente'] = bloco_cliente
-
-        bloco_status = self.create_bloco(self.dados_pedido)
-        self.hfs_status(bloco_status)
-        self.context['status'] = bloco_status
-
-        bloco_obs = self.create_bloco(self.dados_pedido)
-        self.hfs_obs(bloco_obs)
-        self.context['obs'] = bloco_obs
-
-    def mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-
-        self.context['pedido'] = self.pedido
-
-        self.dados_pedido = self.get_dados_pedido()
-        if not self.dados_pedido:
-            self.context['mensagem'] = "Pedido não encontrado"
-            return
-
-        self.info_cliente()
-
+    def info_ops(self):
         dados_ops = self.get_dados_ops()
         ops = []
         for row in dados_ops:
-            bloco_ops = self.create_bloco(
+            bloco_ops = self.create_table(
                 [
                     dados
                     for dados in dados_ops
@@ -143,3 +131,16 @@ class RastreabilidadeView(O2BaseGetPostView):
                 'bloco': bloco_ops,
             })
         self.context['ops'] = ops
+
+    def mount_context(self):
+        self.cursor = db_cursor_so(self.request)
+
+        self.context['pedido'] = self.pedido
+
+        self.dados_pedido = self.get_dados_pedido()
+        if not self.dados_pedido:
+            self.context['mensagem'] = "Pedido não encontrado"
+            return
+
+        self.info_pedido()
+        self.info_ops()
