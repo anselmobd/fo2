@@ -100,6 +100,12 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_ops(self):
         for row in self.dados_ops:
+            if row['op_princ']:
+                row['op_princ|TARGET'] = '_blank'
+                row['op_princ|A'] = reverse(
+                    'producao:op__get',
+                    args=[row['op_princ']],
+                )
             row_field_str(row, 'op')
             row_field_date(row, 'dt_canc')
             row_field_date(row, 'dt_corte')
