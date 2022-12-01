@@ -24,7 +24,10 @@
     {% include "layout/table_generic.html" with dados=status only %}
     {% include "layout/table_generic.html" with dados=obs only %}
     {% for op in ops %}
-      <h4>OP {{op.op}}</h4>
+      <h4>
+        {% url 'producao:op__get' op.op as link_op %}
+        OP {% include "layout/link.html" with link=link_op text=op.op target='_blank' only %}
+      </h4>
       {% include "layout/table_generic.html" with dados=op.info only %}
       {% include "layout/table_generic.html" with dados=op.obs only %}
     {% endfor %}
