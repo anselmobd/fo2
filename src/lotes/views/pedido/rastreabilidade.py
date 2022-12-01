@@ -118,13 +118,8 @@ class RastreabilidadeView(O2BaseGetPostView):
         dados_ops = self.get_dados_ops()
         ops = []
         for row in dados_ops:
-            bloco_ops = self.create_table(
-                [
-                    dados
-                    for dados in dados_ops
-                    if dados['op']==row['op']
-                ]
-            )
+            dados_op = [row]
+            bloco_ops = self.create_table(dados_op)
             self.hfs_op(bloco_ops)
             ops.append({
                 'op': row['op'],
