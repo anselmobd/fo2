@@ -101,8 +101,9 @@ class RastreabilidadeView(O2BaseGetPostView):
     def prep_rows_ops(self):
         for row in self.dados_ops:
             row_field_str(row, 'op')
-            row_field_date(row, 'dt_corte')
             row_field_date(row, 'dt_canc')
+            row_field_date(row, 'dt_corte')
+            row_field_str(row, 'op_princ')
 
     def table_op_info(self, dados):
         bloco = self.create_table(dados)
@@ -115,9 +116,9 @@ class RastreabilidadeView(O2BaseGetPostView):
             'alt': ["Alternativa"],
             'qtd': ["Quant."],
             'dt_corte': ["Data corte"],
-            'op_origem': ["op_origem"],
-            'op_princ': ["op_princ"],
-            'op_assoc': ["op_assoc"],
+            # 'op_origem': ["op_origem"],
+            'op_princ': ["OP mãe"],
+            # 'op_assoc': ["op_assoc"],
         }).hfs_dict(context=bloco)
         return bloco
 
