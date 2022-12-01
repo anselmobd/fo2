@@ -25,7 +25,8 @@
     {% include "layout/table_generic.html" with dados=obs only %}
     {% for op in ops %}
       <h4>OP {{op.op}}</h4>
-      {% include "layout/table_generic.html" with dados=op.bloco only %}
+      {% include "layout/table_generic.html" with dados=op.info only %}
+      {% include "layout/table_generic.html" with dados=op.obs only %}
     {% endfor %}
-    {% endif %}
+  {% endif %}
 {% endblock %}
