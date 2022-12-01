@@ -55,7 +55,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             row_field_date(row, 'dt_embarque')
             row_field_empty(row, 'observacao')
 
-    def table_cliente(self):
+    def table_ped_cliente(self):
         bloco = self.create_table(self.dados_pedido)
         TableDefsHpSD({
             'pedido_venda': ["Pedido"],
@@ -66,7 +66,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         }).hfs_dict(context=bloco)
         return bloco
 
-    def table_status(self):
+    def table_ped_status(self):
         bloco = self.create_table(self.dados_pedido)
         TableDefsHpSD({
             'dt_embarque': ["Embarque"],
@@ -77,7 +77,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         }).hfs_dict(context=bloco)
         return bloco
 
-    def table_obs(self):
+    def table_ped_obs(self):
         bloco = self.create_table(self.dados_pedido)
         TableDefsHpSD({
             'observacao': ["Observação"],
@@ -87,9 +87,9 @@ class RastreabilidadeView(O2BaseGetPostView):
     def info_pedido(self):
         self.prep_rows_pedido()
         self.context.update({
-            'cliente': self.table_cliente(),
-            'status': self.table_status(),
-            'obs': self.table_obs(),
+            'cliente': self.table_ped_cliente(),
+            'status': self.table_ped_status(),
+            'obs': self.table_ped_obs(),
         })
 
     def get_dados_ops(self):
