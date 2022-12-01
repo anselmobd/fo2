@@ -39,7 +39,6 @@ def query(
           ON canc.COD_CANCELAMENTO = op.COD_CANCELAMENTO
         WHERE 1=1
           {filtra_pedido} -- filtra_pedido
-          AND op.PEDIDO_VENDA = 33710
     """)
 
     debug_cursor_execute(cursor, sql)
