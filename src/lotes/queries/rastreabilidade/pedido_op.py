@@ -49,5 +49,17 @@ def query(
         cod_canc = row['cod_canc']
         descr_canc = row['descr_canc']
         row['canc'] = f"{cod_canc}-{descr_canc}" if cod_canc else '-'
+        if row['ref'] < 'A0000':
+            row['tipo_ref'] = 'PA'
+        elif row['ref'] < 'B0000':
+            row['tipo_ref'] = 'PG'
+        elif row['ref'] < 'C0000':
+            row['tipo_ref'] = 'PB'
+        elif row['ref'].startswith('F'):
+            row['tipo_ref'] = 'MP'
+        elif row['ref'].startswith('Z'):
+            row['tipo_ref'] = 'DESMONTE'
+        else:
+            row['tipo_ref'] = 'MD'
 
     return dados
