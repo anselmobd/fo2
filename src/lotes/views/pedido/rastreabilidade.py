@@ -100,29 +100,32 @@ class RastreabilidadeView(O2BaseGetPostView):
             'obs2': ["obs2"],
         }).hfs_dict(context=bloco)
 
+    def info_cliente(self):
+        self.prep_rows(self.dados_pedido)
+
+        bloco_cliente = self.create_bloco(self.dados_pedido)
+        self.hfs_cliente(bloco_cliente)
+        self.context['cliente'] = bloco_cliente
+
+        bloco_status = self.create_bloco(self.dados_pedido)
+        self.hfs_status(bloco_status)
+        self.context['status'] = bloco_status
+
+        bloco_obs = self.create_bloco(self.dados_pedido)
+        self.hfs_obs(bloco_obs)
+        self.context['obs'] = bloco_obs
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
         self.context['pedido'] = self.pedido
 
-        dados_pedido = self.get_dados_pedido()
-        if not dados_pedido:
+        self.dados_pedido = self.get_dados_pedido()
+        if not self.dados_pedido:
             self.context['mensagem'] = "Pedido não encontrado"
             return
 
-        self.prep_rows(dados_pedido)
-
-        bloco_cliente = self.create_bloco(dados_pedido)
-        self.hfs_cliente(bloco_cliente)
-        self.context['cliente'] = bloco_cliente
-
-        bloco_status = self.create_bloco(dados_pedido)
-        self.hfs_status(bloco_status)
-        self.context['status'] = bloco_status
-
-        bloco_obs = self.create_bloco(dados_pedido)
-        self.hfs_obs(bloco_obs)
-        self.context['obs'] = bloco_obs
+        self.info_cliente()
 
         dados_ops = self.get_dados_ops()
         ops = []
