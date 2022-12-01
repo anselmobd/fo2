@@ -91,19 +91,19 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def hfs_op(self, bloco):
         TableDefsHpSD({
-            'dep': ["dep"],
+            'dep': ["Depósito"],
             'cod_canc': ["cod_canc"],
             'descr_canc': ["descr_canc"],
             'dt_canc': ["dt_canc"],
-            'ref': ["ref"],
-            'alt': ["alt"],
-            'qtd': ["qtd"],
-            'dt_corte': ["dt_corte"],
+            'ref': ["Referência"],
+            'alt': ["Alternativa"],
+            'qtd': ["Quant."],
+            'dt_corte': ["Data corte"],
             'op_origem': ["op_origem"],
             'op_princ': ["op_princ"],
             'op_assoc': ["op_assoc"],
-            'obs': ["obs"],
-            'obs2': ["obs2"],
+            'obs': ["Observação"],
+            'obs2': ["Observação 2"],
         }).hfs_dict(context=bloco)
 
     def info_pedido(self):
