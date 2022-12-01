@@ -84,7 +84,19 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def hfs_op(self, bloco):
         TableDefsHpSD({
-            'op': ["OP"],
+            'dep': ["dep"],
+            'cod_canc': ["cod_canc"],
+            'descr_canc': ["descr_canc"],
+            'dt_canc': ["dt_canc"],
+            'ref': ["ref"],
+            'alt': ["alt"],
+            'qtd': ["qtd"],
+            'dt_corte': ["dt_corte"],
+            'op_origem': ["op_origem"],
+            'op_princ': ["op_princ"],
+            'op_assoc': ["op_assoc"],
+            'obs': ["obs"],
+            'obs2': ["obs2"],
         }).hfs_dict(context=bloco)
 
     def mount_context(self):
@@ -115,6 +127,18 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.context['obs'] = bloco_obs
 
         dados_ops = self.get_dados_ops()
-        bloco_ops = self.create_bloco(dados_ops, titulo="OPs")
-        self.hfs_op(bloco_ops)
-        self.context['ops'] = bloco_ops
+        ops = []
+        for row in dados_ops:
+            bloco_ops = self.create_bloco(
+                [
+                    dados
+                    for dados in dados_ops
+                    if dados['op']==row['op']
+                ]
+            )
+            self.hfs_op(bloco_ops)
+            ops.append({
+                'op': row['op'],
+                'bloco': bloco_ops,
+            })
+        self.context['ops'] = ops
