@@ -150,4 +150,4 @@ def row_field_empty(row, field, empty='-'):
 
 
 def row_field_str(row, field, empty='-'):
-    row[field] = empty if row[field] is None else str(row[field])
+    row[field] = str(row[field]) if row[field] else empty
