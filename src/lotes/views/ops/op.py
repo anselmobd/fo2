@@ -80,11 +80,11 @@ class Op(View):
                 i_headers = (
                     'Situação', 'Cancelamento', 'Data cancelamento', 'Unidade', 'Pedido',
                     'Pedido do cliente', 'Relacionamento com OPs',
-                    'Prioridade')
+                    'Prioridade', 'NQ')
                 i_fields = (
                     'SITUACAO', 'CANCELAMENTO', 'DT_CANCELAMENTO', 'UNIDADE', 'PEDIDO',
                     'PED_CLIENTE', 'TIPO_OP',
-                    'PRIORIDADE')
+                    'PRIORIDADE', 'NQ')
             else:
                 i_headers = (
                     'Situação', 'Cancelamento', 'Data cancelamento', 'Pedido',
