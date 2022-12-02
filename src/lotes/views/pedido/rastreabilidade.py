@@ -119,6 +119,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             'tipo_ref': ["Tipo"],
             'ref': ["Referência"],
             'alt': ["Alternativa"],
+            'tipo_progr_descr': ["Tipo programação"],
             'qtd': ["Quant."],
             'dep': ["Depósito"],
             'dt_corte': ["Data corte"],

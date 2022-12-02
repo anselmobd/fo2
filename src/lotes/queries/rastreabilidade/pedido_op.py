@@ -1,10 +1,26 @@
 from pprint import pprint
 
+from utils.functions.dict import dict_get_none
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import lms
 
 __all__ = ['query']
+
+_DICT_TIPO_PROGRAMACAO = {
+    None: {
+        None: "Desconhecido",
+        'tpl': '{k}-{v}',
+    },
+    0: "Enfestos/Marcações",
+    1: "Quantidade peças",
+    2: "Para peça de peça",
+    3: "Qtd. peças por grade de tamanho",
+    4: "Qtd. peças/percentual",
+    5: "Qtd. peças - Planej. de Corte",
+    6: "Enfestos/Marcações",
+}
+
 
 
 def query(
@@ -33,6 +49,7 @@ def query(
         , op.ORDEM_ASSOCIADA OP_ASSOC
         , op.OBSERVACAO OBS
         , op.OBSERVACAO2 OBS2
+        , op.TIPO_PROGRAMACAO TIPO_PROGR
         --, op.*
         FROM PCPC_020 op
         LEFT JOIN pcpt_050 canc
@@ -48,6 +65,12 @@ def query(
         cod_canc = row['cod_canc']
         descr_canc = row['descr_canc']
         row['canc'] = f"{cod_canc}-{descr_canc}" if cod_canc else '-'
+
+        row['tipo_progr_descr'] = dict_get_none(
+            _DICT_TIPO_PROGRAMACAO,
+            row['tipo_progr'],
+        )
+
         if row['ref'] < 'A0000':
             row['tipo_ref'] = 'PA'
         elif row['ref'] < 'B0000':
