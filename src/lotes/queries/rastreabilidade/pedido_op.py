@@ -42,6 +42,8 @@ def query(
         , op.DT_CANCELAMENTO DT_CANC
         , op.REFERENCIA_PECA REF
         , r.DESCR_REFERENCIA REF_DESCR
+        , r.COLECAO COD_COLECAO
+        , col.DESCR_COLECAO
         , op.ALTERNATIVA_PECA ALT
         , op.QTDE_PROGRAMADA QTD
         , op.DATA_ENTRADA_CORTE DT_CORTE
@@ -55,6 +57,8 @@ def query(
         FROM PCPC_020 op
         JOIN basi_030 r
           ON r.REFERENCIA = op.REFERENCIA_PECA
+        LEFT JOIN BASI_140 col
+          ON col.COLECAO = r.COLECAO
         LEFT JOIN pcpt_050 canc
           ON canc.COD_CANCELAMENTO = op.COD_CANCELAMENTO
         WHERE 1=1
@@ -73,6 +77,10 @@ def query(
             _DICT_TIPO_PROGRAMACAO,
             row['tipo_progr'],
         )
+
+        cod_colecao = row['cod_colecao']
+        descr_colecao = row['descr_colecao']
+        row['colecao'] = f"{cod_colecao}-{descr_colecao}" if cod_colecao else '-'
 
         if row['ref'] < 'A0000':
             row['tipo_ref'] = 'PA'
