@@ -121,7 +121,6 @@ class RastreabilidadeView(O2BaseGetPostView):
     def table_op_ref(self, dados):
         bloco = self.create_table(dados)
         TableDefsHpSD({
-            'tipo_ref': ["Tipo"],
             'ref': ["Referência"],
             'ref_descr': ["Ref. Descr."],
             'colecao': ["Coleção"],
@@ -157,6 +156,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         for row in self.dados_ops:
             ops.append({
                 'op': row['op'],
+                'tipo_ref': row['tipo_ref'],
                 'ref': self.table_op_ref([row]),
                 'info': self.table_op_info([row]),
                 'obs': self.table_op_obs([row]),
