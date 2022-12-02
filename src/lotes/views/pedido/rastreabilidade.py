@@ -28,6 +28,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.title_name = 'Rastreabilidade'
         self.form_class_has_initial = True
         self.cleaned_data2self = True
+        self.get_args = ['pedido']
 
     def create_table(self, data, titulo=None, vazio=None):
         return {

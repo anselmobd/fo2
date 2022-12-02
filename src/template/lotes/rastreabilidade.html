@@ -15,22 +15,20 @@
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
   </form>
-  {% if request.POST %}
-    {% include "layout/form_inputs_report.html" with form=form h=4 only %}
-    {% if mensagem %}
-      <h4>{{ mensagem }}</h4>
-    {% endif %}
-    {% include "layout/table_generic.html" with dados=cliente only %}
-    {% include "layout/table_generic.html" with dados=status only %}
-    {% include "layout/table_generic.html" with dados=obs only %}
-    {% for op in ops %}
-      <h4>
-        {% url 'producao:op__get' op.op as link_op %}
-        OP de {{op.tipo_ref}} {% include "layout/a.html" with link=link_op text=op.op target='_blank' only %}
-      </h4>
-      {% include "layout/table_generic.html" with dados=op.ref only %}
-      {% include "layout/table_generic.html" with dados=op.info only %}
-      {% include "layout/table_generic.html" with dados=op.obs only %}
-    {% endfor %}
+  {% include "layout/form_inputs_report.html" with form=form h=4 only %}
+  {% if mensagem %}
+    <h4>{{ mensagem }}</h4>
   {% endif %}
+  {% include "layout/table_generic.html" with dados=cliente only %}
+  {% include "layout/table_generic.html" with dados=status only %}
+  {% include "layout/table_generic.html" with dados=obs only %}
+  {% for op in ops %}
+    <h4>
+      {% url 'producao:op__get' op.op as link_op %}
+      OP de {{op.tipo_ref}} {% include "layout/a.html" with link=link_op text=op.op target='_blank' only %}
+    </h4>
+    {% include "layout/table_generic.html" with dados=op.ref only %}
+    {% include "layout/table_generic.html" with dados=op.info only %}
+    {% include "layout/table_generic.html" with dados=op.obs only %}
+  {% endfor %}
 {% endblock %}

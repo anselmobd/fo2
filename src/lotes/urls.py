@@ -198,6 +198,12 @@ urlpatterns = [
         name='rastreabilidade'
     ),
 
+    re_path(
+        r'^rastreabilidade/(?P<pedido>\d+)/$',
+        RastreabilidadeView.as_view(),
+        name='rastreabilidade__get'
+    ),
+
     re_path(r'^regras_lote_caixa/$',
         views.RegrasLoteCaixa.as_view(), name='regras_lote_caixa'),
     re_path(r'^regras_lote_caixa/(?P<colecao>[^/]+)?/(?P<referencia>[^/]+)?/(?P<ead>[^/]+)?/$',
