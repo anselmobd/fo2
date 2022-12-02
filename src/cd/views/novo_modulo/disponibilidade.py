@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from fo2.connections import db_cursor_so
 
 from base.paginator import list_paginator_basic
-from base.views.o2.get_post import O2BaseGetPostView
+from o2.views.base.get_post import O2BaseGetPostView
 from utils.classes import Perf
 from utils.functions.dictlist.dictlist_to_grade import filter_dictlist_to_grade_qtd
 

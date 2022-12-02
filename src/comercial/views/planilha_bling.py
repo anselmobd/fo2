@@ -3,7 +3,7 @@ from pprint import pprint
 from django.shortcuts import render
 from django.urls import reverse
 
-from base.views.o2.get_post import O2BaseGetPostView
+from o2.views.base.get_post import O2BaseGetPostView
 
 from fo2.connections import db_cursor_so
 

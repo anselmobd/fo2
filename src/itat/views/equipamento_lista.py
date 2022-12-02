@@ -3,7 +3,7 @@ from pprint import pprint
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 
-from base.views.o2.get_post import O2BaseGetPostView
+from o2.views.base.get_post import O2BaseGetPostView
 
 import itat.forms
 import itat.models

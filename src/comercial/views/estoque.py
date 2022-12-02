@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from fo2.connections import db_cursor_so
 
 from o2.views.base.get import O2BaseGetView
-from base.views.o2.get_post import O2BaseGetPostView
+from o2.views.base.get_post import O2BaseGetPostView
 from geral.functions import has_permission
 from utils.views import totalize_data
 from utils.functions import dec_month, dec_months, safe_cast, dias_uteis_mes

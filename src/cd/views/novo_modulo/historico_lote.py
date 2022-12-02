@@ -2,7 +2,7 @@ from pprint import pprint
 
 from fo2.connections import db_cursor_so
 
-from base.views.o2.get_post import O2BaseGetPostView
+from o2.views.base.get_post import O2BaseGetPostView
 from utils.table_defs import TableDefs
 
 from lotes.queries.lote import op_de_lote

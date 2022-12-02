@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.connections import db_cursor_so
 
-from base.views.o2.get_post import O2BaseGetPostView
+from o2.views.base.get_post import O2BaseGetPostView
 from utils.views import group_rowspan, totalize_grouped_data
 
 from contabil.queries import nf_inform

@@ -5,7 +5,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import Forms2
-from base.views.o2.get_post import O2BaseGetPostView
+from o2.views.base.get_post import O2BaseGetPostView
 from utils.views import totalize_data
 
 from lotes.queries.pedido.pedido_faturavel_sortimento \

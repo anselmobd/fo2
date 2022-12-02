@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.connections import db_cursor_so
 
-from base.views.o2.get_post import O2BaseGetPostView
+from o2.views.base.get_post import O2BaseGetPostView
 
 from cd.forms.add1palete import Add1PaleteForm
 from cd.queries.palete import custom_add_palete

@@ -5,7 +5,7 @@ from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
-from base.views.o2.get_post import O2BaseGetPostView
+from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.strings import min_max_string
 from utils.functions.date import dmy_or_empty
 from utils.table_defs import TableDefsHpSD

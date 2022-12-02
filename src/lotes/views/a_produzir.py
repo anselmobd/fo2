@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import Forms2
-from base.views.o2.get_post import O2BaseGetPostView
+from o2.views.base.get_post import O2BaseGetPostView
 from o2.views.base.get import O2BaseGetView
 from geral.functions import config_get_value
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
