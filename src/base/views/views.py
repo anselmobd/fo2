@@ -16,18 +16,7 @@ from utils.functions.models.dictlist import queryset_to_dictlist_lower
 from utils.functions.oracle import get_oracle_conn_err
 
 from base.pages_context import get_current_users_requisicao
-
-
-class O2BaseGetView(CustomView):
-
-    def render_mount(self):
-        self.mount_context()
-        return self.my_render()
-
-    def get(self, request, *args, **kwargs):
-        self.init_self(request, kwargs)
-
-        return self.render_mount()
+from base.views.o2.get import O2BaseGetView
 
 
 def index(request):

@@ -5,7 +5,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
-from base.views import O2BaseGetView
+from base.views.o2.get import O2BaseGetView
 from utils.table_defs import TableDefs
 
 from cd.queries import inconsist_qtd_solicit

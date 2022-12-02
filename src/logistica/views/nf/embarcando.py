@@ -3,7 +3,7 @@ from pprint import pprint
 from django.utils import timezone
 from django.urls import reverse
 
-from base.views import O2BaseGetView
+from base.views.o2.get import O2BaseGetView
 
 from logistica.models import NotaFiscal
 

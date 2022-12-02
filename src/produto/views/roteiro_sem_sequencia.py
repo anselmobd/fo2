@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.urls import reverse
 
-from base.views import O2BaseGetView
+from base.views.o2.get import O2BaseGetView
 from utils.forms import FiltroForm
 
 import produto.queries
