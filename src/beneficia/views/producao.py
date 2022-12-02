@@ -56,6 +56,7 @@ class Producao(O2BaseGetPostView):
             turno=self.turno,
             estagio=self.estagio.codigo_estagio if self.estagio else None,
             tipo=2,
+            horario=int(self.horario),
         )
         result = {
             'titulo': 'OB2',

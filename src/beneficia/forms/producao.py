@@ -51,3 +51,16 @@ class Form(forms.Form):
         empty_label="Todos",
         initial=78,
     )
+
+    CHOICES = [
+        ('', "Definir"),
+        ('6', "06h00"),
+        ('7', "07h00"),
+    ]
+    horario = forms.ChoiceField(
+        label='Horário',
+        choices=CHOICES,
+        initial='',
+        help_text="(considerado o início das 24 horas do dia)"
+    )
+
