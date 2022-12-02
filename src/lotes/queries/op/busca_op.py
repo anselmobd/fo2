@@ -3,6 +3,7 @@ from django.core.cache import cache
 from utils.functions.models.dictlist import dictlist
 
 from utils.functions import fo2logger, my_make_key_cache
+from utils.functions.models.dictlist import row_field_empty
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -442,6 +443,7 @@ def busca_op(
           THEN ' '
           ELSE div.DIVISAO_PRODUCAO || '-' || div.DESCRICAO
           END UNIDADE
+        , o.NIVEL_QUALIDADE NQ
         FROM PCPC_020 o
         LEFT JOIN (
           SELECT
@@ -598,6 +600,7 @@ def busca_op(
         , r.COLECAO
         , o.OBSERVACAO
         , o.OBSERVACAO2
+        , o.NIVEL_QUALIDADE
         ORDER BY
           o.ORDEM_PRODUCAO DESC
         )
@@ -639,6 +642,7 @@ def busca_op(
         , sele.COLECAO
         , sele.OBSERVACAO
         , sele.OBSERVACAO2
+        , sele.NQ
         , sele.UNIDADE
         , CASE WHEN EXISTS
           ( SELECT 
@@ -658,6 +662,10 @@ def busca_op(
     debug_cursor_execute(cursor, sql)
 
     cached_result = dictlist(cursor)
+
+    for row in cached_result:
+        row_field_empty(row, 'NQ')
+
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
     return cached_result
