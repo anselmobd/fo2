@@ -1,3 +1,4 @@
+import operator
 from pprint import pprint
 
 from utils.functions.dict import dict_get_none
@@ -84,15 +85,23 @@ def query(
 
         if row['ref'] < 'A0000':
             row['tipo_ref'] = 'PA'
+            row['ordem_ref'] = 1
         elif row['ref'] < 'B0000':
             row['tipo_ref'] = 'PG'
+            row['ordem_ref'] = 2
         elif row['ref'] < 'C0000':
             row['tipo_ref'] = 'PB'
+            row['ordem_ref'] = 2
         elif row['ref'].startswith('F'):
             row['tipo_ref'] = 'MP'
+            row['ordem_ref'] = 4
         elif row['ref'].startswith('Z'):
             row['tipo_ref'] = 'DESMONTE'
+            row['ordem_ref'] = 1
         else:
             row['tipo_ref'] = 'MD'
+            row['ordem_ref'] = 3
+
+    dados.sort(key=operator.itemgetter('ordem_ref', 'ref'))
 
     return dados
