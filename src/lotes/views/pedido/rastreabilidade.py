@@ -106,6 +106,11 @@ class RastreabilidadeView(O2BaseGetPostView):
                     'producao:op__get',
                     args=[row['op_princ']],
                 )
+            row['ref|TARGET'] = '_blank'
+            row['ref|A'] = reverse(
+                'produto:ref__get',
+                args=[row['ref']],
+            )
             row_field_str(row, 'op')
             row_field_date(row, 'dt_canc')
             row_field_date(row, 'dt_corte')
