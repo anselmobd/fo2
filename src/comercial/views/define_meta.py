@@ -9,7 +9,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import Forms2
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 from geral.functions import has_permission
 from o2.views.base.custom import StopStepsException
 from utils.functions import safe_cast

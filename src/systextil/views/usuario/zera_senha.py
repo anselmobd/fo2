@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.connections import db_cursor_so
 
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 
 from systextil.forms.usuario import ZeraSenhaForm
 from systextil.models.base import Usuario

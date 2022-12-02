@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 from geral.functions import config_get_value
 from utils.views import group_rowspan, totalize_grouped_data
 from utils.table_defs import TableDefs

@@ -3,7 +3,7 @@ from pprint import pprint
 from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import Forms2
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 
 from lotes.queries.analise.produzir_grade_empenho import mount_produzir_grade_empenho
 

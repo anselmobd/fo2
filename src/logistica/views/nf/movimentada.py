@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.db.models import Q
 
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 from utils.functions import untuple_keys_concat
 
 from logistica.models import PosicaoCargaAlteracaoLog

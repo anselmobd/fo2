@@ -3,7 +3,7 @@ from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 from fo2.connections import db_cursor_so
 from utils.functions.sql import sql_formato_fo2
 

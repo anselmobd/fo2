@@ -3,7 +3,7 @@ from pprint import pprint
 from django.db.models import Q
 
 from base.paginator import paginator_basic
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 
 from lotes.models.inventario import (
     Inventario,

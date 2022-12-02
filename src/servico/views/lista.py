@@ -3,7 +3,7 @@ from pprint import pprint
 from django.db import connection
 from django.urls import reverse
 
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 
 import servico.forms
 import servico.models

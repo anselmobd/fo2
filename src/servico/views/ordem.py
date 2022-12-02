@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 from utils.classes import LoggedInUser
 
 import servico.forms

@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import (
 )
 from django.urls import reverse
 
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 from fo2.connections import db_cursor_so
 
 from systextil.forms.main import SessaoForm

@@ -7,7 +7,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 from utils.views import group_rowspan, totalize_data, totalize_grouped_data
 
 import insumo.forms as forms

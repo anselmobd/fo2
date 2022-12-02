@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.connections import db_cursor_so
 
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 
 from lotes.forms.corte.informa_nf_envio import InformaNfEnvioForm
 from contabil.queries import set_nf_envia

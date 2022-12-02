@@ -3,7 +3,7 @@ from pprint import pprint
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 
-from base.views import O2BaseGetPostView
+from base.views.o2.get_post import O2BaseGetPostView
 
 import servico.forms
 import servico.models
