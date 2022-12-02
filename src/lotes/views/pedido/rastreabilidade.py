@@ -110,6 +110,8 @@ class RastreabilidadeView(O2BaseGetPostView):
             row_field_date(row, 'dt_canc')
             row_field_date(row, 'dt_corte')
             row_field_str(row, 'op_princ')
+            row_field_empty(row, 'obs')
+            row_field_empty(row, 'obs2')
 
     def table_op_info(self, dados):
         bloco = self.create_table(dados)
