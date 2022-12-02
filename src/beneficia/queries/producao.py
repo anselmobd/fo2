@@ -17,7 +17,8 @@ def query(
         data_ate=None,
         turno=None,
         estagio=None,
-        tipo=None
+        tipo=None,
+        horario=7,
     ):
     """
     Onde:
@@ -29,13 +30,16 @@ def query(
     if not data_de:
         data_de = date.today()
 
+    horario_sql = f"{horario:02d}:00"
+    print(horario_sql)
+
     data_ate_prox = data_ate if data_ate else data_de
     data_ate_prox = data_ate_prox + timedelta(days=1)
 
     filtra_data_de = f"""\
         AND ( 
           ( bt.DATA_TERMINO = DATE '{data_de}'
-            AND bt.HORA_TERMINO >= TIMESTAMP '1989-11-16 07:00:00'
+            AND bt.HORA_TERMINO >= TIMESTAMP '1989-11-16 {horario_sql}:00'
           )
           OR 
           ( bt.DATA_TERMINO > DATE '{data_de}'
@@ -43,7 +47,7 @@ def query(
           )
           OR 
           ( bt.DATA_TERMINO = DATE '{data_ate_prox}'
-            AND bt.HORA_TERMINO < TIMESTAMP '1989-11-16 07:00:00'
+            AND bt.HORA_TERMINO < TIMESTAMP '1989-11-16 {horario_sql}:00'
           )
         ) \
     """
