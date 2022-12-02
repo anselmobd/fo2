@@ -188,6 +188,30 @@ def view(request):
                     '14h22': "kkq-rieh-qxp (2022-11-29 14 22 GMT-3).mp4",
                 },
             },
+            {
+                'titulo': "30/11/2022 - Acompanhamento produção 2 de 4",
+                'subdir': "2022-11-30 Acompanhamento produção 2 de 4",
+                'docs': {
+                    'Ordem de Servico - 4733':
+                        "Ordem de Servico - 4733.pdf",
+                },
+                'files': {
+                    '14h10': "kkq-rieh-qxp (2022-11-30 14 10 GMT-3).mp4",
+                    '16h10': "kkq-rieh-qxp (2022-11-30 16 10 GMT-3).mp4",
+                },
+            },
+            {
+                'titulo': "01/12/2022 - Acompanhamento produção 3 de 4",
+                'subdir': "2022-12-01 Acompanhamento produção 3 de 4",
+                'docs': {
+                    'Ordem de Servico - 4748':
+                        "Ordem de Servico - 4748.pdf",
+                },
+                'files': {
+                    '14h20': "kkq-rieh-qxp (2022-12-01 14 20 GMT-3).mp4",
+                    '16h01': "kkq-rieh-qxp (2022-12-01 16 01 GMT-3).mp4",
+                },
+            },
         ]
     }
     return render(request, template_name, context)
