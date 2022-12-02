@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import (
 )
 from django.urls import reverse
 
-from base.views.o2.get import O2BaseGetView
+from o2.views.base.get import O2BaseGetView
 from fo2.connections import db_cursor_so
 
 from systextil.queries.dba.main import sessoes_travadoras

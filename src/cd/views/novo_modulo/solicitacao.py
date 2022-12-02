@@ -7,7 +7,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
-from base.views.o2.get import O2BaseGetView
+from o2.views.base.get import O2BaseGetView
 from utils.functions import untuple_keys_concat
 from utils.functions.dictlist.dictlist_to_grade import filter_dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade

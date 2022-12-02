@@ -4,7 +4,7 @@ from django.db.models import Exists, OuterRef
 
 from fo2.connections import db_cursor_so
 
-from base.views.o2.get import O2BaseGetView
+from o2.views.base.get import O2BaseGetView
 from utils.views import totalize_data
 from utils.table_defs import TableDefs
 

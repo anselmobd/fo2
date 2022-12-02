@@ -10,7 +10,7 @@ from django.db.models import Exists, OuterRef
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from base.views.o2.get import O2BaseGetView
+from o2.views.base.get import O2BaseGetView
 from utils.functions.date import dow_info
 from utils.views import group_rowspan
 

@@ -3,7 +3,7 @@ import datetime
 
 from fo2.connections import db_cursor_so
 
-from base.views.o2.get import O2BaseGetView
+from o2.views.base.get import O2BaseGetView
 from utils.decorators import CacheGet
 
 import comercial.queries

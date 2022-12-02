@@ -16,7 +16,7 @@ from utils.functions.models.dictlist import queryset_to_dictlist_lower
 from utils.functions.oracle import get_oracle_conn_err
 
 from base.pages_context import get_current_users_requisicao
-from base.views.o2.get import O2BaseGetView
+from o2.views.base.get import O2BaseGetView
 
 
 def index(request):

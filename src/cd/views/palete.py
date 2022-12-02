@@ -3,7 +3,7 @@ from pprint import pprint
 from django.urls import reverse
 
 from base.paginator import paginator_basic
-from base.views.o2.get import O2BaseGetView
+from o2.views.base.get import O2BaseGetView
 
 from fo2.connections import db_cursor_so
 
