@@ -41,6 +41,7 @@ def query(
         , canc.DESCRICAO DESCR_CANC
         , op.DT_CANCELAMENTO DT_CANC
         , op.REFERENCIA_PECA REF
+        , r.DESCR_REFERENCIA REF_DESCR
         , op.ALTERNATIVA_PECA ALT
         , op.QTDE_PROGRAMADA QTD
         , op.DATA_ENTRADA_CORTE DT_CORTE
@@ -52,6 +53,8 @@ def query(
         , op.TIPO_PROGRAMACAO TIPO_PROGR
         --, op.*
         FROM PCPC_020 op
+        JOIN basi_030 r
+          ON r.REFERENCIA = op.REFERENCIA_PECA
         LEFT JOIN pcpt_050 canc
           ON canc.COD_CANCELAMENTO = op.COD_CANCELAMENTO
         WHERE 1=1

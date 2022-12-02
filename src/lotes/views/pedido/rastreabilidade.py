@@ -123,6 +123,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         TableDefsHpSD({
             'tipo_ref': ["Tipo"],
             'ref': ["Referência"],
+            'ref_descr': ["Ref. Descr."],
             'alt': ["Alternativa"],
             'tipo_progr_descr': ["Tipo programação"],
             'qtd': ["Quant."],
