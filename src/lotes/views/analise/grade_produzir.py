@@ -35,7 +35,7 @@ class GradeProduzir(O2BaseGetPostView):
         self.add_refs = True
 
     def adiciona_referencia_em_modelo(
-        self, ref_adicionada, r_gpr_fields, r_gpr_data, gpr_data
+        self, gpr_data, ref_adicionada, r_gpr_fields, r_gpr_data
     ):
         for idx_r_gpr_data, row in enumerate(r_gpr_data):
             ref_cor = row['SORTIMENTO'].lstrip("0")
@@ -185,7 +185,7 @@ class GradeProduzir(O2BaseGetPostView):
                         situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
                 if r_total_oppr != 0:
                     total_oppr += r_total_oppr * ref_adicionada['conta_componentes']
-                    self.adiciona_referencia_em_modelo(ref_adicionada, r_gpr_fields, r_gpr_data, gpr_data)
+                    self.adiciona_referencia_em_modelo(gpr_data, ref_adicionada, r_gpr_fields, r_gpr_data)
 
         goppr = None
         if total_oppr != 0:
@@ -210,7 +210,7 @@ class GradeProduzir(O2BaseGetPostView):
                         situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
                 if r_total_opcd != 0:
                     total_opcd += r_total_opcd * ref_adicionada['conta_componentes']
-                    self.adiciona_referencia_em_modelo(ref_adicionada, r_gcd_fields, r_gcd_data, gcd_data)
+                    self.adiciona_referencia_em_modelo(gcd_data, ref_adicionada, r_gcd_fields, r_gcd_data)
 
         gopcd = None
         if total_opcd != 0:
@@ -227,13 +227,13 @@ class GradeProduzir(O2BaseGetPostView):
                 self.cursor, dep=('101', '102', '231'), modelo=self.modelo)
 
         for ref_adicionada in refs_adicionadas:
-            if ref_adicionada['ok'] and 1==1:
+            if ref_adicionada['ok']:
                 _, r_e_fields, r_e_data, _, r_total_est = \
                     estoque.queries.grade_estoque(
                         self.cursor, dep=('101', '102', '231'), referencia=ref_adicionada['referencia'])
                 if r_total_est != 0:
                     total_est += r_total_est * ref_adicionada['conta_componentes']
-                    self.adiciona_referencia_em_modelo(ref_adicionada, r_e_fields, r_e_data, e_data)
+                    self.adiciona_referencia_em_modelo(e_data, ref_adicionada, r_e_fields, r_e_data)
 
         gest = None
         if total_est != 0:
@@ -262,7 +262,7 @@ class GradeProduzir(O2BaseGetPostView):
             )
 
         for ref_adicionada in refs_adicionadas:
-            if ref_adicionada['ok'] and 1==1:
+            if ref_adicionada['ok']:
                 _, r_gp_fields, r_gp_data, _, r_total_ped = \
                     lotes.queries.pedido.pedido_faturavel_modelo_sortimento(
                         self.cursor, referencia=ref_adicionada['referencia'],
@@ -270,7 +270,7 @@ class GradeProduzir(O2BaseGetPostView):
                     )
                 if r_total_ped != 0:
                     total_ped += r_total_ped * ref_adicionada['conta_componentes']
-                    self.adiciona_referencia_em_modelo(ref_adicionada, r_gp_fields, r_gp_data, gp_data)
+                    self.adiciona_referencia_em_modelo(gp_data, ref_adicionada, r_gp_fields, r_gp_data)
 
         gped = None
         if total_ped != 0:
