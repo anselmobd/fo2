@@ -12,10 +12,12 @@ from o2.views.base.get_post import O2BaseGetPostView
 
 import comercial
 import produto
-import lotes
 import estoque
 from comercial.models.functions.meta_referencia import meta_ref_incluir
 from comercial.views.estoque import grade_meta_estoque
+from lotes.models import RegraColecao, RegraLMTamanho
+from lotes.queries.op import op_sortimentos
+from lotes.queries.pedido import pedido_faturavel_modelo_sortimento
 
 from lotes.views.a_produzir import (
     config_get_value,
@@ -78,10 +80,10 @@ class GradeProduzir(O2BaseGetPostView):
         lm_tam = 0
         lm_cor = 0
         try:
-            LC = lotes.models.RegraColecao.objects.get(colecao=self.colecao)
+            LC = RegraColecao.objects.get(colecao=self.colecao)
             lm_tam = LC.lm_tam
             lm_cor = LC.lm_cor
-        except lotes.models.RegraColecao.DoesNotExist:
+        except RegraColecao.DoesNotExist:
             pass
         return lm_tam, lm_cor
 
@@ -173,14 +175,14 @@ class GradeProduzir(O2BaseGetPostView):
         })
 
         gpr_header, gpr_fields, gpr_data, gpr_style, total_oppr = \
-            lotes.queries.op.op_sortimentos(
+            op_sortimentos(
                 self.cursor, tipo='ap', descr_sort=False, modelo=self.modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
         for ref_adicionada in refs_adicionadas:
             if ref_adicionada['ok']:
                 _, r_gpr_fields, r_gpr_data, _, r_total_oppr = \
-                    lotes.queries.op.op_sortimentos(
+                    op_sortimentos(
                         self.cursor, tipo='ap', descr_sort=False, referencia=ref_adicionada['referencia'],
                         situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
                 if r_total_oppr != 0:
@@ -198,14 +200,14 @@ class GradeProduzir(O2BaseGetPostView):
             self.gzerada = self.og.update_gzerada(self.gzerada, goppr)
 
         gcd_header, gcd_fields, gcd_data, gcd_style, total_opcd = \
-            lotes.queries.op.op_sortimentos(
+            op_sortimentos(
                 self.cursor, tipo='acd', descr_sort=False, modelo=self.modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
         for ref_adicionada in refs_adicionadas:
             if ref_adicionada['ok']:
                 _, r_gcd_fields, r_gcd_data, _, r_total_opcd = \
-                    lotes.queries.op.op_sortimentos(
+                    op_sortimentos(
                         self.cursor, tipo='acd', descr_sort=False, referencia=ref_adicionada['referencia'],
                         situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
                 if r_total_opcd != 0:
@@ -256,7 +258,7 @@ class GradeProduzir(O2BaseGetPostView):
             periodo = self.lead + dias_alem_lead
 
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
-            lotes.queries.pedido.pedido_faturavel_modelo_sortimento(
+            pedido_faturavel_modelo_sortimento(
                 self.cursor, modelo=self.modelo,
                 periodo=':{}'.format(periodo), cached=False
             )
@@ -264,7 +266,7 @@ class GradeProduzir(O2BaseGetPostView):
         for ref_adicionada in refs_adicionadas:
             if ref_adicionada['ok']:
                 _, r_gp_fields, r_gp_data, _, r_total_ped = \
-                    lotes.queries.pedido.pedido_faturavel_modelo_sortimento(
+                    pedido_faturavel_modelo_sortimento(
                         self.cursor, referencia=ref_adicionada['referencia'],
                         periodo=':{}'.format(periodo), cached=False
                     )
@@ -417,13 +419,13 @@ class GradeProduzir(O2BaseGetPostView):
                             'lm_cor_sozinha': 's',
                         }
                         try:
-                            RLM = lotes.models.RegraLMTamanho.objects.get(
+                            RLM = RegraLMTamanho.objects.get(
                                 tamanho=tam)
                             tam_conf[tam] = {
                                 'min_para_lm': RLM.min_para_lm,
                                 'lm_cor_sozinha': RLM.lm_cor_sozinha,
                             }
-                        except lotes.models.RegraLMTamanho.DoesNotExist:
+                        except RegraLMTamanho.DoesNotExist:
                             pass
 
                     if lm_tam != 0 and row_cor[tam] != 0:
