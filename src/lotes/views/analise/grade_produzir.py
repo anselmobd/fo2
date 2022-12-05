@@ -35,44 +35,44 @@ class GradeProduzir(O2BaseGetPostView):
         self.add_refs = True
 
     def adiciona_referencia_em_modelo(
-        self, gpr_data, ref_adicionada, r_gpr_fields, r_gpr_data
+        self, dados, ref_adicionada, ref_fields, ref_dados
     ):
-        for idx_r_gpr_data, row in enumerate(r_gpr_data):
-            ref_cor = row['SORTIMENTO'].lstrip("0")
+        for idx_ref_dados, ref_row in enumerate(ref_dados):
+            ref_cor = ref_row['SORTIMENTO'].lstrip("0")
             if ref_cor in ref_adicionada['cores_dict']:
                 combinacao = ref_adicionada['cores_dict'][ref_cor]
                 self.adiciona_combinacao_em_modelo(
-                    gpr_data, r_gpr_fields, idx_r_gpr_data, row, combinacao
+                    dados, ref_fields, idx_ref_dados, ref_row, combinacao
                 )
 
     def adiciona_combinacao_em_modelo(
-        self, gpr_data, r_gpr_fields, idx_r_gpr_data, row, combinacao
+        self, dados, ref_fields, idx_ref_dados, ref_row, combinacao
     ):
-        tamanhos = r_gpr_fields[1:-1]
+        tamanhos = ref_fields[1:-1]
         for cor in combinacao:
             try:
                 av_row = next(
                     item
-                    for item in gpr_data
+                    for item in dados
                     if item["SORTIMENTO"].lstrip("0") == cor
                 )
             except StopIteration:
-                gpr_data.insert(idx_r_gpr_data, row.copy())
-                av_row = gpr_data[idx_r_gpr_data]
+                dados.insert(idx_ref_dados, ref_row.copy())
+                av_row = dados[idx_ref_dados]
                 for tamanho in tamanhos:
                     av_row[tamanho] = 0
             self.adiciona_tamanho_em_modelo(
-                tamanhos, av_row, row, combinacao, cor)
+                tamanhos, av_row, ref_row, combinacao, cor)
 
     def adiciona_tamanho_em_modelo(
-        self, tamanhos, av_row, row, combinacao, cor
+        self, tamanhos, av_row, ref_row, combinacao, cor
     ):
         for tamanho in tamanhos:
-            if tamanho in row:
+            if tamanho in ref_row:
                 try:
-                    av_row[tamanho] += row[tamanho] * combinacao[cor]
+                    av_row[tamanho] += ref_row[tamanho] * combinacao[cor]
                 except KeyError:
-                    av_row[tamanho] = row[tamanho] * combinacao[cor]
+                    av_row[tamanho] = ref_row[tamanho] * combinacao[cor]
 
     def regra_colecao(self):
         lm_tam = 0
