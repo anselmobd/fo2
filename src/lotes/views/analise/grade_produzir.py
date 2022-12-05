@@ -85,6 +85,18 @@ class GradeProduzir(O2BaseGetPostView):
             pass
         return lm_tam, lm_cor
 
+    def get_meta_estoque(self):
+        metas = comercial.models.MetaEstoque.objects
+        metas = metas.annotate(antiga=Exists(
+            comercial.models.MetaEstoque.objects.filter(
+                modelo=OuterRef('modelo'),
+                data__gt=OuterRef('data')
+            )
+        ))
+        metas = metas.filter(antiga=False, modelo=self.modelo)
+        metas = metas.order_by('-meta_estoque')
+        return metas
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
         self.og = OperacoesGrade()
@@ -111,15 +123,7 @@ class GradeProduzir(O2BaseGetPostView):
 
         lm_tam, lm_cor = self.regra_colecao()
 
-        metas = comercial.models.MetaEstoque.objects
-        metas = metas.annotate(antiga=Exists(
-            comercial.models.MetaEstoque.objects.filter(
-                modelo=OuterRef('modelo'),
-                data__gt=OuterRef('data')
-            )
-        ))
-        metas = metas.filter(antiga=False, modelo=self.modelo)
-        metas = metas.order_by('-meta_estoque')
+        metas = self.get_meta_estoque()
         if len(metas) == 0:
             self.context.update({
                 'msg_meta_estoque': 'Modelo sem meta de estoque definida',
