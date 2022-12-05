@@ -74,6 +74,17 @@ class GradeProduzir(O2BaseGetPostView):
                 except KeyError:
                     av_row[tamanho] = row[tamanho] * combinacao[cor]
 
+    def regra_colecao(self):
+        lm_tam = 0
+        lm_cor = 0
+        try:
+            LC = lotes.models.RegraColecao.objects.get(colecao=self.colecao)
+            lm_tam = LC.lm_tam
+            lm_cor = LC.lm_cor
+        except lotes.models.RegraColecao.DoesNotExist:
+            pass
+        return lm_tam, lm_cor
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
         self.og = OperacoesGrade()
@@ -98,14 +109,7 @@ class GradeProduzir(O2BaseGetPostView):
             'descr': row_modelo['DESCR'],
         })
 
-        lm_tam = 0
-        lm_cor = 0
-        try:
-            LC = lotes.models.RegraColecao.objects.get(colecao=self.colecao)
-            lm_tam = LC.lm_tam
-            lm_cor = LC.lm_cor
-        except lotes.models.RegraColecao.DoesNotExist:
-            pass
+        lm_tam, lm_cor = self.regra_colecao()
 
         metas = comercial.models.MetaEstoque.objects
         metas = metas.annotate(antiga=Exists(
