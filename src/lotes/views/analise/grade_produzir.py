@@ -75,33 +75,33 @@ class GradeProduzir(O2BaseGetPostView):
                     av_row[tamanho] = row[tamanho] * combinacao[cor]
 
     def mount_context(self):
-        cursor = db_cursor_so(self.request)
-        og = OperacoesGrade()
+        self.cursor = db_cursor_so(self.request)
+        self.og = OperacoesGrade()
 
-        modelo = self.form.cleaned_data['modelo']
+        self.modelo = self.form.cleaned_data['modelo']
         self.context.update({
             'add_refs': self.add_refs,
-            'modelo': modelo,
+            'modelo': self.modelo,
         })
 
-        data = produto.queries.modelo_inform(cursor, modelo)
-        if len(data) == 0:
+        data_modelo = produto.queries.modelo_inform(self.cursor, self.modelo)
+        if len(data_modelo) == 0:
             self.context.update({
                 'msg_erro': 'Modelo não encontrado',
             })
             return
 
-        row = data[0]
-        colecao = row['CODIGO_COLECAO']
+        row_modelo = data_modelo[0]
+        self.colecao = row_modelo['CODIGO_COLECAO']
         self.context.update({
-            'colecao': row['COLECAO'],
-            'descr': row['DESCR'],
+            'colecao': row_modelo['COLECAO'],
+            'descr': row_modelo['DESCR'],
         })
 
         lm_tam = 0
         lm_cor = 0
         try:
-            LC = lotes.models.RegraColecao.objects.get(colecao=colecao)
+            LC = lotes.models.RegraColecao.objects.get(colecao=self.colecao)
             lm_tam = LC.lm_tam
             lm_cor = LC.lm_cor
         except lotes.models.RegraColecao.DoesNotExist:
@@ -114,7 +114,7 @@ class GradeProduzir(O2BaseGetPostView):
                 data__gt=OuterRef('data')
             )
         ))
-        metas = metas.filter(antiga=False, modelo=modelo)
+        metas = metas.filter(antiga=False, modelo=self.modelo)
         metas = metas.order_by('-meta_estoque')
         if len(metas) == 0:
             self.context.update({
@@ -136,9 +136,9 @@ class GradeProduzir(O2BaseGetPostView):
         else:
             gme = grade_meta_estoque(meta)
             calcula_grade = True
-            gzerada = og.update_gzerada(gzerada, gme)
+            gzerada = self.og.update_gzerada(gzerada, gme)
 
-        lead = produto.queries.lead_de_modelo(cursor, modelo)
+        lead = produto.queries.lead_de_modelo(self.cursor, self.modelo)
         gmg = None
         if meta.meta_giro == 0:
             self.context.update({
@@ -147,13 +147,13 @@ class GradeProduzir(O2BaseGetPostView):
         else:
             gmg = grade_meta_giro(meta, lead, show_distrib=False)
             calcula_grade = True
-            gzerada = og.update_gzerada(gzerada, gmg)
+            gzerada = self.og.update_gzerada(gzerada, gmg)
 
         if not calcula_grade:
             return
 
         if self.add_refs:
-            refs_adicionadas = meta_ref_incluir(cursor, modelo)
+            refs_adicionadas = meta_ref_incluir(self.cursor, self.modelo)
         else:
             refs_adicionadas = []
         self.context.update({
@@ -162,14 +162,14 @@ class GradeProduzir(O2BaseGetPostView):
 
         gpr_header, gpr_fields, gpr_data, gpr_style, total_oppr = \
             lotes.queries.op.op_sortimentos(
-                cursor, tipo='ap', descr_sort=False, modelo=modelo,
+                self.cursor, tipo='ap', descr_sort=False, modelo=self.modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
         for ref_adicionada in refs_adicionadas:
             if ref_adicionada['ok']:
                 _, r_gpr_fields, r_gpr_data, _, r_total_oppr = \
                     lotes.queries.op.op_sortimentos(
-                        cursor, tipo='ap', descr_sort=False, referencia=ref_adicionada['referencia'],
+                        self.cursor, tipo='ap', descr_sort=False, referencia=ref_adicionada['referencia'],
                         situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
                 if r_total_oppr != 0:
                     total_oppr += r_total_oppr * ref_adicionada['conta_componentes']
@@ -183,18 +183,18 @@ class GradeProduzir(O2BaseGetPostView):
                 'data': gpr_data,
                 'style': gpr_style,
             }
-            gzerada = og.update_gzerada(gzerada, goppr)
+            gzerada = self.og.update_gzerada(gzerada, goppr)
 
         gcd_header, gcd_fields, gcd_data, gcd_style, total_opcd = \
             lotes.queries.op.op_sortimentos(
-                cursor, tipo='acd', descr_sort=False, modelo=modelo,
+                self.cursor, tipo='acd', descr_sort=False, modelo=self.modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
         for ref_adicionada in refs_adicionadas:
             if ref_adicionada['ok']:
                 _, r_gcd_fields, r_gcd_data, _, r_total_opcd = \
                     lotes.queries.op.op_sortimentos(
-                        cursor, tipo='acd', descr_sort=False, referencia=ref_adicionada['referencia'],
+                        self.cursor, tipo='acd', descr_sort=False, referencia=ref_adicionada['referencia'],
                         situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
                 if r_total_opcd != 0:
                     total_opcd += r_total_opcd * ref_adicionada['conta_componentes']
@@ -208,17 +208,17 @@ class GradeProduzir(O2BaseGetPostView):
                 'data': gcd_data,
                 'style': gcd_style,
             }
-            gzerada = og.update_gzerada(gzerada, gopcd)
+            gzerada = self.og.update_gzerada(gzerada, gopcd)
 
         e_header, e_fields, e_data, e_style, total_est = \
             estoque.queries.grade_estoque(
-                cursor, dep=('101', '102', '231'), modelo=modelo)
+                self.cursor, dep=('101', '102', '231'), modelo=self.modelo)
 
         for ref_adicionada in refs_adicionadas:
             if ref_adicionada['ok'] and 1==1:
                 _, r_e_fields, r_e_data, _, r_total_est = \
                     estoque.queries.grade_estoque(
-                        cursor, dep=('101', '102', '231'), referencia=ref_adicionada['referencia'])
+                        self.cursor, dep=('101', '102', '231'), referencia=ref_adicionada['referencia'])
                 if r_total_est != 0:
                     total_est += r_total_est * ref_adicionada['conta_componentes']
                     self.adiciona_referencia_em_modelo(ref_adicionada, r_e_fields, r_e_data, e_data)
@@ -231,7 +231,7 @@ class GradeProduzir(O2BaseGetPostView):
                 'data': e_data,
                 'style': e_style,
             }
-            gzerada = og.update_gzerada(gzerada, gest)
+            gzerada = self.og.update_gzerada(gzerada, gest)
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.context.update({
@@ -245,7 +245,7 @@ class GradeProduzir(O2BaseGetPostView):
 
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
             lotes.queries.pedido.pedido_faturavel_modelo_sortimento(
-                cursor, modelo=modelo,
+                self.cursor, modelo=self.modelo,
                 periodo=':{}'.format(periodo), cached=False
             )
 
@@ -253,7 +253,7 @@ class GradeProduzir(O2BaseGetPostView):
             if ref_adicionada['ok'] and 1==1:
                 _, r_gp_fields, r_gp_data, _, r_total_ped = \
                     lotes.queries.pedido.pedido_faturavel_modelo_sortimento(
-                        cursor, referencia=ref_adicionada['referencia'],
+                        self.cursor, referencia=ref_adicionada['referencia'],
                         periodo=':{}'.format(periodo), cached=False
                     )
                 if r_total_ped != 0:
@@ -264,7 +264,7 @@ class GradeProduzir(O2BaseGetPostView):
         if total_ped != 0:
             self.context.update({
                 'gped_header_link': reverse(
-                    'producao:faturavel_modelo__get', args=[modelo]),
+                    'producao:faturavel_modelo__get', args=[self.modelo]),
             })
             gped = {
                 'headers': gp_header,
@@ -272,42 +272,42 @@ class GradeProduzir(O2BaseGetPostView):
                 'data': gp_data,
                 'style': gp_style,
             }
-            gzerada = og.update_gzerada(gzerada, gped)
+            gzerada = self.og.update_gzerada(gzerada, gped)
 
         # Utiliza grade zerada para igualar cores e tamanhos das grades base
         # dos cálculos
         if gme is not None:
-            gme = og.soma_grades(gzerada, gme)
+            gme = self.og.soma_grades(gzerada, gme)
             self.context.update({
                 'gme': gme,
             })
 
         if gmg is not None:
-            gmg = og.soma_grades(gzerada, gmg)
+            gmg = self.og.soma_grades(gzerada, gmg)
             self.context.update({
                 'gmg': gmg,
             })
 
         if goppr is not None:
-            goppr = og.soma_grades(gzerada, goppr)
+            goppr = self.og.soma_grades(gzerada, goppr)
             self.context.update({
                 'goppr': goppr,
             })
 
         if gopcd is not None:
-            gopcd = og.soma_grades(gzerada, gopcd)
+            gopcd = self.og.soma_grades(gzerada, gopcd)
             self.context.update({
                 'gopcd': gopcd,
             })
 
         if gest is not None:
-            gest = og.soma_grades(gzerada, gest)
+            gest = self.og.soma_grades(gzerada, gest)
             self.context.update({
                 'gest': gest,
             })
 
         if gped is not None:
-            gped = og.soma_grades(gzerada, gped)
+            gped = self.og.soma_grades(gzerada, gped)
             self.context.update({
                 'gped': gped,
             })
@@ -319,7 +319,7 @@ class GradeProduzir(O2BaseGetPostView):
             elif meta.meta_giro == 0:
                 gm = gme
             else:
-                gm = og.soma_grades(gme, gmg)
+                gm = self.og.soma_grades(gme, gmg)
 
             self.context.update({
                 'gm': gm,
@@ -332,7 +332,7 @@ class GradeProduzir(O2BaseGetPostView):
             gop = goppr
             total_op = total_oppr
         elif total_opcd != 0 and total_oppr != 0:
-            gop = og.soma_grades(goppr, gopcd)
+            gop = self.og.soma_grades(goppr, gopcd)
             total_op = total_oppr + total_opcd
         else:
             gop = None
@@ -350,18 +350,18 @@ class GradeProduzir(O2BaseGetPostView):
                 if total_op == 0:
                     gopp = gest
                 else:
-                    gopp = og.soma_grades(gop, gest)
+                    gopp = self.og.soma_grades(gop, gest)
             elif total_op == 0:
                 if total_est == 0:
-                    gopp = og.subtrai_grades(gzerada, gped)
+                    gopp = self.og.subtrai_grades(gzerada, gped)
                 else:
-                    gopp = og.subtrai_grades(gest, gped)
+                    gopp = self.og.subtrai_grades(gest, gped)
             else:
                 if total_est == 0:
-                    gopp = og.subtrai_grades(gop, gped)
+                    gopp = self.og.subtrai_grades(gop, gped)
                 else:
-                    gopp = og.soma_grades(gop, gest)
-                    gopp = og.subtrai_grades(gopp, gped)
+                    gopp = self.og.soma_grades(gop, gest)
+                    gopp = self.og.subtrai_grades(gopp, gped)
 
             self.context.update({
                 'gopp': gopp,
@@ -374,17 +374,17 @@ class GradeProduzir(O2BaseGetPostView):
             elif gm is None:
                 gresult = gopp
             else:
-                gresult = og.subtrai_grades(gm, gopp)
+                gresult = self.og.subtrai_grades(gm, gopp)
 
         glm = None
         glc = None
 
         if gresult is not None:
-            gap = og.opera_grade(gresult, lambda x: x if x > 0 else 0)
+            gap = self.og.opera_grade(gresult, lambda x: x if x > 0 else 0)
             self.context.update({
                 'gap': gap,
             })
-            gex = og.opera_grade(gresult, lambda x: -x if x < 0 else 0)
+            gex = self.og.opera_grade(gresult, lambda x: -x if x < 0 else 0)
             self.context.update({
                 'gex': gex,
             })
