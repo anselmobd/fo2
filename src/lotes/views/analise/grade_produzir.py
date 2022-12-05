@@ -34,29 +34,45 @@ class GradeProduzir(O2BaseGetPostView):
         self.get_args = ['modelo']
         self.add_refs = True
 
-    def adiciona_referencia_em_modelo(self, ref_adicionada, r_gpr_fields, r_gpr_data, gpr_data):
-        for index, row in enumerate(r_gpr_data):
+    def adiciona_referencia_em_modelo(
+        self, ref_adicionada, r_gpr_fields, r_gpr_data, gpr_data
+    ):
+        for idx_r_gpr_data, row in enumerate(r_gpr_data):
             ref_cor = row['SORTIMENTO'].lstrip("0")
             if ref_cor in ref_adicionada['cores_dict']:
                 combinacao = ref_adicionada['cores_dict'][ref_cor]
-                for cor in combinacao:
-                    try:
-                        av_row = next(
-                            item
-                            for item in gpr_data
-                            if item["SORTIMENTO"].lstrip("0") == cor
-                        )
-                    except StopIteration:
-                        gpr_data.insert(index, row.copy())
-                        av_row = gpr_data[index]
-                        for tamanho in r_gpr_fields[1:-1]:
-                            av_row[tamanho] = 0
-                    for tamanho in r_gpr_fields[1:-1]:
-                        if tamanho in row:
-                            try:
-                                av_row[tamanho] += row[tamanho] * combinacao[cor]
-                            except KeyError:
-                                av_row[tamanho] = row[tamanho] * combinacao[cor]
+                self.adiciona_combinacao_em_modelo(
+                    gpr_data, r_gpr_fields, idx_r_gpr_data, row, combinacao
+                )
+
+    def adiciona_combinacao_em_modelo(
+        self, gpr_data, r_gpr_fields, idx_r_gpr_data, row, combinacao
+    ):
+        tamanhos = r_gpr_fields[1:-1]
+        for cor in combinacao:
+            try:
+                av_row = next(
+                    item
+                    for item in gpr_data
+                    if item["SORTIMENTO"].lstrip("0") == cor
+                )
+            except StopIteration:
+                gpr_data.insert(idx_r_gpr_data, row.copy())
+                av_row = gpr_data[idx_r_gpr_data]
+                for tamanho in tamanhos:
+                    av_row[tamanho] = 0
+            self.adiciona_tamanho_em_modelo(
+                tamanhos, av_row, row, combinacao, cor)
+
+    def adiciona_tamanho_em_modelo(
+        self, tamanhos, av_row, row, combinacao, cor
+    ):
+        for tamanho in tamanhos:
+            if tamanho in row:
+                try:
+                    av_row[tamanho] += row[tamanho] * combinacao[cor]
+                except KeyError:
+                    av_row[tamanho] = row[tamanho] * combinacao[cor]
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
