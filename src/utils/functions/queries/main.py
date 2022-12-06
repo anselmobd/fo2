@@ -91,6 +91,14 @@ def sql_where_none_if(
     )
 
 
+def debug_cursor_execute_prt_on():
+    settings.DEBUG_CURSOR_EXECUTE_PRT = True
+
+
+def debug_cursor_execute_prt_off():
+    settings.DEBUG_CURSOR_EXECUTE_PRT = False
+
+
 def debug_cursor_execute(
         cursor, sql, list_args=None, prt=None
     ):
