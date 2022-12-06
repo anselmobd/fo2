@@ -7,7 +7,6 @@ from django.db.models import Exists, OuterRef
 from geral.functions import config_get_value
 from utils.cache import entkeys
 from utils.functions import (
-    # fo2logger,
     my_make_key_cache,
     loginfo,
 )
@@ -36,36 +35,35 @@ class MountProduzirGradeEmpenho():
         self.modelo = modelo
 
     def query(self):
-        key_cache = my_make_key_cache(
+        self.key_cache = my_make_key_cache(
             'lotes/queries/analise/produzir_grade_empenho/MPGE/query',
             self.modelo,
         )
 
-        mount_produzir = cache.get(key_cache)
+        self.mount_produzir = cache.get(self.key_cache)
 
-        if mount_produzir:
-            # fo2logger.info('cached '+key_cache)
-            loginfo('cached '+key_cache)
-            return mount_produzir
+        if self.mount_produzir:
+            loginfo('cached '+self.key_cache)
+            return self.mount_produzir
 
         og = OperacoesGrade()
         self.modelo = f"{self.modelo}"
         self.modelo = int(self.modelo)
 
-        mount_produzir = {
+        self.mount_produzir = {
             'modelo': self.modelo,
         }
 
         data = produto.queries.modelo_inform(self.cursor, self.modelo)
         if len(data) == 0:
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'msg_erro': 'Modelo não encontrado',
             })
-            return mount_produzir
+            return self.mount_produzir
 
         row = data[0]
         colecao = row['CODIGO_COLECAO']
-        mount_produzir.update({
+        self.mount_produzir.update({
             'colecao': row['COLECAO'],
             'descr': row['DESCR'],
         })
@@ -89,11 +87,11 @@ class MountProduzirGradeEmpenho():
         metas = metas.filter(antiga=False, modelo=self.modelo)
         metas = metas.order_by('-meta_estoque')
         if len(metas) == 0:
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'msg_meta_estoque': 'Modelo sem meta de estoque definida',
                 'msg_meta_giro': 'Modelo sem meta de giro definida',
             })
-            return mount_produzir
+            return self.mount_produzir
         else:
             meta = metas[0]
 
@@ -102,7 +100,7 @@ class MountProduzirGradeEmpenho():
         calcula_grade = False
         gme = None
         if meta.meta_estoque == 0:
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'msg_meta_estoque': 'Modelo com meta de estoque zerada',
             })
         else:
@@ -111,11 +109,11 @@ class MountProduzirGradeEmpenho():
             gzerada = og.update_gzerada(gzerada, gme)
 
         lead = produto.queries.lead_de_modelo(self.cursor, self.modelo)
-        mount_produzir['lead'] = lead
+        self.mount_produzir['lead'] = lead
 
         gmg = None
         if meta.meta_giro == 0:
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'msg_meta_giro': 'Modelo com meta de giro zerada',
             })
         else:
@@ -124,7 +122,7 @@ class MountProduzirGradeEmpenho():
             gzerada = og.update_gzerada(gzerada, gmg)
 
         if not calcula_grade:
-            return mount_produzir
+            return self.mount_produzir
 
         g_header, g_fields, g_data, g_style, total_opa = \
             lotes.queries.op.op_sortimentos(
@@ -200,7 +198,7 @@ class MountProduzirGradeEmpenho():
             gzerada = og.update_gzerada(gzerada, gsol)
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
-        mount_produzir.update({
+        self.mount_produzir.update({
             'dias_alem_lead': dias_alem_lead,
         })
 
@@ -282,37 +280,37 @@ class MountProduzirGradeEmpenho():
         # dos cálculos
         if gme is not None:
             gme = og.soma_grades(gzerada, gme)
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'gme': gme,
             })
 
         if gmg is not None:
             gmg = og.soma_grades(gzerada, gmg)
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'gmg': gmg,
             })
 
         if gopa is not None:
             gopa = og.soma_grades(gzerada, gopa)
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'gopa': gopa,
             })
 
         if ginv is not None:
             ginv = og.soma_grades(gzerada, ginv)
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'ginv': ginv,
             })
 
         if gsol is not None:
             gsol = og.soma_grades(gzerada, gsol)
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'gsol': gsol,
             })
 
         if gped is not None:
             gped = og.soma_grades(gzerada, gped)
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'gped': gped,
             })
 
@@ -325,14 +323,14 @@ class MountProduzirGradeEmpenho():
             else:
                 gm = og.soma_grades(gme, gmg)
 
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'gm': gm,
             })
         
         gopa_ncd = None
         if total_inv != 0 and total_opa != total_inv:
             gopa_ncd = og.subtrai_grades(gopa, ginv)
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'gopa_ncd': gopa_ncd,
             })
 
@@ -357,7 +355,7 @@ class MountProduzirGradeEmpenho():
         gopp = None
         if gopp2:
             gopp = gopp2
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'gopp': gopp,
             })
 
@@ -375,11 +373,11 @@ class MountProduzirGradeEmpenho():
 
         if gresult is not None:
             gap = og.opera_grade(gresult, lambda x: x if x > 0 else 0)
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'gap': gap,
             })
             gex = og.opera_grade(gresult, lambda x: -x if x < 0 else 0)
-            mount_produzir.update({
+            self.mount_produzir.update({
                 'gex': gex,
             })
 
@@ -426,7 +424,7 @@ class MountProduzirGradeEmpenho():
                                 'font-weight: bold; color: red'
 
             if glm != gap:
-                mount_produzir.update({
+                self.mount_produzir.update({
                     'glm': glm,
                 })
 
@@ -479,13 +477,12 @@ class MountProduzirGradeEmpenho():
                             row_cor[tam] += lm_cor_acresc
 
             if glc != glm:
-                mount_produzir.update({
+                self.mount_produzir.update({
                     'glc': glc,
                 })
 
 
-        cache.set(key_cache, mount_produzir, timeout=entkeys._MINUTE*5)
-        # fo2logger.info('calculated '+key_cache)
-        loginfo('calculated '+key_cache)
+        cache.set(self.key_cache, self.mount_produzir, timeout=entkeys._MINUTE*5)
+        loginfo('calculated '+self.key_cache)
 
-        return mount_produzir
+        return self.mount_produzir
