@@ -102,7 +102,7 @@ class MountProduzirGradeEmpenho():
             tipo_ref='v', tipo_op='p', tipo_selecao='a'
         )
 
-        g_data_op_p = dictlist_to_grade_qtd(
+        g_dados = dictlist_to_grade_qtd(
             dados=data_op_p,
             field_linha='cor',
             new_field_linha='SORTIMENTO',
@@ -113,17 +113,17 @@ class MountProduzirGradeEmpenho():
             field_quantidade='qtd',
         )
 
-        qtds = None
-        if g_data_op_p['total_abs']:
-            qtds = {
-                'headers': g_data_op_p['headers'],
-                'fields': g_data_op_p['fields'],
-                'data': g_data_op_p['data'],
-                'style': g_data_op_p['style'],
+        grade = None
+        if g_dados['total_abs']:
+            grade = {
+                'headers': g_dados['headers'],
+                'fields': g_dados['fields'],
+                'data': g_dados['data'],
+                'style': g_dados['style'],
             }
-            self.gzerada = self.og.update_gzerada(self.gzerada, qtds)
+            self.gzerada = self.og.update_gzerada(self.gzerada, grade)
 
-        return qtds, g_data_op_p['total']
+        return grade, g_dados['total']
 
     def query(self):
         if self.cache_get():
