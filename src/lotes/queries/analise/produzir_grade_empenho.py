@@ -100,10 +100,8 @@ class MountProduzirGradeEmpenho():
         g_dados = dictlist_to_grade_qtd(
             dados=dados,
             field_linha='cor',
-            new_field_linha='SORTIMENTO',
-            facade_linha='Cores',
             field_coluna='tam',
-            facade_coluna='Tamanhos',
+            facade_coluna='Tamanho',
             field_ordem_coluna='ordem_tam',
             field_quantidade='qtd',
         )
