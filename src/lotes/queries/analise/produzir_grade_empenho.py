@@ -94,7 +94,7 @@ class MountProduzirGradeEmpenho():
             return self.mount_produzir
 
         row_modelo = data_modelo[0]
-        colecao = row_modelo['CODIGO_COLECAO']
+        self.colecao = row_modelo['CODIGO_COLECAO']
         self.mount_produzir.update({
             'colecao': row_modelo['COLECAO'],
             'descr': row_modelo['DESCR'],
@@ -112,7 +112,7 @@ class MountProduzirGradeEmpenho():
         else:
             self.meta = metas[0]
 
-        gzerada = None
+        self.gzerada = None
 
         calcula_grade = False
         gme = None
@@ -123,7 +123,7 @@ class MountProduzirGradeEmpenho():
         else:
             gme = grade_meta_estoque(self.meta)
             calcula_grade = True
-            gzerada = og.update_gzerada(gzerada, gme)
+            self.gzerada = og.update_gzerada(self.gzerada, gme)
 
         lead = produto.queries.lead_de_modelo(self.cursor, self.modelo)
         self.mount_produzir['lead'] = lead
@@ -136,7 +136,7 @@ class MountProduzirGradeEmpenho():
         else:
             gmg = grade_meta_giro(self.meta, lead, show_distrib=False)
             calcula_grade = True
-            gzerada = og.update_gzerada(gzerada, gmg)
+            self.gzerada = og.update_gzerada(self.gzerada, gmg)
 
         if not calcula_grade:
             return self.mount_produzir
@@ -154,7 +154,7 @@ class MountProduzirGradeEmpenho():
                 'data': g_data,
                 'style': g_style,
             }
-            gzerada = og.update_gzerada(gzerada, gopa)
+            self.gzerada = og.update_gzerada(self.gzerada, gopa)
 
         inventario = refs_em_palets.query(
             self.cursor,
@@ -181,7 +181,7 @@ class MountProduzirGradeEmpenho():
                 'data': grade_inventario['data'],
                 'style': grade_inventario['style'],
             }
-            gzerada = og.update_gzerada(gzerada, ginv)
+            self.gzerada = og.update_gzerada(self.gzerada, ginv)
 
         empenhado = refs_em_palets.query(
             self.cursor,
@@ -212,7 +212,7 @@ class MountProduzirGradeEmpenho():
                 'data': grade_empenhado['data'],
                 'style': grade_empenhado['style'],
             }
-            gzerada = og.update_gzerada(gzerada, gsol)
+            self.gzerada = og.update_gzerada(self.gzerada, gsol)
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.mount_produzir.update({
@@ -239,7 +239,7 @@ class MountProduzirGradeEmpenho():
                 'data': gp_data,
                 'style': gp_style,
             }
-            gzerada = og.update_gzerada(gzerada, gped)
+            self.gzerada = og.update_gzerada(self.gzerada, gped)
 
         refs_adicionadas = meta_ref_incluir(self.cursor, self.modelo)
 
@@ -263,7 +263,7 @@ class MountProduzirGradeEmpenho():
                     }
 
             if gadd:
-                gpac = copy.deepcopy(gzerada)
+                gpac = copy.deepcopy(self.gzerada)
                 gadd_sortimento_field = gadd['fields'][0]
                 gadd_total_field = gadd['fields'][-1]
                 gpac_sortimento_field = gpac['fields'][0]
@@ -296,37 +296,37 @@ class MountProduzirGradeEmpenho():
         # Utiliza grade zerada para igualar cores e tamanhos das grades base
         # dos cálculos
         if gme is not None:
-            gme = og.soma_grades(gzerada, gme)
+            gme = og.soma_grades(self.gzerada, gme)
             self.mount_produzir.update({
                 'gme': gme,
             })
 
         if gmg is not None:
-            gmg = og.soma_grades(gzerada, gmg)
+            gmg = og.soma_grades(self.gzerada, gmg)
             self.mount_produzir.update({
                 'gmg': gmg,
             })
 
         if gopa is not None:
-            gopa = og.soma_grades(gzerada, gopa)
+            gopa = og.soma_grades(self.gzerada, gopa)
             self.mount_produzir.update({
                 'gopa': gopa,
             })
 
         if ginv is not None:
-            ginv = og.soma_grades(gzerada, ginv)
+            ginv = og.soma_grades(self.gzerada, ginv)
             self.mount_produzir.update({
                 'ginv': ginv,
             })
 
         if gsol is not None:
-            gsol = og.soma_grades(gzerada, gsol)
+            gsol = og.soma_grades(self.gzerada, gsol)
             self.mount_produzir.update({
                 'gsol': gsol,
             })
 
         if gped is not None:
-            gped = og.soma_grades(gzerada, gped)
+            gped = og.soma_grades(self.gzerada, gped)
             self.mount_produzir.update({
                 'gped': gped,
             })
@@ -356,7 +356,7 @@ class MountProduzirGradeEmpenho():
             if total_ped == 0:
                 gopp1 = gopa
             elif total_opa == 0:
-                gopp1 = og.subtrai_grades(gzerada, gped)
+                gopp1 = og.subtrai_grades(self.gzerada, gped)
             else:
                 gopp1 = og.subtrai_grades(gopa, gped)
 
@@ -365,7 +365,7 @@ class MountProduzirGradeEmpenho():
             if total_sol == 0:
                 gopp2 = gopp1
             elif gopp1 is None:
-                gopp2 = og.subtrai_grades(gzerada, gsol)
+                gopp2 = og.subtrai_grades(self.gzerada, gsol)
             else:
                 gopp2 = og.subtrai_grades(gopp1, gsol)
 
