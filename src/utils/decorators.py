@@ -6,7 +6,7 @@ from pprint import pprint, pformat
 
 from django.core.cache import cache
 
-from utils.cache import entkeys
+from utils.cache import timeout
 from utils.functions import (
     fo2logger,
     my_make_key_cache,
@@ -127,7 +127,7 @@ def caching_function(
                     # fo2logger.info('set _calc_ '+key_cache)
                     cache.set(
                         f"{key_cache}_calc_", "s",
-                        timeout=entkeys._SECOND * max_run_delay)
+                        timeout=timeout.SECOND*max_run_delay)
                     break
                 else:
                     # fo2logger.info('cached_result '+pformat(cached_result))

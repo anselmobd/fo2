@@ -5,7 +5,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.cache import entkeys
+from utils.cache import timeout
 from utils.classes import Perf
 from utils.functions import (
     fo2logger,
@@ -114,7 +114,7 @@ def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
                     niveln.append(novoinsumo)
 
     result = nivel1 + niveln
-    cache.set(key_cache, result, timeout=entkeys._MINUTE * 2)
+    cache.set(key_cache, result, timeout=timeout.MINUTE*2)
     fo2logger.info('calculated '+key_cache)
     p.prt('calculated')
     return result
@@ -319,7 +319,7 @@ def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
     debug_cursor_execute(cursor, sql)
 
     cached_result = dictlist(cursor)
-    cache.set(key_cache, cached_result, timeout=entkeys._MINUTE * 3)
+    cache.set(key_cache, cached_result, timeout=timeout.MINUTE*3)
     fo2logger.info('calculated '+key_cache)
     p.prt('calculated')
     return cached_result
@@ -640,6 +640,6 @@ def mapa_compras_necessidades(
     debug_cursor_execute(cursor, sql)
 
     cached_result = dictlist(cursor)
-    cache.set(key_cache, cached_result, timeout=entkeys._MINUTE)
+    cache.set(key_cache, cached_result, timeout=timeout.MINUTE)
     fo2logger.info('calculated '+key_cache)
     return cached_result

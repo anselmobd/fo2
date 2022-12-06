@@ -10,7 +10,10 @@ from django.template.loader import render_to_string
 
 from fo2.connections import db_cursor_so
 
-from utils.cache import entkeys
+from utils.cache import (
+    entkeys,
+    timeout,
+)
 from utils.functions import fo2logger, my_make_key_cache
 
 import insumo.functions
@@ -20,9 +23,9 @@ def ajax_mapa_compras_semana_ref(request, item, dtini, qtdsem):
 
     def return_result(result):
         cached_result = result
-        cache.set(key_cache, cached_result, timeout=entkeys._HOUR)
+        cache.set(key_cache, cached_result, timeout=timeout.HOUR)
         fo2logger.info('calculated '+key_cache)
-        entkeys.add(key_cache, (nivel, ref, cor, tam), timeout=entkeys._HOUR)
+        entkeys.add(key_cache, (nivel, ref, cor, tam), timeout=timeout.HOUR)
         return cached_result
 
     # key_cache = make_key_cache()

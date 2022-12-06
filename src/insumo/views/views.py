@@ -20,7 +20,6 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from geral.models import Dispositivos, RoloBipado
-from utils.cache import entkeys
 from utils.functions import (fo2logger, max_not_None, min_not_None,
                              my_make_key_cache, segunda)
 from utils.functions.models.dictlist import dictlist, dictlist_lower

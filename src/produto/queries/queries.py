@@ -3,7 +3,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.cache import entkeys
+from utils.cache import timeout
 from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models.dictlist import dictlist, dictlist_lower
 from utils.functions.queries import debug_cursor_execute
@@ -1041,6 +1041,6 @@ def item_narrativa(cursor, nivel, ref, tam, cor):
     debug_cursor_execute(cursor, sql)
     result = dictlist(cursor)
 
-    cache.set(key_cache, result, timeout=entkeys._MINUTE * 5)
+    cache.set(key_cache, result, timeout=timeout.MINUTE*5)
     fo2logger.info('calculated '+key_cache)
     return result

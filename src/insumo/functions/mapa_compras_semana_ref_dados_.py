@@ -5,7 +5,10 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.cache import entkeys
+from utils.cache import (
+    entkeys,
+    timeout,
+)
 from utils.classes import Perf
 from utils.functions import (
     fo2logger,
@@ -43,7 +46,7 @@ def mapa_compras_semana_ref_dados(cursor, nivel, ref, cor, tam, calc=False):
         old_cached_result = None
         if calc:
             old_cached_result = cache.get(key_cache)
-        cache.set(key_cache, cached_result, timeout=entkeys._HOUR*14)
+        cache.set(key_cache, cached_result, timeout=timeout.HOUR*14)
         fo2logger.info('calculated '+key_cache)
         if cached_result != old_cached_result:
             entkeys.flush((nivel, ref, cor, tam))

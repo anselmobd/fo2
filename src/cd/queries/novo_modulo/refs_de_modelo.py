@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.cache import entkeys
+from utils.cache import timeout
 from utils.functions import (
     fo2logger,
     my_make_key_cache,
@@ -77,7 +77,7 @@ def query(cursor, modelo, com_op=False, com_ped=False):
         if modelo_de_ref(row['ref']) == modelo
     ]
 
-    cache.set(key_cache, refs, timeout=entkeys._MINUTE)
+    cache.set(key_cache, refs, timeout=timeout.MINUTE)
     fo2logger.info('calculated '+key_cache)
 
     return refs

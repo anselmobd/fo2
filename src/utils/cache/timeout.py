@@ -1,0 +1,9 @@
+from pprint import pprint
+
+
+SECOND = 1
+MINUTE = 60
+HOUR = MINUTE*60
+DAY = HOUR*24
+
+DEFAULT_TIMEOUT = DAY

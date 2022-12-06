@@ -5,7 +5,7 @@ from django.core.cache import cache
 from django.db.models import Exists, OuterRef
 
 from geral.functions import config_get_value
-from utils.cache import entkeys
+from utils.cache import timeout
 from utils.functions import (
     my_make_key_cache,
     loginfo,
@@ -48,7 +48,7 @@ class MountProduzirGradeEmpenho():
             return True
 
     def cache_set(self):
-        cache.set(self.key_cache, self.mount_produzir, timeout=entkeys._MINUTE*5)
+        cache.set(self.key_cache, self.mount_produzir, timeout=timeout.MINUTE*5)
         loginfo('calculated '+self.key_cache)
 
     def regra_colecao(self):

@@ -2,15 +2,8 @@ import hashlib
 
 from django.core.cache import cache
 
+from utils.cache import timeout
 from utils.functions import fo2logger
-
-
-_SECOND = 1
-_MINUTE = 60
-_HOUR = _MINUTE*60
-_DAY = _HOUR*24
-
-_DEFAULT_TIMEOUT = _DAY
 
 
 class Error(Exception):
@@ -40,7 +33,7 @@ def hash(entity=None, entkey=None):
 def put(keys, entity=None, entkey=None, timeout=None):
     entkey = hash(entity, entkey)
     if timeout is None:
-        timeout = _DEFAULT_TIMEOUT
+        timeout = timeout.DEFAULT_TIMEOUT
     cache.set(entkey, keys, timeout=timeout)
 
 

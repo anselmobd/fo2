@@ -3,7 +3,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
-from utils.cache import entkeys
+from utils.cache import timeout
 from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models.dictlist import rows_to_key_dict
 from utils.functions.queries import sql_where, sql_where_none_if
@@ -58,7 +58,7 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
         if cache.get(f"{key_cache}_calc_"):
             time.sleep(0.2)
         else:
-            cache.set(f"{key_cache}_calc_", "c", timeout=entkeys._SECOND * 5)
+            cache.set(f"{key_cache}_calc_", "c", timeout=timeout.SECOND*5)
             break
 
     filtro_deposito = sql_where_none_if(
