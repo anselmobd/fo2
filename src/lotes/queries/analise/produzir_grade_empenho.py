@@ -26,6 +26,7 @@ from comercial.views.estoque import grade_meta_estoque
 
 import lotes.queries.op
 import lotes.queries.pedido
+from lotes.queries.op.producao import op_producao
 from lotes.models import (
     RegraColecao,
     RegraLMTamanho,
@@ -97,6 +98,30 @@ class MountProduzirGradeEmpenho():
         g_m_g = grade_meta_giro(self.meta, self.lead, show_distrib=False)
         self.gzerada = self.og.update_gzerada(self.gzerada, g_m_g)
         return g_m_g
+
+    def op_nao_finalizada(self, modelo=None):
+        data_op_p = op_producao(
+            self.cursor, modelo=modelo,
+            tipo_ref='v', tipo_op='p', tipo_selecao='a'
+        )
+
+        g_data_op_p = dictlist_to_grade_qtd(
+            dados=data_op_p,
+            field_linha='cor',
+            new_field_linha='SORTIMENTO',
+            facade_linha='Cores',
+            field_coluna='tam',
+            facade_coluna='Tamanhos',
+            field_ordem_coluna='ordem_tam',
+            field_quantidade='qtd',
+        )
+        return (
+            g_data_op_p['headers'],
+            g_data_op_p['fields'],
+            g_data_op_p['data'],
+            g_data_op_p['style'],
+            g_data_op_p['total'],
+        )
 
     def query(self):
         debug_cursor_execute_prt_off()
