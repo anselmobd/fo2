@@ -115,6 +115,7 @@ def dictlist_to_grade_qtd(
     for coluna in indices_colunas:
         total_rows[coluna] = 0
     total_rows[total] = 0
+    total_abs = 0
     for linha in indices_linhas:
         row = {new_field_linha: linha}
         total_row = 0
@@ -132,6 +133,7 @@ def dictlist_to_grade_qtd(
             total_row += quantidade
             total_rows[coluna] += quantidade
             total_rows[total] += quantidade
+            total_abs += abs(quantidade)
         row[total] = total_row
         data.append(row)
     data.append(total_rows)
@@ -145,4 +147,5 @@ def dictlist_to_grade_qtd(
         'style': style,
         'data': data,
         'total': total_rows[total],
+        'total_abs': total_abs,
     }
