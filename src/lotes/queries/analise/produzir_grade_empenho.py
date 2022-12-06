@@ -20,9 +20,12 @@ from cd.queries.novo_modulo import refs_em_palets
 from comercial.models.functions.meta_referencia import meta_ref_incluir
 from comercial.views.estoque import grade_meta_estoque
 
-import lotes.models
 import lotes.queries.op
 import lotes.queries.pedido
+from lotes.models import (
+    RegraColecao,
+    RegraLMTamanho,
+)
 from lotes.views.parametros_functions import grade_meta_giro
 
 __all__ = ['MountProduzirGradeEmpenho']
@@ -77,10 +80,10 @@ class MountProduzirGradeEmpenho():
         lm_tam = 0
         lm_cor = 0
         try:
-            LC = lotes.models.RegraColecao.objects.get(colecao=colecao)
+            LC = RegraColecao.objects.get(colecao=colecao)
             lm_tam = LC.lm_tam
             lm_cor = LC.lm_cor
-        except lotes.models.RegraColecao.DoesNotExist:
+        except RegraColecao.DoesNotExist:
             pass
 
         metas = comercial.models.MetaEstoque.objects
@@ -403,13 +406,13 @@ class MountProduzirGradeEmpenho():
                             'lm_cor_sozinha': 's',
                         }
                         try:
-                            RLM = lotes.models.RegraLMTamanho.objects.get(
+                            RLM = RegraLMTamanho.objects.get(
                                 tamanho=tam)
                             tam_conf[tam] = {
                                 'min_para_lm': RLM.min_para_lm,
                                 'lm_cor_sozinha': RLM.lm_cor_sozinha,
                             }
-                        except lotes.models.RegraLMTamanho.DoesNotExist:
+                        except RegraLMTamanho.DoesNotExist:
                             pass
 
                     if lm_tam != 0 and row_cor[tam] != 0:
