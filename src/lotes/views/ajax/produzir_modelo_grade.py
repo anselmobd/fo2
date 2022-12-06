@@ -5,7 +5,6 @@ from django.template.loader import render_to_string
 
 from fo2.connections import db_cursor_so
 
-# from lotes.queries.analise.produzir_grade_empenho import mount_produzir_grade_empenho
 from lotes.queries.analise.produzir_grade_empenho import MountProduzirGradeEmpenho
 
 __all__ = ['produzir_modelo_grade']
@@ -36,7 +35,6 @@ def produzir_modelo_grade(request, modelo):
     }
 
     try:
-        # dados_produzir = mount_produzir_grade_empenho(cursor, modelo)
         dados_produzir = MountProduzirGradeEmpenho(cursor, modelo).query()
 
         data['modelo'] = modelo
