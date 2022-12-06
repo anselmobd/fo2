@@ -48,7 +48,7 @@ class MountProduzirGradeEmpenho():
             return True
 
     def cache_set(self):
-        cache.set(self.key_cache, self.mount_produzir, timeout=timeout.MINUTE*5)
+        cache.set(self.key_cache, self.mount_produzir, timeout=timeout.MINUTES_5)
         loginfo('calculated '+self.key_cache)
 
     def regra_colecao(self):

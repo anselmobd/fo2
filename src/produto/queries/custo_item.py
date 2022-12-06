@@ -87,6 +87,6 @@ class CustoItem:
             self.consumo, 1)
         result = self.data
 
-        cache.set(key_cache, result, timeout=timeout.MINUTE*5)
+        cache.set(key_cache, result, timeout=timeout.MINUTES_5)
         fo2logger.info('calculated '+key_cache)
         return result
