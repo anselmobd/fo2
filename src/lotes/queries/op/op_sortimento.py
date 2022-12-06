@@ -33,7 +33,7 @@ def op_sortimentos(cursor, **kwargs):
     tipo_ref:>None - Todas
               a - PA
               g - PG
-              b - import pdb; pdb.set_trace()
+              b - PB
               p - PG ou PB
               v - PA, PG ou PB
               m - MD ou outros não "PA, PG ou PB"
