@@ -6,6 +6,7 @@ from django.db.models import Exists, OuterRef
 
 from geral.functions import config_get_value
 from utils.cache import timeout
+from utils.classes import Perf
 from utils.functions import (
     my_make_key_cache,
     loginfo,
@@ -125,6 +126,7 @@ class MountProduzirGradeEmpenho():
 
     def query(self):
         debug_cursor_execute_prt_off()
+        p = Perf(id='MountProduzirGradeEmpenho.query', on=True)
 
         if self.cache_get():
             return self.mount_produzir
@@ -175,10 +177,19 @@ class MountProduzirGradeEmpenho():
         if not (self.gme or self.gmg):
             return self.mount_produzir
 
+        p.prt('antes')
+
         g_header, g_fields, g_data, g_style, total_opa = \
             lotes.queries.op.op_sortimentos(
                 self.cursor, tipo='a', descr_sort=False, modelo=self.modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
+
+        p.prt('op_sortimentos')
+
+        g_header, g_fields, g_data, g_style, total_opa = \
+            self.op_nao_finalizada(modelo=self.modelo)
+
+        p.prt('op_nao_finalizada')
 
         gopa = None
         if total_opa != 0:
