@@ -46,12 +46,12 @@ def op_producao(
     }
 
     filtra_modelo = f"""--
-         AND r.REFERENCIA LIKE '%2%'
+         AND r.REFERENCIA LIKE '%{modelo}%'
          AND REGEXP_REPLACE(
                r.REFERENCIA
              , '^[a-zA-Z]?0*([123456789][0123456789]*)[a-zA-Z]*$'
              , '\\1'
-             ) = '2'
+             ) = '{modelo}'
     """ if modelo else ''
 
     if tipo_ref is None:
