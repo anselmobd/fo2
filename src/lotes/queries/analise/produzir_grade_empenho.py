@@ -62,6 +62,18 @@ class MountProduzirGradeEmpenho():
             pass
         return lm_tam, lm_cor
 
+    def get_meta_estoque(self):
+        metas = comercial.models.MetaEstoque.objects
+        metas = metas.annotate(antiga=Exists(
+            comercial.models.MetaEstoque.objects.filter(
+                modelo=OuterRef('modelo'),
+                data__gt=OuterRef('data')
+            )
+        ))
+        metas = metas.filter(antiga=False, modelo=self.modelo)
+        metas = metas.order_by('-meta_estoque')
+        return metas
+
     def query(self):
         if self.cache_get():
             return self.mount_produzir
@@ -90,34 +102,26 @@ class MountProduzirGradeEmpenho():
 
         lm_tam, lm_cor = self.regra_colecao()
 
-        metas = comercial.models.MetaEstoque.objects
-        metas = metas.annotate(antiga=Exists(
-            comercial.models.MetaEstoque.objects.filter(
-                modelo=OuterRef('modelo'),
-                data__gt=OuterRef('data')
-            )
-        ))
-        metas = metas.filter(antiga=False, modelo=self.modelo)
-        metas = metas.order_by('-meta_estoque')
-        if len(metas) == 0:
+        metas = self.get_meta_estoque()
+        if not metas:
             self.mount_produzir.update({
                 'msg_meta_estoque': 'Modelo sem meta de estoque definida',
                 'msg_meta_giro': 'Modelo sem meta de giro definida',
             })
             return self.mount_produzir
         else:
-            meta = metas[0]
+            self.meta = metas[0]
 
         gzerada = None
 
         calcula_grade = False
         gme = None
-        if meta.meta_estoque == 0:
+        if self.meta.meta_estoque == 0:
             self.mount_produzir.update({
                 'msg_meta_estoque': 'Modelo com meta de estoque zerada',
             })
         else:
-            gme = grade_meta_estoque(meta)
+            gme = grade_meta_estoque(self.meta)
             calcula_grade = True
             gzerada = og.update_gzerada(gzerada, gme)
 
@@ -125,12 +129,12 @@ class MountProduzirGradeEmpenho():
         self.mount_produzir['lead'] = lead
 
         gmg = None
-        if meta.meta_giro == 0:
+        if self.meta.meta_giro == 0:
             self.mount_produzir.update({
                 'msg_meta_giro': 'Modelo com meta de giro zerada',
             })
         else:
-            gmg = grade_meta_giro(meta, lead, show_distrib=False)
+            gmg = grade_meta_giro(self.meta, lead, show_distrib=False)
             calcula_grade = True
             gzerada = og.update_gzerada(gzerada, gmg)
 
@@ -328,10 +332,10 @@ class MountProduzirGradeEmpenho():
             })
 
         gm = None
-        if meta.meta_estoque != 0 or meta.meta_giro != 0:
-            if meta.meta_estoque == 0:
+        if self.meta.meta_estoque != 0 or self.meta.meta_giro != 0:
+            if self.meta.meta_estoque == 0:
                 gm = gmg
-            elif meta.meta_giro == 0:
+            elif self.meta.meta_giro == 0:
                 gm = gme
             else:
                 gm = og.soma_grades(gme, gmg)
