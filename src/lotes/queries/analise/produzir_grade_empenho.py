@@ -78,7 +78,7 @@ class MountProduzirGradeEmpenho():
         if self.cache_get():
             return self.mount_produzir
 
-        og = OperacoesGrade()
+        self.og = OperacoesGrade()
         self.modelo = f"{self.modelo}"
         self.modelo = int(self.modelo)
 
@@ -123,7 +123,7 @@ class MountProduzirGradeEmpenho():
         else:
             gme = grade_meta_estoque(self.meta)
             calcula_grade = True
-            self.gzerada = og.update_gzerada(self.gzerada, gme)
+            self.gzerada = self.og.update_gzerada(self.gzerada, gme)
 
         lead = produto.queries.lead_de_modelo(self.cursor, self.modelo)
         self.mount_produzir['lead'] = lead
@@ -136,7 +136,7 @@ class MountProduzirGradeEmpenho():
         else:
             gmg = grade_meta_giro(self.meta, lead, show_distrib=False)
             calcula_grade = True
-            self.gzerada = og.update_gzerada(self.gzerada, gmg)
+            self.gzerada = self.og.update_gzerada(self.gzerada, gmg)
 
         if not calcula_grade:
             return self.mount_produzir
@@ -154,7 +154,7 @@ class MountProduzirGradeEmpenho():
                 'data': g_data,
                 'style': g_style,
             }
-            self.gzerada = og.update_gzerada(self.gzerada, gopa)
+            self.gzerada = self.og.update_gzerada(self.gzerada, gopa)
 
         inventario = refs_em_palets.query(
             self.cursor,
@@ -181,7 +181,7 @@ class MountProduzirGradeEmpenho():
                 'data': grade_inventario['data'],
                 'style': grade_inventario['style'],
             }
-            self.gzerada = og.update_gzerada(self.gzerada, ginv)
+            self.gzerada = self.og.update_gzerada(self.gzerada, ginv)
 
         empenhado = refs_em_palets.query(
             self.cursor,
@@ -212,7 +212,7 @@ class MountProduzirGradeEmpenho():
                 'data': grade_empenhado['data'],
                 'style': grade_empenhado['style'],
             }
-            self.gzerada = og.update_gzerada(self.gzerada, gsol)
+            self.gzerada = self.og.update_gzerada(self.gzerada, gsol)
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.mount_produzir.update({
@@ -239,7 +239,7 @@ class MountProduzirGradeEmpenho():
                 'data': gp_data,
                 'style': gp_style,
             }
-            self.gzerada = og.update_gzerada(self.gzerada, gped)
+            self.gzerada = self.og.update_gzerada(self.gzerada, gped)
 
         refs_adicionadas = meta_ref_incluir(self.cursor, self.modelo)
 
@@ -291,42 +291,42 @@ class MountProduzirGradeEmpenho():
                                     ga_row_quants[ga_row_comb_tam] *
                                     ga_row_comb[ga_row_comb_cor0]
                                 )
-                gped = og.soma_grades(gped, gpac)
+                gped = self.og.soma_grades(gped, gpac)
 
         # Utiliza grade zerada para igualar cores e tamanhos das grades base
         # dos cálculos
         if gme is not None:
-            gme = og.soma_grades(self.gzerada, gme)
+            gme = self.og.soma_grades(self.gzerada, gme)
             self.mount_produzir.update({
                 'gme': gme,
             })
 
         if gmg is not None:
-            gmg = og.soma_grades(self.gzerada, gmg)
+            gmg = self.og.soma_grades(self.gzerada, gmg)
             self.mount_produzir.update({
                 'gmg': gmg,
             })
 
         if gopa is not None:
-            gopa = og.soma_grades(self.gzerada, gopa)
+            gopa = self.og.soma_grades(self.gzerada, gopa)
             self.mount_produzir.update({
                 'gopa': gopa,
             })
 
         if ginv is not None:
-            ginv = og.soma_grades(self.gzerada, ginv)
+            ginv = self.og.soma_grades(self.gzerada, ginv)
             self.mount_produzir.update({
                 'ginv': ginv,
             })
 
         if gsol is not None:
-            gsol = og.soma_grades(self.gzerada, gsol)
+            gsol = self.og.soma_grades(self.gzerada, gsol)
             self.mount_produzir.update({
                 'gsol': gsol,
             })
 
         if gped is not None:
-            gped = og.soma_grades(self.gzerada, gped)
+            gped = self.og.soma_grades(self.gzerada, gped)
             self.mount_produzir.update({
                 'gped': gped,
             })
@@ -338,7 +338,7 @@ class MountProduzirGradeEmpenho():
             elif self.meta.meta_giro == 0:
                 gm = gme
             else:
-                gm = og.soma_grades(gme, gmg)
+                gm = self.og.soma_grades(gme, gmg)
 
             self.mount_produzir.update({
                 'gm': gm,
@@ -346,7 +346,7 @@ class MountProduzirGradeEmpenho():
         
         gopa_ncd = None
         if total_inv != 0 and total_opa != total_inv:
-            gopa_ncd = og.subtrai_grades(gopa, ginv)
+            gopa_ncd = self.og.subtrai_grades(gopa, ginv)
             self.mount_produzir.update({
                 'gopa_ncd': gopa_ncd,
             })
@@ -356,18 +356,18 @@ class MountProduzirGradeEmpenho():
             if total_ped == 0:
                 gopp1 = gopa
             elif total_opa == 0:
-                gopp1 = og.subtrai_grades(self.gzerada, gped)
+                gopp1 = self.og.subtrai_grades(self.gzerada, gped)
             else:
-                gopp1 = og.subtrai_grades(gopa, gped)
+                gopp1 = self.og.subtrai_grades(gopa, gped)
 
         gopp2 = None
         if gopp1 or total_sol != 0:
             if total_sol == 0:
                 gopp2 = gopp1
             elif gopp1 is None:
-                gopp2 = og.subtrai_grades(self.gzerada, gsol)
+                gopp2 = self.og.subtrai_grades(self.gzerada, gsol)
             else:
-                gopp2 = og.subtrai_grades(gopp1, gsol)
+                gopp2 = self.og.subtrai_grades(gopp1, gsol)
 
         gopp = None
         if gopp2:
@@ -383,17 +383,17 @@ class MountProduzirGradeEmpenho():
             elif gm is None:
                 gresult = gopp
             else:
-                gresult = og.subtrai_grades(gm, gopp)
+                gresult = self.og.subtrai_grades(gm, gopp)
 
         glm = None
         glc = None
 
         if gresult is not None:
-            gap = og.opera_grade(gresult, lambda x: x if x > 0 else 0)
+            gap = self.og.opera_grade(gresult, lambda x: x if x > 0 else 0)
             self.mount_produzir.update({
                 'gap': gap,
             })
-            gex = og.opera_grade(gresult, lambda x: -x if x < 0 else 0)
+            gex = self.og.opera_grade(gresult, lambda x: -x if x < 0 else 0)
             self.mount_produzir.update({
                 'gex': gex,
             })
