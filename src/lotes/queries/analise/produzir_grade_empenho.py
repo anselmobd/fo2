@@ -51,6 +51,17 @@ class MountProduzirGradeEmpenho():
         cache.set(self.key_cache, self.mount_produzir, timeout=entkeys._MINUTE*5)
         loginfo('calculated '+self.key_cache)
 
+    def regra_colecao(self):
+        lm_tam = 0
+        lm_cor = 0
+        try:
+            LC = RegraColecao.objects.get(colecao=self.colecao)
+            lm_tam = LC.lm_tam
+            lm_cor = LC.lm_cor
+        except RegraColecao.DoesNotExist:
+            pass
+        return lm_tam, lm_cor
+
     def query(self):
         if self.cache_get():
             return self.mount_produzir
@@ -77,14 +88,7 @@ class MountProduzirGradeEmpenho():
             'descr': row_modelo['DESCR'],
         })
 
-        lm_tam = 0
-        lm_cor = 0
-        try:
-            LC = RegraColecao.objects.get(colecao=colecao)
-            lm_tam = LC.lm_tam
-            lm_cor = LC.lm_cor
-        except RegraColecao.DoesNotExist:
-            pass
+        lm_tam, lm_cor = self.regra_colecao()
 
         metas = comercial.models.MetaEstoque.objects
         metas = metas.annotate(antiga=Exists(
