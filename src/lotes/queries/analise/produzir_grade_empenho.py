@@ -60,18 +60,18 @@ class MountProduzirGradeEmpenho():
             'modelo': self.modelo,
         }
 
-        data = produto.queries.modelo_inform(self.cursor, self.modelo)
-        if len(data) == 0:
+        data_modelo = produto.queries.modelo_inform(self.cursor, self.modelo)
+        if not data_modelo:
             self.mount_produzir.update({
                 'msg_erro': 'Modelo não encontrado',
             })
             return self.mount_produzir
 
-        row = data[0]
-        colecao = row['CODIGO_COLECAO']
+        row_modelo = data_modelo[0]
+        colecao = row_modelo['CODIGO_COLECAO']
         self.mount_produzir.update({
-            'colecao': row['COLECAO'],
-            'descr': row['DESCR'],
+            'colecao': row_modelo['COLECAO'],
+            'descr': row_modelo['DESCR'],
         })
 
         lm_tam = 0
