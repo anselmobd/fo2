@@ -193,29 +193,9 @@ class MountProduzirGradeEmpenho():
             selecao_lotes='qq',
             paletizado='t',
         )
-
         for row in empenhado:
             row['qtd'] = row['qtd_emp'] + row['qtd_sol']
-
-        grade_empenhado = dictlist_to_grade_qtd(
-            empenhado,
-            field_linha='cor',
-            field_coluna='tam',
-            facade_coluna='Tamanho',
-            field_ordem_coluna='ordem_tam',
-            field_quantidade='qtd',
-        )
-        total_sol = grade_empenhado['total']
-
-        gsol = None
-        if total_sol != 0:
-            gsol = {
-                'headers': grade_empenhado['headers'],
-                'fields': grade_empenhado['fields'],
-                'data': grade_empenhado['data'],
-                'style': grade_empenhado['style'],
-            }
-            self.gzerada = self.og.update_gzerada(self.gzerada, gsol)
+        gsol, total_sol = self.to_grade_e_total(dados=empenhado)
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.mount_produzir.update({
