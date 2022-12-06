@@ -26,7 +26,7 @@ def op_producao(
              e - OP de expedição (não tem estágio 63)
              p - OP de produção (tem estágio 63)
     tipo_selecao:>t - Todos os lotes
-                  #a - Ainda não produzido / não finalizado
+                  a - Ainda não produzido / não finalizado
                   #fpnf - finalizado, de pedido, não faturado
                   #apf - a produzir, de pedido faturado
                   #p - Perda
@@ -115,12 +115,15 @@ def op_producao(
 
     if tipo_selecao is None:  # todos
         filtro_tipo_selecao = ''
+    elif tipo_selecao == 'a':  # Ainda não produzido / não finalizado
+        filtro_tipo_selecao = """--
+            AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
     elif tipo_selecao == 'ap':  # em produção; "a", não no CD (estágios não 57, 63 e 64)
         filtro_tipo_selecao = """--
             AND l.QTDE_DISPONIVEL_BAIXA > 0
-            AND l.CODIGO_ESTAGIO NOT IN (57, 63) --, 64)
+            AND l.CODIGO_ESTAGIO NOT IN (57, 63, 64)
         """
-
 
     sql = f"""
         SELECT
