@@ -12,6 +12,7 @@ def filter_dictlist_to_grade_qtd(
     facade_coluna=None,
     field_ordem_coluna=None,
     field_quantidade=None,
+    total = None,
 ):
     if not isinstance(field_filter, tuple):
         field_filter = (field_filter, )
@@ -36,6 +37,7 @@ def filter_dictlist_to_grade_qtd(
         facade_coluna=facade_coluna,
         field_ordem_coluna=field_ordem_coluna,
         field_quantidade=field_quantidade,
+        total=total,
     )
 
     result.update({
@@ -52,8 +54,8 @@ def dictlist_to_grade_qtd(
     facade_coluna=None,
     field_ordem_coluna=None,
     field_quantidade=None,
+    total = 'Total',
 ):
-    total = 'Total'
 
     if facade_linha is None:
         facade_linha = field_linha.capitalize()
