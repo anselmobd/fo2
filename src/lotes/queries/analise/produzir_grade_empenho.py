@@ -169,8 +169,11 @@ class MountProduzirGradeEmpenho():
             return self.mount_produzir
 
         dados_opp = op_producao(
-            self.cursor, modelo=self.modelo,
-            tipo_ref='v', tipo_op='p', tipo_selecao='a'
+            self.cursor,
+            modelo=self.modelo,
+            tipo_ref='v',
+            tipo_op='p',
+            tipo_selecao='a',
         )
         gopa, total_opa = self.to_grade_e_total(dados=dados_opp)
 
@@ -181,25 +184,7 @@ class MountProduzirGradeEmpenho():
             selecao_lotes='63',
             paletizado='s',
         )
-        grade_inventario = dictlist_to_grade_qtd(
-            inventario,
-            field_linha='cor',
-            field_coluna='tam',
-            facade_coluna='Tamanho',
-            field_ordem_coluna='ordem_tam',
-            field_quantidade='qtd',
-        )
-        total_inv = grade_inventario['total']
-
-        ginv = None
-        if total_inv != 0:
-            ginv = {
-                'headers': grade_inventario['headers'],
-                'fields': grade_inventario['fields'],
-                'data': grade_inventario['data'],
-                'style': grade_inventario['style'],
-            }
-            self.gzerada = self.og.update_gzerada(self.gzerada, ginv)
+        ginv, total_inv = self.to_grade_e_total(dados=inventario)
 
         empenhado = refs_em_palets.query(
             self.cursor,
