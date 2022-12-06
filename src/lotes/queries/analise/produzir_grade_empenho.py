@@ -112,13 +112,18 @@ class MountProduzirGradeEmpenho():
             field_ordem_coluna='ordem_tam',
             field_quantidade='qtd',
         )
-        return (
-            g_data_op_p['headers'],
-            g_data_op_p['fields'],
-            g_data_op_p['data'],
-            g_data_op_p['style'],
-            g_data_op_p['total'],
-        )
+
+        qtds = None
+        if g_data_op_p['total_abs']:
+            qtds = {
+                'headers': g_data_op_p['headers'],
+                'fields': g_data_op_p['fields'],
+                'data': g_data_op_p['data'],
+                'style': g_data_op_p['style'],
+            }
+            self.gzerada = self.og.update_gzerada(self.gzerada, qtds)
+
+        return qtds, g_data_op_p['total']
 
     def query(self):
         if self.cache_get():
@@ -170,18 +175,7 @@ class MountProduzirGradeEmpenho():
         if not (self.gme or self.gmg):
             return self.mount_produzir
 
-        g_header, g_fields, g_data, g_style, total_opa = \
-            self.op_nao_finalizada(modelo=self.modelo)
-
-        gopa = None
-        if total_opa != 0:
-            gopa = {
-                'headers': g_header,
-                'fields': g_fields,
-                'data': g_data,
-                'style': g_style,
-            }
-            self.gzerada = self.og.update_gzerada(self.gzerada, gopa)
+        gopa, total_opa = self.op_nao_finalizada(modelo=self.modelo)
 
         inventario = refs_em_palets.query(
             self.cursor,
