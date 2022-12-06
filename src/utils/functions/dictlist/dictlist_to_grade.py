@@ -7,6 +7,7 @@ def filter_dictlist_to_grade_qtd(
     facade_filter=None,
     value_filter=None,
     field_linha=None,
+    new_field_linha=None,
     facade_linha=None,
     field_coluna=None,
     facade_coluna=None,
@@ -32,6 +33,7 @@ def filter_dictlist_to_grade_qtd(
     result = dictlist_to_grade_qtd(
         dados_filtrados,
         field_linha=field_linha,
+        new_field_linha=new_field_linha,
         facade_linha=facade_linha,
         field_coluna=field_coluna,
         facade_coluna=facade_coluna,
@@ -49,6 +51,7 @@ def filter_dictlist_to_grade_qtd(
 def dictlist_to_grade_qtd(
     dados,
     field_linha=None,
+    new_field_linha=None,
     facade_linha=None,
     field_coluna=None,
     facade_coluna=None,
@@ -56,6 +59,9 @@ def dictlist_to_grade_qtd(
     field_quantidade=None,
     total = 'Total',
 ):
+
+    if new_field_linha is None:
+        new_field_linha = field_linha
 
     if facade_linha is None:
         facade_linha = field_linha.capitalize()
@@ -83,7 +89,7 @@ def dictlist_to_grade_qtd(
         for r in indices_colunas_ordem
     ]
 
-    fields = [field_linha] + indices_colunas + [total]
+    fields = [new_field_linha] + indices_colunas + [total]
 
     facades_list = []
     if facade_linha:
@@ -103,14 +109,14 @@ def dictlist_to_grade_qtd(
 
     data = []
     total_rows = {
-        field_linha: total,
+        new_field_linha: total,
         '|STYLE': 'font-weight: bold;',
     }
     for coluna in indices_colunas:
         total_rows[coluna] = 0
     total_rows[total] = 0
     for linha in indices_linhas:
-        row = {field_linha: linha}
+        row = {new_field_linha: linha}
         total_row = 0
         for coluna in indices_colunas:
             quantidades = [
