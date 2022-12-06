@@ -96,14 +96,9 @@ class MountProduzirGradeEmpenho():
         self.gzerada = self.og.update_gzerada(self.gzerada, g_m_g)
         return g_m_g
 
-    def op_nao_finalizada(self, modelo=None):
-        data_op_p = op_producao(
-            self.cursor, modelo=modelo,
-            tipo_ref='v', tipo_op='p', tipo_selecao='a'
-        )
-
+    def to_grade_e_total(self, dados=None):
         g_dados = dictlist_to_grade_qtd(
-            dados=data_op_p,
+            dados=dados,
             field_linha='cor',
             new_field_linha='SORTIMENTO',
             facade_linha='Cores',
@@ -175,7 +170,11 @@ class MountProduzirGradeEmpenho():
         if not (self.gme or self.gmg):
             return self.mount_produzir
 
-        gopa, total_opa = self.op_nao_finalizada(modelo=self.modelo)
+        dados_opp = op_producao(
+            self.cursor, modelo=self.modelo,
+            tipo_ref='v', tipo_op='p', tipo_selecao='a'
+        )
+        gopa, total_opa = self.to_grade_e_total(dados=dados_opp)
 
         inventario = refs_em_palets.query(
             self.cursor,
