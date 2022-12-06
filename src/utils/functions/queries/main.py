@@ -92,8 +92,10 @@ def sql_where_none_if(
 
 
 def debug_cursor_execute(
-        cursor, sql, list_args=None, prt=settings.DEBUG_CURSOR_EXECUTE_PRT
+        cursor, sql, list_args=None, prt=None
     ):
+    if prt is None:
+        prt=settings.DEBUG_CURSOR_EXECUTE_PRT
     info = []
     if settings.DEBUG_CURSOR_EXECUTE:
         info.append(
