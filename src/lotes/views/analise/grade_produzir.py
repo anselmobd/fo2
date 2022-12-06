@@ -17,12 +17,14 @@ from comercial.models.functions.meta_referencia import meta_ref_incluir
 from comercial.views.estoque import grade_meta_estoque
 from lotes.models import RegraColecao, RegraLMTamanho
 from lotes.queries.op import op_sortimentos
+from lotes.queries.op.producao import op_producao
 from lotes.queries.pedido import pedido_faturavel_modelo_sortimento
-
 from lotes.views.a_produzir import (
     config_get_value,
     grade_meta_giro,
 )
+
+from utils.functions.dictlist.dictlist_to_grade import dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
 
 
@@ -174,10 +176,37 @@ class GradeProduzir(O2BaseGetPostView):
             'adicionadas': refs_adicionadas,
         })
 
+        data_op_p = op_producao(
+            self.cursor, modelo='2', tipo_ref='v', tipo_op='p', tipo_selecao='ap')
+
+        g_data_op_p = dictlist_to_grade_qtd(
+            data_op_p,
+            field_linha='cor',
+            field_coluna='tam',
+            facade_coluna='Tamanho',
+            field_ordem_coluna='ordem_tam',
+            field_quantidade='qtd',
+        )
+        gpr_header = g_data_op_p['headers']
+        gpr_fields = g_data_op_p['fields']
+        gpr_data = g_data_op_p['data']
+        gpr_style = g_data_op_p['style']
+        total_oppr = g_data_op_p['total']
+        pprint(gpr_header)
+        pprint(gpr_fields)
+        pprint(gpr_data)
+        pprint(gpr_style)
+        pprint(total_oppr)
+
         gpr_header, gpr_fields, gpr_data, gpr_style, total_oppr = \
             op_sortimentos(
                 self.cursor, tipo='ap', descr_sort=False, modelo=self.modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
+        pprint(gpr_header)
+        pprint(gpr_fields)
+        pprint(gpr_data)
+        pprint(gpr_style)
+        pprint(total_oppr)
 
         for ref_adicionada in refs_adicionadas:
             if ref_adicionada['ok']:
