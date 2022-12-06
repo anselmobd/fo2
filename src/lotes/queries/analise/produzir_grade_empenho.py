@@ -7,8 +7,9 @@ from django.db.models import Exists, OuterRef
 from geral.functions import config_get_value
 from utils.cache import entkeys
 from utils.functions import (
-    fo2logger,
+    # fo2logger,
     my_make_key_cache,
+    loginfo,
 )
 from utils.functions.dictlist.dictlist_to_grade import dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
@@ -25,7 +26,6 @@ import lotes.queries.op
 import lotes.queries.pedido
 from lotes.views.parametros_functions import grade_meta_giro
 
-# __all__ = ['mount_produzir_grade_empenho']
 __all__ = ['MountProduzirGradeEmpenho']
 
 
@@ -37,14 +37,15 @@ class MountProduzirGradeEmpenho():
 
     def query(self):
         key_cache = my_make_key_cache(
-            'lotes/queries/analise/produzir_grade_empenho/MountProduzirGradeEmpenho/query',
+            'lotes/queries/analise/produzir_grade_empenho/MPGE/query',
             self.modelo,
         )
 
         mount_produzir = cache.get(key_cache)
 
         if mount_produzir:
-            fo2logger.info('cached '+key_cache)
+            # fo2logger.info('cached '+key_cache)
+            loginfo('cached '+key_cache)
             return mount_produzir
 
         og = OperacoesGrade()
@@ -484,6 +485,7 @@ class MountProduzirGradeEmpenho():
 
 
         cache.set(key_cache, mount_produzir, timeout=entkeys._MINUTE*5)
-        fo2logger.info('calculated '+key_cache)
+        # fo2logger.info('calculated '+key_cache)
+        loginfo('calculated '+key_cache)
 
         return mount_produzir
