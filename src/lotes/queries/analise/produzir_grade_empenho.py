@@ -118,6 +118,36 @@ class MountProduzirGradeEmpenho():
 
         return grade, g_dados['total']
 
+    def get_em_producao(self):
+        return op_producao(
+            self.cursor,
+            modelo=self.modelo,
+            tipo_ref='v',
+            tipo_op='p',
+            tipo_selecao='a',
+        )
+
+    def get_inventario(self):
+        return refs_em_palets.query(
+            self.cursor,
+            fields='all',
+            modelo=self.modelo,
+            selecao_lotes='63',
+            paletizado='s',
+        )
+
+    def get_empenhado(self):
+        empenhado = refs_em_palets.query(
+            self.cursor,
+            fields='all',
+            modelo=self.modelo,
+            selecao_lotes='qq',
+            paletizado='t',
+        )
+        for row in empenhado:
+            row['qtd'] = row['qtd_emp'] + row['qtd_sol']
+        return empenhado
+
     def query(self):
         if self.cache_get():
             return self.mount_produzir
@@ -168,34 +198,17 @@ class MountProduzirGradeEmpenho():
         if not (self.gme or self.gmg):
             return self.mount_produzir
 
-        dados_opp = op_producao(
-            self.cursor,
-            modelo=self.modelo,
-            tipo_ref='v',
-            tipo_op='p',
-            tipo_selecao='a',
+        gopa, total_opa = self.to_grade_e_total(
+            dados=self.get_em_producao()
         )
-        gopa, total_opa = self.to_grade_e_total(dados=dados_opp)
 
-        inventario = refs_em_palets.query(
-            self.cursor,
-            fields='all',
-            modelo=self.modelo,
-            selecao_lotes='63',
-            paletizado='s',
+        ginv, total_inv = self.to_grade_e_total(
+            dados=self.get_inventario()
         )
-        ginv, total_inv = self.to_grade_e_total(dados=inventario)
 
-        empenhado = refs_em_palets.query(
-            self.cursor,
-            fields='all',
-            modelo=self.modelo,
-            selecao_lotes='qq',
-            paletizado='t',
+        gsol, total_sol = self.to_grade_e_total(
+            dados=self.get_empenhado()
         )
-        for row in empenhado:
-            row['qtd'] = row['qtd_emp'] + row['qtd_sol']
-        gsol, total_sol = self.to_grade_e_total(dados=empenhado)
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.mount_produzir.update({
