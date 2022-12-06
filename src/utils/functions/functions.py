@@ -14,9 +14,16 @@ from utils.classes import AcessoInterno
 
 fo2logger = logging.getLogger('fo2')
 
-cache_local = (
+_cache_local = (
     settings.CACHES['default']['BACKEND'] ==
-    'django.core.cache.backends.locmem.LocMemCache')
+    'django.core.cache.backends.locmem.LocMemCache'
+)
+
+
+def loginfo(info, prt=settings.DEBUG_CURSOR_EXECUTE_PRT):
+    fo2logger.info(info)
+    if prt:
+        print(info)
 
 
 def arg_def(kwargs, arg, default):
@@ -284,7 +291,7 @@ def make_key_cache_OFF(ignore=[], obey=[]):
 
 
 def cache_ttl(cache, key):
-    if cache_local:
+    if _cache_local:
         exp_dt = cache._expire_info.get('FO2K:1:'+key)
         dt = datetime.datetime.fromtimestamp(exp_dt)
         now = datetime.datetime.now()
