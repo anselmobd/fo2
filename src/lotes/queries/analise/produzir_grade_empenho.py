@@ -25,459 +25,465 @@ import lotes.queries.op
 import lotes.queries.pedido
 from lotes.views.parametros_functions import grade_meta_giro
 
-__all__ = ['mount_produzir_grade_empenho']
+# __all__ = ['mount_produzir_grade_empenho']
+__all__ = ['MountProduzirGradeEmpenho']
 
 
-def mount_produzir_grade_empenho(cursor, modelo):
+class MountProduzirGradeEmpenho():
 
-    key_cache = my_make_key_cache(
-        'lotes/queries/analise/prod_grad_emp/mount',
-        modelo,
-    )
+    def __init__(self, cursor, modelo):
+        self.cursor = cursor
+        self.modelo = modelo
 
-    mount_produzir = cache.get(key_cache)
-
-    if mount_produzir:
-        fo2logger.info('cached '+key_cache)
-        return mount_produzir
-
-    og = OperacoesGrade()
-    modelo = f"{modelo}"
-    modelo = int(modelo)
-
-    mount_produzir = {
-        'modelo': modelo,
-    }
-
-    data = produto.queries.modelo_inform(cursor, modelo)
-    if len(data) == 0:
-        mount_produzir.update({
-            'msg_erro': 'Modelo não encontrado',
-        })
-        return mount_produzir
-
-    row = data[0]
-    colecao = row['CODIGO_COLECAO']
-    mount_produzir.update({
-        'colecao': row['COLECAO'],
-        'descr': row['DESCR'],
-    })
-
-    lm_tam = 0
-    lm_cor = 0
-    try:
-        LC = lotes.models.RegraColecao.objects.get(colecao=colecao)
-        lm_tam = LC.lm_tam
-        lm_cor = LC.lm_cor
-    except lotes.models.RegraColecao.DoesNotExist:
-        pass
-
-    metas = comercial.models.MetaEstoque.objects
-    metas = metas.annotate(antiga=Exists(
-        comercial.models.MetaEstoque.objects.filter(
-            modelo=OuterRef('modelo'),
-            data__gt=OuterRef('data')
+    def query(self):
+        key_cache = my_make_key_cache(
+            'lotes/queries/analise/produzir_grade_empenho/MountProduzirGradeEmpenho/query',
+            self.modelo,
         )
-    ))
-    metas = metas.filter(antiga=False, modelo=modelo)
-    metas = metas.order_by('-meta_estoque')
-    if len(metas) == 0:
-        mount_produzir.update({
-            'msg_meta_estoque': 'Modelo sem meta de estoque definida',
-            'msg_meta_giro': 'Modelo sem meta de giro definida',
-        })
-        return mount_produzir
-    else:
-        meta = metas[0]
 
-    gzerada = None
+        mount_produzir = cache.get(key_cache)
 
-    calcula_grade = False
-    gme = None
-    if meta.meta_estoque == 0:
-        mount_produzir.update({
-            'msg_meta_estoque': 'Modelo com meta de estoque zerada',
-        })
-    else:
-        gme = grade_meta_estoque(meta)
-        calcula_grade = True
-        gzerada = og.update_gzerada(gzerada, gme)
+        if mount_produzir:
+            fo2logger.info('cached '+key_cache)
+            return mount_produzir
 
-    lead = produto.queries.lead_de_modelo(cursor, modelo)
-    mount_produzir['lead'] = lead
+        og = OperacoesGrade()
+        self.modelo = f"{self.modelo}"
+        self.modelo = int(self.modelo)
 
-    gmg = None
-    if meta.meta_giro == 0:
-        mount_produzir.update({
-            'msg_meta_giro': 'Modelo com meta de giro zerada',
-        })
-    else:
-        gmg = grade_meta_giro(meta, lead, show_distrib=False)
-        calcula_grade = True
-        gzerada = og.update_gzerada(gzerada, gmg)
-
-    if not calcula_grade:
-        return mount_produzir
-
-    g_header, g_fields, g_data, g_style, total_opa = \
-        lotes.queries.op.op_sortimentos(
-            cursor, tipo='a', descr_sort=False, modelo=modelo,
-            situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
-
-    gopa = None
-    if total_opa != 0:
-        gopa = {
-            'headers': g_header,
-            'fields': g_fields,
-            'data': g_data,
-            'style': g_style,
+        mount_produzir = {
+            'modelo': self.modelo,
         }
-        gzerada = og.update_gzerada(gzerada, gopa)
 
-    inventario = refs_em_palets.query(
-        cursor,
-        fields='all',
-        modelo=modelo,
-        selecao_lotes='63',
-        paletizado='s',
-    )
-    grade_inventario = dictlist_to_grade_qtd(
-        inventario,
-        field_linha='cor',
-        field_coluna='tam',
-        facade_coluna='Tamanho',
-        field_ordem_coluna='ordem_tam',
-        field_quantidade='qtd',
-    )
-    total_inv = grade_inventario['total']
+        data = produto.queries.modelo_inform(self.cursor, self.modelo)
+        if len(data) == 0:
+            mount_produzir.update({
+                'msg_erro': 'Modelo não encontrado',
+            })
+            return mount_produzir
 
-    ginv = None
-    if total_inv != 0:
-        ginv = {
-            'headers': grade_inventario['headers'],
-            'fields': grade_inventario['fields'],
-            'data': grade_inventario['data'],
-            'style': grade_inventario['style'],
-        }
-        gzerada = og.update_gzerada(gzerada, ginv)
-
-    empenhado = refs_em_palets.query(
-        cursor,
-        fields='all',
-        modelo=modelo,
-        selecao_lotes='qq',
-        paletizado='t',
-    )
-
-    for row in empenhado:
-        row['qtd'] = row['qtd_emp'] + row['qtd_sol']
-
-    grade_empenhado = dictlist_to_grade_qtd(
-        empenhado,
-        field_linha='cor',
-        field_coluna='tam',
-        facade_coluna='Tamanho',
-        field_ordem_coluna='ordem_tam',
-        field_quantidade='qtd',
-    )
-    total_sol = grade_empenhado['total']
-
-    gsol = None
-    if total_sol != 0:
-        gsol = {
-            'headers': grade_empenhado['headers'],
-            'fields': grade_empenhado['fields'],
-            'data': grade_empenhado['data'],
-            'style': grade_empenhado['style'],
-        }
-        gzerada = og.update_gzerada(gzerada, gsol)
-
-    dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
-    mount_produzir.update({
-        'dias_alem_lead': dias_alem_lead,
-    })
-
-    if lead == 0:
-        periodo = ''
-    else:
-        periodo = lead + dias_alem_lead
-
-    gp_header, gp_fields, gp_data, gp_style, total_ped = \
-        lotes.queries.pedido.sortimento(
-            cursor, tipo_sort='c', descr_sort=False, modelo=modelo,
-            cancelado='n', faturavel='f', total='Total', solicitado='n',
-            agrupado='n', pedido_liberado='s',
-            periodo=':{}'.format(periodo))
-
-    gped = None
-    if total_ped != 0:
-        gped = {
-            'headers': gp_header,
-            'fields': gp_fields,
-            'data': gp_data,
-            'style': gp_style,
-        }
-        gzerada = og.update_gzerada(gzerada, gped)
-
-    refs_adicionadas = meta_ref_incluir(cursor, modelo)
-
-    for row_ref in refs_adicionadas:
-        gadd = None
-        if row_ref['ok']:
-
-            ga_header, ga_fields, ga_data, ga_style, total_add = \
-                lotes.queries.pedido.sortimento(
-                    cursor, tipo_sort='c', descr_sort=False, ref=row_ref['referencia'],
-                    cancelado='n', faturavel='f', total='Total', solicitado='n',
-                    pedido_liberado='s',
-                    periodo=':{}'.format(periodo))
-
-            if total_add != 0:
-                gadd = {
-                    'headers': ga_header,
-                    'fields': ga_fields,
-                    'data': ga_data,
-                    'style': ga_style,
-                }
-
-        if gadd:
-            gpac = copy.deepcopy(gzerada)
-            gadd_sortimento_field = gadd['fields'][0]
-            gadd_total_field = gadd['fields'][-1]
-            gpac_sortimento_field = gpac['fields'][0]
-            for ga_row in gadd['data']:
-                if (
-                    ga_row[gadd_total_field] > 0 and
-                    ga_row[gadd_sortimento_field] != 'Total'
-                ):
-                    cor0 = ga_row[gadd_sortimento_field].lstrip("0")
-                    ga_row_quants = {
-                        key: ga_row[key]
-                        for key in ga_row
-                        if key not in (gadd_sortimento_field, gadd_total_field)
-                    }
-                    ga_row_comb = row_ref['cores_dict'][cor0]
-                    for ga_row_comb_cor0 in ga_row_comb:
-                        ga_row_comb_cor = ga_row_comb_cor0.zfill(6)
-                        gpac_row = [
-                            row
-                            for row in gpac['data']
-                            if row[gpac_sortimento_field] == ga_row_comb_cor
-                        ][0]
-                        for ga_row_comb_tam in ga_row_quants:
-                            gpac_row[ga_row_comb_tam] += (
-                                ga_row_quants[ga_row_comb_tam] *
-                                ga_row_comb[ga_row_comb_cor0]
-                            )
-            gped = og.soma_grades(gped, gpac)
-
-    # Utiliza grade zerada para igualar cores e tamanhos das grades base
-    # dos cálculos
-    if gme is not None:
-        gme = og.soma_grades(gzerada, gme)
+        row = data[0]
+        colecao = row['CODIGO_COLECAO']
         mount_produzir.update({
-            'gme': gme,
+            'colecao': row['COLECAO'],
+            'descr': row['DESCR'],
         })
 
-    if gmg is not None:
-        gmg = og.soma_grades(gzerada, gmg)
-        mount_produzir.update({
-            'gmg': gmg,
-        })
+        lm_tam = 0
+        lm_cor = 0
+        try:
+            LC = lotes.models.RegraColecao.objects.get(colecao=colecao)
+            lm_tam = LC.lm_tam
+            lm_cor = LC.lm_cor
+        except lotes.models.RegraColecao.DoesNotExist:
+            pass
 
-    if gopa is not None:
-        gopa = og.soma_grades(gzerada, gopa)
-        mount_produzir.update({
-            'gopa': gopa,
-        })
+        metas = comercial.models.MetaEstoque.objects
+        metas = metas.annotate(antiga=Exists(
+            comercial.models.MetaEstoque.objects.filter(
+                modelo=OuterRef('modelo'),
+                data__gt=OuterRef('data')
+            )
+        ))
+        metas = metas.filter(antiga=False, modelo=self.modelo)
+        metas = metas.order_by('-meta_estoque')
+        if len(metas) == 0:
+            mount_produzir.update({
+                'msg_meta_estoque': 'Modelo sem meta de estoque definida',
+                'msg_meta_giro': 'Modelo sem meta de giro definida',
+            })
+            return mount_produzir
+        else:
+            meta = metas[0]
 
-    if ginv is not None:
-        ginv = og.soma_grades(gzerada, ginv)
-        mount_produzir.update({
-            'ginv': ginv,
-        })
+        gzerada = None
 
-    if gsol is not None:
-        gsol = og.soma_grades(gzerada, gsol)
-        mount_produzir.update({
-            'gsol': gsol,
-        })
-
-    if gped is not None:
-        gped = og.soma_grades(gzerada, gped)
-        mount_produzir.update({
-            'gped': gped,
-        })
-
-    gm = None
-    if meta.meta_estoque != 0 or meta.meta_giro != 0:
+        calcula_grade = False
+        gme = None
         if meta.meta_estoque == 0:
-            gm = gmg
-        elif meta.meta_giro == 0:
-            gm = gme
+            mount_produzir.update({
+                'msg_meta_estoque': 'Modelo com meta de estoque zerada',
+            })
         else:
-            gm = og.soma_grades(gme, gmg)
+            gme = grade_meta_estoque(meta)
+            calcula_grade = True
+            gzerada = og.update_gzerada(gzerada, gme)
 
-        mount_produzir.update({
-            'gm': gm,
-        })
-    
-    gopa_ncd = None
-    if total_inv != 0 and total_opa != total_inv:
-        gopa_ncd = og.subtrai_grades(gopa, ginv)
-        mount_produzir.update({
-            'gopa_ncd': gopa_ncd,
-        })
+        lead = produto.queries.lead_de_modelo(self.cursor, self.modelo)
+        mount_produzir['lead'] = lead
 
-    gopp1 = None
-    if total_opa != 0 or total_ped != 0:
-        if total_ped == 0:
-            gopp1 = gopa
-        elif total_opa == 0:
-            gopp1 = og.subtrai_grades(gzerada, gped)
+        gmg = None
+        if meta.meta_giro == 0:
+            mount_produzir.update({
+                'msg_meta_giro': 'Modelo com meta de giro zerada',
+            })
         else:
-            gopp1 = og.subtrai_grades(gopa, gped)
+            gmg = grade_meta_giro(meta, lead, show_distrib=False)
+            calcula_grade = True
+            gzerada = og.update_gzerada(gzerada, gmg)
 
-    gopp2 = None
-    if gopp1 or total_sol != 0:
-        if total_sol == 0:
-            gopp2 = gopp1
-        elif gopp1 is None:
-            gopp2 = og.subtrai_grades(gzerada, gsol)
+        if not calcula_grade:
+            return mount_produzir
+
+        g_header, g_fields, g_data, g_style, total_opa = \
+            lotes.queries.op.op_sortimentos(
+                self.cursor, tipo='a', descr_sort=False, modelo=self.modelo,
+                situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
+
+        gopa = None
+        if total_opa != 0:
+            gopa = {
+                'headers': g_header,
+                'fields': g_fields,
+                'data': g_data,
+                'style': g_style,
+            }
+            gzerada = og.update_gzerada(gzerada, gopa)
+
+        inventario = refs_em_palets.query(
+            self.cursor,
+            fields='all',
+            modelo=self.modelo,
+            selecao_lotes='63',
+            paletizado='s',
+        )
+        grade_inventario = dictlist_to_grade_qtd(
+            inventario,
+            field_linha='cor',
+            field_coluna='tam',
+            facade_coluna='Tamanho',
+            field_ordem_coluna='ordem_tam',
+            field_quantidade='qtd',
+        )
+        total_inv = grade_inventario['total']
+
+        ginv = None
+        if total_inv != 0:
+            ginv = {
+                'headers': grade_inventario['headers'],
+                'fields': grade_inventario['fields'],
+                'data': grade_inventario['data'],
+                'style': grade_inventario['style'],
+            }
+            gzerada = og.update_gzerada(gzerada, ginv)
+
+        empenhado = refs_em_palets.query(
+            self.cursor,
+            fields='all',
+            modelo=self.modelo,
+            selecao_lotes='qq',
+            paletizado='t',
+        )
+
+        for row in empenhado:
+            row['qtd'] = row['qtd_emp'] + row['qtd_sol']
+
+        grade_empenhado = dictlist_to_grade_qtd(
+            empenhado,
+            field_linha='cor',
+            field_coluna='tam',
+            facade_coluna='Tamanho',
+            field_ordem_coluna='ordem_tam',
+            field_quantidade='qtd',
+        )
+        total_sol = grade_empenhado['total']
+
+        gsol = None
+        if total_sol != 0:
+            gsol = {
+                'headers': grade_empenhado['headers'],
+                'fields': grade_empenhado['fields'],
+                'data': grade_empenhado['data'],
+                'style': grade_empenhado['style'],
+            }
+            gzerada = og.update_gzerada(gzerada, gsol)
+
+        dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
+        mount_produzir.update({
+            'dias_alem_lead': dias_alem_lead,
+        })
+
+        if lead == 0:
+            periodo = ''
         else:
-            gopp2 = og.subtrai_grades(gopp1, gsol)
+            periodo = lead + dias_alem_lead
 
-    gopp = None
-    if gopp2:
-        gopp = gopp2
-        mount_produzir.update({
-            'gopp': gopp,
-        })
+        gp_header, gp_fields, gp_data, gp_style, total_ped = \
+            lotes.queries.pedido.sortimento(
+                self.cursor, tipo_sort='c', descr_sort=False, modelo=self.modelo,
+                cancelado='n', faturavel='f', total='Total', solicitado='n',
+                agrupado='n', pedido_liberado='s',
+                periodo=':{}'.format(periodo))
 
-    gresult = None
-    if gopp is not None or gm is not None:
-        if gopp is None:
-            gresult = gm
-        elif gm is None:
-            gresult = gopp
-        else:
-            gresult = og.subtrai_grades(gm, gopp)
+        gped = None
+        if total_ped != 0:
+            gped = {
+                'headers': gp_header,
+                'fields': gp_fields,
+                'data': gp_data,
+                'style': gp_style,
+            }
+            gzerada = og.update_gzerada(gzerada, gped)
 
-    glm = None
-    glc = None
+        refs_adicionadas = meta_ref_incluir(self.cursor, self.modelo)
 
-    if gresult is not None:
-        gap = og.opera_grade(gresult, lambda x: x if x > 0 else 0)
-        mount_produzir.update({
-            'gap': gap,
-        })
-        gex = og.opera_grade(gresult, lambda x: -x if x < 0 else 0)
-        mount_produzir.update({
-            'gex': gex,
-        })
+        for row_ref in refs_adicionadas:
+            gadd = None
+            if row_ref['ok']:
 
-        if lm_tam != 0 or lm_cor != 0:
-            glm = copy.deepcopy(gap)
+                ga_header, ga_fields, ga_data, ga_style, total_add = \
+                    lotes.queries.pedido.sortimento(
+                        self.cursor, tipo_sort='c', descr_sort=False, ref=row_ref['referencia'],
+                        cancelado='n', faturavel='f', total='Total', solicitado='n',
+                        pedido_liberado='s',
+                        periodo=':{}'.format(periodo))
 
-    if glm is not None:
-
-        row_tot = glm['data'][-1]
-        tam_conf = {}
-        for row_cor in glm['data'][:-1]:
-            field_tot = glm['fields'][-1]
-            for tam in glm['fields'][1:-1]:
-                if tam not in tam_conf:
-                    tam_conf[tam] = {
-                        'min_para_lm': 0,
-                        'lm_cor_sozinha': 's',
+                if total_add != 0:
+                    gadd = {
+                        'headers': ga_header,
+                        'fields': ga_fields,
+                        'data': ga_data,
+                        'style': ga_style,
                     }
-                    try:
-                        RLM = lotes.models.RegraLMTamanho.objects.get(
-                            tamanho=tam)
-                        tam_conf[tam] = {
-                            'min_para_lm': RLM.min_para_lm,
-                            'lm_cor_sozinha': RLM.lm_cor_sozinha,
+
+            if gadd:
+                gpac = copy.deepcopy(gzerada)
+                gadd_sortimento_field = gadd['fields'][0]
+                gadd_total_field = gadd['fields'][-1]
+                gpac_sortimento_field = gpac['fields'][0]
+                for ga_row in gadd['data']:
+                    if (
+                        ga_row[gadd_total_field] > 0 and
+                        ga_row[gadd_sortimento_field] != 'Total'
+                    ):
+                        cor0 = ga_row[gadd_sortimento_field].lstrip("0")
+                        ga_row_quants = {
+                            key: ga_row[key]
+                            for key in ga_row
+                            if key not in (gadd_sortimento_field, gadd_total_field)
                         }
-                    except lotes.models.RegraLMTamanho.DoesNotExist:
-                        pass
+                        ga_row_comb = row_ref['cores_dict'][cor0]
+                        for ga_row_comb_cor0 in ga_row_comb:
+                            ga_row_comb_cor = ga_row_comb_cor0.zfill(6)
+                            gpac_row = [
+                                row
+                                for row in gpac['data']
+                                if row[gpac_sortimento_field] == ga_row_comb_cor
+                            ][0]
+                            for ga_row_comb_tam in ga_row_quants:
+                                gpac_row[ga_row_comb_tam] += (
+                                    ga_row_quants[ga_row_comb_tam] *
+                                    ga_row_comb[ga_row_comb_cor0]
+                                )
+                gped = og.soma_grades(gped, gpac)
 
-                if lm_tam != 0 and row_cor[tam] != 0:
-                    lm_lim = round(
-                        lm_tam * tam_conf[tam]['min_para_lm'] / 100, 0)
-                    if row_cor[tam] < lm_tam:
-                        if row_cor[tam] >= lm_lim:
-                            row_tot[field_tot] += lm_tam - row_cor[tam]
-                            row_tot[tam] += lm_tam - row_cor[tam]
-                            row_cor[field_tot] += lm_tam - row_cor[tam]
-                            row_cor[tam] = lm_tam
-                        else:
-                            row_tot[field_tot] += -row_cor[tam]
-                            row_tot[tam] += -row_cor[tam]
-                            row_cor[field_tot] += -row_cor[tam]
-                            row_cor[tam] = 0
-                        row_cor['{}|STYLE'.format(tam)] = \
-                            'font-weight: bold; color: red'
-
-        if glm != gap:
+        # Utiliza grade zerada para igualar cores e tamanhos das grades base
+        # dos cálculos
+        if gme is not None:
+            gme = og.soma_grades(gzerada, gme)
             mount_produzir.update({
-                'glm': glm,
+                'gme': gme,
             })
 
-        glc = copy.deepcopy(glm)
+        if gmg is not None:
+            gmg = og.soma_grades(gzerada, gmg)
+            mount_produzir.update({
+                'gmg': gmg,
+            })
 
-    if glc is not None:
-        row_tot = glc['data'][-1]
-        for row_cor in glc['data'][:-1]:
-            tam_count = 0
-            tam_tot = 0
-            field_tot = glc['fields'][-1]
-            for tam in glc['fields'][1:-1]:
-                if row_cor[tam] != 0:
-                    tam_count += 1
-                tam_tot += row_cor[tam]
+        if gopa is not None:
+            gopa = og.soma_grades(gzerada, gopa)
+            mount_produzir.update({
+                'gopa': gopa,
+            })
 
-            lm_cor_acresc = 0
-            if tam_tot != 0 and lm_cor != 0:
-                if tam_tot < lm_cor:
-                    if tam_count > 1 or \
-                            tam_conf[tam]['lm_cor_sozinha'] == 's':
-                        lm_cor_acresc = lm_cor - tam_tot
-            if lm_cor_acresc > 0:
-                tam_tot_final = 0
-                tam_ult = None
+        if ginv is not None:
+            ginv = og.soma_grades(gzerada, ginv)
+            mount_produzir.update({
+                'ginv': ginv,
+            })
+
+        if gsol is not None:
+            gsol = og.soma_grades(gzerada, gsol)
+            mount_produzir.update({
+                'gsol': gsol,
+            })
+
+        if gped is not None:
+            gped = og.soma_grades(gzerada, gped)
+            mount_produzir.update({
+                'gped': gped,
+            })
+
+        gm = None
+        if meta.meta_estoque != 0 or meta.meta_giro != 0:
+            if meta.meta_estoque == 0:
+                gm = gmg
+            elif meta.meta_giro == 0:
+                gm = gme
+            else:
+                gm = og.soma_grades(gme, gmg)
+
+            mount_produzir.update({
+                'gm': gm,
+            })
+        
+        gopa_ncd = None
+        if total_inv != 0 and total_opa != total_inv:
+            gopa_ncd = og.subtrai_grades(gopa, ginv)
+            mount_produzir.update({
+                'gopa_ncd': gopa_ncd,
+            })
+
+        gopp1 = None
+        if total_opa != 0 or total_ped != 0:
+            if total_ped == 0:
+                gopp1 = gopa
+            elif total_opa == 0:
+                gopp1 = og.subtrai_grades(gzerada, gped)
+            else:
+                gopp1 = og.subtrai_grades(gopa, gped)
+
+        gopp2 = None
+        if gopp1 or total_sol != 0:
+            if total_sol == 0:
+                gopp2 = gopp1
+            elif gopp1 is None:
+                gopp2 = og.subtrai_grades(gzerada, gsol)
+            else:
+                gopp2 = og.subtrai_grades(gopp1, gsol)
+
+        gopp = None
+        if gopp2:
+            gopp = gopp2
+            mount_produzir.update({
+                'gopp': gopp,
+            })
+
+        gresult = None
+        if gopp is not None or gm is not None:
+            if gopp is None:
+                gresult = gm
+            elif gm is None:
+                gresult = gopp
+            else:
+                gresult = og.subtrai_grades(gm, gopp)
+
+        glm = None
+        glc = None
+
+        if gresult is not None:
+            gap = og.opera_grade(gresult, lambda x: x if x > 0 else 0)
+            mount_produzir.update({
+                'gap': gap,
+            })
+            gex = og.opera_grade(gresult, lambda x: -x if x < 0 else 0)
+            mount_produzir.update({
+                'gex': gex,
+            })
+
+            if lm_tam != 0 or lm_cor != 0:
+                glm = copy.deepcopy(gap)
+
+        if glm is not None:
+
+            row_tot = glm['data'][-1]
+            tam_conf = {}
+            for row_cor in glm['data'][:-1]:
+                field_tot = glm['fields'][-1]
+                for tam in glm['fields'][1:-1]:
+                    if tam not in tam_conf:
+                        tam_conf[tam] = {
+                            'min_para_lm': 0,
+                            'lm_cor_sozinha': 's',
+                        }
+                        try:
+                            RLM = lotes.models.RegraLMTamanho.objects.get(
+                                tamanho=tam)
+                            tam_conf[tam] = {
+                                'min_para_lm': RLM.min_para_lm,
+                                'lm_cor_sozinha': RLM.lm_cor_sozinha,
+                            }
+                        except lotes.models.RegraLMTamanho.DoesNotExist:
+                            pass
+
+                    if lm_tam != 0 and row_cor[tam] != 0:
+                        lm_lim = round(
+                            lm_tam * tam_conf[tam]['min_para_lm'] / 100, 0)
+                        if row_cor[tam] < lm_tam:
+                            if row_cor[tam] >= lm_lim:
+                                row_tot[field_tot] += lm_tam - row_cor[tam]
+                                row_tot[tam] += lm_tam - row_cor[tam]
+                                row_cor[field_tot] += lm_tam - row_cor[tam]
+                                row_cor[tam] = lm_tam
+                            else:
+                                row_tot[field_tot] += -row_cor[tam]
+                                row_tot[tam] += -row_cor[tam]
+                                row_cor[field_tot] += -row_cor[tam]
+                                row_cor[tam] = 0
+                            row_cor['{}|STYLE'.format(tam)] = \
+                                'font-weight: bold; color: red'
+
+            if glm != gap:
+                mount_produzir.update({
+                    'glm': glm,
+                })
+
+            glc = copy.deepcopy(glm)
+
+        if glc is not None:
+            row_tot = glc['data'][-1]
+            for row_cor in glc['data'][:-1]:
+                tam_count = 0
+                tam_tot = 0
+                field_tot = glc['fields'][-1]
                 for tam in glc['fields'][1:-1]:
-                    if row_cor[tam] > 0:
-                        tam_ult = tam
-                        acrescenta = round(
-                            lm_cor_acresc / tam_tot * row_cor[tam],
-                            0)
-                        row_tot[field_tot] += acrescenta
-                        row_tot[tam] += acrescenta
-                        row_cor[field_tot] += acrescenta
-                        row_cor[tam] += acrescenta
-                        row_cor['{}|STYLE'.format(tam)] = \
-                            'font-weight: bold; color: red'
-                        tam_tot_final += row_cor[tam]
+                    if row_cor[tam] != 0:
+                        tam_count += 1
+                    tam_tot += row_cor[tam]
 
-                # em caso de distribuição do lm_cor por mais de uma cor
-                # o arredondamento pode não formar lm_cor. Se total ainda
-                # estiver abaico do lm_cor, acrescentar ao último tamanho
-                # alterado
-                lm_cor_acresc = lm_cor - tam_tot_final
+                lm_cor_acresc = 0
+                if tam_tot != 0 and lm_cor != 0:
+                    if tam_tot < lm_cor:
+                        if tam_count > 1 or \
+                                tam_conf[tam]['lm_cor_sozinha'] == 's':
+                            lm_cor_acresc = lm_cor - tam_tot
                 if lm_cor_acresc > 0:
-                    if tam_ult is not None:
-                        row_tot[field_tot] += lm_cor_acresc
-                        row_tot[tam] += lm_cor_acresc
-                        row_cor[field_tot] += lm_cor_acresc
-                        row_cor[tam] += lm_cor_acresc
+                    tam_tot_final = 0
+                    tam_ult = None
+                    for tam in glc['fields'][1:-1]:
+                        if row_cor[tam] > 0:
+                            tam_ult = tam
+                            acrescenta = round(
+                                lm_cor_acresc / tam_tot * row_cor[tam],
+                                0)
+                            row_tot[field_tot] += acrescenta
+                            row_tot[tam] += acrescenta
+                            row_cor[field_tot] += acrescenta
+                            row_cor[tam] += acrescenta
+                            row_cor['{}|STYLE'.format(tam)] = \
+                                'font-weight: bold; color: red'
+                            tam_tot_final += row_cor[tam]
 
-        if glc != glm:
-            mount_produzir.update({
-                'glc': glc,
-            })
+                    # em caso de distribuição do lm_cor por mais de uma cor
+                    # o arredondamento pode não formar lm_cor. Se total ainda
+                    # estiver abaico do lm_cor, acrescentar ao último tamanho
+                    # alterado
+                    lm_cor_acresc = lm_cor - tam_tot_final
+                    if lm_cor_acresc > 0:
+                        if tam_ult is not None:
+                            row_tot[field_tot] += lm_cor_acresc
+                            row_tot[tam] += lm_cor_acresc
+                            row_cor[field_tot] += lm_cor_acresc
+                            row_cor[tam] += lm_cor_acresc
+
+            if glc != glm:
+                mount_produzir.update({
+                    'glc': glc,
+                })
 
 
-    cache.set(key_cache, mount_produzir, timeout=entkeys._MINUTE*5)
-    fo2logger.info('calculated '+key_cache)
+        cache.set(key_cache, mount_produzir, timeout=entkeys._MINUTE*5)
+        fo2logger.info('calculated '+key_cache)
 
-    return mount_produzir
+        return mount_produzir

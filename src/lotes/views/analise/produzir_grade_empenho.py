@@ -5,7 +5,8 @@ from fo2.connections import db_cursor_so
 from base.forms.forms2 import Forms2
 from o2.views.base.get_post import O2BaseGetPostView
 
-from lotes.queries.analise.produzir_grade_empenho import mount_produzir_grade_empenho
+# from lotes.queries.analise.produzir_grade_empenho import mount_produzir_grade_empenho
+from lotes.queries.analise.produzir_grade_empenho import MountProduzirGradeEmpenho
 
 __all__ = ['ProduzirGradeEmpenho']
 
@@ -22,5 +23,6 @@ class ProduzirGradeEmpenho(O2BaseGetPostView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
         modelo = self.form.cleaned_data['modelo']
-        dados_produzir = mount_produzir_grade_empenho(cursor, modelo)
+        # dados_produzir = mount_produzir_grade_empenho(cursor, modelo)
+        dados_produzir = MountProduzirGradeEmpenho(cursor, modelo).query()
         self.context.update(dados_produzir)
