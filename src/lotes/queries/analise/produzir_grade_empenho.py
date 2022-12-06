@@ -34,16 +34,18 @@ class MountProduzirGradeEmpenho():
         self.cursor = cursor
         self.modelo = modelo
 
-    def query(self):
+    def cache_get(self):
         self.key_cache = my_make_key_cache(
             'lotes/queries/analise/produzir_grade_empenho/MPGE/query',
             self.modelo,
         )
-
         self.mount_produzir = cache.get(self.key_cache)
-
         if self.mount_produzir:
             loginfo('cached '+self.key_cache)
+            return True
+
+    def query(self):
+        if self.cache_get():
             return self.mount_produzir
 
         og = OperacoesGrade()
