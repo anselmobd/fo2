@@ -298,16 +298,16 @@ class MountProduzirGradeEmpenho():
 
         # Utiliza grade zerada para igualar cores e tamanhos das grades base
         # dos cálculos
-        if gme is not None:
-            gme = self.og.soma_grades(self.gzerada, gme)
+        if self.gme is not None:
+            self.gme = self.og.soma_grades(self.gzerada, self.gme)
             self.mount_produzir.update({
-                'gme': gme,
+                'gme': self.gme,
             })
 
-        if gmg is not None:
-            gmg = self.og.soma_grades(self.gzerada, gmg)
+        if self.gmg is not None:
+            self.gmg = self.og.soma_grades(self.gzerada, self.gmg)
             self.mount_produzir.update({
-                'gmg': gmg,
+                'gmg': self.gmg,
             })
 
         if gopa is not None:
@@ -337,11 +337,11 @@ class MountProduzirGradeEmpenho():
         gm = None
         if self.meta.meta_estoque != 0 or self.meta.meta_giro != 0:
             if self.meta.meta_estoque == 0:
-                gm = gmg
+                gm = self.gmg
             elif self.meta.meta_giro == 0:
-                gm = gme
+                gm = self.gme
             else:
-                gm = self.og.soma_grades(gme, gmg)
+                gm = self.og.soma_grades(self.gme, self.gmg)
 
             self.mount_produzir.update({
                 'gm': gm,
