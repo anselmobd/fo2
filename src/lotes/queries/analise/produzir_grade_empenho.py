@@ -12,6 +12,10 @@ from utils.functions import (
 )
 from utils.functions.dictlist.dictlist_to_grade import dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
+from utils.functions.queries import (
+    debug_cursor_execute_prt_off,
+    debug_cursor_execute_prt_on,
+)
 
 import comercial.models
 import produto.models
@@ -95,6 +99,8 @@ class MountProduzirGradeEmpenho():
         return g_m_g
 
     def query(self):
+        debug_cursor_execute_prt_off()
+
         if self.cache_get():
             return self.mount_produzir
 
@@ -502,5 +508,7 @@ class MountProduzirGradeEmpenho():
                 })
 
         self.cache_set()
+
+        debug_cursor_execute_prt_on()
 
         return self.mount_produzir
