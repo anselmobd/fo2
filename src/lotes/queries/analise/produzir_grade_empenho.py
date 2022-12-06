@@ -44,6 +44,10 @@ class MountProduzirGradeEmpenho():
             loginfo('cached '+self.key_cache)
             return True
 
+    def cache_set(self):
+        cache.set(self.key_cache, self.mount_produzir, timeout=entkeys._MINUTE*5)
+        loginfo('calculated '+self.key_cache)
+
     def query(self):
         if self.cache_get():
             return self.mount_produzir
@@ -483,8 +487,6 @@ class MountProduzirGradeEmpenho():
                     'glc': glc,
                 })
 
-
-        cache.set(self.key_cache, self.mount_produzir, timeout=entkeys._MINUTE*5)
-        loginfo('calculated '+self.key_cache)
+        self.cache_set()
 
         return self.mount_produzir
