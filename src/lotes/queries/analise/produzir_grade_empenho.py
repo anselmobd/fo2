@@ -6,32 +6,28 @@ from django.db.models import Exists, OuterRef
 
 from geral.functions import config_get_value
 from utils.cache import timeout
-from utils.classes import Perf
 from utils.functions import (
     my_make_key_cache,
     loginfo,
 )
 from utils.functions.dictlist.dictlist_to_grade import dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
-from utils.functions.queries import (
-    debug_cursor_execute_prt_off,
-    debug_cursor_execute_prt_on,
-)
 
-import comercial.models
-import produto.models
-import produto.queries
 from cd.queries.novo_modulo import refs_em_palets
+from comercial.models import MetaEstoque
 from comercial.models.functions.meta_referencia import meta_ref_incluir
 from comercial.views.estoque import grade_meta_estoque
+from produto.queries import (
+    lead_de_modelo,
+    modelo_inform,
+)
 
-import lotes.queries.op
-import lotes.queries.pedido
-from lotes.queries.op.producao import op_producao
 from lotes.models import (
     RegraColecao,
     RegraLMTamanho,
 )
+from lotes.queries.op.producao import op_producao
+from lotes.queries.pedido import sortimento
 from lotes.views.parametros_functions import grade_meta_giro
 
 __all__ = ['MountProduzirGradeEmpenho']
@@ -69,9 +65,9 @@ class MountProduzirGradeEmpenho():
         return lm_tam, lm_cor
 
     def get_meta_estoque(self):
-        metas = comercial.models.MetaEstoque.objects
+        metas = MetaEstoque.objects
         metas = metas.annotate(antiga=Exists(
-            comercial.models.MetaEstoque.objects.filter(
+            MetaEstoque.objects.filter(
                 modelo=OuterRef('modelo'),
                 data__gt=OuterRef('data')
             )
@@ -125,9 +121,6 @@ class MountProduzirGradeEmpenho():
         )
 
     def query(self):
-        # debug_cursor_execute_prt_off()
-        # p = Perf(id='MountProduzirGradeEmpenho.query', on=True)
-
         if self.cache_get():
             return self.mount_produzir
 
@@ -139,7 +132,7 @@ class MountProduzirGradeEmpenho():
             'modelo': self.modelo,
         }
 
-        data_modelo = produto.queries.modelo_inform(self.cursor, self.modelo)
+        data_modelo = modelo_inform(self.cursor, self.modelo)
         if not data_modelo:
             self.mount_produzir.update({
                 'msg_erro': 'Modelo não encontrado',
@@ -169,7 +162,7 @@ class MountProduzirGradeEmpenho():
 
         self.gme = self.get_gme()
 
-        self.lead = produto.queries.lead_de_modelo(self.cursor, self.modelo)
+        self.lead = lead_de_modelo(self.cursor, self.modelo)
         self.mount_produzir['lead'] = self.lead
 
         self.gmg = self.get_gmg()
@@ -259,7 +252,7 @@ class MountProduzirGradeEmpenho():
             periodo = self.lead + dias_alem_lead
 
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
-            lotes.queries.pedido.sortimento(
+            sortimento(
                 self.cursor, tipo_sort='c', descr_sort=False, modelo=self.modelo,
                 cancelado='n', faturavel='f', total='Total', solicitado='n',
                 agrupado='n', pedido_liberado='s',
@@ -282,7 +275,7 @@ class MountProduzirGradeEmpenho():
             if row_ref['ok']:
 
                 ga_header, ga_fields, ga_data, ga_style, total_add = \
-                    lotes.queries.pedido.sortimento(
+                    sortimento(
                         self.cursor, tipo_sort='c', descr_sort=False, ref=row_ref['referencia'],
                         cancelado='n', faturavel='f', total='Total', solicitado='n',
                         pedido_liberado='s',
@@ -533,7 +526,5 @@ class MountProduzirGradeEmpenho():
                 })
 
         self.cache_set()
-
-        # debug_cursor_execute_prt_on()
 
         return self.mount_produzir
