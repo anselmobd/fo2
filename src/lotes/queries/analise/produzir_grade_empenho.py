@@ -74,6 +74,26 @@ class MountProduzirGradeEmpenho():
         metas = metas.order_by('-meta_estoque')
         return metas
 
+    def get_gme(self):
+        if self.meta.meta_estoque == 0:
+            self.context.update({
+                'msg_meta_estoque': 'Modelo com meta de estoque zerada',
+            })
+            return None
+        g_m_e = grade_meta_estoque(self.meta)
+        self.gzerada = self.og.update_gzerada(self.gzerada, g_m_e)
+        return g_m_e
+
+    def get_gmg(self):
+        if self.meta.meta_giro == 0:
+            self.context.update({
+                'msg_meta_giro': 'Modelo com meta de giro zerada',
+            })
+            return None
+        g_m_g = grade_meta_giro(self.meta, self.lead, show_distrib=False)
+        self.gzerada = self.og.update_gzerada(self.gzerada, g_m_g)
+        return g_m_g
+
     def query(self):
         if self.cache_get():
             return self.mount_produzir
@@ -114,31 +134,14 @@ class MountProduzirGradeEmpenho():
 
         self.gzerada = None
 
-        calcula_grade = False
-        gme = None
-        if self.meta.meta_estoque == 0:
-            self.mount_produzir.update({
-                'msg_meta_estoque': 'Modelo com meta de estoque zerada',
-            })
-        else:
-            gme = grade_meta_estoque(self.meta)
-            calcula_grade = True
-            self.gzerada = self.og.update_gzerada(self.gzerada, gme)
+        self.gme = self.get_gme()
 
-        lead = produto.queries.lead_de_modelo(self.cursor, self.modelo)
-        self.mount_produzir['lead'] = lead
+        self.lead = produto.queries.lead_de_modelo(self.cursor, self.modelo)
+        self.mount_produzir['lead'] = self.lead
 
-        gmg = None
-        if self.meta.meta_giro == 0:
-            self.mount_produzir.update({
-                'msg_meta_giro': 'Modelo com meta de giro zerada',
-            })
-        else:
-            gmg = grade_meta_giro(self.meta, lead, show_distrib=False)
-            calcula_grade = True
-            self.gzerada = self.og.update_gzerada(self.gzerada, gmg)
+        self.gmg = self.get_gmg()
 
-        if not calcula_grade:
+        if not (self.gme or self.gmg):
             return self.mount_produzir
 
         g_header, g_fields, g_data, g_style, total_opa = \
@@ -219,10 +222,10 @@ class MountProduzirGradeEmpenho():
             'dias_alem_lead': dias_alem_lead,
         })
 
-        if lead == 0:
+        if self.lead == 0:
             periodo = ''
         else:
-            periodo = lead + dias_alem_lead
+            periodo = self.lead + dias_alem_lead
 
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
             lotes.queries.pedido.sortimento(
