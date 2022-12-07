@@ -162,25 +162,27 @@ class Pedido(View):
             else:
                 row['SITUACAO'] = 'Ativa'
 
-            row['NF_FILIAL'] = '-'
             if row['TEM_15'] and dados_filial:
-                for nf in dados_filial:
-                    op_match = re.findall('OP\(([^\)]+)\)', nf['obs'])
-                    if not op_match:
-                        continue
-                    ops = set().union(*[
-                        op_str.split(', ')
-                        for op_str in op_match
-                    ])
-                    if f"{row['ORDEM_PRODUCAO']}" in ops:
-                        row['NF_FILIAL'] = nf['nf'] if nf['nf'] else '-'
-                        break
-            if row['NF_FILIAL'] != '-':
-                row['NF_FILIAL|TARGET'] = "_blank"
-                row['NF_FILIAL|LINK'] = reverse(
-                    'contabil:nota_fiscal__get',
-                    args=['3', row['NF_FILIAL']],
+                nfs = [
+                    dado['nf']
+                    for dado in dados_filial
+                    if f"{row['ORDEM_PRODUCAO']}" in dado['op_ped']
+                ]
+                op_link = reverse(
+                    'contabil:nota_fiscal__get', args=['3', '99999']
+                ).replace("99999", r"\1")
+                row['NF_FILIAL'] = ", ".join(
+                    re.sub(
+                        r'([^, ]+)',
+                        fr'<a href="{op_link}" target="_blank">\1<span '
+                        'class="glyphicon glyphicon-link" '
+                        'aria-hidden="true"></span></a>',
+                        str(nf)
+                    )
+                    for nf in nfs
                 )
+            else:
+                row['NF_FILIAL'] = "-"
 
             if row['TEM_15']:
                 row['TEM_15'] = 'S'
@@ -201,6 +203,7 @@ class Pedido(View):
                 ),
                 'data': o_data,
                 'titulo': "OP do pedido",
+                'safe': ['NF_FILIAL'],
             },
         })
 
