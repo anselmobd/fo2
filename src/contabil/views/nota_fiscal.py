@@ -39,7 +39,17 @@ class NotaFiscal(O2BaseGetPostView):
             })
             return
 
+        tem_ped = False
         for row in data:
+            if row['ped']:
+                tem_ped = True
+                row['ped|TARGET'] = '_blank'
+                row['ped|A'] = reverse(
+                    'producao:pedido__get',
+                    args=[row['ped']],
+                )
+            if row['ped_obs'] is None:
+                row['ped_obs'] = '-'
             row['situacao'] = nf_situacao_descr(
                 row['situacao'], row['cod_status'])
             if row['nf_devolucao'] is None:
@@ -64,14 +74,20 @@ class NotaFiscal(O2BaseGetPostView):
             'data': data,
         })
 
+        if tem_ped:
+            self.context.update({
+                'pedido': {
+                    'headers': ('Pedido', 'Observação'),
+                    'fields': ('ped', 'ped_obs'),
+                    'data': data,
+                    'titulo': "Pedido da NF",
+                },
+            })
+
+
         i_data = nf_itens.query(cursor, self.nf, especiais=True, empresa=self.empresa)
         max_digits = 0
         for row in i_data:
-            if row['pedido_venda'] == 0:
-                row['pedido_venda'] = '-'
-            else:
-                row['pedido_venda|LINK'] = reverse(
-                    'producao:pedido__get', args=[row['pedido_venda']])
             num_digits = str(row['qtde_item_fatur'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
             row['valor_unitario'] = \
@@ -99,7 +115,6 @@ class NotaFiscal(O2BaseGetPostView):
                 "Quantidade",
                 "Valor unitário",
                 "Valor total",
-                "Pedido de venda",
             ],
             'i_fields': [
                 'seq_item_nfisc',
@@ -111,13 +126,11 @@ class NotaFiscal(O2BaseGetPostView):
                 'qtde_item_fatur',
                 'valor_unitario',
                 'valor_contabil',
-                'pedido_venda',
             ],
             'i_data': i_data,
             'i_style': {
                 7: 'text-align: right;',
                 8: 'text-align: right;',
                 9: 'text-align: right;',
-                10: 'text-align: right;',
             },
         })

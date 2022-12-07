@@ -24,6 +24,7 @@
       {% include "layout/html_thead.html" with data=headers only %}
       {% include "layout/html_tbody.html" with fields=fields data=data only %}
     </table>
+    {% include "layout/table_generic.html" with dados=pedido only %}
   {% endif %}
   {% if i_data %}
     <h3>Itens da NF</h3>
