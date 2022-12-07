@@ -115,9 +115,10 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None):
                 continue
             cliente = fantasia
 
-        if cliente not in peds:
-            peds[cliente] = []
-        peds[cliente].append(row)
+        try:
+            peds[cliente].append(row)
+        except KeyError:
+            peds[cliente] = [row]
 
     if fantasia:
         return peds[fantasia]
