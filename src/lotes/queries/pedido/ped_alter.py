@@ -66,12 +66,13 @@ def inclui_pedido_item(cursor, pedido, nat_cod, nat_uf, seq, row):
     cursor.execute(sql)
 
 
-def pedidos_filial_na_data(cursor, data=None, fantasia=None):
+def pedidos_filial_na_data(cursor, data=None, fantasia=None, op=None):
     """Busca pedidos auxiliares para faturamento de produção da filial
     Filtros
     - data: data do pedido (data de finalização do estágio 15 das OPs)
     - fansatia: nome fantasia do cliente do pedido da OP ou "estque"
         em caso de OP de estoque
+    - op: OP produzida na filial
     Retorno
     - caso filtre por fantasia:
         retorna um dictlist com os dados dos pedidos filtrados daquele 
@@ -120,6 +121,7 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None):
             if not cliente_match:
                 continue
             cliente = cliente_match.group(1).lower()
+
         if fantasia:
             if not (
                 cliente.upper().startswith(slug_fantasia.upper())
@@ -128,6 +130,18 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None):
                 continue
             cliente = fantasia
 
+        ped_op_pattern = re.compile(r'Pedido\(([0123456789-]+)\)-OP\(([0123456789, ]+)\)')
+        match = ped_op_pattern.findall(obs)
+        op_ped = {}
+        for ped, str_ops in match:
+            ops = str_ops.split(', ')
+            for op in ops:
+                op_ped[op] = ped
+
+        if op and op not in op_ped:
+            continue
+
+        row['op_ped'] = op_ped
         try:
             peds[cliente].append(row)
         except KeyError:
