@@ -47,11 +47,19 @@ _DICT_EMPRESA = {
 }
 
 
-def ped_inform_lower(cursor, pedido, empresa=1, f_dictlist=dictlist_lower):
-    return ped_inform(cursor, pedido, empresa, f_dictlist)
+def ped_inform_lower(
+    cursor, pedido, empresa=None, busca_tb_ped_cli=None,
+):
+    return ped_inform(
+        cursor, pedido, empresa=empresa,
+        f_dictlist=dictlist_lower, busca_tb_ped_cli=busca_tb_ped_cli
+    )
 
 
-def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
+def ped_inform(
+    cursor, pedido, empresa=1,
+    f_dictlist=dictlist, busca_tb_ped_cli=False,
+):
     if f_dictlist == dictlist:
         f_case = str.upper
     else:
@@ -75,6 +83,8 @@ def ped_inform(cursor, pedido, empresa=1, f_dictlist=dictlist):
     for ped in pedido:
         if ped:
             pedido_list.append(f"ped.PEDIDO_VENDA = {ped}")
+            if busca_tb_ped_cli:
+                pedido_list.append(f"ped.COD_PED_CLIENTE = {ped}")
     filtro_pedido = f"""--
         AND ({' OR '.join(pedido_list)})
     """
