@@ -67,6 +67,19 @@ def inclui_pedido_item(cursor, pedido, nat_cod, nat_uf, seq, row):
 
 
 def pedidos_filial_na_data(cursor, data=None, fantasia=None):
+    """Busca pedidos auxiliares para faturamento de produção da filial
+    Filtros
+    - data: data do pedido (data de finalização do estágio 15 das OPs)
+    - fansatia: nome fantasia do cliente do pedido da OP ou "estque"
+        em caso de OP de estoque
+    Retorno
+    - caso filtre por fantasia:
+        retorna um dictlist com os dados dos pedidos filtrados daquele 
+        cliente (ou estoque)
+    - caso Não filtre por fantasia:
+        retorna um dict com chave cliente (ou estoque) e valor dictlist
+        com seus dados dos pedidos filtrados
+    """
     if fantasia:
         slug_fantasia =  slugify(fantasia)
     filtra_data = f"""--
