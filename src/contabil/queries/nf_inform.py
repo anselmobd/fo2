@@ -28,6 +28,8 @@ def query(cursor, nf, especiais=False, empresa=1):
           || '-' || lpad(c.CGC_2, 2, '0')
           || ')' CLIENTE
         , f.NUMERO_CAIXA_ECF especial
+        , f.PEDIDO_VENDA PED
+        , ped.OBSERVACAO PED_OBS 
         FROM FATU_050 f -- fatura
         JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = f.CGC_9
@@ -35,6 +37,8 @@ def query(cursor, nf, especiais=False, empresa=1):
         LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
           ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
          AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
+        LEFT JOIN PEDI_100 ped -- pedido de venda
+          ON ped.PEDIDO_VENDA = f.PEDIDO_VENDA
         WHERE f.NUM_NOTA_FISCAL = {nf}
           {filtra_empresa} -- filtra_empresa
           {filtra_especial} -- filtra_especial
