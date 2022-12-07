@@ -37,86 +37,87 @@ class NotaFiscal(O2BaseGetPostView):
             self.context.update({
                 'msg_erro': "Nota fiscal não encontrada",
             })
-        else:
-            for row in data:
-                row['situacao'] = nf_situacao_descr(
-                    row['situacao'], row['cod_status'])
-                if row['nf_devolucao'] is None:
-                    row['nf_devolucao'] = '-'
-                else:
-                    row['situacao'] = f"{row['situacao']}/Devolvida"
-            self.context.update({
-                'headers': [
-                    "Cliente",
-                    "Data NFe",
-                    "Situação",
-                    "Valor",
-                    "NF Devolução",
-                ],
-                'fields': [
-                    'cliente',
-                    'data',
-                    'situacao',
-                    'valor',
-                    'nf_devolucao',
-                ],
-                'data': data,
-            })
+            return
 
-            i_data = nf_itens.query(cursor, self.nf, especiais=True, empresa=self.empresa)
-            max_digits = 0
-            for row in i_data:
-                if row['pedido_venda'] == 0:
-                    row['pedido_venda'] = '-'
-                else:
-                    row['pedido_venda|LINK'] = reverse(
-                        'producao:pedido__get', args=[row['pedido_venda']])
-                num_digits = str(row['qtde_item_fatur'])[::-1].find('.')
-                max_digits = max(max_digits, num_digits)
-                row['valor_unitario'] = \
-                    row['valor_contabil'] / row['qtde_item_fatur']
+        for row in data:
+            row['situacao'] = nf_situacao_descr(
+                row['situacao'], row['cod_status'])
+            if row['nf_devolucao'] is None:
+                row['nf_devolucao'] = '-'
+            else:
+                row['situacao'] = f"{row['situacao']}/Devolvida"
+        self.context.update({
+            'headers': [
+                "Cliente",
+                "Data NFe",
+                "Situação",
+                "Valor",
+                "NF Devolução",
+            ],
+            'fields': [
+                'cliente',
+                'data',
+                'situacao',
+                'valor',
+                'nf_devolucao',
+            ],
+            'data': data,
+        })
 
-            totalize_data(i_data, {
-                'sum': ['qtde_item_fatur', 'valor_contabil'],
-                'descr': {'narrativa': "Totais:"},
-                'row_style': 'font-weight: bold;',
-            })
+        i_data = nf_itens.query(cursor, self.nf, especiais=True, empresa=self.empresa)
+        max_digits = 0
+        for row in i_data:
+            if row['pedido_venda'] == 0:
+                row['pedido_venda'] = '-'
+            else:
+                row['pedido_venda|LINK'] = reverse(
+                    'producao:pedido__get', args=[row['pedido_venda']])
+            num_digits = str(row['qtde_item_fatur'])[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
+            row['valor_unitario'] = \
+                row['valor_contabil'] / row['qtde_item_fatur']
 
-            for row in i_data:
-                row['qtde_item_fatur|DECIMALS'] = max_digits
-                row['valor_unitario|DECIMALS'] = 2
-                row['valor_contabil|DECIMALS'] = 2
+        totalize_data(i_data, {
+            'sum': ['qtde_item_fatur', 'valor_contabil'],
+            'descr': {'narrativa': "Totais:"},
+            'row_style': 'font-weight: bold;',
+        })
 
-            self.context.update({
-                'i_headers': [
-                    "Seq.",
-                    "Nível",
-                    "Referência",
-                    "Tamanho",
-                    "Cor",
-                    "Descrição",
-                    "Quantidade",
-                    "Valor unitário",
-                    "Valor total",
-                    "Pedido de venda",
-                ],
-                'i_fields': [
-                    'seq_item_nfisc',
-                    'nivel_estrutura',
-                    'grupo_estrutura',
-                    'subgru_estrutura',
-                    'item_estrutura',
-                    'narrativa',
-                    'qtde_item_fatur',
-                    'valor_unitario',
-                    'valor_contabil',
-                    'pedido_venda',
-                ],
-                'i_data': i_data,
-                'i_style': {
-                    7: 'text-align: right;',
-                    8: 'text-align: right;',
-                    9: 'text-align: right;',
-                    10: 'text-align: right;',
-                },
-            })
+        for row in i_data:
+            row['qtde_item_fatur|DECIMALS'] = max_digits
+            row['valor_unitario|DECIMALS'] = 2
+            row['valor_contabil|DECIMALS'] = 2
+
+        self.context.update({
+            'i_headers': [
+                "Seq.",
+                "Nível",
+                "Referência",
+                "Tamanho",
+                "Cor",
+                "Descrição",
+                "Quantidade",
+                "Valor unitário",
+                "Valor total",
+                "Pedido de venda",
+            ],
+            'i_fields': [
+                'seq_item_nfisc',
+                'nivel_estrutura',
+                'grupo_estrutura',
+                'subgru_estrutura',
+                'item_estrutura',
+                'narrativa',
+                'qtde_item_fatur',
+                'valor_unitario',
+                'valor_contabil',
+                'pedido_venda',
+            ],
+            'i_data': i_data,
+            'i_style': {
+                7: 'text-align: right;',
+                8: 'text-align: right;',
+                9: 'text-align: right;',
+                10: 'text-align: right;',
+            },
+        })
