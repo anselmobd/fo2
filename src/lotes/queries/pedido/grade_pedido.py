@@ -6,16 +6,15 @@ from utils.functions.queries import debug_cursor_execute
 
 from cd.queries.novo_modulo.gerais import get_filtra_ref
 
-__all__ = ['op_producao']
+__all__ = ['query']
 
 
-def grade_pedido(cursor, **kwargs):
+def query(cursor, **kwargs):
     def argdef(arg, default):
         return arg_def(kwargs, arg, default)
 
+    empresa = argdef('empresa', 1)  # default tussor matriz
     pedido = argdef('pedido', None)
-    tipo_sort = argdef('tipo_sort', 'rc')
-    descr_sort = argdef('descr_sort', True)
     ref = argdef('ref', None)
     modelo = argdef('modelo', None)
     periodo = argdef('periodo', None)
@@ -26,28 +25,35 @@ def grade_pedido(cursor, **kwargs):
     agrupado = argdef('agrupado', 't')  # default todos os pedidos
     pedido_liberado = argdef('pedido_liberado', 't')  # default todos os pedidos
     total = argdef('total', None)
-    empresa = argdef('empresa', 1)  # default tussor matriz
+
+    filtro_empresa = f"""--
+        AND ped.CODIGO_EMPRESA = {empresa}
+    """
 
     filtra_pedido = f"AND i.PEDIDO_VENDA = {pedido}" if pedido else ''
 
-    # filtro_modelo = ''
-    # if modelo is not None:
-    #     filtro_modelo = f"""--
-    #         AND TRIM(LEADING '0' FROM
-    #                  (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
-    #                                  '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-    #                                  ))) = '{modelo}' """
+    if ref:
+        if isinstance(ref, (tuple, list)):
+            refs = set(ref)
+        else:
+            refs = {ref, }
+        refs_sql = ', '.join(list(refs))
+        filtra_ref = f"""--
+            AND r.REFERENCIA in ({refs_sql})
+        """
+    else:
+        filtra_ref = ''
 
-    filtro_modelo = get_filtra_ref(
-        cursor,
-        field="i.CD_IT_PE_GRUPO",
-        ref=ref,
-        modelo=modelo,
-        com_ped=True,
-    )
+    filtra_modelo = f"""--
+         AND r.REFERENCIA LIKE '%{modelo}%'
+         AND REGEXP_REPLACE(
+               r.REFERENCIA
+             , '^[a-zA-Z]?0*([123456789][0123456789]*)[a-zA-Z]*$'
+             , '\\1'
+             ) = '{modelo}'
+    """ if modelo else ''
 
-    filtra_periodo = ''
-    if periodo is not None:
+    if periodo:
         periodo_list = periodo.split(':')
         if periodo_list[0] != '':
             filtra_periodo += f"""--
@@ -57,18 +63,20 @@ def grade_pedido(cursor, **kwargs):
             filtra_periodo += f"""--
                 AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {periodo_list[1]}
             """
+    else:
+        filtra_periodo = ''
 
-    filtro_cancelado = ''
-    if cancelado in ['n', 'a']:  # não cancelado ou ativo
-        filtro_cancelado = """--
-            AND ped.STATUS_PEDIDO <> 5 -- não cancelado
-        """
-    elif cancelado in ['c', 'i']:  # cancelado ou inativo
+    if cancelado in ['c', 'i']:  # cancelado ou inativo
         filtro_cancelado = """--
             AND ped.STATUS_PEDIDO = 5 -- cancelado
         """
+    elif cancelado in ['n', 'a']:  # não cancelado ou ativo
+        filtro_cancelado = """--
+            AND ped.STATUS_PEDIDO <> 5 -- não cancelado
+        """
+    else:
+        filtro_cancelado = ''
 
-    filtro_faturado = ''
     if faturado == 'f':  # faturado
         filtro_faturado = """--
             AND f.NUM_NOTA_FISCAL IS NOT NULL -- faturado
@@ -77,6 +85,8 @@ def grade_pedido(cursor, **kwargs):
         filtro_faturado = """--
             AND f.NUM_NOTA_FISCAL IS NULL -- não faturado
         """
+    else:
+        filtro_faturado = ''
 
     filtro_faturavel = ''
     if faturavel == 'f':  # faturavel
@@ -136,10 +146,6 @@ def grade_pedido(cursor, **kwargs):
             AND ped.SITUACAO_VENDA = 0
         """
 
-    filtro_empresa = f"""--
-        AND ped.CODIGO_EMPRESA = {empresa}
-    """
-
     # sortimento
     sql=f"""
         SELECT
@@ -149,6 +155,9 @@ def grade_pedido(cursor, **kwargs):
         , t.ORDEM_TAMANHO ORDEM_TAM
         , sum(i.QTDE_PEDIDA) QUANTIDADE
         FROM PEDI_110 i -- item de pedido de venda
+        JOIN BASI_030 r
+          ON r.REFERENCIA = i.CD_IT_PE_GRUPO
+         AND r.NIVEL_ESTRUTURA = 1
         JOIN PEDI_100 ped -- pedido de venda
           ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
         LEFT JOIN FATU_050 f -- fatura
@@ -169,7 +178,8 @@ def grade_pedido(cursor, **kwargs):
         WHERE 1=1
           {filtro_empresa} -- filtro_empresa
           {filtra_pedido} -- filtra_pedido
-          {filtro_modelo} -- filtro_modelo
+          {filtra_ref} -- filtra_ref
+          {filtra_modelo} -- filtra_modelo
           {filtra_periodo} -- filtra_periodo
           {filtro_cancelado} -- filtro_cancelado
           {filtro_faturado} -- filtro_faturado
@@ -184,4 +194,7 @@ def grade_pedido(cursor, **kwargs):
         , t.ORDEM_TAMANHO
     """
 
-    return result
+    debug_cursor_execute(cursor, sql)
+    dados = dictlist_lower(cursor)
+
+    return dados
