@@ -14,6 +14,7 @@ from utils.functions.models.dictlist import (
 from utils.table_defs import TableDefsHpSD
 
 from lotes.queries.rastreabilidade import (
+    filial_pedido,
     pedido_op,
 )
 from lotes.queries.pedido.ped_inform import ped_inform_lower
@@ -164,6 +165,27 @@ class RastreabilidadeView(O2BaseGetPostView):
             })
         self.context['ops'] = ops
 
+    def get_dados_filial_pedido(self):
+        return filial_pedido.query(
+            self.cursor,
+            pedido=self.pedido,
+        )
+
+    def info_filial_pedido(self):
+        pass
+        # self.dados_filial_ped = self.get_dados_filial_pedido()
+        # self.prep_rows_ops()
+        # ops = []
+        # for row in self.dados_ops:
+        #     ops.append({
+        #         'op': row['op'],
+        #         'tipo_ref': row['tipo_ref'],
+        #         'ref': self.table_op_ref([row]),
+        #         'info': self.table_op_info([row]),
+        #         'obs': self.table_op_obs([row]),
+        #     })
+        # self.context['ops'] = ops
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
@@ -176,3 +198,4 @@ class RastreabilidadeView(O2BaseGetPostView):
 
         self.info_pedido()
         self.info_ops()
+        self.info_filial_pedido()
