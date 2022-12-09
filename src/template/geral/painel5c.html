@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <title>Independent CSS scrolling panels (with inertia)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <style>
+    /*I love me some border-box*/
+    * {
+        box-sizing: border-box;
+    }
+    /*This just stops me getting horizontal scrolling if anything overflows the width*/
+    body {
+        overflow-x: hidden;
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        color: #333;
+    }
+    /*Just removing default browser padding/margin*/
+    html,
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    /*Flexbox gives us the flexiness we need. The top just stays put as there is no scrolling on the body due to the page never exceeding viewport height*/
+    .PN_Top_Link {
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        font-size: 0.8rem;
+        position: relative;
+        z-index: 5;
+        height: 1rem;
+        padding: 0 1rem 0 1rem;
+        background-color: firebrick;
+        color: snow;
+    }
+    .PN_Top_Link a.timer {
+        color: snow;
+        justify-content: right;
+        animation-name: timer;
+        animation-duration: 20s;
+    }
+    @keyframes timer {
+        0%   {color: snow;}
+        50%  {color: yellow;}
+        95%  {color: orange;}
+        100% {color: firebrick;}
+    }
+    hr {
+      border: 1px dashed firebrick;
+    }
+    .PN_Top {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        position: relative;
+        z-index: 10;
+        height: 1rem;
+        padding-bottom: 0.5rem;
+        background-color: firebrick;
+        color: snow;
+        font-weight: bold;
+    }
+    .PN_Top_Sub {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        position: relative;
+        z-index: 20;
+        height: 3rem;
+        background-color: firebrick;
+        color: #333;
+    }
+    /*This is our main wrapping element, it's made 100vh high to ensure it is always the correct size and then moved into place and padded with negative margin and padding*/
+    .PN_Container {
+        display: flex;
+        overflow: hidden;
+        height: 100vh;
+        margin-top: -9rem;
+        padding-top: 9rem;
+        position: relative;
+        width: 100%;
+        backface-visibility: hidden;
+        will-change: overflow;
+    }
+    /*All the scrollable sections should overflow and be whatever height they need to be. As they are flex-items (due to being inside a flex container) they could be made to stretch full height at all times if needed.
+    WebKit inertia scrolling is being added here for any present/future devices that are able to make use of it.
+    */
+    .PN_Left,
+    .PN_MiddleLeft,
+    .PN_MiddleRight,
+    .PN_Right,
+    .PN_Last {
+        overflow: auto;
+        height: auto;
+        padding: .5rem;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none;
+    }
+    /*Entirely optional – just wanted to remove the scrollbar on WebKit browsers as I find them ugly*/
+    .PN_Left::-webkit-scrollbar,
+    .PN_MiddleLeft::-webkit-scrollbar,
+    .PN_MiddleRight::-webkit-scrollbar,
+    .PN_Right::-webkit-scrollbar,
+    .PN_Last::-webkit-scrollbar {
+        display: none;
+    }
+    /*  Left and Right are set sizes while the Middle is set to flex one so it occupies all remaining space. This could be set as a width too if prefereable, perhaps using calc.*/
+    .PN_Left {
+      width: 20%;
+      background-color: #f2f2f2;
+    }
+
+    .PN_MiddleLeft {
+      width: 20%;
+      background-color: white;
+    }
+
+    .PN_MiddleRight {
+      width: 20%;
+      background-color: #f2f2f2;
+    }
+
+    .PN_Right {
+      flex: 1;
+      background-color: white;
+    }
+
+    .PN_Last {
+      width: 20%;
+      background-color: #f2f2f2;
+    }
+
+    .invisible {
+        visibility: hidden;
+        position: absolute;
+        top: -9999px;
+    }
+
+    .visible {
+        visibility: visible;
+        position: static;
+    }
+  </style>
+  <script>
+     // var timerId;
+     // var seconds=30;
+     // var count=seconds;
+     //
+     // resetCount = function() {
+     //   //  alert('on');
+     //   var count=seconds;
+     //
+     //   let elm = document.getElementById("timerlink");
+     //   let newone = elm.cloneNode(true);
+     //   elm.parentNode.replaceChild(newone, elm);
+     // }
+     //
+     // startTimer = function() {
+     //   var timerId = setInterval(function() {
+     //     var count = count - 1;
+     //     if (count<=0) {
+     //       location.reload(true);
+     //     }
+     //   },1000);
+     // }
+
+   // var time = new Date().getTime();
+   //  $(document.body).bind("mousemove keypress", function () {
+   //      time = new Date().getTime();
+   //  });
+   //
+   //  setInterval(function() {
+   //      if (new Date().getTime() - time >= 30000) {
+   //          window.location.reload(true);
+   //      }
+   //  }, 1000);
+
+   var valendo = false;
+
+   console.log("Start");
+
+   var refresh_rate = 20; //<-- In seconds, change to your needs
+   var last_user_action = 0;
+   // var has_focus = false;
+   // var lost_focus_count = 0;
+   // var focus_margin = 30; // If we lose focus more then the margin we want to refresh
+
+
+   function reset() {
+     if (valendo) {
+       let elm = document.getElementById("timerlink");
+       let newone = elm.cloneNode(true);
+       elm.parentNode.replaceChild(newone, elm);
+
+       last_user_action = 0;
+       console.log("Reset");
+     }
+   }
+
+   // function windowHasFocus() {
+   //   has_focus = true;
+   // }
+   //
+   // function windowLostFocus() {
+   //   has_focus = false;
+   //   lost_focus_count++;
+   //   console.log(lost_focus_count + " <~ Lost Focus");
+   // }
+
+   function refreshCheck() {
+     if (valendo) {
+       // var focus = window.onfocus;
+       // if ((last_user_action >= refresh_rate && !has_focus && document.readyState == "complete") || lost_focus_count > focus_margin) {
+       if (last_user_action >= refresh_rate && document.readyState == "complete") {
+         // window.location.reload(); // If this is called no reset is needed
+         location.reload(true);
+         // reset(); // We want to reset just to make sure the location reload is not called.
+       }
+     }
+   }
+
+   // window.addEventListener("focus", windowHasFocus, false);
+   // window.addEventListener("blur", windowLostFocus, false);
+   window.addEventListener("focus", reset, false);
+   window.addEventListener("blur", reset, false);
+   window.addEventListener("click", reset, false);
+   window.addEventListener("dblclick", reset, false);
+   window.addEventListener("mouseover", reset, false);
+   window.addEventListener("mousemove", reset, false);
+   window.addEventListener("keypress", reset, false);
+   window.addEventListener("keydown", reset, false);
+   window.addEventListener("scroll", reset, false);
+   document.addEventListener("touchMove", reset, false);
+   document.addEventListener("touchEnd", reset, false);
+
+   function resetScroll() {
+     let pn_l = document.getElementById("id_PN_Left");
+     pn_l.scrollTop = 0;
+     let pn_ml = document.getElementById("id_PN_MiddleLeft");
+     pn_ml.scrollTop = 0;
+     let pn_mr = document.getElementById("id_PN_MiddleRight");
+     pn_mr.scrollTop = 0;
+     let pn_r = document.getElementById("id_PN_Right");
+     pn_r.scrollTop = 0;
+     let pn_la = document.getElementById("id_PN_Last");
+     pn_la.scrollTop = 0;
+
+     setInterval(function () {
+       last_user_action++;
+       console.log(last_user_action);
+       refreshCheck();
+     }, 1000);
+
+     valendo = true;
+   }
+
+  </script>
+</head>
+<!-- <body onload="startTimer();" onmouseover="resetCount();"
+        onmousemove="resetCount();" onclick="resetCount();"
+        ondblclick="resetCount();" onkeydown="resetCount();"
+        onscroll="resetCount();"> -->
+<body onload="resetScroll();">
+  <!-- <div id="aviso_rh" class="invisible">
+    <h1><center><a href="/media/rh/Regulamento_interno.pdf" target="_blank">Clique aqui para ler o Regulamento interno da Tussor</a></center></h1>
+  </div> -->
+  <div class="PN_Top_Link"><a id="timerlink" class="timer" href=".">Recarrega</a></div>
+  <div class="PN_Top">{{ titulo }}</div>
+  <div class="PN_Top_Sub">
+    <div class="PN_Left">{{ config.dados.0.modulo_nome }}</div>
+    <div class="PN_MiddleLeft">{{ config.dados.1.modulo_nome }}</div>
+    <div class="PN_MiddleRight">{{ config.dados.2.modulo_nome }}</div>
+    <div class="PN_Right">{{ config.dados.3.modulo_nome }}</div>
+    <div class="PN_Last">{{ config.dados.4.modulo_nome }}</div>
+  </div>
+  <div class="PN_Container">
+    <div id="id_PN_Left" class="PN_Left">
+      {% for dados in config.dados.0.dados %}
+        {{ dados.data }} - {{ dados.usuario.first_name }}
+        <h3>{{ dados.chamada }}</h3>
+        <hr>
+      {% endfor%}
+    </div>
+    <div id="id_PN_MiddleLeft" class="PN_MiddleLeft">
+      {% for dados in config.dados.1.dados %}
+        {{ dados.data }} - {{ dados.usuario.first_name }}
+        <h3>{{ dados.chamada }}</h3>
+        <hr>
+      {% endfor%}
+    </div>
+    <div id="id_PN_MiddleRight" class="PN_MiddleRight">
+      {% for dados in config.dados.2.dados %}
+        {{ dados.data }} - {{ dados.usuario.first_name }}
+        <h3>{{ dados.chamada }}</h3>
+        <hr>
+      {% endfor%}
+    </div>
+    <div id="id_PN_Right" class="PN_Right">
+      {% for dados in config.dados.3.dados %}
+        {{ dados.data }} - {{ dados.usuario.first_name }}
+        <h3>{{ dados.chamada }}</h3>
+        <hr>
+      {% endfor%}
+    </div>
+    <div id="id_PN_Last" class="PN_Last">
+      {% for dados in config.dados.4.dados %}
+        {{ dados.data }} - {{ dados.usuario.first_name }}
+        <h3>{{ dados.chamada }}</h3>
+        <hr>
+      {% endfor%}
+    </div>
+  </div>
+</body>
+</html>
+<script>
+  function myCreateCookie(name, value, hours, minutes, seconds) {
+    if (hours || minutes || seconds) {
+      var date = new Date();
+      date.setTime(date.getTime()+(hours*60*60*1000)+(minutes*60*1000)+(seconds*1000));
+      var expires = "; expires="+date.toGMTString();
+    } else {
+      var expires = "";
+    }
+    document.cookie = name+"="+value+expires+"; path=/";
+  }
+
+  if (document.cookie.split(';').filter((item) =>
+      item.trim().startsWith('Tussor_Aviso_RH=')).length == 0) {
+    $('#aviso_rh').removeClass('invisible').addClass('visible');
+    myCreateCookie("Tussor_Aviso_RH", "RH", 1, 0, 0);
+  }
+</script>
