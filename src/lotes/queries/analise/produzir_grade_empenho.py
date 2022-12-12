@@ -27,7 +27,10 @@ from lotes.models import (
     RegraLMTamanho,
 )
 from lotes.queries.op.producao import op_producao
-from lotes.queries.pedido import sortimento
+from lotes.queries.pedido import (
+    grade_pedido,
+    sortimento,
+)
 from lotes.views.parametros_functions import grade_meta_giro
 
 __all__ = ['MountProduzirGradeEmpenho']
@@ -148,6 +151,18 @@ class MountProduzirGradeEmpenho():
             row['qtd'] = row['qtd_emp'] + row['qtd_sol']
         return empenhado
 
+    def get_grade_pedido(self):
+        return grade_pedido.query(
+            self.cursor,
+            modelo=self.modelo,
+            periodo=f':{self.periodo}',
+            cancelado='n',
+            liberado='s',
+            faturavel='f',
+            solicitado='n',
+            agrupado_em_solicitacao='n',
+        )
+
     def query(self):
         if self.cache_get():
             return self.mount_produzir
@@ -217,22 +232,10 @@ class MountProduzirGradeEmpenho():
 
         self.periodo = '' if self.lead == 0 else self.lead + dias_alem_lead
 
-        gp_header, gp_fields, gp_data, gp_style, total_ped = \
-            sortimento(
-                self.cursor, tipo_sort='c', descr_sort=False, modelo=self.modelo,
-                cancelado='n', faturavel='f', total='Total', solicitado='n',
-                agrupado='n', pedido_liberado='s',
-                periodo=':{}'.format(self.periodo))
+        gped, total_ped = self.to_grade_e_total(
+            dados=self.get_grade_pedido()
+        )
 
-        gped = None
-        if total_ped != 0:
-            gped = {
-                'headers': gp_header,
-                'fields': gp_fields,
-                'data': gp_data,
-                'style': gp_style,
-            }
-            self.gzerada = self.og.update_gzerada(self.gzerada, gped)
 
         refs_adicionadas = meta_ref_incluir(self.cursor, self.modelo)
 
