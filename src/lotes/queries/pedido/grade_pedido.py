@@ -4,12 +4,25 @@ from utils.functions import arg_def
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
-from cd.queries.novo_modulo.gerais import get_filtra_ref
+from lotes.functions.varias import modelo_de_ref
 
 __all__ = ['query']
 
 
-def query(cursor, **kwargs):
+def query(
+    cursor,
+    empresa=1,
+    pedido=None,
+    ref=None,
+    modelo=None,
+    periodo=None,
+    cancelado='t',
+    liberado='t',
+    faturado='t',
+    faturavel='t',
+    solicitado='t',
+    agrupado_em_solicitacao='t',
+):
     """Return total de quantidade pedida por referência/cor/tamanho
     Filtra por:
         empresa - default 1 (matriz)
@@ -29,6 +42,10 @@ def query(cursor, **kwargs):
         cancelado - default 't' todos os pedidos
             'c' ou 'i' - cancelado ou inativo
             'n' ou 'a' - não cancelado ou ativo
+        liberado - default 't' todos os pedidos
+            pedido liberado (SITUACAO_VENDA = 0)
+            's' - liberado
+            'n' - não liberado
         faturado - default 't' todos os pedidos
             'f' - faturado (obs.: não verifica se foi devolvido)
             'n' - não faturado
@@ -40,29 +57,11 @@ def query(cursor, **kwargs):
             questão e esta solicitação está com situação diferente de zero
             's' - solicitado
             'n' - não solicitado
-        agrupado - default 't' todos os pedidos
+        agrupado_em_solicitacao - default 't' todos os pedidos
             agrupado em empenho para varejo
             's' - agrupado
             'n' - não agrupado
-        pedido_liberado - default 't' todos os pedidos
-            pedido liberado (SITUACAO_VENDA = 0)
-            's' - liberado
-            'n' - não liberado
     """
-    def argdef(arg, default):
-        return arg_def(kwargs, arg, default)
-
-    empresa = argdef('empresa', 1)
-    pedido = argdef('pedido', None)
-    ref = argdef('ref', None)
-    modelo = argdef('modelo', None)
-    periodo = argdef('periodo', None)
-    cancelado = argdef('cancelado', 't')
-    faturado = argdef('faturado', 't')
-    faturavel = argdef('faturavel', 't')
-    solicitado = argdef('solicitado', 't')
-    agrupado = argdef('agrupado', 't')
-    pedido_liberado = argdef('pedido_liberado', 't')
 
     filtro_empresa = f"""--
         AND ped.CODIGO_EMPRESA = {empresa}
@@ -114,6 +113,17 @@ def query(cursor, **kwargs):
     else:
         filtro_cancelado = ''
 
+    if liberado == 's':
+        filtro_liberado = """--
+            AND ped.SITUACAO_VENDA = 0
+        """
+    elif liberado == 'n':
+        filtro_liberado = """--
+            AND ped.SITUACAO_VENDA <> 0
+        """
+    else:
+        filtro_liberado = ''
+
     if faturado == 't':
         filtro_faturado = ''
     else:
@@ -144,11 +154,11 @@ def query(cursor, **kwargs):
                 )
         """
 
-    if agrupado == 't':
-        filtro_agrupado = ''
+    if agrupado_em_solicitacao == 't':
+        filtro_agrupado_em_solicitacao = ''
     else:
-        exists = 'NOT' if agrupado == 'n' else ''
-        filtro_agrupado = f"""--
+        exists = 'NOT' if agrupado_em_solicitacao == 'n' else ''
+        filtro_agrupado_em_solicitacao = f"""--
             AND {exists} EXISTS
                 ( SELECT
                     1
@@ -157,17 +167,6 @@ def query(cursor, **kwargs):
                     AND iped.AGRUPADOR_PRODUCAO <> 0
                 )
         """
-
-    if pedido_liberado == 's':
-        filtro_pedido_liberado = """--
-            AND ped.SITUACAO_VENDA = 0
-        """
-    elif pedido_liberado == 'n':
-        filtro_pedido_liberado = """--
-            AND ped.SITUACAO_VENDA <> 0
-        """
-    else:
-        filtro_pedido_liberado = ''
 
     sql=f"""
         SELECT
@@ -204,11 +203,11 @@ def query(cursor, **kwargs):
           {filtra_modelo} -- filtra_modelo
           {filtra_periodo} -- filtra_periodo
           {filtro_cancelado} -- filtro_cancelado
+          {filtro_liberado} -- filtro_liberado
           {filtro_faturado} -- filtro_faturado
           {filtro_faturavel} -- filtro_faturavel
           {filtro_solicitado} -- filtro_solicitado
-          {filtro_agrupado} -- filtro_agrupado
-          {filtro_pedido_liberado} -- filtro_pedido_liberado
+          {filtro_agrupado_em_solicitacao} -- filtro_agrupado_em_solicitacao
         GROUP BY
           i.CD_IT_PE_GRUPO
         , i.CD_IT_PE_ITEM
@@ -218,5 +217,8 @@ def query(cursor, **kwargs):
 
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
+
+    for row in dados:
+        row['modelo'] = modelo_de_ref(row['ref'])
 
     return dados
