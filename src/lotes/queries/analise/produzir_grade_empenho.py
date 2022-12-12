@@ -163,6 +163,63 @@ class MountProduzirGradeEmpenho():
             agrupado_em_solicitacao='n',
         )
 
+    def add_refs_pacote(self, gped, total_ped):
+        refs_adicionadas = meta_ref_incluir(self.cursor, self.modelo)
+        pprint(refs_adicionadas)
+
+        for row_ref in refs_adicionadas:
+            gadd = None
+            if row_ref['ok']:
+
+                ga_header, ga_fields, ga_data, ga_style, total_add = \
+                    sortimento(
+                        self.cursor, tipo_sort='c', descr_sort=False, ref=row_ref['referencia'],
+                        cancelado='n', faturavel='f', total='Total', solicitado='n',
+                        pedido_liberado='s',
+                        periodo=':{}'.format(self.periodo))
+
+                if total_add != 0:
+                    gadd = {
+                        'headers': ga_header,
+                        'fields': ga_fields,
+                        'data': ga_data,
+                        'style': ga_style,
+                    }
+
+            if gadd:
+                gpac = copy.deepcopy(self.gzerada)
+                gadd_sortimento_field = gadd['fields'][0]
+                gadd_total_field = gadd['fields'][-1]
+                gpac_sortimento_field = gpac['fields'][0]
+                for ga_row in gadd['data']:
+                    if (
+                        ga_row[gadd_total_field] > 0 and
+                        ga_row[gadd_sortimento_field] != 'Total'
+                    ):
+                        cor0 = ga_row[gadd_sortimento_field].lstrip("0")
+                        ga_row_quants = {
+                            key: ga_row[key]
+                            for key in ga_row
+                            if key not in (gadd_sortimento_field, gadd_total_field)
+                        }
+                        ga_row_comb = row_ref['cores_dict'][cor0]
+                        for ga_row_comb_cor0 in ga_row_comb:
+                            ga_row_comb_cor = ga_row_comb_cor0.zfill(6)
+                            gpac_row = [
+                                row
+                                for row in gpac['data']
+                                if row[gpac_sortimento_field] == ga_row_comb_cor
+                            ][0]
+                            for ga_row_comb_tam in ga_row_quants:
+                                gpac_row[ga_row_comb_tam] += (
+                                    ga_row_quants[ga_row_comb_tam] *
+                                    ga_row_comb[ga_row_comb_cor0]
+                                )
+                gped = self.og.soma_grades(gped, gpac)
+                total_ped += total_add
+
+        return gped, total_ped
+
     def query(self):
         if self.cache_get():
             return self.mount_produzir
@@ -236,59 +293,7 @@ class MountProduzirGradeEmpenho():
             dados=self.get_grade_pedido()
         )
 
-
-        refs_adicionadas = meta_ref_incluir(self.cursor, self.modelo)
-
-        for row_ref in refs_adicionadas:
-            gadd = None
-            if row_ref['ok']:
-
-                ga_header, ga_fields, ga_data, ga_style, total_add = \
-                    sortimento(
-                        self.cursor, tipo_sort='c', descr_sort=False, ref=row_ref['referencia'],
-                        cancelado='n', faturavel='f', total='Total', solicitado='n',
-                        pedido_liberado='s',
-                        periodo=':{}'.format(self.periodo))
-
-                if total_add != 0:
-                    gadd = {
-                        'headers': ga_header,
-                        'fields': ga_fields,
-                        'data': ga_data,
-                        'style': ga_style,
-                    }
-
-            if gadd:
-                gpac = copy.deepcopy(self.gzerada)
-                gadd_sortimento_field = gadd['fields'][0]
-                gadd_total_field = gadd['fields'][-1]
-                gpac_sortimento_field = gpac['fields'][0]
-                for ga_row in gadd['data']:
-                    if (
-                        ga_row[gadd_total_field] > 0 and
-                        ga_row[gadd_sortimento_field] != 'Total'
-                    ):
-                        cor0 = ga_row[gadd_sortimento_field].lstrip("0")
-                        ga_row_quants = {
-                            key: ga_row[key]
-                            for key in ga_row
-                            if key not in (gadd_sortimento_field, gadd_total_field)
-                        }
-                        ga_row_comb = row_ref['cores_dict'][cor0]
-                        for ga_row_comb_cor0 in ga_row_comb:
-                            ga_row_comb_cor = ga_row_comb_cor0.zfill(6)
-                            gpac_row = [
-                                row
-                                for row in gpac['data']
-                                if row[gpac_sortimento_field] == ga_row_comb_cor
-                            ][0]
-                            for ga_row_comb_tam in ga_row_quants:
-                                gpac_row[ga_row_comb_tam] += (
-                                    ga_row_quants[ga_row_comb_tam] *
-                                    ga_row_comb[ga_row_comb_cor0]
-                                )
-                gped = self.og.soma_grades(gped, gpac)
-                total_ped += total_add
+        gped, total_ped = self.add_refs_pacote(gped, total_ped)
 
         # Utiliza grade zerada para igualar cores e tamanhos das grades base
         # dos cálculos
