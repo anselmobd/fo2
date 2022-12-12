@@ -35,7 +35,7 @@ def produzir_modelo_grade(request, modelo):
     }
 
     try:
-        dados_produzir = MountProduzirGradeEmpenho(cursor, modelo).query()
+        dados_produzir = MountProduzirGradeEmpenho(cursor, modelo).mount_context()
 
         data['modelo'] = modelo
         data['meta_estoque'] = get_total(dados_produzir, 'gme')

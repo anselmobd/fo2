@@ -208,7 +208,7 @@ class MountProduzirGradeEmpenho():
 
         return gped, total_ped
 
-    def query(self):
+    def mount_context(self):
         if self.cache_get():
             return self.context
 
