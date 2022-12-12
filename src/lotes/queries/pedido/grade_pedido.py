@@ -10,21 +10,59 @@ __all__ = ['query']
 
 
 def query(cursor, **kwargs):
+    """Return total de quantidade pedida por referência/cor/tamanho
+    Filtra por:
+        empresa - default 1 (matriz)
+        pedido - default não filtra
+            um número de pedido específico
+        ref - default não filtra
+            referência, que pode ser unica (string)
+            ou tupla ou lista de referências
+        modelo - default não filtra
+            um modelo específico
+        periodo - default não filtra
+            período de data de embarque do pedido
+            string com ':' separando dois números (opcionais)
+            significando quantidade de dias após o dia corrente.
+            o primeiro referente à data inicial (não inclusa) e
+            o segundo referente à data final (inclusa) do período.
+        cancelado - default 't' todos os pedidos
+            'c' ou 'i' - cancelado ou inativo
+            'n' ou 'a' - não cancelado ou ativo
+        faturado - default 't' todos os pedidos
+            'f' - faturado (obs.: não verifica se foi devolvido)
+            'n' - não faturado
+        faturavel - default 't' todos os pedidos
+            'f' - faturavel (não faturado)
+            'n' - não faturavel (faturado - obs.: não verifica se foi devolvido)
+        solicitado - default 't' todos os pedidos
+            existe solicitação do com pedido destino igual ao pedido em 
+            questão e esta solicitação está com situação diferente de zero
+            's' - solicitado
+            'n' - não solicitado
+        agrupado - default 't' todos os pedidos
+            agrupado em empenho para varejo
+            's' - agrupado
+            'n' - não agrupado
+        pedido_liberado - default 't' todos os pedidos
+            pedido liberado (SITUACAO_VENDA = 0)
+            's' - liberado
+            'n' - não liberado
+    """
     def argdef(arg, default):
         return arg_def(kwargs, arg, default)
 
-    empresa = argdef('empresa', 1)  # default tussor matriz
+    empresa = argdef('empresa', 1)
     pedido = argdef('pedido', None)
     ref = argdef('ref', None)
     modelo = argdef('modelo', None)
     periodo = argdef('periodo', None)
-    cancelado = argdef('cancelado', 't')  # default todos os pedidos
-    faturado = argdef('faturado', 't')  # default todos os pedidos
-    faturavel = argdef('faturavel', 't')  # default todos os pedidos
-    solicitado = argdef('solicitado', 't')  # default todos os pedidos
-    agrupado = argdef('agrupado', 't')  # default todos os pedidos
-    pedido_liberado = argdef('pedido_liberado', 't')  # default todos os pedidos
-    total = argdef('total', None)
+    cancelado = argdef('cancelado', 't')
+    faturado = argdef('faturado', 't')
+    faturavel = argdef('faturavel', 't')
+    solicitado = argdef('solicitado', 't')
+    agrupado = argdef('agrupado', 't')
+    pedido_liberado = argdef('pedido_liberado', 't')
 
     filtro_empresa = f"""--
         AND ped.CODIGO_EMPRESA = {empresa}
@@ -53,7 +91,8 @@ def query(cursor, **kwargs):
              ) = '{modelo}'
     """ if modelo else ''
 
-    if periodo:
+    filtra_periodo = ''
+    if periodo and ':' in periodo:
         periodo_list = periodo.split(':')
         if periodo_list[0] != '':
             filtra_periodo += f"""--
@@ -63,43 +102,40 @@ def query(cursor, **kwargs):
             filtra_periodo += f"""--
                 AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {periodo_list[1]}
             """
-    else:
-        filtra_periodo = ''
 
-    if cancelado in ['c', 'i']:  # cancelado ou inativo
+    if cancelado in ['c', 'i']:
         filtro_cancelado = """--
-            AND ped.STATUS_PEDIDO = 5 -- cancelado
+            AND ped.STATUS_PEDIDO = 5
         """
-    elif cancelado in ['n', 'a']:  # não cancelado ou ativo
+    elif cancelado in ['n', 'a']:
         filtro_cancelado = """--
-            AND ped.STATUS_PEDIDO <> 5 -- não cancelado
+            AND ped.STATUS_PEDIDO <> 5
         """
     else:
         filtro_cancelado = ''
 
-    if faturado == 'f':  # faturado
-        filtro_faturado = """--
-            AND f.NUM_NOTA_FISCAL IS NOT NULL -- faturado
-        """
-    elif faturado == 'n':  # não faturado
-        filtro_faturado = """--
-            AND f.NUM_NOTA_FISCAL IS NULL -- não faturado
-        """
-    else:
+    if faturado == 't':
         filtro_faturado = ''
+    else:
+        exists = 'NOT' if faturado == 'f' else ''
+        filtro_faturado = f"""--
+            AND f.NUM_NOTA_FISCAL IS {exists} NULL
+        """
 
-    filtro_faturavel = ''
-    if faturavel == 'f':  # faturavel
-        filtro_faturavel = """--
-            AND fok.NUM_NOTA_FISCAL IS NULL"""
-    elif faturavel == 'n':  # não faturavel
-        filtro_faturavel = """--
-            AND fok.NUM_NOTA_FISCAL IS NOT NULL"""
+    if faturavel == 't':
+        filtro_faturavel = ''
+    else:
+        exists = 'NOT' if faturavel == 'n' else ''
+        filtro_faturavel = f"""--
+            AND fok.NUM_NOTA_FISCAL IS {exists} NULL
+        """
 
-    filtro_solicitado = ''
-    if solicitado == 's':  # solicitado
-        filtro_solicitado = """--
-            AND EXISTS
+    if solicitado == 't':
+        filtro_solicitado = ''
+    else:
+        exists = 'NOT' if solicitado == 'n' else ''
+        filtro_solicitado = f"""--
+            AND {exists} EXISTS
                 ( SELECT
                     1
                   FROM pcpc_044 sl -- solicitação / lote 
@@ -107,31 +143,13 @@ def query(cursor, **kwargs):
                     AND sl.SITUACAO <> 0
                 )
         """
-    elif solicitado == 'n':  # não solicitado
-        filtro_solicitado = """--
-            AND NOT EXISTS
-                ( SELECT
-                    1
-                  FROM pcpc_044 sl -- solicitação / lote 
-                  WHERE sl.PEDIDO_DESTINO = i.PEDIDO_VENDA
-                    AND sl.SITUACAO <> 0
-                )
-        """
 
-    filtro_agrupado = ''
-    if agrupado == 's':  # agrupado em empenho para varejo
-        filtro_agrupado = """--
-            AND EXISTS
-                ( SELECT
-                    1
-                  FROM PEDI_110 iped -- item de pedido de venda
-                  WHERE iped.PEDIDO_VENDA = i.PEDIDO_VENDA
-                    AND iped.AGRUPADOR_PRODUCAO <> 0
-                )
-        """
-    elif agrupado == 'n':  # agrupado em empenho para varejo
-        filtro_agrupado = """--
-            AND NOT EXISTS
+    if agrupado == 't':
+        filtro_agrupado = ''
+    else:
+        exists = 'NOT' if agrupado == 'n' else ''
+        filtro_agrupado = f"""--
+            AND {exists} EXISTS
                 ( SELECT
                     1
                   FROM PEDI_110 iped -- item de pedido de venda
@@ -140,13 +158,17 @@ def query(cursor, **kwargs):
                 )
         """
 
-    filtro_pedido_liberado = ''
-    if pedido_liberado == 's':  # pedido_liberado
+    if pedido_liberado == 's':
         filtro_pedido_liberado = """--
             AND ped.SITUACAO_VENDA = 0
         """
+    elif pedido_liberado == 'n':
+        filtro_pedido_liberado = """--
+            AND ped.SITUACAO_VENDA <> 0
+        """
+    else:
+        filtro_pedido_liberado = ''
 
-    # sortimento
     sql=f"""
         SELECT
           i.CD_IT_PE_GRUPO REF
