@@ -81,7 +81,7 @@ def query(
             refs = {ref, }
         refs_sql = ', '.join(list(refs))
         filtra_ref = f"""--
-            AND r.REFERENCIA in ({refs_sql})
+            AND r.REFERENCIA in ('{refs_sql}')
         """
     else:
         filtra_ref = ''
