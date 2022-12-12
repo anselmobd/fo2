@@ -171,21 +171,9 @@ class MountProduzirGradeEmpenho():
         for row_ref in refs_adicionadas:
             gadd = None
             if row_ref['ok']:
-
-                ga_header, ga_fields, ga_data, ga_style, total_add = \
-                    sortimento(
-                        self.cursor, tipo_sort='c', descr_sort=False, ref=row_ref['referencia'],
-                        cancelado='n', faturavel='f', total='Total', solicitado='n',
-                        pedido_liberado='s',
-                        periodo=':{}'.format(self.periodo))
-
-                if total_add != 0:
-                    gadd = {
-                        'headers': ga_header,
-                        'fields': ga_fields,
-                        'data': ga_data,
-                        'style': ga_style,
-                    }
+                gadd, total_add = self.to_grade_e_total(
+                    dados=self.get_grade_pedido(ref=row_ref['referencia'])
+                )
 
             if gadd:
                 gpac = copy.deepcopy(self.gzerada)
