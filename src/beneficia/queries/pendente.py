@@ -100,6 +100,9 @@ def query(
         )
         SELECT DISTINCT 
           bt.ORDEM_PRODUCAO OB
+        , ob.GRUPO_MAQUINA GRUP_MAQ
+        , ob.SUBGRUPO_MAQUINA SUB_MAQ 
+        , ob.NUMERO_MAQUINA NUM_MAQ
         , bt.CODIGO_ESTAGIO EST
         , bt.SEQ_OPERACAO SEQ_OP
         , t.QTDE_QUILOS_REAL QUILOS
@@ -130,6 +133,7 @@ def query(
 
     ob2s = set()
     for row in dados:
+        row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
         row['tipo_tecido'] = dict_tipo_tecido.get(row['tipo_ref'], "Desconhecido")
         ob2s.add(row['ob'])
 

@@ -78,6 +78,7 @@ class Pendente(O2BaseGetPostView):
     def table_hfs(self):
         TableDefsHpSD({
             'ob': ["OB2"],
+            'maq': ["Equipamento"],
             'op': ["OP"],
             'tipo_tecido': ["Tipo tecido"],
             'cor': ["Cor"],
