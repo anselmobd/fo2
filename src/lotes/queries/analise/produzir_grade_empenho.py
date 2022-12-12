@@ -151,10 +151,11 @@ class MountProduzirGradeEmpenho():
             row['qtd'] = row['qtd_emp'] + row['qtd_sol']
         return empenhado
 
-    def get_grade_pedido(self):
+    def get_grade_pedido(self, ref=None, modelo=None):
         return grade_pedido.query(
             self.cursor,
-            modelo=self.modelo,
+            ref=ref,
+            modelo=modelo,
             periodo=f':{self.periodo}',
             cancelado='n',
             liberado='s',
@@ -290,7 +291,7 @@ class MountProduzirGradeEmpenho():
         self.periodo = '' if self.lead == 0 else self.lead + dias_alem_lead
 
         gped, total_ped = self.to_grade_e_total(
-            dados=self.get_grade_pedido()
+            dados=self.get_grade_pedido(modelo=self.modelo)
         )
 
         gped, total_ped = self.add_refs_pacote(gped, total_ped)
