@@ -205,7 +205,7 @@ def query(
     sql=f"""
         SELECT
           {sql_agrupamento[agrupamento]['select']}
-        , sum(i.QTDE_PEDIDA) QUANTIDADE
+        , sum(i.QTDE_PEDIDA) QTD
         FROM PEDI_110 i -- item de pedido de venda
         JOIN BASI_030 r
           ON r.REFERENCIA = i.CD_IT_PE_GRUPO
