@@ -25,7 +25,7 @@ class Pendente(O2BaseGetPostView):
         self.form_class_has_initial = True
         self.cleaned_data2self = True
 
-    def get_pendente(self):
+    def get_dados(self):
         return pendente_query(
             self.cursor,
             data_de=self.data_de,
@@ -35,15 +35,15 @@ class Pendente(O2BaseGetPostView):
             tipo=2,
         )
 
-    def mount_titulo(self, data):
-        return {
+    def init_table(self):
+        return  {
             'titulo': 'OB2',
-            'data': data,
+            'data': self.dados,
             'vazio': "Sem pendente",
         }
 
-    def mount_link(self, pendente):
-        for row in pendente['data']:
+    def prepara_dados(self):
+        for row in self.dados:
             row['ob|TARGET'] = '_blank'
             row['ob|LINK'] = reverse(
                 'beneficia:ob__get',
@@ -62,9 +62,9 @@ class Pendente(O2BaseGetPostView):
             else:
                 row['op'] = '-'
 
-    def mount_total(self, pendente):
+    def totaliza(self):
         totalize_data(
-            pendente['data'],
+            self.dados,
             {
                 'sum': ['quilos'],
                 'descr': {'ob': 'Total:'},
@@ -75,27 +75,27 @@ class Pendente(O2BaseGetPostView):
             }
         )
 
-    def mount_hfs(self, pendente):
+    def table_hfs(self):
         TableDefsHpSD({
             'ob': ["OB2"],
             'op': ["OP"],
             'tipo_tecido': ["Tipo tecido"],
             'cor': ["Cor"],
             'quilos': ["Quilos", 'r', 3],
-        }).hfs_dict(context=pendente)
-        pendente.update({
+        }).hfs_dict(context=self.table)
+        self.table.update({
             'safe': ['op'],
         })
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        pendente_data = self.get_pendente()
-        pendente = self.mount_titulo(pendente_data)
+        self.dados = self.get_dados()
+        self.table = self.init_table()
 
-        if pendente_data:
-            self.mount_link(pendente)
-            self.mount_total(pendente)
-            self.mount_hfs(pendente)
+        if self.dados:
+            self.prepara_dados()
+            self.totaliza()
+            self.table_hfs()
 
-        self.context['pendente'] = pendente
+        self.context['pendente'] = self.table
