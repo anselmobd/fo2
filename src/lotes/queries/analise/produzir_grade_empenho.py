@@ -285,6 +285,7 @@ class MountProduzirGradeEmpenho():
                                     ga_row_comb[ga_row_comb_cor0]
                                 )
                 gped = self.og.soma_grades(gped, gpac)
+                total_ped += total_add
 
         # Utiliza grade zerada para igualar cores e tamanhos das grades base
         # dos cálculos
