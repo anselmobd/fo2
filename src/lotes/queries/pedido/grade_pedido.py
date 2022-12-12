@@ -11,6 +11,7 @@ __all__ = ['query']
 
 def query(
     cursor,
+    agrupamento='ct',
     empresa=1,
     pedido=None,
     ref=None,
@@ -23,8 +24,12 @@ def query(
     solicitado='t',
     agrupado_em_solicitacao='t',
 ):
-    """Return total de quantidade pedida por referência/cor/tamanho
+    """Return total de quantidade pedida por
+    agrupamento (referência e/ou cor e/ou tamanho)
     Filtra por:
+        agrupamento - default 'ct' (cor, tamanho)
+            totaliza por quais campos
+            'rct' (ref., cor, tamanho)
         empresa - default 1 (matriz)
         pedido - default não filtra
             um número de pedido específico
@@ -58,7 +63,7 @@ def query(
             's' - solicitado
             'n' - não solicitado
         agrupado_em_solicitacao - default 't' todos os pedidos
-            agrupado em empenho para varejo
+            pedido agrupado em empenho para varejo
             's' - agrupado
             'n' - não agrupado
     """
@@ -168,12 +173,38 @@ def query(
                 )
         """
 
+    sql_agrupamento = {
+        'rct': {
+            'select': """--
+                  i.CD_IT_PE_GRUPO REF
+                , i.CD_IT_PE_ITEM COR
+                , i.CD_IT_PE_SUBGRUPO TAM
+                , t.ORDEM_TAMANHO ORDEM_TAM
+            """,
+            'group_order': """--
+                  i.CD_IT_PE_GRUPO
+                , i.CD_IT_PE_ITEM
+                , t.ORDEM_TAMANHO
+                , i.CD_IT_PE_SUBGRUPO
+            """,
+        },
+        'ct': {
+            'select': """--
+                  i.CD_IT_PE_ITEM COR
+                , i.CD_IT_PE_SUBGRUPO TAM
+                , t.ORDEM_TAMANHO ORDEM_TAM
+            """,
+            'group_order': """--
+                  i.CD_IT_PE_ITEM
+                , t.ORDEM_TAMANHO
+                , i.CD_IT_PE_SUBGRUPO
+            """,
+        },
+    }
+
     sql=f"""
         SELECT
-          i.CD_IT_PE_GRUPO REF
-        , i.CD_IT_PE_ITEM COR
-        , i.CD_IT_PE_SUBGRUPO TAM
-        , t.ORDEM_TAMANHO ORDEM_TAM
+          {sql_agrupamento[agrupamento]['select']}
         , sum(i.QTDE_PEDIDA) QUANTIDADE
         FROM PEDI_110 i -- item de pedido de venda
         JOIN BASI_030 r
@@ -209,16 +240,16 @@ def query(
           {filtro_solicitado} -- filtro_solicitado
           {filtro_agrupado_em_solicitacao} -- filtro_agrupado_em_solicitacao
         GROUP BY
-          i.CD_IT_PE_GRUPO
-        , i.CD_IT_PE_ITEM
-        , i.CD_IT_PE_SUBGRUPO
-        , t.ORDEM_TAMANHO
+          {sql_agrupamento[agrupamento]['group_order']}
+        ORDER BY
+          {sql_agrupamento[agrupamento]['group_order']}
     """
 
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
 
-    for row in dados:
-        row['modelo'] = modelo_de_ref(row['ref'])
+    if dados and 'ref' in dados[0]:
+        for row in dados:
+            row['modelo'] = modelo_de_ref(row['ref'])
 
     return dados
