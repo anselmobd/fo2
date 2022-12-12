@@ -47,13 +47,13 @@ class MountProduzirGradeEmpenho():
             'lotes/queries/analise/produzir_grade_empenho/MPGE/query',
             self.modelo,
         )
-        self.mount_produzir = cache.get(self.key_cache)
-        if self.mount_produzir:
+        self.context = cache.get(self.key_cache)
+        if self.context:
             loginfo('cached '+self.key_cache)
             return True
 
     def cache_set(self):
-        cache.set(self.key_cache, self.mount_produzir, timeout=timeout.MINUTES_5)
+        cache.set(self.key_cache, self.context, timeout=timeout.MINUTES_5)
         loginfo('calculated '+self.key_cache)
 
     def regra_colecao(self):
@@ -166,7 +166,6 @@ class MountProduzirGradeEmpenho():
 
     def add_refs_pacote(self, gped, total_ped):
         refs_adicionadas = meta_ref_incluir(self.cursor, self.modelo)
-        pprint(refs_adicionadas)
 
         for row_ref in refs_adicionadas:
             gadd = None
@@ -211,26 +210,26 @@ class MountProduzirGradeEmpenho():
 
     def query(self):
         if self.cache_get():
-            return self.mount_produzir
+            return self.context
 
         self.og = OperacoesGrade()
         self.modelo = f"{self.modelo}"
         self.modelo = int(self.modelo)
 
-        self.mount_produzir = {
+        self.context = {
             'modelo': self.modelo,
         }
 
         data_modelo = modelo_inform(self.cursor, self.modelo)
         if not data_modelo:
-            self.mount_produzir.update({
+            self.context.update({
                 'msg_erro': 'Modelo não encontrado',
             })
-            return self.mount_produzir
+            return self.context
 
         row_modelo = data_modelo[0]
         self.colecao = row_modelo['CODIGO_COLECAO']
-        self.mount_produzir.update({
+        self.context.update({
             'colecao': row_modelo['COLECAO'],
             'descr': row_modelo['DESCR'],
         })
@@ -239,11 +238,11 @@ class MountProduzirGradeEmpenho():
 
         metas = self.get_meta_estoque()
         if not metas:
-            self.mount_produzir.update({
+            self.context.update({
                 'msg_meta_estoque': 'Modelo sem meta de estoque definida',
                 'msg_meta_giro': 'Modelo sem meta de giro definida',
             })
-            return self.mount_produzir
+            return self.context
         else:
             self.meta = metas[0]
 
@@ -252,12 +251,12 @@ class MountProduzirGradeEmpenho():
         self.gme = self.get_gme()
 
         self.lead = lead_de_modelo(self.cursor, self.modelo)
-        self.mount_produzir['lead'] = self.lead
+        self.context['lead'] = self.lead
 
         self.gmg = self.get_gmg()
 
         if not (self.gme or self.gmg):
-            return self.mount_produzir
+            return self.context
 
         gopa, total_opa = self.to_grade_e_total(
             dados=self.get_em_producao()
@@ -272,7 +271,7 @@ class MountProduzirGradeEmpenho():
         )
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
-        self.mount_produzir.update({
+        self.context.update({
             'dias_alem_lead': dias_alem_lead,
         })
 
@@ -288,37 +287,37 @@ class MountProduzirGradeEmpenho():
         # dos cálculos
         if self.gme is not None:
             self.gme = self.og.soma_grades(self.gzerada, self.gme)
-            self.mount_produzir.update({
+            self.context.update({
                 'gme': self.gme,
             })
 
         if self.gmg is not None:
             self.gmg = self.og.soma_grades(self.gzerada, self.gmg)
-            self.mount_produzir.update({
+            self.context.update({
                 'gmg': self.gmg,
             })
 
         if gopa is not None:
             gopa = self.og.soma_grades(self.gzerada, gopa)
-            self.mount_produzir.update({
+            self.context.update({
                 'gopa': gopa,
             })
 
         if ginv is not None:
             ginv = self.og.soma_grades(self.gzerada, ginv)
-            self.mount_produzir.update({
+            self.context.update({
                 'ginv': ginv,
             })
 
         if gsol is not None:
             gsol = self.og.soma_grades(self.gzerada, gsol)
-            self.mount_produzir.update({
+            self.context.update({
                 'gsol': gsol,
             })
 
         if gped is not None:
             gped = self.og.soma_grades(self.gzerada, gped)
-            self.mount_produzir.update({
+            self.context.update({
                 'gped': gped,
             })
 
@@ -331,14 +330,14 @@ class MountProduzirGradeEmpenho():
             else:
                 gm = self.og.soma_grades(self.gme, self.gmg)
 
-            self.mount_produzir.update({
+            self.context.update({
                 'gm': gm,
             })
         
         gopa_ncd = None
         if total_inv != 0 and total_opa != total_inv:
             gopa_ncd = self.og.subtrai_grades(gopa, ginv)
-            self.mount_produzir.update({
+            self.context.update({
                 'gopa_ncd': gopa_ncd,
             })
 
@@ -363,7 +362,7 @@ class MountProduzirGradeEmpenho():
         gopp = None
         if gopp2:
             gopp = gopp2
-            self.mount_produzir.update({
+            self.context.update({
                 'gopp': gopp,
             })
 
@@ -381,11 +380,11 @@ class MountProduzirGradeEmpenho():
 
         if gresult is not None:
             gap = self.og.opera_grade(gresult, lambda x: x if x > 0 else 0)
-            self.mount_produzir.update({
+            self.context.update({
                 'gap': gap,
             })
             gex = self.og.opera_grade(gresult, lambda x: -x if x < 0 else 0)
-            self.mount_produzir.update({
+            self.context.update({
                 'gex': gex,
             })
 
@@ -432,7 +431,7 @@ class MountProduzirGradeEmpenho():
                                 'font-weight: bold; color: red'
 
             if glm != gap:
-                self.mount_produzir.update({
+                self.context.update({
                     'glm': glm,
                 })
 
@@ -485,10 +484,10 @@ class MountProduzirGradeEmpenho():
                             row_cor[tam] += lm_cor_acresc
 
             if glc != glm:
-                self.mount_produzir.update({
+                self.context.update({
                     'glc': glc,
                 })
 
         self.cache_set()
 
-        return self.mount_produzir
+        return self.context
