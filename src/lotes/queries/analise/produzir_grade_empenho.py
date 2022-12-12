@@ -215,17 +215,14 @@ class MountProduzirGradeEmpenho():
             'dias_alem_lead': dias_alem_lead,
         })
 
-        if self.lead == 0:
-            periodo = ''
-        else:
-            periodo = self.lead + dias_alem_lead
+        self.periodo = '' if self.lead == 0 else self.lead + dias_alem_lead
 
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
             sortimento(
                 self.cursor, tipo_sort='c', descr_sort=False, modelo=self.modelo,
                 cancelado='n', faturavel='f', total='Total', solicitado='n',
                 agrupado='n', pedido_liberado='s',
-                periodo=':{}'.format(periodo))
+                periodo=':{}'.format(self.periodo))
 
         gped = None
         if total_ped != 0:
@@ -248,7 +245,7 @@ class MountProduzirGradeEmpenho():
                         self.cursor, tipo_sort='c', descr_sort=False, ref=row_ref['referencia'],
                         cancelado='n', faturavel='f', total='Total', solicitado='n',
                         pedido_liberado='s',
-                        periodo=':{}'.format(periodo))
+                        periodo=':{}'.format(self.periodo))
 
                 if total_add != 0:
                     gadd = {
