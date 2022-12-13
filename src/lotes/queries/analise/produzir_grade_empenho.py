@@ -169,11 +169,26 @@ class MountProduzirGradeEmpenho():
     def add_refs_pacote(self, gped, total_ped):
         refs_adicionadas = meta_ref_incluir(self.cursor, self.modelo)
 
+        refs_list = [
+            row_ref['referencia']
+            for row_ref in refs_adicionadas
+            if row_ref['ok']
+        ]
+        dados_refs=(
+            self.get_grade_pedido(agrupamento='rct', ref=refs_list)
+            if refs_list
+            else []
+        )
+
         for row_ref in refs_adicionadas:
             gadd = None
             if row_ref['ok']:
                 gadd, total_add = self.to_grade_e_total(
-                    dados=self.get_grade_pedido(ref=row_ref['referencia'])
+                    dados=[
+                        row_aux
+                        for row_aux in dados_refs
+                        if row_aux['ref'] == row_ref['referencia']
+                    ]
                 )
 
             if gadd:
