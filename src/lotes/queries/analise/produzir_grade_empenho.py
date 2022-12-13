@@ -314,7 +314,7 @@ class MountProduzirGradeEmpenho():
             gm = None
 
         gopa_ncd = None
-        if total_inv != 0 and total_opa != total_inv:
+        if total_inv != 0:  # and total_opa != total_inv:
             gopa_ncd = self.og.subtrai_grades(gopa, ginv)
             self.context.update({
                 'gopa_ncd': gopa_ncd,
