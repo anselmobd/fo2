@@ -208,6 +208,13 @@ class MountProduzirGradeEmpenho():
 
         return gped, total_ped
 
+    def cortam2context(self, nome, grade):
+        if grade:
+            grade = self.og.soma_grades(self.gzerada, grade)
+            self.context.update({
+                nome: grade,
+            })
+
     def mount_context(self):
         if self.cache_get():
             return self.context
@@ -283,43 +290,17 @@ class MountProduzirGradeEmpenho():
 
         gped, total_ped = self.add_refs_pacote(gped, total_ped)
 
-        # Utiliza grade zerada para igualar cores e tamanhos das grades base
-        # dos cálculos
-        if self.gme is not None:
-            self.gme = self.og.soma_grades(self.gzerada, self.gme)
-            self.context.update({
-                'gme': self.gme,
-            })
+        self.cortam2context('gme', self.gme)
 
-        if self.gmg is not None:
-            self.gmg = self.og.soma_grades(self.gzerada, self.gmg)
-            self.context.update({
-                'gmg': self.gmg,
-            })
+        self.cortam2context('gmg', self.gmg)
 
-        if gopa is not None:
-            gopa = self.og.soma_grades(self.gzerada, gopa)
-            self.context.update({
-                'gopa': gopa,
-            })
+        self.cortam2context('gopa', gopa)
 
-        if ginv is not None:
-            ginv = self.og.soma_grades(self.gzerada, ginv)
-            self.context.update({
-                'ginv': ginv,
-            })
+        self.cortam2context('ginv', ginv)
 
-        if gsol is not None:
-            gsol = self.og.soma_grades(self.gzerada, gsol)
-            self.context.update({
-                'gsol': gsol,
-            })
+        self.cortam2context('gsol', gsol)
 
-        if gped is not None:
-            gped = self.og.soma_grades(self.gzerada, gped)
-            self.context.update({
-                'gped': gped,
-            })
+        self.cortam2context('gped', gped)
 
         gm = None
         if self.meta.meta_estoque != 0 or self.meta.meta_giro != 0:
