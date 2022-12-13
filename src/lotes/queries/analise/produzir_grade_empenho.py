@@ -12,6 +12,7 @@ from utils.functions import (
 )
 from utils.functions.dictlist.dictlist_to_grade import dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
+from utils.functions.queries.main import debug_cursor_execute_prt_off
 
 from cd.queries.novo_modulo import refs_em_palets
 from comercial.models import MetaEstoque
@@ -216,6 +217,7 @@ class MountProduzirGradeEmpenho():
             })
 
     def mount_context(self):
+        debug_cursor_execute_prt_off()
         if self.cache_get():
             return self.context
 
