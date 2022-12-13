@@ -302,19 +302,17 @@ class MountProduzirGradeEmpenho():
 
         self.cortam2context('gped', gped)
 
-        gm = None
-        if self.meta.meta_estoque != 0 or self.meta.meta_giro != 0:
-            if self.meta.meta_estoque == 0:
-                gm = self.gmg
-            elif self.meta.meta_giro == 0:
-                gm = self.gme
-            else:
-                gm = self.og.soma_grades(self.gme, self.gmg)
-
+        tem_meta = abs(self.meta.meta_estoque) + abs(self.meta.meta_giro)
+        if tem_meta:
+            aux_me = self.gme if self.meta.meta_estoque else self.gzerada
+            aux_mg = self.gmg if self.meta.meta_estoque else self.gzerada
+            gm = self.og.soma_grades(aux_me, aux_mg)
             self.context.update({
                 'gm': gm,
             })
-        
+        else:
+            gm = None
+
         gopa_ncd = None
         if total_inv != 0 and total_opa != total_inv:
             gopa_ncd = self.og.subtrai_grades(gopa, ginv)
