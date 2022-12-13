@@ -68,6 +68,9 @@ def query(
             'n' - não agrupado
     """
 
+    if not agrupamento:
+        agrupamento = 'ct'
+
     filtro_empresa = f"""--
         AND ped.CODIGO_EMPRESA = {empresa}
     """
@@ -129,7 +132,7 @@ def query(
     else:
         filtro_liberado = ''
 
-    if faturado == 't':
+    if not faturado or faturado == 't':
         filtro_faturado = ''
     else:
         exists = 'NOT' if faturado == 'f' else ''
@@ -137,7 +140,7 @@ def query(
             AND f.NUM_NOTA_FISCAL IS {exists} NULL
         """
 
-    if faturavel == 't':
+    if not faturavel or faturavel == 't':
         filtro_faturavel = ''
     else:
         exists = 'NOT' if faturavel == 'n' else ''
@@ -145,7 +148,7 @@ def query(
             AND fok.NUM_NOTA_FISCAL IS {exists} NULL
         """
 
-    if solicitado == 't':
+    if not solicitado or solicitado == 't':
         filtro_solicitado = ''
     else:
         exists = 'NOT' if solicitado == 'n' else ''
@@ -159,7 +162,7 @@ def query(
                 )
         """
 
-    if agrupado_em_solicitacao == 't':
+    if not agrupado_em_solicitacao or agrupado_em_solicitacao == 't':
         filtro_agrupado_em_solicitacao = ''
     else:
         exists = 'NOT' if agrupado_em_solicitacao == 'n' else ''
