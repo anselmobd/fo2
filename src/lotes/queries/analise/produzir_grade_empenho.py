@@ -305,7 +305,7 @@ class MountProduzirGradeEmpenho():
         tem_meta = abs(self.meta.meta_estoque) + abs(self.meta.meta_giro)
         if tem_meta:
             aux_me = self.gme if self.meta.meta_estoque else self.gzerada
-            aux_mg = self.gmg if self.meta.meta_estoque else self.gzerada
+            aux_mg = self.gmg if self.meta.meta_giro else self.gzerada
             gm = self.og.soma_grades(aux_me, aux_mg)
             self.context.update({
                 'gm': gm,
