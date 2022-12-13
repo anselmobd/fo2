@@ -336,14 +336,12 @@ class MountProduzirGradeEmpenho():
                 'gopp': gopp,
             })
 
-        gresult = None
-        if gopp is not None or gm is not None:
-            if gopp is None:
-                gresult = gm
-            elif gm is None:
-                gresult = gopp
-            else:
-                gresult = self.og.subtrai_grades(gm, gopp)
+        if gm or gopp:
+            aux_m = gm if gm else self.gzerada
+            aux_opp = gopp if gopp else self.gzerada
+            gresult = self.og.subtrai_grades(aux_m, aux_opp)
+        else:
+            gresult = None
 
         glm = None
         glc = None
