@@ -152,9 +152,10 @@ class MountProduzirGradeEmpenho():
             row['qtd'] = row['qtd_emp'] + row['qtd_sol']
         return empenhado
 
-    def get_grade_pedido(self, ref=None, modelo=None):
+    def get_grade_pedido(self, agrupamento=None, ref=None, modelo=None):
         return grade_pedido.query(
             self.cursor,
+            agrupamento=agrupamento,
             ref=ref,
             modelo=modelo,
             periodo=f':{self.periodo}',
