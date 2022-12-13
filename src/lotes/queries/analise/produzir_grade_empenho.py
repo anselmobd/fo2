@@ -320,27 +320,18 @@ class MountProduzirGradeEmpenho():
                 'gopa_ncd': gopa_ncd,
             })
 
-        gopp1 = None
-        if total_opa != 0 or total_ped != 0:
-            if total_ped == 0:
-                gopp1 = gopa
-            elif total_opa == 0:
-                gopp1 = self.og.subtrai_grades(self.gzerada, gped)
-            else:
-                gopp1 = self.og.subtrai_grades(gopa, gped)
-
-        gopp2 = None
-        if gopp1 or total_sol != 0:
-            if total_sol == 0:
-                gopp2 = gopp1
-            elif gopp1 is None:
-                gopp2 = self.og.subtrai_grades(self.gzerada, gsol)
-            else:
-                gopp2 = self.og.subtrai_grades(gopp1, gsol)
+        if abs(total_opa) + abs(total_ped):
+            aux_opa = gopa if total_opa else self.gzerada
+            aux_ped = gped if total_ped else self.gzerada
+            gopp_tmp = self.og.subtrai_grades(aux_opa, aux_ped)
+        else:
+            gopp_tmp = None
 
         gopp = None
-        if gopp2:
-            gopp = gopp2
+        if gopp_tmp or total_sol:
+            aux_opp = gopp_tmp if gopp_tmp else self.gzerada
+            aux_sol = gsol if total_sol else self.gzerada
+            gopp = self.og.subtrai_grades(aux_opp, aux_sol)
             self.context.update({
                 'gopp': gopp,
             })
