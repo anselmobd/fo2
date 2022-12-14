@@ -3,7 +3,6 @@ from django.core.cache import cache
 from utils.functions.models.dictlist import dictlist
 
 from utils.functions import fo2logger, my_make_key_cache
-from utils.functions.models.dictlist import row_field_empty
 from utils.functions.queries import debug_cursor_execute
 
 
@@ -664,7 +663,10 @@ def busca_op(
     cached_result = dictlist(cursor)
 
     for row in cached_result:
-        row_field_empty(row, 'NQ')
+        if not row['NQ']:
+            row['NQ'] = '-'
+        else:
+            row['NQ'] = int(row['NQ'])
 
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
