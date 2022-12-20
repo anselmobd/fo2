@@ -43,6 +43,9 @@ class Account(models.Model):
     num_2 = models.CharField(
         null=True, blank=True,
         max_length=20, verbose_name='número 2')
+    cnpj = models.BooleanField(
+        default=False,
+        verbose_name='Apresenta CNPJ')
     diretorio = models.ForeignKey(
         remote_files.models.Diretorio, on_delete=models.PROTECT)
     subdiretorio = models.CharField(
