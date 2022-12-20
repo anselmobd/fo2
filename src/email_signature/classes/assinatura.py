@@ -32,6 +32,7 @@ class GeraAssinatura():
             'num_1': conta.num_1,
             'ddd_2': conta.ddd_2,
             'num_2': conta.num_2,
+            'cnpj': conta.cnpj,
         }
         try:
             assinatura = render_to_string(self.template_file, context)
