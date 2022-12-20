@@ -20,5 +20,6 @@ def show_template(request, tipo):
         'num_1': '99999-1111',
         'ddd_2': 21,
         'num_2': '99999-2222',
+        'cnpj': True,
     }
     return render(request, template_file, context)

@@ -25,10 +25,14 @@ class AccountForm(forms.ModelForm):
     subdiretorio = forms.CharField(
         widget=forms.TextInput(attrs={"size": 40}))
 
+    cnpj = forms.BooleanField(
+        required=False,
+    )
+
     class Meta:
         model = Account
         fields = [
             "tipo", "email", "nome", "setor",
             "ddd_1", "num_1", "ddd_2", "num_2",
-            "diretorio", "subdiretorio"
+            "diretorio", "subdiretorio", "cnpj",
         ]
