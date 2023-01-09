@@ -67,7 +67,7 @@ class RegrasLoteCaixa(View):
                 'aria-hidden="true"></span></a>'
             )
 
-        headers = ['Coleção', 'Descrição', 'Início de referência', 'Lote por caixa']
+        headers = ['Coleção', 'Descrição', 'Início de referência', 'Lotes por caixa']
         fields = ['colecao', 'descr_colecao', 'referencia', 'lotes_caixa']
         if has_perm:
             headers.insert(0, '')
