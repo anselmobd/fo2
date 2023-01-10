@@ -163,8 +163,6 @@ class ItemNoTempo(View):
                 else:
                     row['tipo'] = 'Movimentação'
 
-            pprint(dados)
-
             row['trans_descr'] = row['trans_descr'].capitalize()
             if tipo_doc == '':
                 row['ped'] = '.'
