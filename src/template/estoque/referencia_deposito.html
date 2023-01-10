@@ -4,9 +4,9 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'estoque:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
-<style>
-{% include 'layout/simple_table.css' %}
-</style>
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -29,7 +29,7 @@
     231-MAT PRIMA ESTOQUE
   {% endif %}
 </h4>
-<table>
+<table class="layout">
   <tr>
     <td>
       {% if modelo %}
