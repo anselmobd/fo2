@@ -19,12 +19,16 @@
     <input type="submit" value="Busca"/>
 </form>
 <h4>Depósito:
-  {% if deposito == '-' %}
-    TODOS (101, 102, 231)
+  {% if deposito == 'A00' %}
+    TODOS (101, 102, 103, 122, 231)
   {% elif deposito == '101' %}
     101-PA ATACADO PRIMEIRA QUALIDADE
   {% elif deposito == '102' %}
     102-PA VAREJO PRIMEIRA QUALIDADE
+  {% elif deposito == '103' %}
+    103-PA SEGUNDA QUALIDADE
+  {% elif deposito == '122' %}
+    122-PA CAIXINHA VAREJO
   {% elif deposito == '231' %}
     231-MAT PRIMA ESTOQUE
   {% endif %}
@@ -34,9 +38,8 @@
     <td>
       {% if modelo %}
        <h4>Modelo:
-           {% if deposito != '-' %}
-           <a title="Referência anterior"
-              href="{% url 'estoque:mostra_estoque__get' deposito '-' modelo %}"
+           {% if deposito != 'A00' %}
+           <a href="{% url 'estoque:mostra_estoque__get' deposito '-' modelo %}"
               target="_blank"
            > {{ modelo }}
            </a>

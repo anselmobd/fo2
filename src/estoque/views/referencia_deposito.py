@@ -72,7 +72,7 @@ class ReferenciaDeposito(View):
             'count': [],
             'descr': {'ref': 'Totais:'},
         }
-        if deposito == '-':
+        if deposito == 'A00':
             tot_conf.update({
                 'global_sum': ['estoque', 'falta', 'soma'],
                 'global_descr': {'ref': 'Totais gerais:'},
