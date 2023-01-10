@@ -15,7 +15,7 @@ from utils.functions.strings import only_digits
 import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
-    lotes_em_local,
+    lote_item_qtd_em_local,
     get_endereco,
     get_esvaziamentos_de_palete,
     get_palete,
@@ -57,8 +57,8 @@ class ConteudoLocal(View):
             })
 
     def get_lotes(self):
-        headers = ["Bipado em", "Lote", "OP"]
-        fields = ['data', 'lote', 'op']
+        headers = ["Bipado", "Lote", "OP", 'Item', 'Qtd.']
+        fields = ['data', 'lote', 'op', 'item', 'qtd']
 
         if self.tipo_local == self._PALETE:
             enderecos = set()
@@ -93,6 +93,8 @@ class ConteudoLocal(View):
                     'data|STYLE': "font-weight: bold;",
                     'lote': '',
                     'op': '',
+                    'item': '',
+                    'qtd': '',
                     'palete': '',
                     'endereco': '',
                     'retira': '',
@@ -120,6 +122,9 @@ class ConteudoLocal(View):
             'headers': headers,
             'fields': fields,
             'data': dados,
+            'style': {
+                5: 'text-align: right;',
+            },
             'qtd_lotes': len(self.lotes_end),
         })
 
@@ -169,7 +174,7 @@ class ConteudoLocal(View):
             'nome_tipo_local': nome_tipo_local,
         })
 
-        self.lotes_end = lotes_em_local(self.cursor, self.local)
+        self.lotes_end = lote_item_qtd_em_local(self.cursor, self.local)
 
         tem_lotes = self.lotes_end and self.lotes_end[0]['lote']
 

@@ -4,7 +4,7 @@
 <style>
 {% include 'layout/simple_table.css' %}
 table {
-  font-size: 4vw;
+  font-size: 3.5vw;
 }
 </style>
 {% endblock %}
@@ -38,8 +38,8 @@ table {
       <br/>Palete: {{palete_lotes}}
     {% endif %}
     <table id="lista_table">
-      {% include "layout/thead_generic.html" with data=headers only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
   {% endif %}
 {% endif %}
