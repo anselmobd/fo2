@@ -41,6 +41,9 @@ table {
       {% url 'cd:conteudo_local' palete as lotes_palete %}
       {% include "layout/link.html" with link=lotes_palete text=palete only %}<br/>
       {{ data|length }} lote{{ data|length|pluralize }}
+      {% if total_qtd %}
+        - {{ total_qtd }} ite{{ total_qtd|pluralize:"m,ns" }}
+      {%endif%}
     {%endif%}
     <table id="lista_table">
       {% include "layout/thead_generic.html" with data=headers style=style only %}

@@ -56,7 +56,9 @@ class LocalizaLote(View):
 
         lotes_end = lote_item_qtd_em_local(cursor, local[0]['palete'])
 
+        total_qtd = 0
         for row in lotes_end:
+            total_qtd += row['qtd']
             row['lote|LINK'] = reverse(
                 'cd:localiza_lote',
                 args=[row['lote']]
@@ -69,6 +71,7 @@ class LocalizaLote(View):
             'style': {
                 4: 'text-align: right;',
             },
+            'total_qtd': total_qtd,
         })
 
         return context
