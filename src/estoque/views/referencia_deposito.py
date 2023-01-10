@@ -35,20 +35,20 @@ class ReferenciaDeposito(View):
         except Exception:
             imodelo = None
         if imodelo is not None:
-            anterior = None
-            posterior = None
-            get_prox = False
             lista = produto.queries.busca_modelo(cursor)
-            for row in lista:
-                item = row['modelo']
-                if get_prox:
-                    posterior = item
-                    break
-                else:
-                    if imodelo == item:
-                        get_prox = True
-                    else:
-                        anterior = item
+            modelos = [
+                row['modelo']
+                for row in lista  
+            ]
+            imodelo_idx = modelos.index(imodelo)
+            try:
+                anterior = modelos[imodelo_idx - 1]
+            except IndexError:
+                anterior = None
+            try:
+                posterior = modelos[imodelo_idx + 1]
+            except IndexError:
+                posterior = None
             context.update({
                 'anterior': anterior,
                 'posterior': posterior,
