@@ -37,6 +37,9 @@ table {
     {% if palete_lotes %}
       <br/>Palete: {{palete_lotes}}
     {% endif %}
+    {% if total_qtd %}
+    - {{ total_qtd }} ite{{ total_qtd|pluralize:"m,ns" }}
+    {%endif%}
     <table id="lista_table">
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}

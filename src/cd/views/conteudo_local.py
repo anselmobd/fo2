@@ -83,6 +83,7 @@ class ConteudoLocal(View):
                 headers += ['Palete']
                 fields += ['palete']
 
+        total_qtd = 0
         dados = []
         ult_data = datetime(3000, 1, 1)
         for row in self.lotes_end:
@@ -100,6 +101,7 @@ class ConteudoLocal(View):
                     'retira': '',
                 })
             dados.append(row)
+            total_qtd += row['qtd']
             row['data'] = row['data'].strftime("%H:%M:%S")
             row['lote|LINK'] = reverse(
                 'cd:localiza_lote',
@@ -126,6 +128,7 @@ class ConteudoLocal(View):
                 5: 'text-align: right;',
             },
             'qtd_lotes': len(self.lotes_end),
+            'total_qtd': total_qtd,
         })
 
     def local_ok(self):
