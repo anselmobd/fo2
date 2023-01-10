@@ -63,8 +63,8 @@ class LocalizaLote(View):
             )
 
         context.update({
-            'headers': ['Lote', 'OP'],
-            'fields': ['lote', 'op'],
+            'headers': ['Lote', 'OP', 'Item'],
+            'fields': ['lote', 'op', 'item'],
             'data': lotes_end,
         })
 
