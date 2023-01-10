@@ -59,6 +59,7 @@ class LocalizaLote(View):
         total_qtd = 0
         for row in lotes_end:
             total_qtd += row['qtd']
+            row['op'] = f"{row['op']}"
             row['lote|LINK'] = reverse(
                 'cd:localiza_lote',
                 args=[row['lote']]
