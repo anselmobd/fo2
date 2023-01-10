@@ -60,6 +60,11 @@ class ReferenciaDeposito(View):
             return context
 
         for row in data:
+            if imodelo:
+                row['dep|TARGET'] = '_blank'
+                row['dep|LINK'] = reverse(
+                    'estoque:mostra_estoque__get', args=[
+                        row['dep'], '-', imodelo])
             row['ref|TARGET'] = '_blank'
             row['ref|LINK'] = reverse(
                 'estoque:mostra_estoque__get', args=[
