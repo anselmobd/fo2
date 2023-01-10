@@ -16,7 +16,7 @@ import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
     local_de_lote,
-    lotes_em_local,
+    lote_item_qtd_em_local,
 )
 
 
@@ -54,7 +54,7 @@ class LocalizaLote(View):
             'palete': local[0]['palete'],
         })
 
-        lotes_end = lotes_em_local(cursor, local[0]['palete'])
+        lotes_end = lote_item_qtd_em_local(cursor, local[0]['palete'])
 
         for row in lotes_end:
             row['lote|LINK'] = reverse(
@@ -63,8 +63,8 @@ class LocalizaLote(View):
             )
 
         context.update({
-            'headers': ['Lote', 'OP', 'Item'],
-            'fields': ['lote', 'op', 'item'],
+            'headers': ['Lote', 'OP', 'Item', 'Qtd.'],
+            'fields': ['lote', 'op', 'item', 'qtd'],
             'data': lotes_end,
         })
 
