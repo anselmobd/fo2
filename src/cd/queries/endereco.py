@@ -138,9 +138,17 @@ def lotes_em_local(cursor, local=None, bloco=None):
         , lp.ORDEM_PRODUCAO op
         , lp.ORDEM_CONFECCAO lote
         , lp.DATA_INCLUSAO data
+        , l.PROCONF_GRUPO REF
+        , l.PROCONF_SUBGRUPO TAM
+        , l.PROCONF_ITEM COR
         FROM ENDR_014 lp -- lote/palete - oc/container
         LEFT JOIN ENDR_015 ec -- endereço/container
           ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
+        LEFT JOIN PCPC_040 l
+          -- ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
+          ON l.PERIODO_PRODUCAO = TRUNC(lp.ORDEM_CONFECCAO / 100000) 
+         AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+         AND l.SEQUENCIA_ESTAGIO = 1 
         WHERE 1=1
           {filtro} -- filtro
           {filtro_bloco} -- filtro_bloco
@@ -148,7 +156,13 @@ def lotes_em_local(cursor, local=None, bloco=None):
           lp.DATA_INCLUSAO DESC
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
+    dados = dictlist_lower(cursor)
+    for row in dados:
+        row['item'] = (
+            f"{row['ref']}.{row['tam']}.{row['cor']}"
+            if row['ref'] else '-'
+        )
+    return dados
 
 
 def lotes_itens_em_local(cursor, local=None, bloco=None):
