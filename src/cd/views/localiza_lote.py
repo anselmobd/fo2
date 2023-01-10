@@ -66,6 +66,9 @@ class LocalizaLote(View):
             'headers': ['Lote', 'OP', 'Item', 'Qtd.'],
             'fields': ['lote', 'op', 'item', 'qtd'],
             'data': lotes_end,
+            'style': {
+                4: 'text-align: right;',
+            },
         })
 
         return context
