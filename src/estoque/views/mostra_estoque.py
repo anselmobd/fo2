@@ -122,12 +122,14 @@ class MostraEstoque(View):
         for row in data:
             movimento = 0
             ajuste = 0
+            row['qtd'] = int(row['qtd'])
             if idata is not None:
                 d_tot_movi = queries.get_transfo2_deposito_ref(
                     cursor, deposito, row['ref'], row['cor'], row['tam'],
                     tipo='s', data=idata, hora=hora)
                 if len(d_tot_movi) != 0:
                     for d_row in d_tot_movi:
+                        d_row['qtd'] = int(d_row['qtd'])
                         if d_row['es'] == 'E':
                             movimento += d_row['qtd']
                         elif d_row['es'] == 'S':
@@ -166,12 +168,14 @@ class MostraEstoque(View):
                 self.table.add('executa')
             for row in data:
                 movimento = 0
+                row['qtd'] = int(row['qtd'])
                 if idata is not None:
                     d_tot_movi = queries.get_transfo2_deposito_ref(
                         cursor, deposito, row['ref'], row['cor'], row['tam'],
                         tipo='s', data=idata, hora=hora)
                     if len(d_tot_movi) != 0:
                         for d_row in d_tot_movi:
+                            d_row['qtd'] = int(d_row['qtd'])
                             if d_row['es'] == 'E':
                                 movimento += d_row['qtd']
                             elif d_row['es'] == 'S':
