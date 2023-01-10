@@ -102,6 +102,7 @@ class ConteudoLocal(View):
                 })
             dados.append(row)
             total_qtd += row['qtd']
+            row['op'] = f"{row['op']}"
             row['data'] = row['data'].strftime("%H:%M:%S")
             row['lote|LINK'] = reverse(
                 'cd:localiza_lote',
