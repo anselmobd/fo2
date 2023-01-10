@@ -274,7 +274,7 @@ class MostraEstoque(View):
 
         deposito = kwargs['deposito']
         ref = kwargs['ref']
-        modelo = kwargs['modelo']
+        modelo = kwargs['modelo'] if 'modelo' in kwargs else None
         cursor = db_cursor_so(request)
         context.update(self.mount_context(
             request, cursor, deposito, ref, None, idata, None, modelo))
