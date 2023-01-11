@@ -39,6 +39,7 @@ class MostraEstoque(View):
 
     def mount_context(
             self, request, cursor, deposito, ref, qtd, idata, hora, modelo):
+        depositos = ['101', '102', '103', '122', '231']
         try:
             qtd = int(qtd)
         except Exception:
@@ -58,6 +59,8 @@ class MostraEstoque(View):
             'num_doc': num_doc,
         }
 
+        deposito_anterior = None
+        deposito_posterior = None
         anterior = None
         posterior = None
         if modelo == '-':
@@ -76,28 +79,42 @@ class MostraEstoque(View):
                     else:
                         anterior = item
         else:
-            if '-' in modelo:
-                pass
-            else:
+            if '-' not in modelo:
                 try:
                     imodelo = int(modelo)
                 except Exception:
                     imodelo = None
-                get_prox = False
-                lista = produto.queries.busca_modelo(cursor)
-                for row in lista:
-                    item = row['modelo']
-                    if get_prox:
-                        posterior = item
-                        break
-                    else:
-                        if imodelo == item:
-                            get_prox = True
+                if imodelo is not None:
+                    lista = produto.queries.busca_modelo(cursor)
+                    modelos = [
+                        row['modelo']
+                        for row in lista  
+                    ]
+                    imodelo_idx = modelos.index(imodelo)
+                    deposito_idx = depositos.index(deposito)
+                    try:
+                        if deposito_idx == 0:
+                            deposito_anterior = depositos[-1]
+                            anterior = modelos[imodelo_idx - 1]
                         else:
-                            anterior = item
+                            deposito_anterior = depositos[deposito_idx - 1]
+                            anterior = imodelo
+                    except IndexError:
+                        anterior = None
+                    try:
+                        if deposito == depositos[-1]:
+                            deposito_posterior = depositos[0]
+                            posterior = modelos[imodelo_idx + 1]
+                        else:
+                            deposito_posterior = depositos[deposito_idx + 1]
+                            posterior = imodelo
+                    except IndexError:
+                        posterior = None
 
         context.update({
+            'deposito_anterior': deposito_anterior,
             'anterior': anterior,
+            'deposito_posterior': deposito_posterior,
             'posterior': posterior,
         })
 

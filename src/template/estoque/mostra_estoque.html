@@ -41,10 +41,14 @@
           {% else %}
             <a title="Modelo anterior"
                href="javascript:void(0);"
-               onclick="alterFormMod('{{ deposito }}', '{{ anterior|safe }}');"
+               onclick="alterFormMod('{{ deposito_anterior }}', '{{ anterior|safe }}');"
             >
           {% endif %}
-            Anterior: {{ anterior|safe }}
+          Anterior:
+          {% if deposito_anterior %}
+            ({{deposito_anterior}})
+          {% endif %}
+          {{ anterior|safe }}
           </a>
         {% endif %}
         {% if anterior and posterior %}
@@ -59,10 +63,14 @@
           {% else %}
             <a title="Próximo modelo"
                href="javascript:void(0);"
-               onclick="alterFormMod('{{ deposito }}', '{{ posterior|safe }}');"
+               onclick="alterFormMod('{{ deposito_posterior }}', '{{ posterior|safe }}');"
             >
           {% endif %}
-            Posterior: {{ posterior|safe }}
+            Posterior:
+            {% if deposito_posterior %}
+              ({{deposito_posterior}})
+            {% endif %}
+            {{ posterior|safe }}
           </a>
         {% endif %}
         </p>
