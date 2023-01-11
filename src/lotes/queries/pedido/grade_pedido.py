@@ -82,9 +82,9 @@ def query(
             refs = set(ref)
         else:
             refs = {ref, }
-        refs_sql = ', '.join(list(refs))
+        refs_sql = ', '.join([f"'{r1}'" for r1 in list(refs)])
         filtra_ref = f"""--
-            AND r.REFERENCIA in ('{refs_sql}')
+            AND r.REFERENCIA in ({refs_sql})
         """
     else:
         filtra_ref = ''
