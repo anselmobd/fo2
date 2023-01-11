@@ -28,7 +28,7 @@ def referencia_deposito(cursor, modelo, todos=True, deposito='A00'):
     filtro_deposito = ''
     if deposito is not None and deposito != '':
         if deposito == 'A00':
-            filtro_deposito = "AND d.CODIGO_DEPOSITO IN (101, 102, 122, 231)"
+            filtro_deposito = "AND d.CODIGO_DEPOSITO IN (101, 102, 103, 122, 231)"
         else:
             filtro_deposito = "AND d.CODIGO_DEPOSITO = '{deposito}'".format(
                 deposito=deposito)
