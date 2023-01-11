@@ -207,7 +207,7 @@ def query(
 
     sql=f"""
         SELECT
-          {sql_agrupamento[agrupamento]['select']}
+          {sql_agrupamento[agrupamento]['select']} -- sql_agrupamento select
         , sum(i.QTDE_PEDIDA) QTD
         FROM PEDI_110 i -- item de pedido de venda
         JOIN BASI_030 r
@@ -243,9 +243,9 @@ def query(
           {filtro_solicitado} -- filtro_solicitado
           {filtro_agrupado_em_solicitacao} -- filtro_agrupado_em_solicitacao
         GROUP BY
-          {sql_agrupamento[agrupamento]['group_order']}
+          {sql_agrupamento[agrupamento]['group_order']} -- sql_agrupamento group_order
         ORDER BY
-          {sql_agrupamento[agrupamento]['group_order']}
+          {sql_agrupamento[agrupamento]['group_order']} -- sql_agrupamento group_order
     """
 
     debug_cursor_execute(cursor, sql)
