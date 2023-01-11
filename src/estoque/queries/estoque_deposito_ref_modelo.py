@@ -1,4 +1,7 @@
+from pprint import pprint
+
 from utils.functions.models.dictlist import dictlist_lower
+from utils.functions.queries import debug_cursor_execute
 
 
 def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
@@ -59,7 +62,7 @@ def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
                 modelo=modelo,
             )
 
-    sql = '''
+    sql = f'''
         SELECT
           i.MODELO
         , i.REF
@@ -111,10 +114,7 @@ def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
         , NLSSORT(i.REF,'NLS_SORT=BINARY_AI')
         , i.COR
         , ta.ORDEM_TAMANHO
-    '''.format(
-        deposito=deposito,
-        filtro_ref=filtro_ref,
-        filtro_modelo=filtro_modelo,
-    )
-    cursor.execute(sql)
+    '''
+
+    debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)
