@@ -36,12 +36,12 @@
           {% if ref and ref != '-' %}
             <a title="Referência anterior"
                href="javascript:void(0);"
-               onclick="alterForm('{{ ref }}', '{{ anterior }}');"
+               onclick="alterFormRef('{{ deposito }}', '{{ anterior }}');"
             >
           {% else %}
             <a title="Modelo anterior"
                href="javascript:void(0);"
-               onclick="alterForm('{{ modelo }}', '{{ anterior|safe }}');"
+               onclick="alterFormMod('{{ deposito }}', '{{ anterior|safe }}');"
             >
           {% endif %}
             Anterior: {{ anterior|safe }}
@@ -54,12 +54,12 @@
           {% if ref and ref != '-' %}
             <a title="Próxima referência"
                href="javascript:void(0);"
-               onclick="alterForm('{{ ref }}', '{{ posterior }}');"
+               onclick="alterFormRef('{{ deposito }}', '{{ posterior }}');"
             >
           {% else %}
             <a title="Próximo modelo"
                href="javascript:void(0);"
-               onclick="alterForm('{{ modelo }}', '{{ posterior|safe }}');"
+               onclick="alterFormMod('{{ deposito }}', '{{ posterior|safe }}');"
             >
           {% endif %}
             Posterior: {{ posterior|safe }}
@@ -195,13 +195,24 @@
 
   // window.addEventListener("load", link2ajax, false);
 
-  function alterForm(ref, newref) {
+  var action_modelo="{% url 'estoque:mostra_estoque__get' '_deposito_' '_referencia_' '_modelo_' %}"
+
+  function alterForm(newdep, newref, newmod) {
     var form = document.getElementById("form");
-    if (form.action.slice(-1) != "/") {
-      form.action = form.action + "/";
-    }
-    form.action = form.action.replace("/"+ref+"/", "/"+newref+"/");
+    let action = action_modelo;
+    action = action.replace("_deposito_", newdep);
+    action = action.replace("_referencia_", newref);
+    action = action.replace("_modelo_", newmod);
+    form.action = action;
     form.submit();
+  }
+
+  function alterFormRef(newdep, newref) {
+    alterForm(newdep, newref, "-");
+  }
+
+  function alterFormMod(newdep, newmod) {
+    alterForm(newdep, "-", newmod);
   }
 
 </script>
