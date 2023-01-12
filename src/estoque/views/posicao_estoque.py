@@ -24,6 +24,7 @@ class PosicaoEstoque(O2BaseGetPostView):
         self.title_name = 'Posição de estoque'
         self.cleaned_data2self = True
 
+        self.por_pagina = 50
         self.table = TableDefs(
             {
                 'nivel': ['Nível'],
@@ -143,7 +144,7 @@ class PosicaoEstoque(O2BaseGetPostView):
 
         row_totalizer = data[-1].copy()
 
-        data = paginator_basic(data, 50, self.page)
+        data = paginator_basic(data, self.por_pagina, self.page)
 
         if data.paginator.num_pages > 1:
             if len(data.object_list) > 2:
