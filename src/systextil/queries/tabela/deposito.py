@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import debug_cursor_execute
 
 
 def query_deposito(cursor, only=None, less=None):
@@ -44,5 +45,5 @@ def query_deposito(cursor, only=None, less=None):
         ORDER BY
           d.CODIGO_DEPOSITO
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
