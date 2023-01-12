@@ -195,12 +195,12 @@
     }
     var x = document.getElementsByClassName("exec_ajuste");
     var i;
-    for (i = 0; i < x.length; i++) {
+    for (i = x.length - 1; i >= 0 ; i--) {
       x[i].click();
-      x[i].style.backgroundColor = "darkred";
+      x[i].outerHTML = "Ajusta";
     }
     var x = document.getElementsByClassName("exec_all_ajuste_btn");
-    x[0].style.backgroundColor = "darkred";
+    x[0].outerHTML = "Ajusta todos";
   }
 
   // window.addEventListener("load", link2ajax, false);
