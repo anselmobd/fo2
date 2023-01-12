@@ -98,7 +98,7 @@
   {% if count_btn_executa > 0 %}
     <div class="exec_all_ajuste" align="right">
       <a title="Executa todos os ajustes indicados pelo inventário"
-         class="btn btn-primary"
+         class="btn btn-primary exec_all_ajuste_btn"
          style="padding: 0px 12px;"
          href="javascript:void(0);"
          onclick="clickAll();"
@@ -196,9 +196,11 @@
     var x = document.getElementsByClassName("exec_ajuste");
     var i;
     for (i = 0; i < x.length; i++) {
-      x[i].style.backgroundColor = "darkred";
       x[i].click();
+      x[i].style.backgroundColor = "darkred";
     }
+    var x = document.getElementsByClassName("exec_all_ajuste_btn");
+    x[0].style.backgroundColor = "darkred";
   }
 
   // window.addEventListener("load", link2ajax, false);
