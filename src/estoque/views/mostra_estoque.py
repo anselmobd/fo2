@@ -280,25 +280,36 @@ class MostraEstoque(View):
             })
         return context
 
-    def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-
+    def set_initial(self, request):
         get_data_inv = None
+        iqtd = None
+        if has_permission(request, 'base.can_adjust_stock'):
+            iqtd = '0'
         idata = None
         if 'ajuste_inv_data' in request.COOKIES:
             get_data_inv = request.COOKIES.get('ajuste_inv_data')
         if get_data_inv is None:
             self.form = self.Form_class()
         else:
-            self.form = self.Form_class(initial={"data": get_data_inv})
+            initial = {
+                "qtd": iqtd,
+                "data": get_data_inv,
+            }
+            self.form = self.Form_class(initial=initial)
             idata = datetime.datetime.strptime(get_data_inv, '%Y-%m-%d').date()
+        return iqtd, idata
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+
+        iqtd, idata = self.set_initial(request)
 
         deposito = kwargs['deposito']
         ref = kwargs['ref']
         modelo = kwargs['modelo'] if 'modelo' in kwargs else None
         cursor = db_cursor_so(request)
         context.update(self.mount_context(
-            request, cursor, deposito, ref, None, idata, None, modelo))
+            request, cursor, deposito, ref, iqtd, idata, None, modelo))
 
         context['form'] = self.form
         return render(request, self.template_name, context)
