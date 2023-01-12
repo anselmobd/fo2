@@ -4,7 +4,7 @@ from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
-def query_deposito(cursor, only=None, less=None):
+def query_deposito(cursor, only=None, less=None, empresa=None):
 
     def monta_filtro(in_, depositos):
         filtro = ''
@@ -22,6 +22,8 @@ def query_deposito(cursor, only=None, less=None):
         monta_filtro('IN', only),
         monta_filtro('NOT IN', less),
     ])
+
+    filtro_empresa = f"AND d.LOCAL_DEPOSITO = {empresa}" if empresa else ''
 
     sql = f'''
         SELECT
@@ -42,6 +44,7 @@ def query_deposito(cursor, only=None, less=None):
          AND f.FORNECEDOR2 = d.CNPJ2
         WHERE 1=1
           {filtra_depositos} -- filtra_depositos
+          {filtro_empresa} -- filtro_empresa
         ORDER BY
           d.CODIGO_DEPOSITO
     '''
