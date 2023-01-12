@@ -40,14 +40,15 @@ class PorDepositoForm(forms.Form):
     agrupamento = forms.ChoiceField(
         choices=CHOICES, initial='rtcd')
 
-    CHOICES = [('t', 'Todos'),
-               ('a', 'PA'),
-               ('g', 'PG'),
-               ('b', 'PB'),
-               ('p', 'PG/PB'),
-               ('v', 'PA/PG/PB'),
-               ('m', 'MD'),
-               ]
+    CHOICES = [
+        ('t', 'Todos'),
+        ('a', 'PA'),
+        ('g', 'PG'),
+        ('b', 'PB'),
+        ('p', 'PG/PB'),
+        ('v', 'PA/PG/PB'),
+        ('m', 'MD'),
+    ]
     tipo = forms.ChoiceField(
         choices=CHOICES, initial='t')
 
@@ -62,8 +63,14 @@ class PorDepositoForm(forms.Form):
     def mount_choices(self):
         CHOICES = geral.functions.depositos_choices(
             self.cursor,
-            cod_todos='999', descr_todos='--Todos--', cod_only='A00',
-            only=(101, 102, 231), rest=True, controle=True)
+            cod_todos='999',
+            descr_todos='--Todos--',
+            cod_only='A00',
+            only=(101, 102, 231),
+            rest=True,
+            controle=True,
+            empresa=1,
+        )
         setattr(self.fields['deposito'], 'choices', CHOICES)
 
     def upper_clean(self, field_name):
