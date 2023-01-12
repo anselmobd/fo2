@@ -162,17 +162,16 @@ def depositos_choices(
     CHOICES = []
 
     todos = []
-    if cod_todos is not None:
-        if descr_todos is None and only is not None:
-            todos = [
-                {'COD': cod_todos,
-                 'DESCR': f"TODOS ({', '.join(map(str, only))})",
-                 }]
+    if cod_todos:
+        dict_todos = {'COD': cod_todos}
+        if descr_todos:
+            dict_todos['DESCR'] = descr_todos
         else:
-            todos = [
-                {'COD': cod_todos,
-                 'DESCR': descr_todos,
-                 }]
+            if only:
+                dict_todos['DESCR'] = f"TODOS ({', '.join(map(str, only))})"
+            else:
+                dict_todos['DESCR'] = "TODOS"
+        todos.append(dict_todos)
 
     grupo = []
     if cod_only is not None and only is not None:
