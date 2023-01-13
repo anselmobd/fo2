@@ -2,11 +2,11 @@ import operator
 from collections import namedtuple
 from pprint import pprint
 
-from django.shortcuts import render
 from django.urls import reverse
-from django.views import View
 
 from fo2.connections import db_cursor_so
+
+from o2.views.base.get import O2BaseGetView
 
 from utils.views import (
     group_rowspan,
@@ -17,15 +17,15 @@ from cd.classes.endereco import EnderecoCd
 from cd.queries.endereco import lotes_em_local
 
 
-class VisaoCd(View):
+class VisaoCd(O2BaseGetView):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(VisaoCd, self).__init__(*args, **kwargs)
         self.template_name = 'cd/novo_modulo/visao_cd.html'
         self.title_name = 'Visão do CD'
         self.DataKey = namedtuple('DataKey', 'espaco espaco_cod bloco')
 
     def mount_context(self):
-        context = {}
         self.cursor = db_cursor_so(self.request)
 
         ecd = EnderecoCd()
@@ -88,7 +88,7 @@ class VisaoCd(View):
             'qtd_lotes': 'Qtd. lotes',
         }
 
-        context.update({
+        self.context.update({
             'headers': fields.values(),
             'fields': fields.keys(),
             'data': data,
@@ -98,12 +98,3 @@ class VisaoCd(View):
                 4: 'text-align: right;',
             },
         })
-
-
-        return context
-
-    def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        data = self.mount_context()
-        context.update(data)
-        return render(request, self.template_name, context)
