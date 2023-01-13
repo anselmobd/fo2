@@ -11,9 +11,9 @@
 
 {% block content %}
   {% if data %}
-    <a href="{% url 'cd:novo_visao_cd' %}">Visão do CD&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+    <a href="{% url 'cd:novo_visao_cd' %}">Visão do CD&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a><br/>
+    <a href="{% url 'cd:visao_bloco_detalhe__get' bloco %}">Visão detalhada do bloco&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
     <h4>{{ descr_bloco }}</h4>
-    <a href="{% url 'cd:visao_bloco_detalhe__get' bloco %}">Visão detalhada deste bloco&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
