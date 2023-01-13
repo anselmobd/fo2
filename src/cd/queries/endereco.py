@@ -134,6 +134,7 @@ def conteudo_local(
             referência
             tamanho
             cor
+            ordem_tam
             item (calculado 'ref.tam.cor')
         qtd63 (default False): Adiciona retorno de:
             qtd (quantidade do lote no estágio 63)
@@ -145,9 +146,10 @@ def conteudo_local(
         qtd63 = True
 
     retorna_item = """--
-        , l.PROCONF_GRUPO REF
-        , l.PROCONF_SUBGRUPO TAM
-        , l.PROCONF_ITEM COR
+        , l.PROCONF_GRUPO ref
+        , l.PROCONF_SUBGRUPO tam
+        , l.PROCONF_ITEM cor
+        , t.ORDEM_TAMANHO ordem_tam
     """ if item else ''
 
     retorna_qtd = """--
@@ -160,6 +162,8 @@ def conteudo_local(
               ON l.PERIODO_PRODUCAO = TRUNC(lp.ORDEM_CONFECCAO / 100000)
              AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
              AND l.SEQUENCIA_ESTAGIO = 1
+            LEFT JOIN BASI_220 t -- tamanhos
+              ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
         """,
         'l63' : """--
             LEFT JOIN PCPC_040 l63
