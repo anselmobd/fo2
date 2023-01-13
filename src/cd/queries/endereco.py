@@ -213,6 +213,84 @@ def lote_item_qtd_em_local(cursor, local=None, bloco=None):
     return dados
 
 
+def conteudo_local(cursor, local=None, bloco=None, qtd63=False):
+    """Lista lotes paletizados
+    Retorna
+        endereco
+        palete
+        op
+        lote
+        data (de inclusão)
+    Filtros
+        local (opcional): pode ser tanto um endereço quando um palete
+        blobo (opcional): início de endereço
+    Parâmetros
+        qtd63 (default False): Adiciona retorno de:
+            qtd (quantidade do lote no estágio 63)
+    """
+
+    retorna_qtd = """--
+        , coalesce(l.QTDE_A_PRODUZIR_PACOTE, 0) qtd
+    """ if qtd63 else ''
+
+    join_dict = {
+        'PCPC_040' : """--
+            LEFT JOIN PCPC_040 l
+            ON l.PERIODO_PRODUCAO = TRUNC(lp.ORDEM_CONFECCAO / 100000)
+            AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+            AND l.CODIGO_ESTAGIO = 63
+        """
+    }
+
+    join_set = set()
+    if qtd63:
+        join_set.add('PCPC_040')
+
+    joins = "\n".join([
+        join_stm
+        for join_key, join_stm in join_dict.items()
+        if join_key in join_set
+    ])
+
+    filtra_local = f"""--
+        AND ( ec.COD_ENDERECO = '{local}'
+            OR UPPER(lp.COD_CONTAINER)  = '{local}'
+            )
+    """ if local else ''
+
+    filtra_bloco = ""
+    if bloco:
+        if bloco == '0-':
+            filtra_bloco = f"""--
+                AND ec.COD_ENDERECO IS NULL
+            """
+        else:
+            filtra_bloco = f"""--
+                AND ec.COD_ENDERECO LIKE '{bloco}%'
+            """
+
+    sql = f"""
+        SELECT
+          ec.COD_ENDERECO endereco
+        , UPPER(lp.COD_CONTAINER) palete
+        , lp.ORDEM_PRODUCAO op
+        , lp.ORDEM_CONFECCAO lote
+        , lp.DATA_INCLUSAO data
+        {retorna_qtd} -- retorna_qtd
+        FROM ENDR_014 lp -- lote/palete - oc/container
+        LEFT JOIN ENDR_015 ec -- endereço/container
+          ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
+        {joins} -- joins
+        WHERE 1=1
+          {filtra_local} -- filtra_local
+          {filtra_bloco} -- filtra_bloco
+        ORDER BY
+          lp.DATA_INCLUSAO DESC
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist_lower(cursor)
+
+
 def lote_qtd_em_local(cursor, local=None, bloco=None):
     """Lista lotes paletizados com suas quantidades"""
 
