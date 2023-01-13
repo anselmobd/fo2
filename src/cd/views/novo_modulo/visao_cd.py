@@ -47,9 +47,11 @@ class VisaoCd(O2BaseGetView):
                 dados[dados_key] = {
                     'enderecos': set(),
                     'lotes': set(),
+                    'qtd': 0,
                 }
             dados[dados_key]['enderecos'].add(end['endereco'])
             dados[dados_key]['lotes'].add(end['lote'])
+            dados[dados_key]['qtd'] += end['qtd']
 
         data = []
         for dados_key in dados:
@@ -61,6 +63,7 @@ class VisaoCd(O2BaseGetView):
                     else len(dados[dados_key]['enderecos'])
                 ),
                 'qtd_lotes': len(dados[dados_key]['lotes']),
+                'qtd': dados[dados_key]['qtd'],
             }
             row['qtd_ends|LINK'] = reverse(
                 'cd:novo_visao_bloco__get', args=[
@@ -71,10 +74,10 @@ class VisaoCd(O2BaseGetView):
         group = ['espaco']
         totalize_grouped_data(data, {
             'group': group,
-            'sum': ['qtd_ends', 'qtd_lotes'],
+            'sum': ['qtd_ends', 'qtd_lotes', 'qtd'],
             'count': [],
             'descr': {'espaco': 'Totais:'},
-            'global_sum': ['qtd_ends', 'qtd_lotes'],
+            'global_sum': ['qtd_ends', 'qtd_lotes', 'qtd'],
             'global_descr': {'espaco': 'Totais gerais:'},
             'flags': ['NO_TOT_1'],
             'row_style': 'font-weight: bold;',
@@ -84,8 +87,9 @@ class VisaoCd(O2BaseGetView):
         fields = {
             'espaco': 'Espaço',
             'bloco': 'Bloco',
-            'qtd_ends': 'Qtd. Endereços',
-            'qtd_lotes': 'Qtd. lotes',
+            'qtd_ends': 'Endereços',
+            'qtd_lotes': 'Lotes',
+            'qtd': 'Itens',
         }
 
         self.context.update({
@@ -96,5 +100,6 @@ class VisaoCd(O2BaseGetView):
             'style': {
                 3: 'text-align: right;',
                 4: 'text-align: right;',
+                5: 'text-align: right;',
             },
         })
