@@ -6,7 +6,6 @@ from fo2.connections import db_cursor_so
 from o2.views.base.get import O2BaseGetView
 from utils.views import totalize_data
 
-from cd.classes.endereco import EnderecoCd
 from cd.queries.endereco import conteudo_local
 
 
@@ -22,60 +21,55 @@ class VisaoBloco(O2BaseGetView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        ecd = EnderecoCd()
+        if self.bloco == '0-':
+            self.context['bloco'] = 'Paletes não endereçados'
+            local_field = 'palete'
+        else:
+            self.context['bloco'] = f"Bloco {self.bloco}"
+            local_field = 'endereco'
+
         lotes = conteudo_local(self.cursor, bloco=self.bloco, qtd63=True)
-        for row in lotes:
-            if row['endereco']:
-                ecd.endereco = row['endereco']
-                row.update(ecd.details_dict)
-            else:
-                row['endereco'] = row['palete']
 
-        lotes.sort(key=operator.itemgetter('endereco'))
+        lotes.sort(key=operator.itemgetter(local_field))
 
-        dados = {}
-        for end in lotes:
-            if end['endereco'] not in dados:
-                dados[end['endereco']] = {
-                    'enderecos': set(),
+        locais = {}
+        for lote in lotes:
+            if lote[local_field] not in locais:
+                locais[lote[local_field]] = {
                     'lotes': set(),
-                    'qtd_itens': 0,
+                    'itens': 0,
                 }
-            dados[end['endereco']]['lotes'].add(end['lote'])
-            dados[end['endereco']]['qtd_itens'] += end['qtd']
+            locais[lote[local_field]]['lotes'].add(lote['lote'])
+            locais[lote[local_field]]['itens'] += lote['qtd']
 
-        data = [
+        dados = [
             {
-                'endereco': dados_key if dados_key else 'Não endereçado',
-                'qtd_lotes': len(dados[dados_key]['lotes']),
-                'qtd_itens': dados[dados_key]['qtd_itens'],
+                local_field: local,
+                'lotes': len(locais[local]['lotes']),
+                'itens': locais[local]['itens'],
             }
-            for dados_key in dados
+            for local in locais
         ]
 
-        totalize_data(data, {
-            'sum': ['qtd_lotes', 'qtd_itens'],
-            'count': [],
-            'descr': {'endereco': 'Totais:'},
+        totalize_data(dados, {
+            'sum': ['lotes', 'itens'],
+            'descr': {local_field: 'Totais:'},
             'flags': ['NO_TOT_1'],
             'row_style': 'font-weight: bold;',
         })
 
         fields = {
-            'endereco': 'Endereço',
-            'qtd_lotes': 'Qtd. lotes',
-            'qtd_itens': 'Qtd. itens',
+            local_field: 'Palete' if local_field == 'palete' else 'Endereço',
+            'lotes': 'Lotes',
+            'itens': 'Itens',
         }
-        if self.bloco == '0-':
-            fields['endereco'] = 'Palete'
 
         self.context.update({
             'headers': fields.values(),
             'fields': fields.keys(),
-            'data': data,
+            'data': dados,
             'style': {
                 2: 'text-align: right;',
                 3: 'text-align: right;',
             },
-            'bloco': 'Não endereçado' if self.bloco == '0-' else self.bloco,
         })
