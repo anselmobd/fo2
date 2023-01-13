@@ -41,7 +41,7 @@ class VisaoBlocoDetalhe(O2BaseGetView):
             row.update(ecd.details_dict)
 
         sort_field = 'order_ap' if local_field == 'endereco' else local_field
-        lotes.sort(key=operator.itemgetter(sort_field, 'op', 'ref', 'cor', 'tam'))
+        lotes.sort(key=operator.itemgetter(sort_field, 'op', 'ref', 'cor', 'ordem_tam'))
 
         itens = {}
         for lote in lotes:
