@@ -111,68 +111,6 @@ def add_endereco(cursor, endereco):
         return repr(e)
 
 
-def lote_item_qtd_em_local(cursor, local=None, bloco=None):
-    """Lista lotes paletizados com ref, tam, cor e quantidade"""
-    filtro = f"""--
-        AND ( ec.COD_ENDERECO = '{local}'
-            OR UPPER(lp.COD_CONTAINER)  = '{local}'
-            )
-    """ if local else ''
-
-    filtro_bloco = ""
-    if bloco:
-        if bloco == '0-':
-            filtro_bloco = f"""--
-                AND ec.COD_ENDERECO IS NULL
-            """
-        else:
-            filtro_bloco = f"""--
-                AND ec.COD_ENDERECO LIKE '{bloco}%'
-            """
-
-    sql = f"""
-        SELECT
-          ec.COD_ENDERECO endereco
-        , UPPER(lp.COD_CONTAINER) palete
-        , lp.ORDEM_PRODUCAO op
-        , lp.ORDEM_CONFECCAO lote
-        , lp.DATA_INCLUSAO data
-        , l.PROCONF_GRUPO REF
-        , l.PROCONF_SUBGRUPO TAM
-        , l.PROCONF_ITEM COR
-        , coalesce(
-            ( SELECT 
-                sum(lq.QTDE_EM_PRODUCAO_PACOTE)
-              FROM PCPC_040 lq
-              WHERE lq.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO 
-                AND lq.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-            )
-          , 0
-          ) QTD
-        FROM ENDR_014 lp -- lote/palete - oc/container
-        LEFT JOIN ENDR_015 ec -- endereço/container
-          ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
-        LEFT JOIN PCPC_040 l
-          -- ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
-          ON l.PERIODO_PRODUCAO = TRUNC(lp.ORDEM_CONFECCAO / 100000) 
-         AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
-         AND l.SEQUENCIA_ESTAGIO = 1 
-        WHERE 1=1
-          {filtro} -- filtro
-          {filtro_bloco} -- filtro_bloco
-        ORDER BY
-          lp.DATA_INCLUSAO DESC
-    """
-    debug_cursor_execute(cursor, sql)
-    dados = dictlist_lower(cursor)
-    for row in dados:
-        row['item'] = (
-            f"{row['ref']}.{row['tam']}.{row['cor']}"
-            if row['ref'] else '-'
-        )
-    return dados
-
-
 def conteudo_local(
     cursor,
     local=None,
