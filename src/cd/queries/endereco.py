@@ -138,16 +138,6 @@ def lotes_em_local(cursor, local=None, bloco=None):
         , lp.ORDEM_PRODUCAO op
         , lp.ORDEM_CONFECCAO lote
         , lp.DATA_INCLUSAO data
-        , coalesce(
-            ( SELECT 
-                lq.QTDE_EM_PRODUCAO_PACOTE
-              FROM PCPC_040 lq
-              WHERE lq.PERIODO_PRODUCAO = TRUNC(lp.ORDEM_CONFECCAO / 100000) 
-                AND lq.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
-                AND lq.CODIGO_ESTAGIO = 63
-            )
-          , 0
-          ) qtd
         FROM ENDR_014 lp -- lote/palete - oc/container
         LEFT JOIN ENDR_015 ec -- endereço/container
           ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
