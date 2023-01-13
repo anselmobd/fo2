@@ -18,15 +18,16 @@ class VisaoBloco(O2BaseGetView):
         self.title_name = 'Visão do bloco'
         self.get_args = ['bloco']
         self.get_args2self = True
+        self.get_args2context = True
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
         if self.bloco == '0-':
-            self.context['bloco'] = 'Paletes não endereçados'
+            self.context['descr_bloco'] = 'Paletes não endereçados'
             local_field = 'palete'
         else:
-            self.context['bloco'] = f"Bloco {self.bloco}"
+            self.context['descr_bloco'] = f"Bloco {self.bloco}"
             local_field = 'endereco'
 
         ecd = EnderecoCd()
