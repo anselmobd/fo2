@@ -255,7 +255,7 @@ def lotes_itens_em_local(cursor, local=None, bloco=None):
         LEFT JOIN ENDR_015 ec -- endereço/container
           ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
         LEFT JOIN PCPC_040 l
-          ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
+          ON l.PERIODO_PRODUCAO = TRUNC(lp.ORDEM_CONFECCAO / 100000)
          AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
          AND l.CODIGO_ESTAGIO = 63
         WHERE 1=1
