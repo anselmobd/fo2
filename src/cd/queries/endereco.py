@@ -140,7 +140,7 @@ def lotes_em_local(cursor, local=None, bloco=None):
         , lp.DATA_INCLUSAO data
         , coalesce(
             ( SELECT 
-                sum(lq.QTDE_EM_PRODUCAO_PACOTE)
+                lq.QTDE_EM_PRODUCAO_PACOTE
               FROM PCPC_040 lq
               WHERE lq.PERIODO_PRODUCAO = TRUNC(lp.ORDEM_CONFECCAO / 100000) 
                 AND lq.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
