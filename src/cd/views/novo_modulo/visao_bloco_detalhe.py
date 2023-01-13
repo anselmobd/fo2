@@ -1,4 +1,5 @@
 import operator
+from collections import namedtuple
 from pprint import pprint
 
 from fo2.connections import db_cursor_so
@@ -6,6 +7,7 @@ from fo2.connections import db_cursor_so
 from o2.views.base.get import O2BaseGetView
 from utils.views import totalize_data
 
+from cd.classes.endereco import EnderecoCd
 from cd.queries.endereco import conteudo_local
 
 
@@ -17,6 +19,7 @@ class VisaoBlocoDetalhe(O2BaseGetView):
         self.title_name = 'Visão detalhada do bloco'
         self.get_args = ['bloco']
         self.get_args2self = True
+        self.Key = namedtuple('Key', 'local ref cor tam')
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -28,31 +31,42 @@ class VisaoBlocoDetalhe(O2BaseGetView):
             self.context['bloco'] = f"Bloco {self.bloco}"
             local_field = 'endereco'
 
-        lotes = conteudo_local(self.cursor, bloco=self.bloco, qtd63=True)
+        ecd = EnderecoCd()
+        lotes = conteudo_local(self.cursor, bloco=self.bloco, item_qtd63=True)
+        for row in lotes:
+            ecd.endereco = row['endereco']
+            row.update(ecd.details_dict)
 
-        lotes.sort(key=operator.itemgetter(local_field))
+        sort_field = 'order_ap' if local_field == 'endereco' else local_field
+        lotes.sort(key=operator.itemgetter(sort_field, 'ref', 'cor', 'tam'))
 
-        locais = {}
+        itens = {}
         for lote in lotes:
-            if lote[local_field] not in locais:
-                locais[lote[local_field]] = {
-                    'lotes': set(),
-                    'itens': 0,
+            item = self.Key(
+                local=lote[local_field],
+                ref=lote['ref'],
+                cor=lote['cor'],
+                tam=lote['tam'],
+            )
+            if item not in itens:
+                itens[item] = {
+                    'qtd': 0,
                 }
-            locais[lote[local_field]]['lotes'].add(lote['lote'])
-            locais[lote[local_field]]['itens'] += lote['qtd']
+            itens[item]['qtd'] += lote['qtd']
 
         dados = [
             {
-                local_field: local,
-                'lotes': len(locais[local]['lotes']),
-                'itens': locais[local]['itens'],
+                local_field: item.local,
+                'ref': item.ref,
+                'cor': item.cor,
+                'tam': item.tam,
+                'qtd': itens[item]['qtd'],
             }
-            for local in locais
+            for item in itens
         ]
 
         totalize_data(dados, {
-            'sum': ['lotes', 'itens'],
+            'sum': ['qtd'],
             'descr': {local_field: 'Totais:'},
             'flags': ['NO_TOT_1'],
             'row_style': 'font-weight: bold;',
@@ -60,8 +74,10 @@ class VisaoBlocoDetalhe(O2BaseGetView):
 
         fields = {
             local_field: 'Palete' if local_field == 'palete' else 'Endereço',
-            'lotes': 'Lotes',
-            'itens': 'Itens',
+            'ref': 'Referência',
+            'cor': 'cor',
+            'tam': 'tamanho',
+            'qtd': 'Qtd.',
         }
 
         self.context.update({
@@ -69,7 +85,6 @@ class VisaoBlocoDetalhe(O2BaseGetView):
             'fields': fields.keys(),
             'data': dados,
             'style': {
-                2: 'text-align: right;',
-                3: 'text-align: right;',
+                5: 'text-align: right;',
             },
         })
