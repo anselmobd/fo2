@@ -128,7 +128,7 @@ class PosicaoEstoque(O2BaseGetPostView):
         data = queries.posicao_estoque(
             self.cursor, self.nivel, self.ref, self.tam, self.cor,
             self.deposito, zerados=False, group=self.agrupamento,
-            tipo=self.tipo, modelo=self.modelo)
+            tipo=self.tipo, modelo=self.modelo, empresa=1)
 
         if not data:
             return
