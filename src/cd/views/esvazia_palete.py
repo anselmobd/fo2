@@ -12,7 +12,7 @@ from systextil.models import Usuario as SystextilUsuario
 import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
-    lotes_em_local,
+    conteudo_local,
     esvazia_palete,
     get_palete,
     palete_guarda_hist,
@@ -61,7 +61,7 @@ class EsvaziaPalete(LoginRequiredMixin, View):
             self.context['identificado'] = None
             return
 
-        lotes_end = lotes_em_local(cursor, palete)
+        lotes_end = conteudo_local(cursor, local=palete)
         if lotes_end:
             self.context.update({
                 'quant_lotes': len(lotes_end),

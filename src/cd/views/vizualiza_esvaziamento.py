@@ -13,7 +13,7 @@ from utils.functions import coalesce
 import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
-    lotes_em_local,
+    conteudo_local,
     lotes_em_versao_palete,
 )
 
@@ -41,7 +41,7 @@ class VisualizaEsvaziamento(View):
             for row in lotes_versao
         }
 
-        lotes_end = lotes_em_local(self.cursor, palete)
+        lotes_end = conteudo_local(self.cursor, local=palete)
         lotes_end_dict = {
             row['lote']: row['data'].strftime('%d/%m/%y %H:%M:%S')
             for row in lotes_end
