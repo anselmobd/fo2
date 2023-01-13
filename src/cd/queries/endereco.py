@@ -151,21 +151,29 @@ def conteudo_local(
     """ if item else ''
 
     retorna_qtd = """--
-        , coalesce(l.QTDE_A_PRODUZIR_PACOTE, 0) qtd
+        , coalesce(l63.QTDE_A_PRODUZIR_PACOTE, 0) qtd
     """ if qtd63 else ''
 
     join_dict = {
-        'PCPC_040' : """--
+        'l' : """--
             LEFT JOIN PCPC_040 l
-            ON l.PERIODO_PRODUCAO = TRUNC(lp.ORDEM_CONFECCAO / 100000)
-            AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
-            AND l.CODIGO_ESTAGIO = 63
-        """
+              ON l.PERIODO_PRODUCAO = TRUNC(lp.ORDEM_CONFECCAO / 100000)
+             AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+             AND l.SEQUENCIA_ESTAGIO = 1
+        """,
+        'l63' : """--
+            LEFT JOIN PCPC_040 l63
+              ON l63.PERIODO_PRODUCAO = TRUNC(lp.ORDEM_CONFECCAO / 100000)
+             AND l63.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+             AND l63.CODIGO_ESTAGIO = 63
+        """,
     }
 
     join_set = set()
-    if qtd63 or item:
-        join_set.add('PCPC_040')
+    if item:
+        join_set.add('l')
+    if qtd63:
+        join_set.add('l63')
 
     joins = "\n".join([
         join_stm
