@@ -1,22 +1,23 @@
 import operator
 from pprint import pprint
 
-from django.shortcuts import render
-from django.views import View
-
 from fo2.connections import db_cursor_so
 
+from o2.views.base.get import O2BaseGetView
 from utils.views import totalize_data
 
 from cd.classes.endereco import EnderecoCd
 from cd.queries.endereco import lotes_itens_em_local
 
 
-class VisaoBloco(View):
+class VisaoBloco(O2BaseGetView):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(VisaoBloco, self).__init__(*args, **kwargs)
         self.template_name = 'cd/novo_modulo/visao_bloco.html'
         self.title_name = 'Visão do bloco'
+        self.get_args = ['bloco']
+        self.get_args2self = True
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -78,9 +79,3 @@ class VisaoBloco(View):
             },
             'bloco': 'Não endereçado' if self.bloco == '0-' else self.bloco,
         })
-
-    def get(self, request, *args, **kwargs):
-        self.bloco = kwargs['bloco']
-        self.context = {'titulo': self.title_name}
-        self.mount_context()
-        return render(request, self.template_name, self.context)
