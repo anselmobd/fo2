@@ -30,49 +30,49 @@ class VisaoCd(O2BaseGetView):
 
         ecd = EnderecoCd()
         lotes = conteudo_local(self.cursor, qtd63=True)
-        for row in lotes:
-            ecd.endereco = row['endereco']
-            row.update(ecd.details_dict)
+        for lote in lotes:
+            ecd.endereco = lote['endereco']
+            lote.update(ecd.details_dict)
 
         lotes.sort(key=operator.itemgetter('prioridade', 'bloco', 'order_ap'))
 
-        dados = {}
-        for end in lotes:
-            dados_key = self.DataKey(
-                espaco=end['espaco'],
-                espaco_cod=end['espaco_cod'],
-                bloco=end['bloco'],
+        blocos = {}
+        for lote in lotes:
+            bloco = self.DataKey(
+                espaco=lote['espaco'],
+                espaco_cod=lote['espaco_cod'],
+                bloco=lote['bloco'],
             )
-            if dados_key not in dados:
-                dados[dados_key] = {
+            if bloco not in blocos:
+                blocos[bloco] = {
                     'enderecos': set(),
                     'lotes': set(),
                     'qtd': 0,
                 }
-            dados[dados_key]['enderecos'].add(end['endereco'])
-            dados[dados_key]['lotes'].add(end['lote'])
-            dados[dados_key]['qtd'] += end['qtd']
+            blocos[bloco]['enderecos'].add(lote['endereco'])
+            blocos[bloco]['lotes'].add(lote['lote'])
+            blocos[bloco]['qtd'] += lote['qtd']
 
-        data = []
-        for dados_key in dados:
-            row = {
-                'espaco': dados_key.espaco,
-                'bloco': dados_key.bloco,
+        dados = []
+        for bloco in blocos:
+            lote = {
+                'espaco': bloco.espaco,
+                'bloco': bloco.bloco,
                 'qtd_ends': (
-                    0 if dados_key.bloco == '-'
-                    else len(dados[dados_key]['enderecos'])
+                    0 if bloco.bloco == '-'
+                    else len(blocos[bloco]['enderecos'])
                 ),
-                'qtd_lotes': len(dados[dados_key]['lotes']),
-                'qtd': dados[dados_key]['qtd'],
+                'qtd_lotes': len(blocos[bloco]['lotes']),
+                'qtd': blocos[bloco]['qtd'],
             }
-            row['qtd_ends|LINK'] = reverse(
+            lote['qtd_ends|LINK'] = reverse(
                 'cd:novo_visao_bloco__get', args=[
-                    f"{dados_key.espaco_cod}{dados_key.bloco}"
+                    f"{bloco.espaco_cod}{bloco.bloco}"
                 ])
-            data.append(row)
+            dados.append(lote)
 
         group = ['espaco']
-        totalize_grouped_data(data, {
+        totalize_grouped_data(dados, {
             'group': group,
             'sum': ['qtd_ends', 'qtd_lotes', 'qtd'],
             'count': [],
@@ -82,7 +82,7 @@ class VisaoCd(O2BaseGetView):
             'flags': ['NO_TOT_1'],
             'row_style': 'font-weight: bold;',
         })
-        group_rowspan(data, group)
+        group_rowspan(dados, group)
 
         fields = {
             'espaco': 'Espaço',
@@ -95,7 +95,7 @@ class VisaoCd(O2BaseGetView):
         self.context.update({
             'headers': fields.values(),
             'fields': fields.keys(),
-            'data': data,
+            'data': dados,
             'group': group,
             'style': {
                 3: 'text-align: right;',
