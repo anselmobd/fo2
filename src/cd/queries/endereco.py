@@ -173,21 +173,44 @@ def lote_item_qtd_em_local(cursor, local=None, bloco=None):
     return dados
 
 
-def conteudo_local(cursor, local=None, bloco=None, qtd63=False):
+def conteudo_local(
+    cursor,
+    local=None,
+    bloco=None,
+    item=False,
+    qtd63=False,
+    item_qtd63=False,
+):
     """Lista lotes paletizados
     Retorna
         endereco
         palete
         op
         lote
-        data (de inclusão)
+        data de inclusão
     Filtros
         local (opcional): pode ser tanto um endereço quando um palete
         blobo (opcional): início de endereço
     Parâmetros
+        item (default False): Adiciona retorno de:
+            referência
+            tamanho
+            cor
+            item (calculado 'ref.tam.cor')
         qtd63 (default False): Adiciona retorno de:
             qtd (quantidade do lote no estágio 63)
+        item_qtd63 (default False): item e qtd63
     """
+
+    if item_qtd63:
+        item = True
+        qtd63 = True
+
+    retorna_item = """--
+        , l.PROCONF_GRUPO REF
+        , l.PROCONF_SUBGRUPO TAM
+        , l.PROCONF_ITEM COR
+    """ if item else ''
 
     retorna_qtd = """--
         , coalesce(l.QTDE_A_PRODUZIR_PACOTE, 0) qtd
@@ -203,7 +226,7 @@ def conteudo_local(cursor, local=None, bloco=None, qtd63=False):
     }
 
     join_set = set()
-    if qtd63:
+    if qtd63 or item:
         join_set.add('PCPC_040')
 
     joins = "\n".join([
@@ -236,6 +259,7 @@ def conteudo_local(cursor, local=None, bloco=None, qtd63=False):
         , lp.ORDEM_PRODUCAO op
         , lp.ORDEM_CONFECCAO lote
         , lp.DATA_INCLUSAO data
+        {retorna_item} -- retorna_item
         {retorna_qtd} -- retorna_qtd
         FROM ENDR_014 lp -- lote/palete - oc/container
         LEFT JOIN ENDR_015 ec -- endereço/container
@@ -248,7 +272,16 @@ def conteudo_local(cursor, local=None, bloco=None, qtd63=False):
           lp.DATA_INCLUSAO DESC
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
+    dados = dictlist_lower(cursor)
+
+    if item:
+        for row in dados:
+            row['item'] = (
+                f"{row['ref']}.{row['tam']}.{row['cor']}"
+                if row['ref'] else '-'
+            )
+
+    return dados
 
 
 def lotes_em_versao_palete(cursor, palete, data_versao):
