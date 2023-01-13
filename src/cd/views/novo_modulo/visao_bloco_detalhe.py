@@ -22,7 +22,7 @@ class VisaoBlocoDetalhe(O2BaseGetView):
         self.title_name = 'Visão detalhada do bloco'
         self.get_args = ['bloco']
         self.get_args2self = True
-        self.Key = namedtuple('Key', 'local op item')
+        self.Key = namedtuple('Key', 'local op ref, cor, tam')
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -48,7 +48,9 @@ class VisaoBlocoDetalhe(O2BaseGetView):
             item = self.Key(
                 local=lote[local_field],
                 op=lote['op'],
-                item=lote['item'],
+                ref=lote['ref'],
+                cor=lote['cor'],
+                tam=lote['tam'],
             )
             if item not in itens:
                 itens[item] = {
@@ -62,7 +64,9 @@ class VisaoBlocoDetalhe(O2BaseGetView):
             {
                 local_field: item.local,
                 'op': item.op,
-                'item': item.item,
+                'ref': item.ref,
+                'cor': item.cor,
+                'tam': item.tam,
                 'lotes': len(itens[item]['lotes']),
                 'qtd': itens[item]['qtd'],
             }
@@ -85,7 +89,9 @@ class VisaoBlocoDetalhe(O2BaseGetView):
         fields = {
             local_field: 'Palete' if local_field == 'palete' else 'Endereço',
             'op': 'OP',
-            'item': 'Item',
+            'ref': 'Referência',
+            'cor': 'Cor',
+            'tam': 'Tamanho',
             'lotes': 'Lotes',
             'qtd': 'Quant.',
         }
@@ -96,7 +102,7 @@ class VisaoBlocoDetalhe(O2BaseGetView):
             'data': dados,
             'group': group,
             'style': {
-                4: 'text-align: right;',
-                5: 'text-align: right;',
+                6: 'text-align: right;',
+                7: 'text-align: right;',
             },
         })
