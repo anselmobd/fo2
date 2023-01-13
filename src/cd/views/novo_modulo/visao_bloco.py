@@ -6,6 +6,7 @@ from fo2.connections import db_cursor_so
 from o2.views.base.get import O2BaseGetView
 from utils.views import totalize_data
 
+from cd.classes.endereco import EnderecoCd
 from cd.queries.endereco import conteudo_local
 
 
@@ -28,9 +29,16 @@ class VisaoBloco(O2BaseGetView):
             self.context['bloco'] = f"Bloco {self.bloco}"
             local_field = 'endereco'
 
+        ecd = EnderecoCd()
         lotes = conteudo_local(self.cursor, bloco=self.bloco, qtd63=True)
+        for lote in lotes:
+            ecd.endereco = lote['endereco']
+            lote.update(ecd.details_dict)
 
-        lotes.sort(key=operator.itemgetter(local_field))
+        if local_field == 'palete':
+            lotes.sort(key=operator.itemgetter(local_field))
+        else:
+            lotes.sort(key=operator.itemgetter('order_ap'))
 
         locais = {}
         for lote in lotes:
