@@ -15,7 +15,7 @@ from utils.functions.strings import only_digits
 import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
-    lote_item_qtd_em_local,
+    conteudo_local,
     get_endereco,
     get_esvaziamentos_de_palete,
     get_palete,
@@ -178,7 +178,11 @@ class ConteudoLocal(View):
             'nome_tipo_local': nome_tipo_local,
         })
 
-        self.lotes_end = lote_item_qtd_em_local(self.cursor, self.local)
+        self.lotes_end = conteudo_local(
+            self.cursor,
+            local=self.local,
+            item_qtd63=True,
+        )
 
         tem_lotes = self.lotes_end and self.lotes_end[0]['lote']
 

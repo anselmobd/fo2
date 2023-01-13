@@ -15,8 +15,8 @@ from lotes.views.lote import dict_conserto_lote
 import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
+    conteudo_local,
     local_de_lote,
-    lote_item_qtd_em_local,
 )
 
 
@@ -54,7 +54,11 @@ class LocalizaLote(View):
             'palete': local[0]['palete'],
         })
 
-        lotes_end = lote_item_qtd_em_local(cursor, local[0]['palete'])
+        lotes_end = conteudo_local(
+            cursor,
+            local=local[0]['palete'],
+            item_qtd63=True,
+        )
 
         total_qtd = 0
         for row in lotes_end:
