@@ -3,7 +3,7 @@ from utils.functions.models.dictlist import dictlist_lower
 
 def posicao_estoque(
         cursor, nivel, ref, tam, cor, deposito='999', zerados=True, group='',
-        tipo='t', modelo=None):
+        tipo='t', modelo=None, empresa=None):
     filtro_nivel = ''
     if nivel is not None:
         filtro_nivel = "AND e.CDITEM_NIVEL99 = {nivel}".format(nivel=nivel)
@@ -171,6 +171,8 @@ def posicao_estoque(
     elif tipo == 'm':
         filtro_tipo = "AND e.cditem_grupo >= 'C0000'"
 
+    filtro_empresa = f"AND d.LOCAL_DEPOSITO = {empresa}" if empresa else ''
+
     sql = f'''
         SELECT
           e.cditem_nivel99 nivel
@@ -190,6 +192,7 @@ def posicao_estoque(
           {filtro_deposito} -- filtro_deposito
           {filtro_zerados} -- filtro_zerados
           {filtro_tipo} -- filtro_tipo
+          {filtro_empresa} -- filtro_empresa
         {group_fields} -- group_fields
         ORDER BY
           e.CDITEM_NIVEL99
