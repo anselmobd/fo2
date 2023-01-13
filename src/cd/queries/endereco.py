@@ -111,46 +111,6 @@ def add_endereco(cursor, endereco):
         return repr(e)
 
 
-def lotes_em_local(cursor, local=None, bloco=None):
-    """Lista lotes paletizados"""
-
-    filtro = f"""--
-        AND ( ec.COD_ENDERECO = '{local}'
-            OR UPPER(lp.COD_CONTAINER)  = '{local}'
-            )
-    """ if local else ''
-
-    filtro_bloco = ""
-    if bloco:
-        if bloco == '0-':
-            filtro_bloco = f"""--
-                AND ec.COD_ENDERECO IS NULL
-            """
-        else:
-            filtro_bloco = f"""--
-                AND ec.COD_ENDERECO LIKE '{bloco}%'
-            """
-
-    sql = f"""
-        SELECT
-          ec.COD_ENDERECO endereco
-        , UPPER(lp.COD_CONTAINER) palete
-        , lp.ORDEM_PRODUCAO op
-        , lp.ORDEM_CONFECCAO lote
-        , lp.DATA_INCLUSAO data
-        FROM ENDR_014 lp -- lote/palete - oc/container
-        LEFT JOIN ENDR_015 ec -- endereço/container
-          ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
-        WHERE 1=1
-          {filtro} -- filtro
-          {filtro_bloco} -- filtro_bloco
-        ORDER BY
-          lp.DATA_INCLUSAO DESC
-    """
-    debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
-
-
 def lote_item_qtd_em_local(cursor, local=None, bloco=None):
     """Lista lotes paletizados com ref, tam, cor e quantidade"""
     filtro = f"""--
