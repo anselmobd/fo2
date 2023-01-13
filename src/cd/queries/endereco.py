@@ -223,7 +223,7 @@ def lote_item_qtd_em_local(cursor, local=None, bloco=None):
     return dados
 
 
-def lotes_itens_em_local(cursor, local=None, bloco=None):
+def lote_qtd_em_local(cursor, local=None, bloco=None):
     """Lista lotes paletizados com suas quantidades"""
 
     filtro = f"""--

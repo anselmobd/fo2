@@ -7,7 +7,7 @@ from o2.views.base.get import O2BaseGetView
 from utils.views import totalize_data
 
 from cd.classes.endereco import EnderecoCd
-from cd.queries.endereco import lotes_itens_em_local
+from cd.queries.endereco import lote_qtd_em_local
 
 
 class VisaoBloco(O2BaseGetView):
@@ -23,7 +23,7 @@ class VisaoBloco(O2BaseGetView):
         self.cursor = db_cursor_so(self.request)
 
         ecd = EnderecoCd()
-        lotes = lotes_itens_em_local(self.cursor, bloco=self.bloco)
+        lotes = lote_qtd_em_local(self.cursor, bloco=self.bloco)
         for row in lotes:
             if row['endereco']:
                 ecd.endereco = row['endereco']

@@ -14,7 +14,7 @@ from utils.views import (
 )
 
 from cd.classes.endereco import EnderecoCd
-from cd.queries.endereco import lotes_itens_em_local
+from cd.queries.endereco import lote_qtd_em_local
 
 
 class VisaoCd(O2BaseGetView):
@@ -29,7 +29,7 @@ class VisaoCd(O2BaseGetView):
         self.cursor = db_cursor_so(self.request)
 
         ecd = EnderecoCd()
-        lotes = lotes_itens_em_local(self.cursor)
+        lotes = lote_qtd_em_local(self.cursor)
         for row in lotes:
             ecd.endereco = row['endereco']
             row.update(ecd.details_dict)
