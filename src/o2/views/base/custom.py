@@ -32,10 +32,15 @@ class CustomView(View):
         get_args2context
             um boolean indicando se as variáveis recebidas por GET
             vão para o context
+        
+        get_args2self
+            um boolean indicando se as variáveis recebidas por GET
+            vão para o self da view
         """
         super(CustomView, self).__init__(*args, **kwargs)
         self.get_args = []
         self.get_args2context = False
+        self.get_args2self = False
         self.get_args2form = True
         self.redirect = None
         self.context = {}
@@ -65,6 +70,11 @@ class CustomView(View):
             for arg in self.get_args:
                 arg_value = self.get_arg(arg)
                 self.context.update({arg: arg_value})
+
+        if self.get_args2self:
+            for arg in self.get_args:
+                arg_value = self.get_arg(arg)
+                setattr(self, arg, arg_value)
 
     def get_arg(self, field):
         """
