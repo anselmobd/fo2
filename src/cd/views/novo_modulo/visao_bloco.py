@@ -1,6 +1,8 @@
 import operator
 from pprint import pprint
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from o2.views.base.get import O2BaseGetView
@@ -57,6 +59,13 @@ class VisaoBloco(O2BaseGetView):
             }
             for local in locais
         ]
+
+        if local_field == 'endereco':
+            for row in dados:
+                row['endereco|LINK'] = reverse(
+                    'cd:visao_bloco_detalhe__get', args=[
+                        f"{row['endereco']}"
+                    ])
 
         totalize_data(dados, {
             'sum': ['lotes', 'itens'],

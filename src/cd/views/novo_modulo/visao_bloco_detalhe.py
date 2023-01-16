@@ -2,6 +2,8 @@ import operator
 from collections import namedtuple
 from pprint import pprint
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from o2.views.base.get import O2BaseGetView
@@ -73,6 +75,12 @@ class VisaoBlocoDetalhe(O2BaseGetView):
             }
             for item in itens
         ]
+
+        for row in dados:
+            row['endereco|LINK'] = reverse(
+                'cd:visao_bloco_detalhe__get', args=[
+                    f"{row['endereco']}"
+                ])
 
         group = [local_field]
         totalize_grouped_data(dados, {
