@@ -29,7 +29,10 @@ class VisaoBloco(O2BaseGetView):
             self.context['descr_bloco'] = 'Paletes não endereçados'
             local_field = 'palete'
         else:
-            self.context['descr_bloco'] = f"Bloco {self.bloco}"
+            if len(self.bloco) == 6:
+                self.context['descr_bloco'] = f"Endereço {self.bloco}"
+            else:
+                self.context['descr_bloco'] = f"Bloco {self.bloco}"
             local_field = 'endereco'
 
         ecd = EnderecoCd()
