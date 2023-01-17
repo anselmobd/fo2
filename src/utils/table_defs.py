@@ -5,32 +5,34 @@ __all__ = ['TableDefs', 'TableDefsHpS']
 
 
 class TableDefs(object):
-    '''Classe para auxiliar a montagem do dicionário utilizado
-    nos templates para gerar HTML table;
+    '''Classe para auxiliar a montagem do dicionário com definições necessarias
+    para gerar, nos templates, um "HTML table" que apresenta o conteúdo de um
+    "dictlist" de dados.
 
-    Gera um dicionário com as seguintes chaves:
+    O dicionário gerado terá as seguintes chaves:
         headers
         fields
         style
-        decimals
+        decimals (opcional)
 
-    Para isso trabalha em uma extrutura guardade em self.definition
+    Para isso trabalha em uma estrutura que deve estar no parâmetro
+    self.definition desta classe.
 
-    self.definition é um dicionário de campos, cujos
-    valores são dicionário com pares chave e valor das
-    configurações do campo.
+    self.definition é um dicionário cujas chaves são os nomes dos campos de um
+    "dictlist" de dados, e cujos valores são dicionários com pares chave/valor
+    das configurações de apresentação do campo.
 
     As possíveis chave das configurações do campo são:
         - header
         - style
         - decimals
-    Por exemplo:
 
+    Por exemplo:
     {
         'field': {
             'header': 'Header',
             'style': 'text-align: right;',
-            'decimals': 9,
+            'decimals': 2,
         },
     }
     '''
