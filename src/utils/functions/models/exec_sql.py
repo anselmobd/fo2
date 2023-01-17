@@ -16,8 +16,8 @@ class ExecSql(object):
     - receive imediatly data
     Parameters can be:
     - result_case:
-      - '' or upper: process cursor with rows_to_dict_list
-      - lower: process cursor with rows_to_dict_list_lower
+      - '' or upper: process cursor with dictlist
+      - lower: process cursor with dictlist_lower
       - cursor; not process the cursor
     """
     def __init__(self, cursor, *arguments, args=None, sql='', **kwargs):
