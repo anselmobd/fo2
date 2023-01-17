@@ -13,8 +13,8 @@ from utils.functions.models.dictlist import (
 )
 from utils.table_defs import TableDefsHpSD
 
+from lotes.queries.pedido.ped_alter import pedidos_filial_na_data
 from lotes.queries.rastreabilidade import (
-    filial_pedido,
     pedido_op,
 )
 from lotes.queries.pedido.ped_inform import ped_inform
@@ -30,9 +30,10 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.cleaned_data2self = True
         self.get_args = ['pedido']
 
-    def create_table(self, data, titulo=None, vazio=None):
+    def create_table(self, data, titulo=None, titulo_h=4, vazio=None):
         return {
             'titulo': titulo,
+            'titulo_h': titulo_h,
             'data': data,
             'vazio': vazio,
         }
@@ -168,25 +169,34 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.context['ops'] = ops
 
     def get_dados_filial_pedido(self):
-        return filial_pedido.query(
-            self.cursor,
-            pedido=self.pedido,
+        fantasia = self.dados_pedido[0]['fantasia']
+        ops = [
+            op['op']
+            for op in self.dados_ops
+        ]
+        return pedidos_filial_na_data(
+            self.cursor, fantasia=fantasia, op=ops)
+
+    def prep_rows_filial_pedido(self):
+        for row in self.dados_filial_ped:
+            row_field_str(row, 'ped')
+
+    def table_filial_pedido(self):
+        bloco = self.create_table(
+            self.dados_filial_ped,
+            titulo='Pedidos auxiliares para faturamento Filial-Matriz',
         )
+        TableDefsHpSD({
+            'ped': ["Pedido"],
+        }).hfs_dict_context(bloco)
+        return bloco
 
     def info_filial_pedido(self):
-        pass
-        # self.dados_filial_ped = self.get_dados_filial_pedido()
-        # self.prep_rows_ops()
-        # ops = []
-        # for row in self.dados_ops:
-        #     ops.append({
-        #         'op': row['op'],
-        #         'tipo_ref': row['tipo_ref'],
-        #         'ref': self.table_op_ref([row]),
-        #         'info': self.table_op_info([row]),
-        #         'obs': self.table_op_obs([row]),
-        #     })
-        # self.context['ops'] = ops
+        self.dados_filial_ped = self.get_dados_filial_pedido()
+        self.prep_rows_filial_pedido()
+        self.context.update({
+            'filial_pedido': self.table_filial_pedido(),
+        })
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -199,5 +209,5 @@ class RastreabilidadeView(O2BaseGetPostView):
             return
 
         self.info_pedido()
-        self.info_ops()
+        self.info_ops()      
         self.info_filial_pedido()

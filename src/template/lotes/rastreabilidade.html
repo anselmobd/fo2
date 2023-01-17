@@ -33,4 +33,5 @@
   {% empty %}
     <h4>Nenhuma OP</h4>
   {% endfor %}
+  {% include "layout/table_generic.html" with dados=filial_pedido only %}
 {% endblock %}
