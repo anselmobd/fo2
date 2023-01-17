@@ -36,12 +36,18 @@ class CustomView(View):
         get_args2self
             um boolean indicando se as variáveis recebidas por GET
             vão para o self da view
+
+        redirect
+            string ou tupla que serão attibutos da execução de um
+            redirect. Caso None, é executado um render.
+
         """
         super(CustomView, self).__init__(*args, **kwargs)
         self.get_args = []
         self.get_args2context = False
         self.get_args2self = False
         self.redirect = None
+
         self.context = {}
 
     def init_self(self, request, kwargs):
@@ -50,6 +56,7 @@ class CustomView(View):
             request
             kwargs
             context
+            {outras, caso get_args2self}
         """
         self.request = request
         self.kwargs = kwargs
@@ -81,8 +88,8 @@ class CustomView(View):
 
     def my_render(self):
         """
-        Se redirect for definifo, execute.
-        Senão, chama render com self: request, template_name e context
+        Se self.redirect for definido, execute redirect.
+        Senão, execute render com request, template_name e context
         """
         if self.redirect:
             if isinstance(self.redirect, tuple):
@@ -105,7 +112,9 @@ class CustomView(View):
 
     def do_steps(self, steps, msg_erro='msg_erro'):
         """Metodo de que recebe lista de metodos e os executa.
+
         Retorna booleano indicando sucesso da execução da lista inteira.
+        Na primeira ocorrência de excessão a execução da lista é interompida.
         
         Se os métodos levantarem uma exceção o texto desta vai para a chave
         msg_erro do self.context
@@ -118,8 +127,6 @@ class CustomView(View):
         Caso tanto o atributo quanto o retorno forem dicionários, é feito um
         atributo.update(retorno). Isso é útil, por exemplo, quando se quer que o 
         retorno seja adicionado ao context.
-
-        Na primeira ocorrência de excessão a execução da lista é interompida.
         """
         for do_get in steps:
             try:
