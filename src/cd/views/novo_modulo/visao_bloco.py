@@ -80,7 +80,7 @@ class VisaoBloco(O2BaseGetView):
         fields = {
             local_field: 'Palete' if local_field == 'palete' else 'Endereço',
             'lotes': 'Lotes',
-            'itens': 'Itens',
+            'itens': 'Itens(63)',
         }
 
         self.context.update({

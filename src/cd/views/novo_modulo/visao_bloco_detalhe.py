@@ -103,7 +103,7 @@ class VisaoBlocoDetalhe(O2BaseGetView):
             'cor': 'Cor',
             'tam': 'Tamanho',
             'lotes': 'Lotes',
-            'qtd': 'Quant.',
+            'qtd': 'Quant.(63)',
         }
 
         self.context.update({
