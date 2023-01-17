@@ -180,6 +180,7 @@ class RastreabilidadeView(O2BaseGetPostView):
     def prep_rows_filial_pedido(self):
         for row in self.dados_filial_ped:
             row_field_str(row, 'ped')
+            row_field_date(row, 'data')
             row_field_str(row, 'nf')
 
     def table_filial_pedido(self):
@@ -189,6 +190,8 @@ class RastreabilidadeView(O2BaseGetPostView):
         )
         TableDefsHpSD({
             'ped': ["Pedido"],
+            'data': ["Data estágio 16", 'c'],
+            'obs': ["Observação"],
             'nf': ["NF"],
         }).hfs_dict_context(bloco)
         return bloco
