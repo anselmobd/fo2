@@ -180,6 +180,7 @@ class RastreabilidadeView(O2BaseGetPostView):
     def prep_rows_filial_pedido(self):
         for row in self.dados_filial_ped:
             row_field_str(row, 'ped')
+            row_field_str(row, 'nf')
 
     def table_filial_pedido(self):
         bloco = self.create_table(
@@ -188,6 +189,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         )
         TableDefsHpSD({
             'ped': ["Pedido"],
+            'nf': ["NF"],
         }).hfs_dict_context(bloco)
         return bloco
 
@@ -209,7 +211,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             return
 
         self.info_pedido()
-        
+
         if not self.dados_pedido[0]['empresa'].startswith('1'):
             return
 
