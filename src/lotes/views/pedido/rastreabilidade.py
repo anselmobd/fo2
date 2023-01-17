@@ -17,7 +17,7 @@ from lotes.queries.rastreabilidade import (
     filial_pedido,
     pedido_op,
 )
-from lotes.queries.pedido.ped_inform import ped_inform_lower
+from lotes.queries.pedido.ped_inform import ped_inform
 
 
 class RastreabilidadeView(O2BaseGetPostView):
@@ -27,7 +27,6 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.Form_class = Forms2().Pedido
         self.template_name = 'lotes/rastreabilidade.html'
         self.title_name = 'Rastreabilidade'
-        self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.get_args = ['pedido']
 
@@ -39,9 +38,11 @@ class RastreabilidadeView(O2BaseGetPostView):
         }
 
     def get_dados_pedido(self):
-        return ped_inform_lower(
+        return ped_inform(
             self.cursor,
             pedido=self.pedido,
+            empresa=None,
+            lower=True,
         )
 
     def prep_rows_pedido(self):

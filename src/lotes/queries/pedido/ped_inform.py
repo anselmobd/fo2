@@ -8,7 +8,7 @@ from utils.functions.models.dictlist import (
 )
 from utils.functions.queries import debug_cursor_execute
 
-__all__ = ['ped_inform_lower', 'ped_inform']
+__all__ = ['ped_inform']
 
 
 _DICT_STATUS_PEDIDO = {
@@ -47,19 +47,17 @@ _DICT_EMPRESA = {
 }
 
 
-def ped_inform_lower(
-    cursor, pedido, empresa=None, busca_tb_ped_cli=None,
-):
-    return ped_inform(
-        cursor, pedido, empresa=empresa,
-        f_dictlist=dictlist_lower, busca_tb_ped_cli=busca_tb_ped_cli
-    )
-
-
 def ped_inform(
-    cursor, pedido, empresa=1,
-    f_dictlist=dictlist, busca_tb_ped_cli=False,
+    cursor,
+    pedido,
+    empresa=1,
+    busca_tb_ped_cli=False,
+    f_dictlist=dictlist,
+    lower=False,
 ):
+    if lower:
+        f_dictlist = dictlist_lower
+
     if f_dictlist == dictlist:
         f_case = str.upper
     else:
