@@ -61,6 +61,7 @@ class RastreabilidadeView(O2BaseGetPostView):
     def table_ped_cliente(self):
         bloco = self.create_table(self.dados_pedido)
         TableDefsHpSD({
+            'empresa': ["Empresa"],
             'pedido_venda': ["Pedido"],
             'deposito': ["Depósito"],
             'fantasia': ["Fantasia"],
