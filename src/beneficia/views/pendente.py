@@ -83,7 +83,7 @@ class Pendente(O2BaseGetPostView):
             'tipo_tecido': ["Tipo tecido"],
             'cor': ["Cor"],
             'quilos': ["Quilos", 'r', 3],
-        }).hfs_dict(context=self.table)
+        }).hfs_dict_context(self.table)
         self.table.update({
             'safe': ['op'],
         })

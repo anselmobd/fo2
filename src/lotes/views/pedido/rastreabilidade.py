@@ -67,7 +67,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             'fantasia': ["Fantasia"],
             'cliente': ["Cliente"],
             'pedido_cliente': ["Pedido Cliente"],
-        }).hfs_dict(context=bloco)
+        }).hfs_dict_context(bloco)
         return bloco
 
     def table_ped_status(self):
@@ -78,14 +78,14 @@ class RastreabilidadeView(O2BaseGetPostView):
             'status_pedido': ["Status pedido"],
             'cancelamento_descr': ["Cancelamento"],
             'situacao_venda': ["Situação venda"],
-        }).hfs_dict(context=bloco)
+        }).hfs_dict_context(bloco)
         return bloco
 
     def table_ped_obs(self):
         bloco = self.create_table(self.dados_pedido)
         TableDefsHpSD({
             'observacao': ["Observação"],
-        }).hfs_dict(context=bloco)
+        }).hfs_dict_context(bloco)
         return bloco
 
     def info_pedido(self):
@@ -129,7 +129,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             'ref_descr': ["Ref. Descr."],
             'colecao': ["Coleção"],
             'qtd': ["Quant."],
-        }).hfs_dict(context=bloco)
+        }).hfs_dict_context(bloco)
         return bloco
 
     def table_op_info(self, dados):
@@ -142,7 +142,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             'op_princ': ["OP mãe"],
             'canc': ["Cancelamento"],
             'dt_canc': ["Data Canc."],
-        }).hfs_dict(context=bloco)
+        }).hfs_dict_context(bloco)
         return bloco
 
     def table_op_obs(self, dados):
@@ -150,7 +150,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         TableDefsHpSD({
             'obs': ["Observação"],
             'obs2': ["Observação 2"],
-        }).hfs_dict(context=bloco)
+        }).hfs_dict_context(bloco)
         return bloco
 
     def info_ops(self):

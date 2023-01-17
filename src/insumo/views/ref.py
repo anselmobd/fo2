@@ -121,7 +121,7 @@ class Ref(O2BaseGetPostView):
             TableDefsH({
                 'cor': ["Cor"],
                 'descr': ["Descrição"],
-            }).hfs_dict(context=result)
+            }).hfs_dict_context(result)
         return result
 
     def get_taman(self, cursor, nivel, ref):
@@ -138,7 +138,7 @@ class Ref(O2BaseGetPostView):
                 'tam': ["Tamanho"],
                 'descr': ["Descrição"],
                 'compl': ["Complemento"],
-            }).hfs_dict(context=result)
+            }).hfs_dict_context(result)
         return result
 
     def get_param(self, cursor, nivel, ref):

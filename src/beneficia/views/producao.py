@@ -115,7 +115,7 @@ class Producao(O2BaseGetPostView):
                 'tipo_tecido': ["Tipo tecido"],
                 'cor': ["Cor"],
                 'quilos': ["Quilos", 'r', 3],
-            }).hfs_dict(context=result)
+            }).hfs_dict_context(result)
 
         return result, grade
 

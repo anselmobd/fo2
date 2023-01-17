@@ -75,7 +75,7 @@ class BuscaPedido(O2BaseGetPostView):
             'nf': ["NF"],
             'dt_nf': ["NF emissão"],
             'obs': ["Observação"],
-        }).hfs_dict(context=bloco)
+        }).hfs_dict_context(bloco)
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
