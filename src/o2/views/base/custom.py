@@ -59,12 +59,10 @@ class CustomView(View):
         if self.app_name == 'producao':
             self.app_name = 'lotes'
         self.app_config = apps.get_app_config(self.app_name)
+        self.context.update({'app_config': self.app_config})
 
         if hasattr(self, 'title_name'):
-            self.context.update({
-                'titulo': self.title_name,
-                'app_config': self.app_config,
-            })
+            self.context.update({'titulo': self.title_name})
 
         if self.get_args2context:
             for arg in self.get_args:
