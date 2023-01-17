@@ -77,10 +77,11 @@ class VisaoBlocoDetalhe(O2BaseGetView):
         ]
 
         for row in dados:
-            row['endereco|LINK'] = reverse(
-                'cd:visao_bloco_detalhe__get', args=[
-                    f"{row['endereco']}"
-                ])
+            if 'endereco' in row:
+                row['endereco|LINK'] = reverse(
+                    'cd:visao_bloco_detalhe__get', args=[
+                        f"{row['endereco']}"
+                    ])
 
         group = [local_field]
         totalize_grouped_data(dados, {
