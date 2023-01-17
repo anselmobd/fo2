@@ -21,6 +21,7 @@ class O2BaseGetPostView(CustomView):
         self.form_class_has_initial = False
         self.form_dict_initial = {}
         self.form_create_kwargs = {}
+        self.get_args2form = True
         self.cleaned_data2self = False
         self.cleaned_data2data = False
 

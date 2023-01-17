@@ -41,7 +41,6 @@ class CustomView(View):
         self.get_args = []
         self.get_args2context = False
         self.get_args2self = False
-        self.get_args2form = True
         self.redirect = None
         self.context = {}
 
