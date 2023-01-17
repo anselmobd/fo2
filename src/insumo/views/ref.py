@@ -163,7 +163,7 @@ class Ref(O2BaseGetPostView):
                 'estoque_minimo': ["Estoque mínimo", 'r', max_digits],
                 'estoque_maximo': ["Estoque máximo", 'r', max_digits],
                 'lead': ["Lead", 'r'],
-            }).hfsd_dict(context=result)
+            }).hfsd_dict_context(result)
         return result
 
     def get_usado(self, cursor, nivel, ref):
@@ -195,5 +195,5 @@ class Ref(O2BaseGetPostView):
                 'alternativa': ["Alternativa", 'r'],
                 'consumo': ["Consumo", 'r', max_digits],
                 'estagio': ["Estágio"],
-            }).hfsd_dict(context=result)
+            }).hfsd_dict_context(result)
         return result
