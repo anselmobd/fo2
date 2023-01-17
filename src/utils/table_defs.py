@@ -84,6 +84,13 @@ class TableDefs(object):
 
             O valor da chave na lista do definition será uma chave desse
             dicionário e deve ser traduzida para o valor ali encontrado.
+
+        Dicionários padrão em kwargs:
+            têm o nome da chave das configuração e o valor especial '_' com o
+            nome do padrão desejado para aquela chave das configuração.
+        
+            Padrões disponíveis para 'style':
+                text-align
         '''
         super(TableDefs, self).__init__()
         self.kwargs = kwargs
