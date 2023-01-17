@@ -22,16 +22,18 @@
   {% include "layout/table_generic.html" with dados=cliente only %}
   {% include "layout/table_generic.html" with dados=status only %}
   {% include "layout/table_generic.html" with dados=obs only %}
-  {% for op in ops %}
-    <h4>
-      {% url 'producao:op__get' op.op as link_op %}
-      OP de {{op.tipo_ref}}: {% include "layout/a.html" with link=link_op text=op.op target='_blank' only %}
-    </h4>
-    {% include "layout/table_generic.html" with dados=op.ref only %}
-    {% include "layout/table_generic.html" with dados=op.info only %}
-    {% include "layout/table_generic.html" with dados=op.obs only %}
-  {% empty %}
-    <h4>Nenhuma OP</h4>
-  {% endfor %}
+  {% if ops %}
+    {% for op in ops %}
+      <h4>
+        {% url 'producao:op__get' op.op as link_op %}
+        OP de {{op.tipo_ref}}: {% include "layout/a.html" with link=link_op text=op.op target='_blank' only %}
+      </h4>
+      {% include "layout/table_generic.html" with dados=op.ref only %}
+      {% include "layout/table_generic.html" with dados=op.info only %}
+      {% include "layout/table_generic.html" with dados=op.obs only %}
+    {% empty %}
+      <h4>Nenhuma OP</h4>
+    {% endfor %}
+  {% endif %}
   {% include "layout/table_generic.html" with dados=filial_pedido only %}
 {% endblock %}

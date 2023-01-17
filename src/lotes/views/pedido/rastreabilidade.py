@@ -209,5 +209,9 @@ class RastreabilidadeView(O2BaseGetPostView):
             return
 
         self.info_pedido()
+        
+        if not self.dados_pedido[0]['empresa'].startswith('1'):
+            return
+
         self.info_ops()      
         self.info_filial_pedido()
