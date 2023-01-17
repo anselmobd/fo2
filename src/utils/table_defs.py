@@ -41,34 +41,46 @@ class TableDefs(object):
         ''' Inicializa classe
         Recebe:
             definition:
-                dicionário cujas chaves são os nomes dos campos
-                e o valores são configurações do campo.
-                
-                Essas configurações são:
-                    - um dicionário já seguindo o padrão do 
-                    self.definition
-                    - uma lista
-                    - um valor, que será convertido em uma lista
-                    com esse valor
+                - um dicionário já no formato do self.definition; ou
+                - um formato intermediário, que a inicialização irá converter
+                  no formato do self.definition
 
-                Caso seja, por fim, uma lista, será necessário receber 
-                keys com as chaves das configurações referentes à cada
+                Formato intermediário:
+                    - um dicionário cujas chaves são os nomes dos campos e
+                    cujos valores são:
+                        - uma lista; ou
+                        - um valor, que será convertido em uma lista com esse
+                          valor
+
+                Caso seja utilizado o formato intermediário, será necessário
+                receber neste método também o parâmetro "keys"
+                
+                 com as chaves das configurações referentes à cada
                 posição na lista.
 
             keys
-                lista com as chaves das configurações referentes à cada
-                posição da definição, caso esta seja, por fim, uma lista.
+                lista com as chaves das configurações de campo.
 
-                se keys for uma lista de chaves como ['header', 'style'],
+                Cada valor na lista do formato intermediário será atribuido
+                à chave no na mesma posição da lista "keys"
 
         Exemplo:
             Se keys for uma lista de chaves como ['header', 'style'],
-            definition deverá ser um dicionário de listas, como abaixo:
+            definition deverá estar no formato intermediário, como abaixo:
             {'field': ['Header', 'text-align: right;'], ...}
 
+            Isso gerará a seguinte saida da classe:
+            {
+                'headers': ['Header'],
+                'fields': ['field'],
+                'style': {
+                    1: 'text-align: right;';
+                },
+            }
+
         Caso especial de keys:
-            Caso um valor da lista de chaves iniciar com '+', em kwargs
-            deve haver um dicionário com o nome dessa chave.
+            Quando um valor da lista de chaves iniciar com '+', em kwargs deve
+            haver um dicionário com o nome dessa chave.
 
             O valor da chave na lista do definition será uma chave desse
             dicionário e deve ser traduzida para o valor ali encontrado.
