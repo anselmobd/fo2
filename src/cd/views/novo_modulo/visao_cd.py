@@ -69,7 +69,7 @@ class VisaoCd(O2BaseGetView):
                 'cd:novo_visao_bloco__get', args=[
                     f"{bloco.espaco_cod}{bloco.bloco}"
                 ])
-            lote['qtd_lotes|LINK'] = reverse(
+            lote['qtd|LINK'] = reverse(
                 'cd:visao_bloco_detalhe__get', args=[
                     f"{bloco.espaco_cod}{bloco.bloco}"
                 ])
