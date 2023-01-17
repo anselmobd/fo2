@@ -5,31 +5,71 @@ __all__ = ['TableDefs', 'TableDefsHpS']
 
 
 class TableDefs(object):
-    '''
-        formato do self.definition:
-        {
-            'field': {
-                'header': 'Header',
-                'style': 'text-align: right;',
-                'decimals': 
-            },
-            ...
-        }
+    '''Classe para auxiliar a montagem do dicionário utilizado
+    nos templates para gerar HTML table;
+
+    Gera um dicionário com as seguintes chaves:
+        headers
+        fields
+        style
+        decimals
+
+    Para isso trabalha em uma extrutura guardade em self.definition
+
+    self.definition é um dicionário de campos, cujos
+    valores são dicionário com pares chave e valor das
+    configurações do campo.
+
+    As possíveis chave das configurações do campo são:
+        - header
+        - style
+        - decimals
+    Por exemplo:
+
+    {
+        'field': {
+            'header': 'Header',
+            'style': 'text-align: right;',
+            'decimals': 9,
+        },
+    }
     '''
 
     def __init__(self, definition, keys=None, **kwargs):
-        '''
-            se keys for uma lista de chaves como ['header', 'style'],
-            a definition recebida estará no formato
-            {
-                'field': ['Header', 'text-align: right;'],
-                ...
-            }
-            e deverá ser convertida para o formato do self.definition
+        ''' Inicializa classe
+        Recebe:
+            definition:
+                dicionário cujas chaves são os nomes dos campos
+                e o valores são configurações do campo.
+                
+                Essas configurações são:
+                    - um dicionário já seguindo o padrão do 
+                    self.definition
+                    - uma lista
+                    - um valor, que será convertido em uma lista
+                    com esse valor
 
-            se uma key na lista de chaves iniciar com '+' como ['header', '+style'],
-            valor do key será uma chave para um dicionário com esse nome
-            passado no kwargs
+                Caso seja, por fim, uma lista, será necessário receber 
+                keys com as chaves das configurações referentes à cada
+                posição na lista.
+
+            keys
+                lista com as chaves das configurações referentes à cada
+                posição da definição, caso esta seja, por fim, uma lista.
+
+                se keys for uma lista de chaves como ['header', 'style'],
+
+        Exemplo:
+            Se keys for uma lista de chaves como ['header', 'style'],
+            definition deverá ser um dicionário de listas, como abaixo:
+            {'field': ['Header', 'text-align: right;'], ...}
+
+        Caso especial de keys:
+            Caso um valor da lista de chaves iniciar com '+', em kwargs
+            deve haver um dicionário com o nome dessa chave.
+
+            O valor da chave na lista do definition será uma chave desse
+            dicionário e deve ser traduzida para o valor ali encontrado.
         '''
         super(TableDefs, self).__init__()
         self.kwargs = kwargs
