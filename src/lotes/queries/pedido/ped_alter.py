@@ -83,10 +83,16 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None, op=None):
     """
     if fantasia:
         slug_fantasia =  slugify(fantasia)
+
+    if op:
+        if not isinstance(op, (list, tuple)):
+            op = [op]
+
     filtra_data = f"""--
         AND p.DATA_EMIS_VENDA = DATE '{data}'
         AND p.DATA_ENTR_VENDA = DATE '{data}'
     """ if data else ''
+
     sql = f"""
         SELECT
           p.PEDIDO_VENDA ped
@@ -135,11 +141,15 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None, op=None):
         op_ped = {}
         for ped, str_ops in match:
             ops = str_ops.split(', ')
-            for op in ops:
-                op_ped[op] = ped
+            for op1 in ops:
+                op_ped[op1] = ped
 
-        if op and op not in op_ped:
-            continue
+        if op:
+            achou = False
+            for op1 in op:
+                achou = achou or (op1 in op_ped)
+            if not achou:
+                continue
 
         row['op_ped'] = op_ped
         try:
@@ -147,7 +157,7 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None, op=None):
         except KeyError:
             peds[cliente] = [row]
 
-    if fantasia:
+    if fantasia and peds:
         return peds[fantasia]
     else:
         return peds
