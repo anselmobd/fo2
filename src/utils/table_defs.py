@@ -14,6 +14,7 @@ class TableDefs(object):
         fields
         style
         decimals (opcional)
+    com um opcional sufixo.
 
     Para isso trabalha em uma estrutura que deve estar no parâmetro
     self.definition desta classe.
@@ -196,12 +197,9 @@ class TableDefs(object):
             if 'decimals' in self.definition[col]:
                 self.decimals[idx] = self.definition[col]['decimals']
 
-    def hfs(self, *cols, bitmap=None, decimals=False):
+    def hfs(self, *cols, bitmap=None):
         self.defs(*cols, bitmap=bitmap)
-        result = [self.headers, self.fields, self.style]
-        if decimals:
-            result.append(self.decimals)
-        return tuple(result)
+        return (self.headers, self.fields, self.style)
 
     def hfs_dict(self, *cols, bitmap=None, context=None, sufixo='', decimals=False):
         self.defs(*cols, bitmap=bitmap)
@@ -218,7 +216,8 @@ class TableDefs(object):
             return config
 
     def hfsd(self, *cols, bitmap=None):
-        return self.hfs(*cols, bitmap=bitmap, decimals=True)
+        self.defs(*cols, bitmap=bitmap)
+        return (self.headers, self.fields, self.style, self.decimals)
 
     def hfsd_dict(self, *cols, bitmap=None, context=None, sufixo=''):
         return self.hfs_dict(*cols, bitmap=bitmap, context=context, sufixo=sufixo, decimals=True)
