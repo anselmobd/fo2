@@ -215,6 +215,11 @@ class TableDefs(object):
         else:
             return config
 
+    def hfs_dict_context(self, context, *cols, bitmap=None, sufixo='', decimals=False):
+        context.update(
+            self.hfs_dict(*cols, bitmap=bitmap, sufixo=sufixo, decimals=decimals)
+        )
+
     def hfsd(self, *cols, bitmap=None):
         self.defs(*cols, bitmap=bitmap)
         return (self.headers, self.fields, self.style, self.decimals)
