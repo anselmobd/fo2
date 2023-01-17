@@ -168,11 +168,11 @@ class TableDefs(object):
         return True
 
     def defs(self, *cols, bitmap=None):
-        if len(cols) == 0:
-            if len(self.cols_list) == 0:
-                cols = self.definition.keys()
-            else:
+        if not cols:
+            if self.cols_list:
                 cols = self.cols_list
+            else:
+                cols = self.definition.keys()
 
         if isinstance(bitmap, int):
             cols = [
