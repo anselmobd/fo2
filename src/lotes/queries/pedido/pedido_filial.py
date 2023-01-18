@@ -15,8 +15,9 @@ from utils.functions.queries import debug_cursor_execute
 __all__=['pedidos_filial_na_data']
 
 
-def pedidos_filial_na_data_base(cursor, data=None):
+def pedidos_filial_na_data_base(cursor, data=None, data_de=None):
     """Busca pedidos auxiliares para faturamento de produção da filial
+
     Filtros
     - data: data do pedido (data de finalização do estágio 16 das OPs)
     """
@@ -24,6 +25,7 @@ def pedidos_filial_na_data_base(cursor, data=None):
     key_cache = my_make_key_cache(
         'lotes/quer/ped/ped_filial/p_f_data_base',
         data,
+        data_de,
     )
     dados = cache.get(key_cache)
     if dados:
@@ -33,8 +35,11 @@ def pedidos_filial_na_data_base(cursor, data=None):
 
     filtra_data = f"""--
         AND p.DATA_EMIS_VENDA = DATE '{data}'
-        AND p.DATA_ENTR_VENDA = DATE '{data}'
     """ if data else ''
+
+    filtra_data_de = f"""--
+        AND p.DATA_EMIS_VENDA >= DATE '{data_de}'
+    """ if data_de else ''
 
     sql = f"""
         SELECT
@@ -49,6 +54,7 @@ def pedidos_filial_na_data_base(cursor, data=None):
           AND p.CODIGO_EMPRESA = 3
           AND p.COD_CANCELAMENTO = 0
           {filtra_data} -- filtra_data
+          {filtra_data_de} -- filtra_data_de
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
@@ -58,13 +64,15 @@ def pedidos_filial_na_data_base(cursor, data=None):
 
     return dados
 
-def pedidos_filial_na_data(cursor, data=None, fantasia=None, op=None):
+def pedidos_filial_na_data(cursor, data=None, data_de=None, fantasia=None, op=None):
     """Busca pedidos auxiliares para faturamento de produção da filial
+
     Filtros
     - data: data do pedido (data de finalização do estágio 15 das OPs)
     - fansatia: nome fantasia do cliente do pedido da OP ou "estque"
         em caso de OP de estoque
     - op: OP produzida na filial
+
     Retorno
     - caso filtre por fantasia:
         retorna um dictlist com os dados dos pedidos filtrados daquele 
@@ -74,7 +82,7 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None, op=None):
         com seus dados dos pedidos filtrados
     """
 
-    dados = pedidos_filial_na_data_base(cursor, data=data)
+    dados = pedidos_filial_na_data_base(cursor, data=data, data_de=data_de)
 
     if fantasia:
         slug_fantasia =  slugify(fantasia)
