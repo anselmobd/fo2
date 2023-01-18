@@ -16,8 +16,6 @@ __all__ = [
     'dict_def_options',
     'dict_options',
     'record2dict',
-    'row_field_date',
-    'row_field_empty',
 ]
 
 
