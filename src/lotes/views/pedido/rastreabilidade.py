@@ -121,6 +121,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             row_field_str(row, 'op')
             row_field_date(row, 'dt_canc')
             row_field_date(row, 'dt_corte')
+            row_field_date(row, 'dt_emit')
             row_field_str(row, 'op_princ')
             row_field_empty(row, 'obs')
             row_field_empty(row, 'obs2')
@@ -128,6 +129,7 @@ class RastreabilidadeView(O2BaseGetPostView):
     def table_op_ref(self, dados):
         bloco = self.create_table(dados)
         TableDefsHpSD({
+            'dt_emit': ["Data emissão"],
             'ref': ["Referência"],
             'ref_descr': ["Ref. Descr."],
             'colecao': ["Coleção"],
