@@ -37,6 +37,7 @@ def query(
     sql = lms(f"""\
         SELECT 
           op.ORDEM_PRODUCAO OP
+        , op.DATA_PROGRAMACAO DT_EMIT
         , op.DEPOSITO_ENTRADA DEP
         , op.COD_CANCELAMENTO COD_CANC
         , canc.DESCRICAO DESCR_CANC
