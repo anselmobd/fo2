@@ -173,6 +173,18 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.context['ops'] = ops
 
     def get_dados_filial_pedido(self):
+
+        def add_dados(dados_add):
+            dados.extend([
+                row
+                for row in dados_add
+                if row['ped'] not in pedidos_set
+            ])
+            pedidos_set.update([
+                row['ped']
+                for row in dados_add
+            ])
+
         fantasia = self.dados_pedido[0]['fantasia']
         ops = [
             op['op']
@@ -188,15 +200,7 @@ class RastreabilidadeView(O2BaseGetPostView):
 
         dados_ops = pedidos_filial_na_data(
             self.cursor, data_de=dt_emit, fantasia=fantasia, op=ops)
-        dados.extend([
-            row
-            for row in dados_ops
-            if row['ped'] not in pedidos_set
-        ])
-        pedidos_set.update([
-            row['ped']
-            for row in dados_ops
-        ])
+        add_dados(dados_ops)
 
         return dados
 
