@@ -17,6 +17,11 @@ def _none_empty_blank(value):
     return not value or not value.strip()
 
 
+def _none_numeric0(value):
+    """Retorna True de value for None ou numérico 0"""
+    return not value or not value
+
+
 def fld_a_blank(row, field, viewname, *args):
     row[f'{field}|TARGET'] = '_blank'
     row[f'{field}|A'] = reverse(
@@ -32,6 +37,13 @@ def fld_self_a_blank(row, field, viewname):
 
 def fld_date(row, field, empty='-'):
     row[field] = row[field].date() if row[field] else empty
+
+
+def fld_empty_num(row, field, empty='-'):
+    is_empty = _none_numeric0(row[field])
+    if is_empty:
+        row[field] = empty
+    return is_empty
 
 
 def fld_empty_str(row, field, empty='-'):
