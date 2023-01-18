@@ -21,7 +21,8 @@ def row_field_a_blank(row, field, viewname, *args):
 
 
 def row_field_self_a_blank(row, field, viewname):
-    row_field_a_blank(row, field, viewname, row[field])
+    if row[field] is not None and str(row[field]):
+        row_field_a_blank(row, field, viewname, row[field])
 
 
 def row_field_date(row, field, empty='-'):
