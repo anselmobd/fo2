@@ -1,10 +1,22 @@
 from pprint import pprint
 
+from django.urls import reverse
+
+
 __all__ = [
+    'row_field_a_blank',
     'row_field_date',
     'row_field_empty',
     'row_field_str',
 ]
+
+
+def row_field_a_blank(row, field, viewname, *args):
+    row[f'{field}|TARGET'] = '_blank'
+    row[f'{field}|A'] = reverse(
+        viewname,
+        args=args,
+    )
 
 
 def row_field_date(row, field, empty='-'):
