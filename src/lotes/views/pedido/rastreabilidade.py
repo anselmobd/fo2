@@ -5,10 +5,10 @@ from fo2.connections import db_cursor_so
 from base.forms.forms2 import Forms2
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.models.dictlist.row_field import (
-    row_field_date,
-    row_field_empty,
-    row_field_str,
-    row_field_self_a_blank,
+    fld_date,
+    fld_empty,
+    fld_str,
+    fld_self_a_blank,
 )
 from utils.table_defs import TableDefsHpSD
 
@@ -49,12 +49,12 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_pedido(self):
         for row in self.dados_pedido:
-            row_field_self_a_blank(row, 'pedido_venda', 'producao:pedido__get')
-            row_field_empty(row, 'fantasia')
-            row_field_empty(row, 'pedido_cliente')
-            row_field_date(row, 'dt_emissao')
-            row_field_date(row, 'dt_embarque')
-            row_field_empty(row, 'observacao')
+            fld_self_a_blank(row, 'pedido_venda', 'producao:pedido__get')
+            fld_empty(row, 'fantasia')
+            fld_empty(row, 'pedido_cliente')
+            fld_date(row, 'dt_emissao')
+            fld_date(row, 'dt_embarque')
+            fld_empty(row, 'observacao')
 
     def table_ped_cliente(self):
         bloco = self.create_table(self.dados_pedido)
@@ -102,15 +102,15 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_ops(self):
         for row in self.dados_ops:
-            row_field_self_a_blank(row, 'op_princ', 'producao:op__get')
-            row_field_self_a_blank(row, 'ref', 'produto:ref__get')
-            row_field_str(row, 'op')
-            row_field_date(row, 'dt_canc')
-            row_field_date(row, 'dt_corte')
-            row_field_date(row, 'dt_emit')
-            row_field_str(row, 'op_princ')
-            row_field_empty(row, 'obs')
-            row_field_empty(row, 'obs2')
+            fld_self_a_blank(row, 'op_princ', 'producao:op__get')
+            fld_str(row, 'op_princ')
+            fld_self_a_blank(row, 'ref', 'produto:ref__get')
+            fld_str(row, 'op')
+            fld_date(row, 'dt_canc')
+            fld_date(row, 'dt_corte')
+            fld_date(row, 'dt_emit')
+            fld_empty(row, 'obs')
+            fld_empty(row, 'obs2')
 
     def table_op_ref(self, dados):
         bloco = self.create_table(dados)
@@ -198,9 +198,9 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_filial_pedido(self):
         for row in self.dados_filial_ped:
-            row_field_str(row, 'ped')
-            row_field_date(row, 'data')
-            row_field_str(row, 'nf')
+            fld_str(row, 'ped')
+            fld_date(row, 'data')
+            fld_str(row, 'nf')
 
     def table_filial_pedido(self):
         bloco = self.create_table(

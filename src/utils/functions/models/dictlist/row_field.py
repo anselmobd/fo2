@@ -4,15 +4,15 @@ from django.urls import reverse
 
 
 __all__ = [
-    'row_field_a_blank',
-    'row_field_date',
-    'row_field_empty',
-    'row_field_self_a_blank',
-    'row_field_str',
+    'fld_a_blank',
+    'fld_date',
+    'fld_empty',
+    'fld_self_a_blank',
+    'fld_str',
 ]
 
 
-def row_field_a_blank(row, field, viewname, *args):
+def fld_a_blank(row, field, viewname, *args):
     row[f'{field}|TARGET'] = '_blank'
     row[f'{field}|A'] = reverse(
         viewname,
@@ -20,19 +20,19 @@ def row_field_a_blank(row, field, viewname, *args):
     )
 
 
-def row_field_self_a_blank(row, field, viewname):
+def fld_self_a_blank(row, field, viewname):
     if row[field] is not None and str(row[field]):
-        row_field_a_blank(row, field, viewname, row[field])
+        fld_a_blank(row, field, viewname, row[field])
 
 
-def row_field_date(row, field, empty='-'):
+def fld_date(row, field, empty='-'):
     row[field] = row[field].date() if row[field] else empty
 
 
-def row_field_empty(row, field, empty='-'):
+def fld_empty(row, field, empty='-'):
     if (not row[field]) or (isinstance(row[field], str) and not row[field].strip()):
         row[field] = empty
 
 
-def row_field_str(row, field, empty='-'):
+def fld_str(row, field, empty='-'):
     row[field] = str(row[field]) if row[field] else empty
