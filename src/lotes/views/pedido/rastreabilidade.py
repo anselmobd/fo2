@@ -6,7 +6,7 @@ from base.forms.forms2 import Forms2
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.models.dictlist.row_field import (
     fld_date,
-    fld_empty,
+    fld_empty_str,
     fld_str,
     fld_self_a_blank,
 )
@@ -50,11 +50,11 @@ class RastreabilidadeView(O2BaseGetPostView):
     def prep_rows_pedido(self):
         for row in self.dados_pedido:
             fld_self_a_blank(row, 'pedido_venda', 'producao:pedido__get')
-            fld_empty(row, 'fantasia')
-            fld_empty(row, 'pedido_cliente')
+            fld_empty_str(row, 'fantasia')
+            fld_empty_str(row, 'pedido_cliente')
             fld_date(row, 'dt_emissao')
             fld_date(row, 'dt_embarque')
-            fld_empty(row, 'observacao')
+            fld_empty_str(row, 'observacao')
 
     def table_ped_cliente(self):
         bloco = self.create_table(self.dados_pedido)
@@ -109,8 +109,8 @@ class RastreabilidadeView(O2BaseGetPostView):
             fld_date(row, 'dt_canc')
             fld_date(row, 'dt_corte')
             fld_date(row, 'dt_emit')
-            fld_empty(row, 'obs')
-            fld_empty(row, 'obs2')
+            fld_empty_str(row, 'obs')
+            fld_empty_str(row, 'obs2')
 
     def table_op_ref(self, dados):
         bloco = self.create_table(dados)

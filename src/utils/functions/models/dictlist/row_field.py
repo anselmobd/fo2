@@ -6,10 +6,15 @@ from django.urls import reverse
 __all__ = [
     'fld_a_blank',
     'fld_date',
-    'fld_empty',
+    'fld_empty_str',
     'fld_self_a_blank',
     'fld_str',
 ]
+
+
+def _none_empty_blank(value):
+    """Retorna True de value for None ou string vazia ou em branco"""
+    return not value or not value.strip()
 
 
 def fld_a_blank(row, field, viewname, *args):
@@ -29,9 +34,11 @@ def fld_date(row, field, empty='-'):
     row[field] = row[field].date() if row[field] else empty
 
 
-def fld_empty(row, field, empty='-'):
-    if (not row[field]) or (isinstance(row[field], str) and not row[field].strip()):
+def fld_empty_str(row, field, empty='-'):
+    is_empty = _none_empty_blank(row[field])
+    if is_empty:
         row[field] = empty
+    return is_empty
 
 
 def fld_str(row, field, empty='-'):
