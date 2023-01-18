@@ -6,8 +6,10 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 from lotes.queries.pedido.ped_alter import (
-    pedidos_filial_na_data,
     pedido_matriz_de_pedido_filial,
+)
+from lotes.queries.pedido.pedido_filial import (
+    pedidos_filial_na_data,
 )
 
 

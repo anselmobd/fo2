@@ -17,7 +17,9 @@ from cd.queries.novo_modulo.agrupador import get_agrupador
 import lotes.models as models
 import lotes.queries as queries
 from lotes.queries.pedido import ped_nf_rolos
-from lotes.queries.pedido.ped_alter import pedidos_filial_na_data
+from lotes.queries.pedido.pedido_filial import (
+    pedidos_filial_na_data,
+)
 
 
 class Pedido(View):

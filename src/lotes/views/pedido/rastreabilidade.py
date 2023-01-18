@@ -13,7 +13,9 @@ from utils.functions.models.dictlist import (
 )
 from utils.table_defs import TableDefsHpSD
 
-from lotes.queries.pedido.ped_alter import pedidos_filial_na_data
+from lotes.queries.pedido.pedido_filial import (
+    pedidos_filial_na_data,
+)
 from lotes.queries.rastreabilidade import (
     pedido_op,
 )
@@ -190,7 +192,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         )
         TableDefsHpSD({
             'ped': ["Pedido"],
-            'data': ["Data estágio 16", 'c'],
+            'data': ["Data pedido", 'c'],
             'obs': ["Observação"],
             'nf': ["NF"],
         }).hfs_dict_context(bloco)
