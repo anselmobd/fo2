@@ -1,8 +1,14 @@
 import re
 from pprint import pprint
 
+from django.core.cache import cache
 from django.utils.text import slugify
 
+from utils.cache import timeout
+from utils.functions import (
+    fo2logger,
+    my_make_key_cache,
+)
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
@@ -14,6 +20,16 @@ def pedidos_filial_na_data_base(cursor, data=None):
     Filtros
     - data: data do pedido (data de finalização do estágio 16 das OPs)
     """
+
+    key_cache = my_make_key_cache(
+        'lotes/quer/ped/ped_filial/p_f_data_base',
+        data,
+    )
+    dados = cache.get(key_cache)
+    if dados:
+        fo2logger.info('cached '+key_cache)
+        return dados
+
 
     filtra_data = f"""--
         AND p.DATA_EMIS_VENDA = DATE '{data}'
@@ -35,7 +51,12 @@ def pedidos_filial_na_data_base(cursor, data=None):
           {filtra_data} -- filtra_data
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
+    dados = dictlist_lower(cursor)
+
+    cache.set(key_cache, dados, timeout=timeout.MINUTE)
+    fo2logger.info('calculated '+key_cache)
+
+    return dados
 
 def pedidos_filial_na_data(cursor, data=None, fantasia=None, op=None):
     """Busca pedidos auxiliares para faturamento de produção da filial
