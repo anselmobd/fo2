@@ -186,6 +186,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             ])
 
         fantasia = self.dados_pedido[0]['fantasia']
+        pedido_cliente = self.dados_pedido[0]['pedido_cliente']
         ops = [
             op['op']
             for op in self.dados_ops
@@ -201,6 +202,11 @@ class RastreabilidadeView(O2BaseGetPostView):
         dados_ops = pedidos_filial_na_data(
             self.cursor, data_de=dt_emit, fantasia=fantasia, op=ops)
         add_dados(dados_ops)
+
+        dados_ped_cli = pedidos_filial_na_data(
+            self.cursor, data_de=dt_emit, fantasia=fantasia,
+            pedido_cliente=pedido_cliente)
+        add_dados(dados_ped_cli)
 
         return dados
 
