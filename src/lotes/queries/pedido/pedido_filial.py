@@ -9,27 +9,11 @@ from utils.functions.queries import debug_cursor_execute
 __all__=['pedidos_filial_na_data']
 
 
-def pedidos_filial_na_data(cursor, data=None, fantasia=None, op=None):
+def pedidos_filial_na_data_base(cursor, data=None):
     """Busca pedidos auxiliares para faturamento de produção da filial
     Filtros
-    - data: data do pedido (data de finalização do estágio 15 das OPs)
-    - fansatia: nome fantasia do cliente do pedido da OP ou "estque"
-        em caso de OP de estoque
-    - op: OP produzida na filial
-    Retorno
-    - caso filtre por fantasia:
-        retorna um dictlist com os dados dos pedidos filtrados daquele 
-        cliente (ou estoque)
-    - caso Não filtre por fantasia:
-        retorna um dict com chave cliente (ou estoque) e valor dictlist
-        com seus dados dos pedidos filtrados
+    - data: data do pedido (data de finalização do estágio 16 das OPs)
     """
-    if fantasia:
-        slug_fantasia =  slugify(fantasia)
-
-    if op:
-        if not isinstance(op, (list, tuple)):
-            op = [op]
 
     filtra_data = f"""--
         AND p.DATA_EMIS_VENDA = DATE '{data}'
@@ -51,7 +35,32 @@ def pedidos_filial_na_data(cursor, data=None, fantasia=None, op=None):
           {filtra_data} -- filtra_data
     """
     debug_cursor_execute(cursor, sql)
-    dados = dictlist_lower(cursor)
+    return dictlist_lower(cursor)
+
+def pedidos_filial_na_data(cursor, data=None, fantasia=None, op=None):
+    """Busca pedidos auxiliares para faturamento de produção da filial
+    Filtros
+    - data: data do pedido (data de finalização do estágio 15 das OPs)
+    - fansatia: nome fantasia do cliente do pedido da OP ou "estque"
+        em caso de OP de estoque
+    - op: OP produzida na filial
+    Retorno
+    - caso filtre por fantasia:
+        retorna um dictlist com os dados dos pedidos filtrados daquele 
+        cliente (ou estoque)
+    - caso Não filtre por fantasia:
+        retorna um dict com chave cliente (ou estoque) e valor dictlist
+        com seus dados dos pedidos filtrados
+    """
+
+    dados = pedidos_filial_na_data_base(cursor, data=data)
+
+    if fantasia:
+        slug_fantasia =  slugify(fantasia)
+
+    if op:
+        if not isinstance(op, (list, tuple)):
+            op = [op]
 
     peds = {}
     for row in dados:
