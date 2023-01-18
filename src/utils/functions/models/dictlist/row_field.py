@@ -7,6 +7,7 @@ __all__ = [
     'row_field_a_blank',
     'row_field_date',
     'row_field_empty',
+    'row_field_self_a_blank',
     'row_field_str',
 ]
 
@@ -17,6 +18,10 @@ def row_field_a_blank(row, field, viewname, *args):
         viewname,
         args=args,
     )
+
+
+def row_field_self_a_blank(row, field, viewname):
+    row_field_a_blank(row, field, viewname, row[field])
 
 
 def row_field_date(row, field, empty='-'):
