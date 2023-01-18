@@ -64,14 +64,23 @@ def pedidos_filial_na_data_base(cursor, data=None, data_de=None):
 
     return dados
 
-def pedidos_filial_na_data(cursor, data=None, data_de=None, fantasia=None, op=None):
+def pedidos_filial_na_data(
+    cursor,
+    data=None,
+    data_de=None,
+    fantasia=None,
+    op=None,
+    pedido_cliente=None,
+):
     """Busca pedidos auxiliares para faturamento de produção da filial
 
     Filtros
     - data: data do pedido (data de finalização do estágio 15 das OPs)
+    - data_de: data do pedido mínima
     - fansatia: nome fantasia do cliente do pedido da OP ou "estque"
         em caso de OP de estoque
     - op: OP produzida na filial
+    - pedido_cliente: código de pedido do cliente
 
     Retorno
     - caso filtre por fantasia:
@@ -130,6 +139,10 @@ def pedidos_filial_na_data(cursor, data=None, data_de=None, fantasia=None, op=No
             for op1 in op:
                 achou = achou or (op1 in op_ped)
             if not achou:
+                continue
+
+        if pedido_cliente:
+            if pedido_cliente not in op_ped.values():
                 continue
 
         row['op_ped'] = op_ped
