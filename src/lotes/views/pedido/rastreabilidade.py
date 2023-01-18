@@ -178,12 +178,17 @@ class RastreabilidadeView(O2BaseGetPostView):
             op['op']
             for op in self.dados_ops
         ]
+        dts_emit = [
+            op['dt_emit']
+            for op in self.dados_ops
+        ]
+        dt_emit = min(dts_emit)
 
         pedidos_set = set()
         dados = []
 
         dados_ops = pedidos_filial_na_data(
-            self.cursor, fantasia=fantasia, op=ops)
+            self.cursor, data_de=dt_emit, fantasia=fantasia, op=ops)
         dados.extend([
             row
             for row in dados_ops
