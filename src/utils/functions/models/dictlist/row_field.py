@@ -54,4 +54,4 @@ def fld_empty_str(row, field, empty='-'):
 
 
 def fld_str(row, field, empty='-'):
-    row[field] = str(row[field]) if row[field] else empty
+    row[field] = str(row[field]) if row[field] is not None else empty
