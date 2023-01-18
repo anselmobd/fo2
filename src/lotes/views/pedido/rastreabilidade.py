@@ -1,7 +1,5 @@
 from pprint import pprint
 
-from django.urls import reverse
-
 from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import Forms2
@@ -10,6 +8,7 @@ from utils.functions.models.dictlist.row_field import (
     row_field_date,
     row_field_empty,
     row_field_str,
+    row_field_self_a_blank,
 )
 from utils.table_defs import TableDefsHpSD
 
@@ -50,11 +49,7 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_pedido(self):
         for row in self.dados_pedido:
-            row['pedido_venda|TARGET'] = '_blank'
-            row['pedido_venda|A'] = reverse(
-                'producao:pedido__get',
-                args=[row['pedido_venda']],
-            )
+            row_field_self_a_blank(row, 'pedido_venda', 'producao:pedido__get')
             row_field_empty(row, 'fantasia')
             row_field_empty(row, 'pedido_cliente')
             row_field_date(row, 'dt_emissao')
@@ -107,17 +102,8 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_ops(self):
         for row in self.dados_ops:
-            if row['op_princ']:
-                row['op_princ|TARGET'] = '_blank'
-                row['op_princ|A'] = reverse(
-                    'producao:op__get',
-                    args=[row['op_princ']],
-                )
-            row['ref|TARGET'] = '_blank'
-            row['ref|A'] = reverse(
-                'produto:ref__get',
-                args=[row['ref']],
-            )
+            row_field_self_a_blank(row, 'op_princ', 'producao:op__get')
+            row_field_self_a_blank(row, 'ref', 'produto:ref__get')
             row_field_str(row, 'op')
             row_field_date(row, 'dt_canc')
             row_field_date(row, 'dt_corte')
