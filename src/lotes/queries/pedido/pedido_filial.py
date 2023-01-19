@@ -48,6 +48,7 @@ def pedidos_filial_na_data_base(cursor, data=None, data_de=None):
         , p.DATA_EMIS_VENDA data
         , f.NUM_NOTA_FISCAL nf
         , f.SITUACAO_NFISC situacao
+        , f.CODIGO_EMPRESA nf_empresa
         , fe.DOCUMENTO nf_devolucao
         FROM PEDI_100 p
         LEFT JOIN FATU_050 f
