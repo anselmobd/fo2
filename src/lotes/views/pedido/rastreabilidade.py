@@ -176,6 +176,7 @@ class RastreabilidadeView(O2BaseGetPostView):
                 'nf',
                 'nf_num',
                 'nf_ser',
+                'item',
             ]
         )
         self.prep_rolos()
@@ -189,6 +190,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         TableDefsHpSD({
             'forn_cnpj': ["Fornecedor"],
             'nf': ["NF"],
+            'item': ['Item'],
             'brif_count': ["Qtd. rolos"],
         }).hfs_dict_context(bloco)
         return bloco
