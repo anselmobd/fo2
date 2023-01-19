@@ -47,6 +47,7 @@ def pedidos_filial_na_data_base(cursor, data=None, data_de=None):
         , p.OBSERVACAO obs
         , p.DATA_EMIS_VENDA data
         , f.NUM_NOTA_FISCAL nf
+        , f.DATA_AUTORIZACAO_NFE nf_data
         , f.SITUACAO_NFISC situacao
         , f.CODIGO_EMPRESA nf_empresa
         , fe.DOCUMENTO nf_devolucao
@@ -66,6 +67,7 @@ def pedidos_filial_na_data_base(cursor, data=None, data_de=None):
     dados = dictlist_lower(cursor)
 
     for row in dados:
+        row['situacao_descr'] = None
         if row['situacao'] == 1:
             row['situacao_descr'] = 'Ativa'
         else:
