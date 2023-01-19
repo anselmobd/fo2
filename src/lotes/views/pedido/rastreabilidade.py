@@ -177,6 +177,9 @@ class RastreabilidadeView(O2BaseGetPostView):
                 'nf_num',
                 'nf_ser',
                 'item',
+            ],
+            sum=[
+                'peso',
             ]
         )
         self.prep_rolos()
@@ -192,6 +195,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             'nf': ["NF"],
             'item': ['Item'],
             'brif_count': ["Qtd. rolos"],
+            'peso': ["Peso bruto"],
         }).hfs_dict_context(bloco)
         return bloco
 
