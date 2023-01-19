@@ -38,6 +38,11 @@ def fld_slf_a_blank(row, field, viewname, empty='-'):
         fld_a_blank(row, field, viewname, row[field])
 
 
+def fld_slf_args_a_blank(row, field, viewname, *args, empty='-'):
+    if not fld_empty(row, field, empty=empty):
+        fld_a_blank(row, field, viewname, *args)
+
+
 def fld_date(row, field, empty='-'):
     if not fld_empty(row, field, empty=empty):
         row[field] = row[field].date()
