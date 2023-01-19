@@ -156,11 +156,28 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rolos(self):
         for row in self.rolos_nfs:
-            pass
+            fld_slf_args_a_blank(
+                row,
+                'nf',
+                'contabil:nf_recebida__get',
+                '1',
+                row['nf_num'],
+                row['nf_ser'],
+                row['cnpj9'],
+            )
 
     def info_rolos(self, op):
         self.rolos = self.get_rolos(op)
-        self.rolos_nfs = brif(self.rolos, ['forn_cnpj', 'nf'])
+        self.rolos_nfs = brif(
+            self.rolos,
+            [
+                'cnpj9',
+                'forn_cnpj',
+                'nf',
+                'nf_num',
+                'nf_ser',
+            ]
+        )
         self.prep_rolos()
 
     def table_rolos(self):
@@ -172,7 +189,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         TableDefsHpSD({
             'forn_cnpj': ["Fornecedor"],
             'nf': ["NF"],
-            'brif_count': ["Qtd.rolos"],
+            'brif_count': ["Qtd. rolos"],
         }).hfs_dict_context(bloco)
         return bloco
 
