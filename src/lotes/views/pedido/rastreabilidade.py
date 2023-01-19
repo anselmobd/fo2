@@ -216,6 +216,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         bloco = self.create_table(
             self.dados_filial_ped,
             titulo='Pedido FM (auxiliar para faturamento Filial-Matriz)',
+            vazio='Nenhum pedido gerado'
         )
         TableDefsHpSD({
             'ped': ["Pedido"],
