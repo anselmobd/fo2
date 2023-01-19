@@ -203,6 +203,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             fld_slf_a_blank(row, 'ped', 'producao:pedido__get')
             fld_str(row, 'ped')
             fld_date(row, 'data')
+            fld_str(row, 'obs')
             fld_slf_args_a_blank(
                 row,
                 'nf',
@@ -211,6 +212,7 @@ class RastreabilidadeView(O2BaseGetPostView):
                 row['nf'],
             )
             fld_str(row, 'nf')
+            fld_str(row, 'situacao_descr')
 
     def table_filial_pedido(self):
         bloco = self.create_table(
@@ -223,6 +225,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             'data': ["Data pedido", 'c'],
             'obs': ["Observação"],
             'nf': ["NF"],
+            'nf_data': ["Data NF"],
             'situacao_descr': ["Situação"],
         }).hfs_dict_context(bloco)
         return bloco
