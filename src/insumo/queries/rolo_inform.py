@@ -76,6 +76,7 @@ def query(
         , ro.PANOACAB_GRUPO ref
         , ro.PANOACAB_SUBGRUPO tam
         , ro.PANOACAB_ITEM cor
+        , ro.PESO_BRUTO peso
         , ro.ROLO_ESTOQUE sit
         , ro.DATA_ENTRADA dt_entr
         , re.ORDEM_PRODUCAO op
