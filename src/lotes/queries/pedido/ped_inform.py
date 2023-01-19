@@ -43,7 +43,7 @@ _DICT_EMPRESA = {
     },
     1: 'Tussor matriz',
     2: 'Agator',
-    3: 'Tussor filial corte',
+    3: 'Filial corte',
 }
 
 
