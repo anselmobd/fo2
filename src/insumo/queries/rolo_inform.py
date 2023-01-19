@@ -4,6 +4,8 @@ from utils.functions.format import format_cnpj
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
+from produto.functions import item_str
+
 __all__ = ['query']
 
 
@@ -118,4 +120,5 @@ def query(
     for row in data:
         row['forn_cnpj'] = format_cnpj(row) if row['cnpj9'] else '-'
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}" if row['nf_num'] else '-'
+        row['item'] = item_str(row['nivel'], row['ref'], row['tam'], row['cor'])
     return data
