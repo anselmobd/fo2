@@ -258,15 +258,6 @@ class Pedido(View):
                 'contabil:nota_fiscal__get',
                 args=[row['CODIGO_EMPRESA'], row['NF']],
             )
-            if row['SITUACAO'] == 1:
-                row['SITUACAO'] = 'Ativa'
-            else:
-                row['SITUACAO'] = 'Cancelada'
-
-            if row['NF_DEVOLUCAO'] is None:
-                row['NF_DEVOLUCAO'] = '-'
-            else:
-                row['SITUACAO'] += '/Devolvida'
 
         self.context.update({
             'nf_headers': (
@@ -281,7 +272,7 @@ class Pedido(View):
                 'CODIGO_EMPRESA',
                 'NF',
                 'DATA',
-                'SITUACAO',
+                'SITUACAO_DESCR',
                 'VALOR',
                 'NF_DEVOLUCAO',
             ),

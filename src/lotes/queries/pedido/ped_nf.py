@@ -32,4 +32,17 @@ def ped_nf(cursor, pedido, especiais=False, empresa=1):
           f.NUM_NOTA_FISCAL
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    dados = dictlist(cursor)
+
+    for row in dados:
+        if row['SITUACAO'] == 1:
+            row['SITUACAO_DESCR'] = 'Ativa'
+        else:
+            row['SITUACAO_DESCR'] = 'Cancelada'
+
+        if row['NF_DEVOLUCAO'] is None:
+            row['NF_DEVOLUCAO'] = '-'
+        else:
+            row['SITUACAO_DESCR'] += '/Devolvida'
+
+    return dados
