@@ -47,9 +47,14 @@ def pedidos_filial_na_data_base(cursor, data=None, data_de=None):
         , p.OBSERVACAO obs
         , p.DATA_EMIS_VENDA data
         , f.NUM_NOTA_FISCAL nf
+        , f.SITUACAO_NFISC situacao
+        , fe.DOCUMENTO nf_devolucao
         FROM PEDI_100 p
         LEFT JOIN FATU_050 f
           ON f.PEDIDO_VENDA = p.PEDIDO_VENDA
+        LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
+          ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+         AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
         WHERE 1=1
           AND p.CODIGO_EMPRESA = 3
           AND p.COD_CANCELAMENTO = 0
@@ -58,6 +63,17 @@ def pedidos_filial_na_data_base(cursor, data=None, data_de=None):
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
+
+    for row in dados:
+        if row['situacao'] == 1:
+            row['situacao_descr'] = 'Ativa'
+        else:
+            row['situacao_descr'] = 'Cancelada'
+
+        if row['nf_devolucao'] is None:
+            row['nf_devolucao'] = '-'
+        else:
+            row['situacao_descr'] += '/Devolvida'
 
     cache.set(key_cache, dados, timeout=timeout.MINUTE)
     fo2logger.info('calculated '+key_cache)
