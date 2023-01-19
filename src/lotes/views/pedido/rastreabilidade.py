@@ -12,6 +12,7 @@ from utils.functions.models.dictlist.row_field import (
     fld_str,
 )
 from utils.table_defs import TableDefsHpSD
+from utils.views.summarize import brif
 
 from insumo.queries import rolo_inform
 
@@ -154,23 +155,24 @@ class RastreabilidadeView(O2BaseGetPostView):
             self.cursor, op=op)
 
     def prep_rolos(self):
-        for row in self.rolos:
-            fld_str(row, 'op')
+        for row in self.rolos_nfs:
+            pass
 
     def info_rolos(self, op):
         self.rolos = self.get_rolos(op)
+        self.rolos_nfs = brif(self.rolos, ['forn_cnpj', 'nf'])
         self.prep_rolos()
 
-    def table_rolos(self, dados):
+    def table_rolos(self):
         bloco = self.create_table(
-            dados,
-            titulo='Rolos',
+            self.rolos_nfs,
+            dados_titulo='Rolos',
             titulo_h=4,
         )
         TableDefsHpSD({
             'forn_cnpj': ["Fornecedor"],
             'nf': ["NF"],
-            'rolo': ["Rolo"],
+            'brif_count': ["Qtd.rolos"],
         }).hfs_dict_context(bloco)
         return bloco
 
@@ -186,7 +188,7 @@ class RastreabilidadeView(O2BaseGetPostView):
                 'ref': self.table_op_ref([row]),
                 'info': self.table_op_info([row]),
                 'obs': self.table_op_obs([row]),
-                # 'rolos': self.table_rolos(self.rolos),
+                'rolos': self.table_rolos(),
             })
         self.context['ops'] = ops
 
