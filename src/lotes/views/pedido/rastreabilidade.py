@@ -160,7 +160,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             })
         self.context['ops'] = ops
 
-    def get_dados_filial_pedido(self):
+    def get_dados_pedfm(self):
 
         def add_dados(dados_add):
             dados.extend([
@@ -198,7 +198,7 @@ class RastreabilidadeView(O2BaseGetPostView):
 
         return dados
 
-    def prep_rows_filial_pedido(self):
+    def prep_rows_pedfm(self):
         for row in self.dados_filial_ped:
             fld_slf_a_blank(row, 'ped', 'producao:pedido__get')
             fld_str(row, 'ped')
@@ -214,7 +214,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             fld_str(row, 'nf')
             fld_str(row, 'situacao_descr')
 
-    def table_filial_pedido(self):
+    def table_pedfm(self):
         bloco = self.create_table(
             self.dados_filial_ped,
             titulo='Pedido FM (auxiliar para faturamento Filial-Matriz)',
@@ -230,11 +230,11 @@ class RastreabilidadeView(O2BaseGetPostView):
         }).hfs_dict_context(bloco)
         return bloco
 
-    def info_filial_pedido(self):
-        self.dados_filial_ped = self.get_dados_filial_pedido()
-        self.prep_rows_filial_pedido()
+    def info_pedfm(self):
+        self.dados_filial_ped = self.get_dados_pedfm()
+        self.prep_rows_pedfm()
         self.context.update({
-            'filial_pedido': self.table_filial_pedido(),
+            'pedfm': self.table_pedfm(),
         })
 
     def mount_context(self):
@@ -254,4 +254,4 @@ class RastreabilidadeView(O2BaseGetPostView):
 
         self.info_ops()      
 
-        self.info_filial_pedido()
+        self.info_pedfm()
