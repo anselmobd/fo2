@@ -23,6 +23,8 @@ def brif(data, keys=[], sum=[]):
     result = []
     for kvalues in items:
         row = dict(zip(keys, kvalues))
+        for sum_key in sum:
+             row[sum_key] = items[kvalues][sum_key]
         row['brif_count'] = items[kvalues]['brif_count']
         result.append(row)
 
