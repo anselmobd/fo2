@@ -32,7 +32,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.cleaned_data2self = True
         self.get_args = ['pedido']
 
-    def create_table(self, data, titulo=None, titulo_h=4, vazio=None):
+    def create_table(self, data, titulo=None, titulo_h=3, vazio=None):
         return {
             'titulo': titulo,
             'titulo_h': titulo_h,
