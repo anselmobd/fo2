@@ -214,6 +214,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             'data': ["Data pedido", 'c'],
             'obs': ["Observação"],
             'nf': ["NF"],
+            'situacao_descr': ["Situação"],
         }).hfs_dict_context(bloco)
         return bloco
 
