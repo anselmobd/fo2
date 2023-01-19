@@ -171,6 +171,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         self.rolos_nfs = brif(
             self.rolos,
             [
+                'forn',
                 'cnpj9',
                 'forn_cnpj',
                 'nf',
@@ -191,7 +192,8 @@ class RastreabilidadeView(O2BaseGetPostView):
             titulo_h=4,
         )
         TableDefsHpSD({
-            'forn_cnpj': ["Fornecedor"],
+            'forn': ["Fornecedor"],
+            'forn_cnpj': ['CNPJ'],
             'nf': ["NF"],
             'item': ['Item'],
             'brif_count': ["Qtd. rolos"],
