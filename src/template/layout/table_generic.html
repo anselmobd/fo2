@@ -2,6 +2,9 @@
   <h{% firstof dados.titulo_h 3 %}>{{dados.titulo}}</h{% firstof dados.titulo_h 3 %}>
 {% endif %}
 {% if dados.data or data %}
+  {% if dados.dados_titulo %}
+    <h{% firstof dados.titulo_h 3 %}>{{dados.dados_titulo}}</h{% firstof dados.titulo_h 3 %}>
+  {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=dados.headers style=dados.style thclass='sticky' only %}
     {% if dados.data %}
