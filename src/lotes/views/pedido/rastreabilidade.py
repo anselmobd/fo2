@@ -13,6 +13,8 @@ from utils.functions.models.dictlist.row_field import (
 )
 from utils.table_defs import TableDefsHpSD
 
+from insumo.queries import rolo_inform
+
 from lotes.queries.pedido.pedido_filial import (
     pedidos_filial_na_data,
 )
@@ -146,17 +148,44 @@ class RastreabilidadeView(O2BaseGetPostView):
         }).hfs_dict_context(bloco)
         return bloco
 
+    def get_rolos(self, op):
+        return rolo_inform.query(
+            self.cursor, op=op)
+
+    def prep_rolos(self):
+        for row in self.rolos:
+            fld_str(row, 'op')
+
+    def info_rolos(self, op):
+        self.rolos = self.get_rolos(op)
+        self.prep_rolos()
+
+    def table_rolos(self, dados):
+        bloco = self.create_table(
+            dados,
+            titulo='Rolos',
+            titulo_h=4,
+        )
+        TableDefsHpSD({
+            'forn_cnpj': ["Fornecedor"],
+            'nf': ["NF"],
+            'rolo': ["Rolo"],
+        }).hfs_dict_context(bloco)
+        return bloco
+
     def info_ops(self):
         self.dados_ops = self.get_dados_ops()
         self.prep_rows_ops()
         ops = []
         for row in self.dados_ops:
+            self.info_rolos(row['op'])
             ops.append({
                 'op': row['op'],
                 'tipo_ref': row['tipo_ref'],
                 'ref': self.table_op_ref([row]),
                 'info': self.table_op_info([row]),
                 'obs': self.table_op_obs([row]),
+                # 'rolos': self.table_rolos(self.rolos),
             })
         self.context['ops'] = ops
 
