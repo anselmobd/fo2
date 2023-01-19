@@ -8,6 +8,7 @@ from utils.functions.models.dictlist.row_field import (
     fld_date,
     fld_empty,
     fld_slf_a_blank,
+    fld_slf_args_a_blank,
     fld_str,
 )
 from utils.table_defs import TableDefsHpSD
@@ -202,6 +203,13 @@ class RastreabilidadeView(O2BaseGetPostView):
             fld_slf_a_blank(row, 'ped', 'producao:pedido__get')
             fld_str(row, 'ped')
             fld_date(row, 'data')
+            fld_slf_args_a_blank(
+                row,
+                'nf',
+                'contabil:nota_fiscal__get',
+                row['nf_empresa'],
+                row['nf'],
+            )
             fld_str(row, 'nf')
 
     def table_filial_pedido(self):
