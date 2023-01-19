@@ -199,6 +199,7 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_filial_pedido(self):
         for row in self.dados_filial_ped:
+            fld_slf_a_blank(row, 'ped', 'producao:pedido__get')
             fld_str(row, 'ped')
             fld_date(row, 'data')
             fld_str(row, 'nf')
