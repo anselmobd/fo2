@@ -12,6 +12,7 @@ def query(
     dt_de=None,
     dt_ate=None,
     relacionado=None,
+    item_nivel=2,
     empr=None,
     nf_num=None,
     nf_ser=None,
@@ -26,6 +27,9 @@ def query(
     filtra_relacionado = f"""--
         AND cnfe.TUSSOR_ENVIA_NF {'<>' if relacionado else '='} 0
     """ if relacionado is not None else ''
+    filtra_item_nivel = f"""--
+        AND infe.CODITEM_NIVEL99 = {item_nivel}
+    """ if item_nivel is not None else ''
     filtra_empr = f"""--
         AND cnfe.LOCAL_ENTREGA = '{empr}'
     """ if empr is not None else ''
@@ -100,7 +104,8 @@ def query(
           AND cnfe.LOCAL_ENTREGA = 1 -- empresa 1: matriz
           AND cnfe.SITUACAO_ENTRADA = 4 -- 4 = nota fornecedor
           AND cnfe.DATA_TRANSACAO >= DATE '2022-03-18'
-          AND infe.CODITEM_NIVEL99 = 2
+          -- AND infe.CODITEM_NIVEL99 = 2
+          {filtra_item_nivel} -- filtra_item_nivel
         ORDER BY
           cnfe.DATA_EMISSAO DESC
         , cnfe.CGC_CLI_FOR_9 DESC
