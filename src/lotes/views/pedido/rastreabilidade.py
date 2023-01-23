@@ -16,6 +16,9 @@ from utils.views.summarize import brif
 
 from insumo.queries import rolo_inform
 
+from lotes.queries.corte import (
+    nfs_de_forn,
+)
 from lotes.queries.pedido.pedido_filial import (
     pedidos_filial_na_data,
 )
@@ -165,6 +168,25 @@ class RastreabilidadeView(O2BaseGetPostView):
                 row['nf_ser'],
                 row['cnpj9'],
             )
+            row['nf_envia'] = '-'
+            row['empr'] = None
+            dados_nfs = nfs_de_forn.query(
+                self.cursor,
+                empr='1',
+                nf_num=row['nf_num'],
+                nf_ser=row['nf_ser'],
+                cnpj9=row['cnpj9'],
+            )
+            if dados_nfs:
+                row['nf_envia'] = dados_nfs[0]['nf_envia']
+                row['empr'] = dados_nfs[0]['empr']
+                fld_slf_args_a_blank(
+                    row,
+                    'nf_envia',
+                    'contabil:nota_fiscal__get',
+                    row['empr'],
+                    row['nf_envia'],
+                    )
 
     def info_rolos(self, op):
         self.rolos = self.get_rolos(op)
@@ -198,6 +220,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             'item': ['Item'],
             'brif_count': ["Qtd. rolos"],
             'peso': ["Peso bruto"],
+            'nf_envia': ["NF de envio"],
         }).hfs_dict_context(bloco)
         return bloco
 
