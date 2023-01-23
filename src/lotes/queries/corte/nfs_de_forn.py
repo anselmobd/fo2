@@ -12,6 +12,10 @@ def query(
     dt_de=None,
     dt_ate=None,
     relacionado=None,
+    empr=None,
+    nf_num=None,
+    nf_ser=None,
+    cnpj9=None,
 ):
     filtra_dt_de = f"""--
         AND cnfe.DATA_EMISSAO >= DATE '{dt_de}'
@@ -22,8 +26,20 @@ def query(
     filtra_relacionado = f"""--
         AND cnfe.TUSSOR_ENVIA_NF {'<>' if relacionado else '='} 0
     """ if relacionado is not None else ''
+    filtra_empr = f"""--
+        AND cnfe.LOCAL_ENTREGA = '{empr}'
+    """ if empr is not None else ''
+    filtra_nf_num = f"""--
+        AND cnfe.DOCUMENTO = {nf_num}
+    """ if nf_num is not None else ''
+    filtra_nf_ser = f"""--
+        AND cnfe.SERIE = {nf_ser}
+    """ if nf_ser is not None else ''
+    filtra_cnpj9 = f"""--
+        AND cnfe.CGC_CLI_FOR_9 = {cnpj9}
+    """ if cnpj9 is not None else ''
     sql = f"""
-        SELECT DISTINCT  
+        SELECT DISTINCT
           cnfe.LOCAL_ENTREGA empr
         , cnfe.CGC_CLI_FOR_9 cnpj9
         , cnfe.CGC_CLI_FOR_4 cnpj4
@@ -31,6 +47,7 @@ def query(
         , cnfe.DOCUMENTO nf_num
         , cnfe.SERIE nf_ser
         , cnfe.VALOR_ITENS valor
+        , cnfe.DATA_TRANSACAO dt_trans
         , cnfe.DATA_EMISSAO dt_emi
         , cnfe.DATA_DIGITACAO dt_dig
         , cnfe.TUSSOR_ENVIA_NF nf_envia
@@ -76,6 +93,10 @@ def query(
           {filtra_dt_de} -- filtra_dt_de
           {filtra_dt_ate} -- filtra_dt_ate
           {filtra_relacionado} -- filtra_relacionado
+          {filtra_empr} -- filtra_empr
+          {filtra_nf_num} -- filtra_nf_num
+          {filtra_nf_ser} -- filtra_nf_ser
+          {filtra_cnpj9} -- filtra_cnpj9
           AND cnfe.LOCAL_ENTREGA = 1 -- empresa 1: matriz
           AND cnfe.SITUACAO_ENTRADA = 4 -- 4 = nota fornecedor
           AND cnfe.DATA_TRANSACAO >= DATE '2022-03-18'
