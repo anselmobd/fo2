@@ -96,6 +96,7 @@ def query(
         JOIN PCPB_080 p
           ON p.ORDEM_PRODUCAO = ob.ot
         WHERE 1=1
+          AND p.PESAR_PRODUTO = 1
           {filtra_periodo} -- filtra_periodo
         ORDER BY 
           p.ORDEM_PRODUCAO DESC 
