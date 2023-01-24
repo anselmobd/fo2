@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'beneficia:ot' %}" method="post">
+<form action="{% url 'beneficia:ot_pesar' %}" method="post">
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca"/>
@@ -29,7 +29,7 @@
       {% include "layout/tbody_generic.html" with fields=fields data=dados style=style safe=safe only %}
     </table>
   {% else %}
-    <h4>OT não encontrada</h4>
+    <h4>Nada encontrado</h4>
   {% endif %}
 {% endif %}
 {% endblock %}

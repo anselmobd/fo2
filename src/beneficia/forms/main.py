@@ -99,3 +99,16 @@ class BuscaObForm(forms.Form):
         data['ref'] = ref
         self.data = data
         return ref
+
+
+class OtPesarForm(forms.Form):
+    periodo = forms.CharField(
+        label='Período', required=False,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'number',
+                'size': 4,
+                'autofocus': 'autofocus'
+            }
+        )
+    )
