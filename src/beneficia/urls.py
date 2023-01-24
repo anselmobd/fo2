@@ -3,6 +3,7 @@ from django.urls import re_path
 from . import views
 from .views import (
     busca_pedido,
+    ot_pesar,
     pendente,
     producao,
 )
@@ -25,6 +26,8 @@ urlpatterns = [
 
     re_path(r'^ot/$', views.Ot.as_view(), name='ot'),
     re_path(r'^ot/(?P<ot>\d+)/$', views.Ot.as_view(), name='ot__get'),
+
+    re_path(r'^ot_pesar/$', ot_pesar.OtPesar.as_view(), name='ot_pesar'),
 
     re_path(r'^pendente/$', pendente.Pendente.as_view(), name='pendente'),
 
