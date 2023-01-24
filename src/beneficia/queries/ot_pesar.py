@@ -9,6 +9,8 @@ from utils.functions.strings import (
     split_numbers,
 )
 
+from produto.functions import item_str
+
 import lotes.queries
 
 __all__ = ['query']
@@ -108,6 +110,7 @@ def query(
 
     oss = set()
     for row in dados:
+        row['item'] = item_str(row['nivel'], row['ref'], row['tam'], row['cor'])
         row['op'] = ""
         if row['obs']:
             obs_list = split_numbers(row['obs'])
