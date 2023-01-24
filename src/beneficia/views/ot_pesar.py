@@ -37,9 +37,25 @@ class OtPesar(View):
         self.context.update({
             'headers': [
                 'OT',
+                'Período',
+                'OP',
+                'nivel',
+                'ref',
+                'tam',
+                'cor',
+                'Peso previsto',
+                'Peso real',
             ],
             'fields': [
                 'ot',
+                'per',
+                'op',
+                'nivel',
+                'ref',
+                'tam',
+                'cor',
+                'p_previsto',
+                'p_real',
             ],
             'dados': dados,
         })
