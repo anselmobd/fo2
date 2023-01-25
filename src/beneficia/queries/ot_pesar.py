@@ -25,7 +25,7 @@ def query(
         periodo=None,
     ):
 
-    filtra_periodo = sql_where_none_if("ob.per", periodo)
+    filtra_periodo = sql_where_none_if("pe.PERIODO_PRODUCAO", periodo)
 
     sql = f'''
         WITH a_pesar AS 
@@ -82,6 +82,17 @@ def query(
           JOIN PCPB_010 ob
             ON ob.ORDEM_PRODUCAO = od.ob1
         )
+        , perid as
+        ( SELECT 
+            pe.PERIODO_PRODUCAO per
+          FROM PCPC_010 pe -- períodos
+          WHERE 1=1
+            -- AND pe.PERIODO_PRODUCAO = 2304
+            {filtra_periodo} -- filtra_periodo
+            -- AND pe.DATA_INI_PERIODO <= DATE '2023-01-25'
+            -- AND pe.DATA_FIM_PERIODO >= DATE '2023-01-25'
+            AND pe.AREA_PERIODO = 2 -- beneficiamento
+        )
         SELECT 
           ob.ot
         , ob.ob
@@ -95,11 +106,13 @@ def query(
         , p.PESO_PREVISTO p_previsto
         , p.PESO_REAL p_real
         FROM ord_b1 ob
+        JOIN perid pe
+          ON 1=1
         JOIN PCPB_080 p
           ON p.ORDEM_PRODUCAO = ob.ot
         WHERE 1=1
           AND p.PESAR_PRODUTO = 1
-          {filtra_periodo} -- filtra_periodo
+          AND ob.per = pe.per
         ORDER BY 
           p.ORDEM_PRODUCAO DESC 
         , p.SEQUENCIA_ESTRUTURA  
