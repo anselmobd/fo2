@@ -11,13 +11,13 @@ from utils.functions.views import (
     context_to_form_post,
 )
 
-from beneficia.forms.main import OtPesarForm
-from beneficia.queries import ot_pesar
+from beneficia import forms
+from beneficia import queries
 
 
 class OtPesar(View):
 
-    Form_class = OtPesarForm
+    Form_class = forms.ot_pesar.OtPesarForm
     template_name = 'beneficia/ot_pesar.html'
     title_name = 'Insumos a pesar'
 
@@ -30,7 +30,8 @@ class OtPesar(View):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        dados = ot_pesar.query(self.cursor, self.context['periodo'])
+        dados = queries.ot_pesar.query(
+            self.cursor, self.context['periodo'])
         if len(dados) == 0:
             return
 
