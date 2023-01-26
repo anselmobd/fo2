@@ -48,7 +48,6 @@ class OtPesar(View):
         self.context.update({
             'headers': [
                 'OT',
-                'Período',
                 'OP',
                 'Item',
                 'Peso previsto',
@@ -56,7 +55,6 @@ class OtPesar(View):
             ],
             'fields': [
                 'ot',
-                'per',
                 'op',
                 'item',
                 'p_previsto',
