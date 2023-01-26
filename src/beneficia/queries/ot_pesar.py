@@ -27,11 +27,21 @@ def query(
         cursor,
         periodo=None,
         data=None,
+        selecao='s',
     ):
 
     filtra_periodo = sql_where_none_if("pe.PERIODO_PRODUCAO", periodo)
+
     filtra_data_ini = sql_where_none_if("pe.DATA_INI_PERIODO", str(data), 'None', operation="<=")
     filtra_data_fim = sql_where_none_if("pe.DATA_FIM_PERIODO", str(data), 'None', operation=">=")
+
+    having_selecao = """ --
+        HAVING 
+          count(*)
+          > sum(
+            CASE WHEN p.PESO_REAL = 0 THEN 0 ELSE 1 END
+          )
+    """ if selecao == 's' else ''
 
     sql = f'''
         WITH a_pesar AS 
@@ -44,16 +54,11 @@ def query(
             ) pesados
           FROM PCPB_080 p
           WHERE 1=1
-        --    AND p.ORDEM_PRODUCAO = 4930
             AND p.PESAR_PRODUTO = 1
             AND p.PESO_PREVISTO > 0
           GROUP BY 
             p.ORDEM_PRODUCAO
-          HAVING 
-            count(*)
-            > sum(
-              CASE WHEN p.PESO_REAL = 0 THEN 0 ELSE 1 END
-            )
+          {having_selecao} -- having_selecao
           ORDER BY 
             p.ORDEM_PRODUCAO DESC 
         )
@@ -122,6 +127,7 @@ def query(
           ON p.ORDEM_PRODUCAO = ob.ot
         WHERE 1=1
           AND p.PESAR_PRODUTO = 1
+          AND p.PESO_PREVISTO > 0
           AND ob.per = pe.per
         UNION 
         SELECT 
