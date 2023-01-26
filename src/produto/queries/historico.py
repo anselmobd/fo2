@@ -29,7 +29,7 @@ def hist_narrativa(referencia):
             "h.sequencia desc",
         ],
     )
-    return OQuery(MQ).debug_execute()
+    return OQuery(MQ, database='systextil_log').debug_execute()
 
     sql = MountQuery(
         fields=[
