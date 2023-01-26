@@ -35,6 +35,13 @@ class OtPesar(View):
             periodo=self.context['periodo'],
             data=self.context['data'],
         )
+
+        self.context.update({
+            'per': per,
+            'dtini': dtini,
+            'dtfim': dtfim,
+        })
+
         if len(dados) == 0:
             return
 
@@ -56,9 +63,6 @@ class OtPesar(View):
                 'p_real',
             ],
             'dados': dados,
-            'per': per,
-            'dtini': dtini,
-            'dtfim': dtfim,
         })
 
 
