@@ -1,6 +1,9 @@
 from pprint import pprint
 
-from utils.functions.models.dictlist import dictlist_lower
+from utils.functions.models.dictlist import (
+    dictlist_lower, 
+    dictlist_split,
+)
 from utils.functions.queries import (
     debug_cursor_execute,
     sql_where_none_if,
@@ -23,9 +26,12 @@ def append_ordem_test(lista, comp, ordem):
 def query(
         cursor,
         periodo=None,
+        data=None,
     ):
 
     filtra_periodo = sql_where_none_if("pe.PERIODO_PRODUCAO", periodo)
+    filtra_data_ini = sql_where_none_if("pe.DATA_INI_PERIODO", str(data), operation="<=")
+    filtra_data_fim = sql_where_none_if("pe.DATA_FIM_PERIODO", str(data), operation=">=")
 
     sql = f'''
         WITH a_pesar AS 
@@ -82,22 +88,26 @@ def query(
           JOIN PCPB_010 ob
             ON ob.ORDEM_PRODUCAO = od.ob1
         )
-        , perid as
+        , period as
         ( SELECT 
             pe.PERIODO_PRODUCAO per
+          , pe.DATA_INI_PERIODO dtini
+          , pe.DATA_FIM_PERIODO dtfim
           FROM PCPC_010 pe -- períodos
           WHERE 1=1
-            -- AND pe.PERIODO_PRODUCAO = 2304
             {filtra_periodo} -- filtra_periodo
-            -- AND pe.DATA_INI_PERIODO <= DATE '2023-01-25'
-            -- AND pe.DATA_FIM_PERIODO >= DATE '2023-01-25'
+            {filtra_data_ini} -- filtra_data_ini
+            {filtra_data_fim} -- filtra_data_fim
             AND pe.AREA_PERIODO = 2 -- beneficiamento
         )
         SELECT 
           ob.ot
+        , p.SEQUENCIA_ESTRUTURA seq
         , ob.ob
         , ob.ob1
-        , ob.per
+        , pe.per
+        , pe.dtini
+        , pe.dtfim
         , ob.obs
         , p.NIVEL_COMP nivel
         , p.GRUPO_COMP ref
@@ -106,25 +116,48 @@ def query(
         , p.PESO_PREVISTO p_previsto
         , p.PESO_REAL p_real
         FROM ord_b1 ob
-        JOIN perid pe
+        JOIN period pe
           ON 1=1
         JOIN PCPB_080 p
           ON p.ORDEM_PRODUCAO = ob.ot
         WHERE 1=1
           AND p.PESAR_PRODUTO = 1
           AND ob.per = pe.per
+        UNION 
+        SELECT 
+          NULL ot
+        , NULL seq
+        , NULL ob
+        , NULL ob1
+        , pe.per
+        , pe.dtini
+        , pe.dtfim
+        , NULL obs
+        , NULL nivel
+        , NULL ref
+        , NULL tam
+        , NULL cor
+        , NULL p_previsto
+        , NULL p_real
+        FROM period pe
         ORDER BY 
-          p.ORDEM_PRODUCAO DESC 
-        , p.SEQUENCIA_ESTRUTURA  
+          1 DESC NULLS FIRST
+        , 2 
     '''
 
     debug_cursor_execute(cursor, sql)
-    dados = dictlist_lower(cursor)
+    consulta = dictlist_lower(cursor)
+
+    dados_per, dados = dictlist_split(
+        consulta, lambda row: row['ot'] is None)
+
+    row_per = dados_per[0]
 
     oss = set()
     for row in dados:
         row['item'] = item_str(row['nivel'], row['ref'], row['tam'], row['cor'])
         row['op'] = ""
+        row['os'] = ""
         if row['obs']:
             obs_list = split_numbers(row['obs'])
             if obs_list:
@@ -152,4 +185,4 @@ def query(
             else:
                 row['os'] = "Não"
 
-    return dados
+    return dados, row_per['per'], row_per['dtini'].date(), row_per['dtfim'].date()

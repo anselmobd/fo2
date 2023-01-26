@@ -30,8 +30,11 @@ class OtPesar(View):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        dados = queries.ot_pesar.query(
-            self.cursor, self.context['periodo'])
+        dados, per, dtini, dtfim = queries.ot_pesar.query(
+            self.cursor,
+            periodo=self.context['periodo'],
+            data=self.context['data'],
+        )
         if len(dados) == 0:
             return
 
