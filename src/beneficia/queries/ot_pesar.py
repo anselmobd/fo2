@@ -151,7 +151,15 @@ def query(
     dados_per, dados = dictlist_split(
         consulta, lambda row: row['ot'] is None)
 
-    row_per = dados_per[0]
+    if dados_per:
+        row_per = dados_per[0]
+        per = row_per['per']
+        dtini = row_per['dtini'].date()
+        dtfim = row_per['dtfim'].date()
+    else:
+        per = None
+        dtini = None
+        dtfim = None
 
     oss = set()
     for row in dados:
@@ -185,4 +193,4 @@ def query(
             else:
                 row['os'] = "Não"
 
-    return dados, row_per['per'], row_per['dtini'].date(), row_per['dtfim'].date()
+    return dados, per, dtini, dtfim
