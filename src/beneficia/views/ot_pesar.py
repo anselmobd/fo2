@@ -34,6 +34,7 @@ class OtPesar(View):
             self.cursor,
             periodo=self.context['periodo'],
             data=self.context['data'],
+            selecao=self.context['selecao'],
         )
 
         self.context.update({

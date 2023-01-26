@@ -30,6 +30,17 @@ class OtPesarForm(forms.Form):
         ),
     )
 
+    CHOICES = [
+        ('s', "Somente OTs com algum insumo sem pesagem"),
+        ('t', "Todas as OTs com insumos que devem ser pesados"),
+    ]
+    selecao = forms.ChoiceField(
+        label="Seleção",
+        choices=CHOICES,
+        initial='s',
+    )
+
+
     def clean(self):
         clean_ef = super(OtPesarForm, self).clean()
 
