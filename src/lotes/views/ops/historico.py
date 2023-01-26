@@ -1,9 +1,7 @@
 import datetime
 from pprint import pprint
 
-from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db import connection
 from django.shortcuts import render
 from django.views import View
 
@@ -16,7 +14,7 @@ class Historico(View):
     template_name = 'lotes/historico_op.html'
     title_name = 'Histórico de OP'
 
-    def mount_context(self, cursor, op, oc, dia, usuario, descr, page):
+    def mount_context(self, op, oc, dia, usuario, descr, page):
         linhas_pagina = 100
         context = {
             'op': op,
@@ -27,7 +25,7 @@ class Historico(View):
             'linhas_pagina': linhas_pagina,
         }
 
-        data = lotes.queries.op.historico_op(cursor, op, oc, dia, usuario, descr)
+        data = lotes.queries.op.historico_op(op, oc, dia, usuario, descr)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Histórico não encontrado',
@@ -92,7 +90,6 @@ class Historico(View):
             usuario = form.cleaned_data['usuario']
             descr = form.cleaned_data['descr']
             page = form.cleaned_data['page']
-            cursor = connection.cursor()
-            context.update(self.mount_context(cursor, op, oc, dia, usuario, descr, page))
+            context.update(self.mount_context(op, oc, dia, usuario, descr, page))
         context['form'] = form
         return render(request, self.template_name, context)
