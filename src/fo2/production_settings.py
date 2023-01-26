@@ -4,6 +4,7 @@ from .settings import *
 
 from .db_password import (
     DBPASS,
+    DBPASS_STLOG,
     DBPASS_SO,
     DBPASS_PERSONA,
     DBPASS_F1,
@@ -23,6 +24,14 @@ DATABASES = {
         'NAME': "tussor_fo2_production",
         'USER': "tussor_fo2",
         'PASSWORD': DBPASS,
+    },
+    'systextil_log': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "tussor_systextil_log",
+        'USER': "tussor_fo2",
+        'PASSWORD': DBPASS_STLOG,
+        'HOST': '192.168.1.84',
+        'PORT': '5432',
     },
     'so': {  # Systextil Oficial
         'ENGINE': 'django.db.backends.oracle',

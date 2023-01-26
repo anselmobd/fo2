@@ -179,6 +179,14 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5434',
     },
+    'systextil_log': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "tussor_dev_fo2_production",
+        'USER': "tussor_dev_fo2",
+        'PASSWORD': "1C94B9CE0FD2B81DF12E923E3E5FF9217CA12A6A8CF1F9C9989C43ED034A9F8D",
+        'HOST': 'localhost',
+        'PORT': '5434',
+    },
     # 'so': {  # Systextil Oficial
     #     'ENGINE': 'django.db.backends.oracle',
     #     'NAME': 'xe',
