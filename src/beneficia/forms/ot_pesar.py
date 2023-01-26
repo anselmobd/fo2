@@ -29,3 +29,19 @@ class OtPesarForm(forms.Form):
             }
         ),
     )
+
+    def clean(self):
+        clean_ef = super(OtPesarForm, self).clean()
+
+        if not any(
+            clean_ef.get(x, '')
+            for x in (
+                'periodo',
+                'data',
+            )
+        ):
+            list_msg = ['Ao menos um destes campos deve ser preenchido']
+            self._errors['periodo'] = self.error_class(list_msg)
+            self._errors['data'] = self.error_class(list_msg)
+
+        return clean_ef
