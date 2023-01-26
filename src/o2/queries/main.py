@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from django.db import connection
+from django.db import connections
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
@@ -102,17 +102,19 @@ class MountQuery():
 
 class OQuery():
 
-    def __init__(self, sql) -> None:
-        self._cursor = None
+    def __init__(self, sql, database='default') -> None:
         if isinstance(sql, MountQuery):
             self.sql = sql.query
         else:
             self.sql = sql
+        self.database = database
+
+        self._cursor = None
 
     @property
     def cursor(self):
         if not self._cursor:
-            self._cursor = connection.cursor()
+            self._cursor = connections[self.database].cursor()
         return self._cursor
 
     def debug_execute(self):
