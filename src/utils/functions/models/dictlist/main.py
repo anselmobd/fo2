@@ -10,6 +10,7 @@ __all__ = [
     'custom_dictlist',
     'dictlist',
     'dictlist_lower',
+    'dictlist_split',
     'queryset_to_dictlist_lower',
     'dictlist_to_lower',
     'dictlist_indexed',
@@ -71,6 +72,17 @@ def dictlist(cursor):
 
 def dictlist_lower(cursor):
     return custom_dictlist(cursor, name_case=str.lower)
+
+
+def dictlist_split(dlist, f_rule):
+    list1 = []
+    list2 = []
+    for row in dlist:
+        if f_rule(row):
+            list1.append(row)
+        else:
+            list2.append(row)
+    return list1, list2
 
 
 def queryset_to_dictlist_lower(qs):
