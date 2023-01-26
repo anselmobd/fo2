@@ -56,6 +56,9 @@ class OtPesar(View):
                 'p_real',
             ],
             'dados': dados,
+            'per': per,
+            'dtini': dtini,
+            'dtfim': dtfim,
         })
 
 

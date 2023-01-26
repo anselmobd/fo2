@@ -23,6 +23,7 @@
 {% endif %}
 {% if post %}
   {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+  <h4>Período {{per}}: {{dtini}} até {{dtfim}}</h4>
   {% if dados %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
