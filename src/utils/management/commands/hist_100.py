@@ -95,7 +95,7 @@ class Command(BaseCommand):
         return self.iter_cursor(cursor_s)
 
     def insert_hist_100(self, row):
-        cursor_f = db_cursor('default')
+        cursor_f = db_cursor('systextil_log')
         sql = f'''
             INSERT INTO systextil_logs.hist_100
             ( tabela
