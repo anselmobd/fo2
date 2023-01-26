@@ -30,8 +30,8 @@ def query(
     ):
 
     filtra_periodo = sql_where_none_if("pe.PERIODO_PRODUCAO", periodo)
-    filtra_data_ini = sql_where_none_if("pe.DATA_INI_PERIODO", str(data), operation="<=")
-    filtra_data_fim = sql_where_none_if("pe.DATA_FIM_PERIODO", str(data), operation=">=")
+    filtra_data_ini = sql_where_none_if("pe.DATA_INI_PERIODO", str(data), 'None', operation="<=")
+    filtra_data_fim = sql_where_none_if("pe.DATA_FIM_PERIODO", str(data), 'None', operation=">=")
 
     sql = f'''
         WITH a_pesar AS 
