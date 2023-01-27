@@ -5,7 +5,7 @@ from django.db import connections
 from utils.functions.models.dictlist import dictlist
 
 
-def historico_op(cursor, op, oc=None, dia=None, usuario=None, descr=None):
+def historico_op(op, oc=None, dia=None, usuario=None, descr=None):
     cursor = connections['systextil_log'].cursor()
     filter_oc = ""
     if oc is not None and oc != "":
