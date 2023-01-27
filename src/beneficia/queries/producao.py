@@ -86,6 +86,12 @@ def query(
         , bt.TURNO_PRODUCAO TURNO
         , bt.CODIGO_USUARIO COD_USU
         , ufim.USUARIO USUARIO
+        -- , t.QTDE_ROLOS_REAL ROLOS -- digitação errada nos valores
+        , ( SELECT 
+              sum(QTDE_ROLOS_PROG)
+            FROM pcpb_030 ob1 -- destinos 
+            WHERE ob1.ORDEM_PRODUCAO =  bt.ORDEM_PRODUCAO
+          ) rolos
         , t.QTDE_QUILOS_REAL QUILOS
         , SUBSTR(t.PANO_SBG_GRUPO, 1, 2) TIPO_REF
         , t.PANO_SBG_GRUPO REF
