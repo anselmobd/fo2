@@ -11,6 +11,7 @@ from utils.functions.views import (
     cleanned_fields_to_context,
     context_to_form_post,
 )
+from utils.views import totalize_data
 
 from beneficia.forms.main import ObForm
 from beneficia.queries import (
@@ -211,6 +212,18 @@ class Ob(View):
         if dest_erro:
             dest_headers.insert(1, 'Erro')
             dest_fields.insert(1, 'erro')
+
+        totalize_data(
+            dest_dados,
+            {
+                'sum': ['rolos', 'quilos'],
+                'descr': {'numero': 'Total:'},
+                'row_style':
+                    "font-weight: bold;"
+                    "background-image: linear-gradient(#DDD, white);",
+                'flags': ['NO_TOT_1'],
+            }
+        )
 
         self.context.update({
             'dest_headers': dest_headers,
