@@ -63,12 +63,15 @@ class Producao(O2BaseGetPostView):
             'data': data,
             'vazio': "Sem produção",
         }
-        grade = {
+        grd_quilos = {
+            'data': None,
+        }
+        grd_itens = {
             'data': None,
         }
         if data:
 
-            grade = dictlist_to_grade_qtd(
+            grd_quilos = dictlist_to_grade_qtd(
                 dados=data,
                 field_linha='cor',
                 field_coluna='tipo_tecido',
@@ -76,9 +79,17 @@ class Producao(O2BaseGetPostView):
                 field_quantidade='quilos',
             )
 
-            for row in grade['data']:
-                for field in grade['fields'][1:]:
+            for row in grd_quilos['data']:
+                for field in grd_quilos['fields'][1:]:
                     row[f'{field}|DECIMALS'] = 3
+
+            grd_itens = dictlist_to_grade_qtd(
+                dados=data,
+                field_linha='cor',
+                field_coluna='tipo_tecido',
+                facade_coluna='Tecido',
+                field_quantidade='rolos',
+            )
 
             for row in data:
                 if not row['usuario']:
@@ -118,7 +129,9 @@ class Producao(O2BaseGetPostView):
                 'quilos': ["Quilos", 'r', 3],
             }).hfs_dict_context(result)
 
-        return result, grade
+        self.context['producao'] = result
+        self.context['grd_quilos'] = grd_quilos
+        self.context['grd_itens'] = grd_itens
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -128,4 +141,4 @@ class Producao(O2BaseGetPostView):
 
         self.context.update(self.form_report())
 
-        self.context['producao'], self.context['grade'] = self.get_producao()
+        self.get_producao()

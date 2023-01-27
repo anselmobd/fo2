@@ -25,11 +25,18 @@
       <h4>Erro: {{ erro }}</h4>
     {% endif %}
     {% include "layout/table_generic.html" with dados=producao only %}
-    {% if grade.data %}
-      <h4>Grade</h4>
+    {% if grd_quilos.data %}
+      <h4>Grade por quilos</h4>
       <table style="width: auto;">
-        {% include "layout/thead_generic.html" with data=grade.headers style=grade.style only %}
-        {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data group=grade.group style=grade.style only %}
+        {% include "layout/thead_generic.html" with data=grd_quilos.headers style=grd_quilos.style only %}
+        {% include "layout/tbody_generic.html" with fields=grd_quilos.fields data=grd_quilos.data group=grd_quilos.group style=grd_quilos.style only %}
+      </table>
+    {% endif %}
+    {% if grd_itens.data %}
+      <h4>Grade por itens</h4>
+      <table style="width: auto;">
+        {% include "layout/thead_generic.html" with data=grd_itens.headers style=grd_itens.style only %}
+        {% include "layout/tbody_generic.html" with fields=grd_itens.fields data=grd_itens.data group=grd_itens.group style=grd_itens.style only %}
       </table>
     {% endif %}
   {% endif %}
