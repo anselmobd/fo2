@@ -96,7 +96,7 @@ class Producao(O2BaseGetPostView):
             totalize_data(
                 data,
                 {
-                    'sum': ['quilos'],
+                    'sum': ['rolos', 'quilos'],
                     'descr': {'dt_fim': 'Total:'},
                     'row_style':
                         "font-weight: bold;"
@@ -114,6 +114,7 @@ class Producao(O2BaseGetPostView):
                 'turno': ["Turno"],
                 'tipo_tecido': ["Tipo tecido"],
                 'cor': ["Cor"],
+                'rolos': ["Itens", 'r', 0],
                 'quilos': ["Quilos", 'r', 3],
             }).hfs_dict_context(result)
 
