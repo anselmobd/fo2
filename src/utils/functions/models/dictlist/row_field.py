@@ -54,20 +54,20 @@ def is_empty(value, also=None, only=None):
     return result
 
 
-def fld_a_blank(row, field, viewname, *args):
-    fld_reverse(row, field, viewname, *args, a_link='A', target='_blank')
+def fld_a_blank(row, field, viewname, *args, **kwargs):
+    fld_reverse(row, field, viewname, *args, **kwargs, a_link='A', target='_blank')
 
 
-def fld_a(row, field, viewname, *args):
-    fld_reverse(row, field, viewname, *args, a_link='A')
+def fld_a(row, field, viewname, *args, **kwargs):
+    fld_reverse(row, field, viewname, *args, **kwargs, a_link='A')
 
 
-def fld_link_blank(row, field, viewname, *args):
-    fld_reverse(row, field, viewname, *args, a_link='LINK', target='_blank')
+def fld_link_blank(row, field, viewname, *args, **kwargs):
+    fld_reverse(row, field, viewname, *args, **kwargs, a_link='LINK', target='_blank')
 
 
-def fld_link(row, field, viewname, *args):
-    fld_reverse(row, field, viewname, *args, a_link='LINK')
+def fld_link(row, field, viewname, *args, **kwargs):
+    fld_reverse(row, field, viewname, *args, **kwargs, a_link='LINK')
 
 
 def fld_reverse(row, field, viewname, *args, a_link=None, target=None):
