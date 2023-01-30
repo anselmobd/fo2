@@ -13,16 +13,45 @@ __all__ = [
 ]
 
 
-def is_empty(value):
-    """Retorna True de value for None ou:
-    - se str: string vazia ou em branco
-    - se number: 0
+def is_empty(value, also=None, only=None):
     """
+    Testa se valor é vazio
+
+    Por padrão retorna True se:
+    - value for None;
+    - for string vazia ou em branco;
+    - for number com valor 0.
+
+    Parametros:
+    - also: enumerate com outros valores a serem considerados
+      como vazios, além do padrão citado acima.
+    - only: enumerate os únicos valores a serem considerados
+      como vazios, sobrepondo o padrão citado acima.
+    """
+
+    def in_enumerate(value, enum):
+        if isinstance(enum, str):
+            enum = [enum]
+        # catch TypeError, se não quiser erro quando also
+        # não é tuple ou list ou outro enumerate
+        for item in enum:
+            if value == item:
+                return True
+        return False
+
+    if only:
+        return in_enumerate(value, only)
+
     try:
         value = value.strip()
     except AttributeError:
         pass
-    return not value
+    result = not value
+
+    if not result and also:
+        return in_enumerate(value, also)
+
+    return result
 
 
 def fld_a_blank(row, field, viewname, *args):
