@@ -75,6 +75,8 @@ def fld_reverse(row, field, viewname, *args, a_link=None, target=None):
         row[f'{field}|TARGET'] = target
     if a_link:
         a_link = a_link.upper()
+        if not args:
+            args = [row[field]]
         row[f'{field}|{a_link}'] = reverse(
             viewname,
             args=args,
