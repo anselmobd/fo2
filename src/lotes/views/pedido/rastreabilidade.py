@@ -334,4 +334,5 @@ class RastreabilidadeView(O2BaseGetPostView):
 
         self.info_ops()      
 
-        self.info_pedfm()
+        if self.dados_ops:
+            self.info_pedfm()
