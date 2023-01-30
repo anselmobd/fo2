@@ -114,7 +114,8 @@ def fld_reverse(row, field, viewname, *args,
         post_process(row, field)
 
 
-def fld_default(row, field, default='-'):
+def fld_default(row, field, default=None):
+    default = default if default else '-'
     test = is_empty(row[field])
     if test and default:
         row[field] = default
