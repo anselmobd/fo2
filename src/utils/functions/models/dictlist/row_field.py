@@ -6,9 +6,8 @@ from django.urls import reverse
 
 __all__ = [
     'fld_a_blank',
-    'fld_slf_a_blank',
     'fld_date',
-    'fld_empty',
+    'fld_default',
     'fld_str',
 ]
 
@@ -100,11 +99,11 @@ def fld_reverse(row, field, viewname, *args,
 
 
 def fld_date(row, field, default='-'):
-    if not fld_empty(row, field, default=default):
+    if not fld_default(row, field, default=default):
         row[field] = row[field].date()
 
 
-def fld_empty(row, field, default='-'):
+def fld_default(row, field, default='-'):
     test = is_empty(row[field])
     if test and default:
         row[field] = default
@@ -112,5 +111,5 @@ def fld_empty(row, field, default='-'):
 
 
 def fld_str(row, field, default='-'):
-    if not fld_empty(row, field, default=default):
+    if not fld_default(row, field, default=default):
         row[field] = str(row[field])

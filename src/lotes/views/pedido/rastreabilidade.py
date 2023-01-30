@@ -7,7 +7,7 @@ from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.models.dictlist.row_field import (
     fld_a_blank,
     fld_date,
-    fld_empty,
+    fld_default,
     fld_str,
 )
 from utils.table_defs import TableDefsHpSD
@@ -58,11 +58,11 @@ class RastreabilidadeView(O2BaseGetPostView):
         for row in self.dados_pedido:
             fld_a_blank(row, 'pedido_venda', 'producao:pedido__get')
             fld_str(row, 'pedido_venda')
-            fld_empty(row, 'fantasia')
-            fld_empty(row, 'pedido_cliente')
+            fld_default(row, 'fantasia')
+            fld_default(row, 'pedido_cliente')
             fld_date(row, 'dt_emissao')
             fld_date(row, 'dt_embarque')
-            fld_empty(row, 'observacao')
+            fld_default(row, 'observacao')
 
     def table_ped_cliente(self):
         bloco = self.create_table(self.dados_pedido)
@@ -116,8 +116,8 @@ class RastreabilidadeView(O2BaseGetPostView):
             fld_date(row, 'dt_canc')
             fld_date(row, 'dt_corte')
             fld_date(row, 'dt_emit')
-            fld_empty(row, 'obs')
-            fld_empty(row, 'obs2')
+            fld_default(row, 'obs')
+            fld_default(row, 'obs2')
 
     def table_op_ref(self, dados):
         bloco = self.create_table(dados)
