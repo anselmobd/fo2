@@ -62,28 +62,28 @@ def fld_a_blank(row, field, viewname, *args):
     )
 
 
-def fld_slf_a_blank(row, field, viewname, empty='-'):
-    if not fld_empty(row, field, empty=empty):
+def fld_slf_a_blank(row, field, viewname, default='-'):
+    if not fld_empty(row, field, default=default):
         fld_a_blank(row, field, viewname, row[field])
 
 
-def fld_slf_args_a_blank(row, field, viewname, *args, empty='-'):
-    if not fld_empty(row, field, empty=empty):
+def fld_slf_args_a_blank(row, field, viewname, *args, default='-'):
+    if not fld_empty(row, field, default=default):
         fld_a_blank(row, field, viewname, *args)
 
 
-def fld_date(row, field, empty='-'):
-    if not fld_empty(row, field, empty=empty):
+def fld_date(row, field, default='-'):
+    if not fld_empty(row, field, default=default):
         row[field] = row[field].date()
 
 
-def fld_empty(row, field, empty='-'):
+def fld_empty(row, field, default='-'):
     test = is_empty(row[field])
-    if test and empty:
-        row[field] = empty
+    if test and default:
+        row[field] = default
     return test
 
 
-def fld_str(row, field, empty='-'):
-    if not fld_empty(row, field, empty=empty):
+def fld_str(row, field, default='-'):
+    if not fld_empty(row, field, default=default):
         row[field] = str(row[field])
