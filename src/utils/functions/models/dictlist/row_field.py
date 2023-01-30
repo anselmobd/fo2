@@ -58,13 +58,19 @@ def fld_a_blank(row, field, viewname, *args):
     fld_a(row, field, viewname, *args, target='_blank')
 
 
-def fld_a(row, field, viewname, *args, target=None):
+def fld_a(row, field, viewname, *args, a_link='A', target=None):
+    fld_reverse(row, field, viewname, *args, a_link=a_link, target=target)
+
+
+def fld_reverse(row, field, viewname, *args, a_link=None, target=None):
     if target:
         row[f'{field}|TARGET'] = target
-    row[f'{field}|A'] = reverse(
-        viewname,
-        args=args,
-    )
+    if a_link:
+        a_link = a_link.upper()
+        row[f'{field}|{a_link}'] = reverse(
+            viewname,
+            args=args,
+        )
 
 
 def fld_slf_a_blank(row, field, viewname, default='-'):
