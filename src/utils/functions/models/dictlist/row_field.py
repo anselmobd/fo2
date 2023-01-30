@@ -179,6 +179,12 @@ class PrepRows():
                 params['args'].append(value)
         return params
 
+    def default(self, *args):
+        self.basic_steps.append(
+            self.prep_args([fld_default]+list(args))
+        )
+        return self
+
     def process(self):
         for row in self.data:
             for basic_step in self.basic_steps:
