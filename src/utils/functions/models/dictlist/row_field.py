@@ -155,8 +155,6 @@ def fld_str_dash(row, field):
 class PrepRows():
 
     def __init__(self, data, basic_steps) -> None:
-        self.basic_params = 'procedure', 'fields'
-
         self.data = data
         self.basic_steps = [
             self.prep_args(step)
@@ -164,21 +162,21 @@ class PrepRows():
         ]
 
     def prep_args(self, step):
-        fields = list(self.basic_params)
-        fields.reverse()
-        params = {}
-        params['args'] = []
-        params['kwargs'] = {}
-        for value in step:
+        params = {
+            'procedure': step[0],
+            'fields': (
+                [step[1]]
+                if isinstance(step[1], str)
+                else step[1]
+            ),
+            'args': [],
+            'kwargs': {},
+        }
+        for value in step[2:]:
             if isinstance(value, dict):
                 params['kwargs'].update(value)
             else:
-                if fields:
-                    params[fields.pop()] = value
-                else:
-                    params['args'].append(value)
-        while fields:
-            params[fields.pop()] = None
+                params['args'].append(value)
         return params
 
     def process(self):
