@@ -55,7 +55,12 @@ def is_empty(value, also=None, only=None):
 
 
 def fld_a_blank(row, field, viewname, *args):
-    row[f'{field}|TARGET'] = '_blank'
+    fld_a(row, field, viewname, *args, target='_blank')
+
+
+def fld_a(row, field, viewname, *args, target=None):
+    if target:
+        row[f'{field}|TARGET'] = target
     row[f'{field}|A'] = reverse(
         viewname,
         args=args,
