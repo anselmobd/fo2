@@ -70,7 +70,7 @@ def fld_link(row, field, viewname, *args, **kwargs):
     fld_reverse(row, field, viewname, *args, **kwargs, a_link='LINK')
 
 
-def fld_reverse(row, field, viewname, *args, a_link=None, target=None):
+def insert_fld_reverse(row, field, viewname, *args, a_link=None, target=None):
     if target:
         row[f'{field}|TARGET'] = target
     if a_link:
@@ -81,6 +81,17 @@ def fld_reverse(row, field, viewname, *args, a_link=None, target=None):
             viewname,
             args=args,
         )
+
+
+def fld_reverse(row, field, viewname, *args,
+    a_link=None, target=None,
+    always_link=False, default=None,
+):
+    field_is_empty = is_empty(row[field])
+    if always_link or not field_is_empty:
+        insert_fld_reverse(row, field, viewname, *args, a_link=a_link, target=target)
+    if field_is_empty and default:
+        row[field] = default
 
 
 def fld_slf_a_blank(row, field, viewname, default='-'):
