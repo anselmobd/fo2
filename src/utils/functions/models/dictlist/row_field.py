@@ -6,8 +6,13 @@ from django.urls import reverse
 
 __all__ = [
     'fld_a_blank',
-    'fld_date_dash',
+    'fld_a',
+    'fld_link_blank',
+    'fld_link',
     'fld_default',
+    'fld_date',
+    'fld_date_dash',
+    'fld_str',
     'fld_str_dash',
 ]
 
