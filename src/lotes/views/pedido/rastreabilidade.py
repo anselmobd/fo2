@@ -6,9 +6,9 @@ from base.forms.forms2 import Forms2
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.models.dictlist.row_field import (
     fld_a_blank,
-    fld_date,
+    fld_date_dash,
     fld_default,
-    fld_str,
+    fld_str_dash,
 )
 from utils.table_defs import TableDefsHpSD
 from utils.views.summarize import brif
@@ -57,11 +57,11 @@ class RastreabilidadeView(O2BaseGetPostView):
     def prep_rows_pedido(self):
         for row in self.dados_pedido:
             fld_a_blank(row, 'pedido_venda', 'producao:pedido__get')
-            fld_str(row, 'pedido_venda')
+            fld_str_dash(row, 'pedido_venda')
             fld_default(row, 'fantasia')
             fld_default(row, 'pedido_cliente')
-            fld_date(row, 'dt_emissao')
-            fld_date(row, 'dt_embarque')
+            fld_date_dash(row, 'dt_emissao')
+            fld_date_dash(row, 'dt_embarque')
             fld_default(row, 'observacao')
 
     def table_ped_cliente(self):
@@ -112,10 +112,10 @@ class RastreabilidadeView(O2BaseGetPostView):
         for row in self.dados_ops:
             fld_a_blank(row, 'op_princ', 'producao:op__get', default='-')
             fld_a_blank(row, 'ref', 'produto:ref__get')
-            fld_str(row, 'op')
-            fld_date(row, 'dt_canc')
-            fld_date(row, 'dt_corte')
-            fld_date(row, 'dt_emit')
+            fld_str_dash(row, 'op')
+            fld_date_dash(row, 'dt_canc')
+            fld_date_dash(row, 'dt_corte')
+            fld_date_dash(row, 'dt_emit')
             fld_default(row, 'obs')
             fld_default(row, 'obs2')
 
@@ -186,7 +186,7 @@ class RastreabilidadeView(O2BaseGetPostView):
                     row['empr'],
                     row['nf_envia'],
                     )
-                fld_str(row, 'nf_envia')
+                fld_str_dash(row, 'nf_envia')
 
     def info_rolos(self, op):
         self.rolos = self.get_rolos(op)
@@ -281,9 +281,9 @@ class RastreabilidadeView(O2BaseGetPostView):
     def prep_rows_pedfm(self):
         for row in self.dados_filial_ped:
             fld_a_blank(row, 'ped', 'producao:pedido__get')
-            fld_str(row, 'ped')
-            fld_date(row, 'data')
-            fld_str(row, 'obs')
+            fld_str_dash(row, 'ped')
+            fld_date_dash(row, 'data')
+            fld_str_dash(row, 'obs')
             fld_a_blank(
                 row,
                 'nf',
@@ -291,8 +291,8 @@ class RastreabilidadeView(O2BaseGetPostView):
                 row['nf_empresa'],
                 row['nf'],
             )
-            fld_str(row, 'nf')
-            fld_str(row, 'situacao_descr')
+            fld_str_dash(row, 'nf')
+            fld_str_dash(row, 'situacao_descr')
 
     def table_pedfm(self):
         bloco = self.create_table(
