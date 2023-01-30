@@ -154,12 +154,12 @@ def fld_str_dash(row, field):
 
 class PrepRows():
 
-    def __init__(self, data, basic_steps) -> None:
+    def __init__(self, data, basic_steps=None) -> None:
         self.data = data
         self.basic_steps = [
             self.prep_args(step)
             for step in basic_steps
-        ]
+        ] if basic_steps else []
 
     def prep_args(self, step):
         params = {
@@ -179,10 +179,22 @@ class PrepRows():
                 params['args'].append(value)
         return params
 
-    def default(self, *args):
+    def custom_command(self, command, args):
         self.basic_steps.append(
-            self.prep_args([fld_default]+list(args))
+            self.prep_args([command]+list(args))
         )
+        return self
+
+    def a_blank(self, *args):
+        self.custom_command(fld_a_blank, args)
+        return self
+
+    def date(self, *args):
+        self.custom_command(fld_date, args)
+        return self
+
+    def default(self, *args):
+        self.custom_command(fld_default, args)
         return self
 
     def process(self):
