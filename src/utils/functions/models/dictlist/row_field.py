@@ -163,11 +163,11 @@ class PrepRows():
             for step in basic_steps
         ]
 
-    def mount_basic_step(self, steps):
-        steps = list(steps)
-        if len(steps) < len(self.basic_step_keys):
-            steps = steps + [None] * (len(self.basic_step_keys) - len(steps))
-        bs = dict(zip(self.basic_step_keys, steps))
+    def mount_basic_step(self, step):
+        step = list(step)
+        if len(step) < len(self.basic_step_keys):
+            step = step + [None] * (len(self.basic_step_keys) - len(step))
+        bs = dict(zip(self.basic_step_keys, step))
         if isinstance(bs['fields'], str):
             bs['fields'] = [bs['fields']]
         return bs
