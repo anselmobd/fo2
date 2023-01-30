@@ -99,16 +99,6 @@ def fld_reverse(row, field, viewname, *args,
         row[field] = default
 
 
-def fld_slf_a_blank(row, field, viewname, default='-'):
-    if not fld_empty(row, field, default=default):
-        fld_a_blank(row, field, viewname, row[field])
-
-
-def fld_slf_args_a_blank(row, field, viewname, *args, default='-'):
-    if not fld_empty(row, field, default=default):
-        fld_a_blank(row, field, viewname, *args)
-
-
 def fld_date(row, field, default='-'):
     if not fld_empty(row, field, default=default):
         row[field] = row[field].date()

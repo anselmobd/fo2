@@ -5,10 +5,9 @@ from fo2.connections import db_cursor_so
 from base.forms.forms2 import Forms2
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.models.dictlist.row_field import (
+    fld_a_blank,
     fld_date,
     fld_empty,
-    fld_slf_a_blank,
-    fld_slf_args_a_blank,
     fld_str,
 )
 from utils.table_defs import TableDefsHpSD
@@ -57,7 +56,7 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_pedido(self):
         for row in self.dados_pedido:
-            fld_slf_a_blank(row, 'pedido_venda', 'producao:pedido__get')
+            fld_a_blank(row, 'pedido_venda', 'producao:pedido__get')
             fld_str(row, 'pedido_venda')
             fld_empty(row, 'fantasia')
             fld_empty(row, 'pedido_cliente')
@@ -111,9 +110,8 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_ops(self):
         for row in self.dados_ops:
-            fld_slf_a_blank(row, 'op_princ', 'producao:op__get')
-            fld_str(row, 'op_princ')
-            fld_slf_a_blank(row, 'ref', 'produto:ref__get')
+            fld_a_blank(row, 'op_princ', 'producao:op__get', default='-')
+            fld_a_blank(row, 'ref', 'produto:ref__get')
             fld_str(row, 'op')
             fld_date(row, 'dt_canc')
             fld_date(row, 'dt_corte')
@@ -159,7 +157,7 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rolos(self):
         for row in self.rolos_nfs:
-            fld_slf_args_a_blank(
+            fld_a_blank(
                 row,
                 'nf',
                 'contabil:nf_recebida__get',
@@ -167,6 +165,7 @@ class RastreabilidadeView(O2BaseGetPostView):
                 row['nf_num'],
                 row['nf_ser'],
                 row['cnpj9'],
+                is_empty_also='-',
             )
             row['nf_envia'] = '-'
             row['empr'] = None
@@ -180,13 +179,14 @@ class RastreabilidadeView(O2BaseGetPostView):
             if dados_nfs:
                 row['nf_envia'] = dados_nfs[0]['nf_envia']
                 row['empr'] = dados_nfs[0]['empr']
-                fld_slf_args_a_blank(
+                fld_a_blank(
                     row,
                     'nf_envia',
                     'contabil:nota_fiscal__get',
                     row['empr'],
                     row['nf_envia'],
                     )
+                fld_str(row, 'nf_envia')
 
     def info_rolos(self, op):
         self.rolos = self.get_rolos(op)
@@ -280,11 +280,11 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_pedfm(self):
         for row in self.dados_filial_ped:
-            fld_slf_a_blank(row, 'ped', 'producao:pedido__get')
+            fld_a_blank(row, 'ped', 'producao:pedido__get')
             fld_str(row, 'ped')
             fld_date(row, 'data')
             fld_str(row, 'obs')
-            fld_slf_args_a_blank(
+            fld_a_blank(
                 row,
                 'nf',
                 'contabil:nota_fiscal__get',
