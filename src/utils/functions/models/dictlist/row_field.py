@@ -28,7 +28,7 @@ def is_empty(value, also=None, only=None):
       como vazios, sobrepondo o padrão citado acima.
     """
 
-    def in_enumerate(value, enum):
+    def in_sequence(value, enum):
         if isinstance(enum, str):
             enum = [enum]
         # catch TypeError, se não quiser erro quando also
@@ -39,7 +39,7 @@ def is_empty(value, also=None, only=None):
         return False
 
     if only:
-        return in_enumerate(value, only)
+        return in_sequence(value, only)
 
     try:
         value = value.strip()
@@ -48,7 +48,7 @@ def is_empty(value, also=None, only=None):
     result = not value
 
     if not result and also:
-        return in_enumerate(value, also)
+        return in_sequence(value, also)
 
     return result
 
