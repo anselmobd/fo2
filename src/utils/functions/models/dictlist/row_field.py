@@ -101,6 +101,7 @@ def fld_reverse(row, field, viewname, *args,
     a_link=None, target=None,
     always_link=False, default=None,
     is_empty_also=None, is_empty_only=None,
+    post_process=None,
 ):
     field_is_empty = is_empty(
         row[field], also=is_empty_also, only=is_empty_only)
@@ -109,6 +110,8 @@ def fld_reverse(row, field, viewname, *args,
             row, field, viewname, *args, a_link=a_link, target=target)
     if field_is_empty and default:
         row[field] = default
+    elif post_process:
+        post_process(row, field)
 
 
 def fld_default(row, field, default='-'):

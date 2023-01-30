@@ -8,6 +8,7 @@ from utils.functions.models.dictlist.row_field import (
     fld_a_blank,
     fld_date_dash,
     fld_default,
+    fld_str,
     fld_str_dash,
 )
 from utils.table_defs import TableDefsHpSD
@@ -56,8 +57,7 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_pedido(self):
         for row in self.dados_pedido:
-            fld_a_blank(row, 'pedido_venda', 'producao:pedido__get')
-            fld_str_dash(row, 'pedido_venda')
+            fld_a_blank(row, 'pedido_venda', 'producao:pedido__get', post_process=fld_str)
             fld_default(row, 'fantasia')
             fld_default(row, 'pedido_cliente')
             fld_date_dash(row, 'dt_emissao')
@@ -185,8 +185,8 @@ class RastreabilidadeView(O2BaseGetPostView):
                     'contabil:nota_fiscal__get',
                     row['empr'],
                     row['nf_envia'],
+                    post_process=fld_str,
                     )
-                fld_str_dash(row, 'nf_envia')
 
     def info_rolos(self, op):
         self.rolos = self.get_rolos(op)
@@ -280,8 +280,7 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rows_pedfm(self):
         for row in self.dados_filial_ped:
-            fld_a_blank(row, 'ped', 'producao:pedido__get')
-            fld_str_dash(row, 'ped')
+            fld_a_blank(row, 'ped', 'producao:pedido__get', post_process=fld_str)
             fld_date_dash(row, 'data')
             fld_str_dash(row, 'obs')
             fld_a_blank(
@@ -290,8 +289,9 @@ class RastreabilidadeView(O2BaseGetPostView):
                 'contabil:nota_fiscal__get',
                 row['nf_empresa'],
                 row['nf'],
+                default='-',
+                post_process=fld_str,
             )
-            fld_str_dash(row, 'nf')
             fld_str_dash(row, 'situacao_descr')
 
     def table_pedfm(self):
