@@ -155,22 +155,31 @@ def fld_str_dash(row, field):
 class PrepRows():
 
     def __init__(self, data, basic_steps) -> None:
-        self.basic_step_keys = 'procedure', 'fields', 'default'
+        self.basic_params = 'procedure', 'fields'
 
         self.data = data
         self.basic_steps = [
-            self.mount_basic_step(step)
+            self.prep_args(step)
             for step in basic_steps
         ]
 
-    def mount_basic_step(self, step):
-        step = list(step)
-        if len(step) < len(self.basic_step_keys):
-            step = step + [None] * (len(self.basic_step_keys) - len(step))
-        bs = dict(zip(self.basic_step_keys, step))
-        if isinstance(bs['fields'], str):
-            bs['fields'] = [bs['fields']]
-        return bs
+    def prep_args(self, step):
+        fields = list(self.basic_params)
+        fields.reverse()
+        params = {}
+        params['args'] = []
+        params['kwargs'] = {}
+        for value in step:
+            if isinstance(value, dict):
+                params['kwargs'].update(value)
+            else:
+                if fields:
+                    params[fields.pop()] = value
+                else:
+                    params['args'].append(value)
+        while fields:
+            params[fields.pop()] = None
+        return params
 
     def process(self):
         for row in self.data:
@@ -179,5 +188,6 @@ class PrepRows():
                     basic_step['procedure'](
                         row,
                         field,
-                        basic_step['default'],
+                        *basic_step['args'],
+                        **basic_step['kwargs'],
                     )
