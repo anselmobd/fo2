@@ -150,3 +150,34 @@ def fld_str(row, field, default=None):
 
 def fld_str_dash(row, field):
     fld_str(row, field, default='-')
+
+
+class PrepRows():
+
+    def __init__(self, data, basic_steps) -> None:
+        self.basic_step_keys = 'procedure', 'fields', 'default'
+
+        self.data = data
+        self.basic_steps = [
+            self.mount_basic_step(step)
+            for step in basic_steps
+        ]
+
+    def mount_basic_step(self, steps):
+        steps = list(steps)
+        if len(steps) < len(self.basic_step_keys):
+            steps = steps + [None] * (len(self.basic_step_keys) - len(steps))
+        bs = dict(zip(self.basic_step_keys, steps))
+        if isinstance(bs['fields'], str):
+            bs['fields'] = [bs['fields']]
+        return bs
+
+    def process(self):
+        for row in self.data:
+            for basic_step in self.basic_steps:
+                for field in basic_step['fields']:
+                    basic_step['procedure'](
+                        row,
+                        field,
+                        basic_step['default'],
+                    )

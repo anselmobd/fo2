@@ -6,10 +6,12 @@ from base.forms.forms2 import Forms2
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.models.dictlist.row_field import (
     fld_a_blank,
+    fld_date,
     fld_date_dash,
     fld_default,
     fld_str,
     fld_str_dash,
+    PrepRows,
 )
 from utils.table_defs import TableDefsHpSD
 from utils.views.summarize import brif
@@ -56,13 +58,26 @@ class RastreabilidadeView(O2BaseGetPostView):
         )
 
     def prep_rows_pedido(self):
+        PrepRows(
+            self.dados_pedido,
+            [
+                [
+                    fld_date,
+                    ('dt_emissao', 'dt_embarque'),
+                ],
+                [
+                    fld_default,
+                    ('fantasia', 'pedido_cliente', 'observacao'),
+                ],
+            ]
+        ).process()
         for row in self.dados_pedido:
             fld_a_blank(row, 'pedido_venda', 'producao:pedido__get', post_process=fld_str)
-            fld_default(row, 'fantasia')
-            fld_default(row, 'pedido_cliente')
-            fld_date_dash(row, 'dt_emissao')
-            fld_date_dash(row, 'dt_embarque')
-            fld_default(row, 'observacao')
+            # fld_default(row, 'fantasia')
+            # fld_default(row, 'pedido_cliente')
+            # fld_date(row, 'dt_emissao')
+            # fld_date(row, 'dt_embarque')
+            # fld_default(row, 'observacao')
 
     def table_ped_cliente(self):
         bloco = self.create_table(self.dados_pedido)
