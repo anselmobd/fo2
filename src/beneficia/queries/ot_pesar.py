@@ -120,11 +120,16 @@ def query(
         , p.ITEM_COMP cor
         , p.PESO_PREVISTO p_previsto
         , p.PESO_REAL p_real
+        , p.OPERADOR cod_pesador
+        , func.NOME nome_pesador
         FROM ord_b1 ob
         JOIN period pe
           ON 1=1
         JOIN PCPB_080 p
           ON p.ORDEM_PRODUCAO = ob.ot
+        LEFT JOIN EFIC_050 func
+          ON func.COD_EMPRESA = 2
+         AND func.COD_FUNCIONARIO = p.OPERADOR  
         WHERE 1=1
           AND p.PESAR_PRODUTO = 1
           AND p.PESO_PREVISTO > 0
@@ -145,6 +150,8 @@ def query(
         , NULL cor
         , NULL p_previsto
         , NULL p_real
+        , NULL cod_pesador
+        , NULL nome_pesador
         FROM period pe
         ORDER BY 
           1 DESC NULLS FIRST
@@ -179,6 +186,8 @@ def query(
                 oss.add(row['os'])
         else:
             row['obs'] = ""
+        row['cod_pesador'] = row['cod_pesador'] if row['cod_pesador'] else '-'
+        row['nome_pesador'] = row['nome_pesador'] if row['nome_pesador'] else '-'
 
     if oss:
         data_os = lotes.queries.os.os_inform(cursor, tuple(oss))
