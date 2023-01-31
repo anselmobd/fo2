@@ -53,6 +53,8 @@ class OtPesar(View):
                 'Item',
                 'Peso previsto',
                 'Peso real',
+                'Pesador',
+                'Nome',
             ],
             'fields': [
                 'ot',
@@ -60,6 +62,8 @@ class OtPesar(View):
                 'item',
                 'p_previsto',
                 'p_real',
+                'cod_pesador',
+                'nome_pesador',
             ],
             'dados': dados,
         })
