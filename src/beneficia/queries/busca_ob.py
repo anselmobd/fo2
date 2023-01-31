@@ -80,6 +80,7 @@ def query(
     sql = f'''
         SELECT 
           b.ORDEM_PRODUCAO OB
+        , b.DATA_PROGRAMA DATA
         , b.PERIODO_PRODUCAO PERIODO
         , b.GRUPO_MAQUINA GRUP_MAQ
         , b.SUBGRUPO_MAQUINA SUB_MAQ 
