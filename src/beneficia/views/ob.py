@@ -42,6 +42,7 @@ class Ob(View):
             return
 
         for row in dados:
+            row['data'] = row['data'].date()
             if is_only_digits(row['os']):
                 row['os|TARGET'] = '_blank'
                 row['os|LINK'] = reverse(
@@ -54,6 +55,7 @@ class Ob(View):
         self.context.update({
             'headers': [
                 'Período',
+                'Data Programa',
                 'Equipamento',
                 'Rolos',
                 'Quilos',
@@ -65,6 +67,7 @@ class Ob(View):
             ],
             'fields': [
                 'periodo',
+                'data',
                 'maq',
                 'rolos',
                 'quilos',
