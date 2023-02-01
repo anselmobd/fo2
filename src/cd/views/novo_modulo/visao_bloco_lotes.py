@@ -45,7 +45,6 @@ class VisaoBlocoLotes(O2BaseGetView):
 
         sort_field = 'order_ap' if local_field == 'endereco' else local_field
         lotes.sort(key=operator.itemgetter(sort_field, 'op', 'ref', 'cor', 'ordem_tam', 'lote'))
-        pprint(lotes)
 
         for row in lotes:
             if 'endereco' in row:
