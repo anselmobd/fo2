@@ -25,7 +25,7 @@ class VisaoBlocoDetalhe(O2BaseGetView):
         self.get_args = ['bloco']
         self.get_args2self = True
         self.get_args2context = True
-        self.Key = namedtuple('Key', 'local ref, cor, tam')
+        self.Key = namedtuple('Key', 'local ref cor tam')
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
