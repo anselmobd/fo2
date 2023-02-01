@@ -80,7 +80,7 @@ class VisaoBlocoDetalhe(O2BaseGetView):
         for row in dados:
             if 'endereco' in row:
                 row['endereco|LINK'] = reverse(
-                    'cd:visao_bloco_detalhe__get', args=[
+                    'cd:visao_bloco_lotes__get', args=[
                         f"{row['endereco']}"
                     ])
 
