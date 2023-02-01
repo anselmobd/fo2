@@ -117,6 +117,7 @@ class Producao(O2BaseGetPostView):
             )
             TableDefsHpSD({
                 'ob': ["OB2"],
+                'op': ["OP"],
                 'maq': ["Máquina"],
                 'est': ["Estágio"],
                 'usuario': ["Usuário"],
