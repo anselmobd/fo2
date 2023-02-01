@@ -189,13 +189,13 @@ def query(
           obp.OB
     ''')
 
+    debug_cursor_execute(cursor, sql)
+    dados = dictlist_lower(cursor)
+
     dict_tipo_tecido = {
         'TP': "Poliamida",
         'TA': "Algodão",
     }
-    debug_cursor_execute(cursor, sql)
-    dados = dictlist_lower(cursor)
-
     ob2s = set()
     for row in dados:
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
