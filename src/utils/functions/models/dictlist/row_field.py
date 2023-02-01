@@ -179,22 +179,22 @@ class PrepRows():
                 params['args'].append(value)
         return params
 
-    def custom_command(self, command, args):
+    def custom_command(self, command, *args, **kwargs):
         self.basic_steps.append(
-            self.prep_args([command]+list(args))
+            self.prep_args([command]+list(args)+[kwargs])
         )
         return self
 
-    def a_blank(self, *args):
-        self.custom_command(fld_a_blank, args)
+    def a_blank(self, *args, **kwargs):
+        self.custom_command(fld_a_blank, *args, **kwargs)
         return self
 
-    def date(self, *args):
-        self.custom_command(fld_date, args)
+    def date(self, *args, **kwargs):
+        self.custom_command(fld_date, *args, **kwargs)
         return self
 
-    def default(self, *args):
-        self.custom_command(fld_default, args)
+    def default(self, *args, **kwargs):
+        self.custom_command(fld_default, *args, **kwargs)
         return self
 
     def process(self):
