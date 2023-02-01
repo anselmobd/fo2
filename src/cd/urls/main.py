@@ -35,6 +35,7 @@ from cd.views.novo_modulo import (
     solicitacoes,
     visao_bloco,
     visao_bloco_detalhe,
+    visao_bloco_lotes,
     visao_cd,
 )
 from cd.views.api.palete.print import PaletePrint
@@ -229,6 +230,10 @@ urlpatterns = [
     re_path(r'^novo/visao_bloco_detalhe/(?P<bloco>[^/]+)$',
         visao_bloco_detalhe.VisaoBlocoDetalhe.as_view(),
         name='visao_bloco_detalhe__get'),
+
+    re_path(r'^novo/visao_bloco_lotes/(?P<bloco>[^/]+)$',
+        visao_bloco_lotes.VisaoBlocoLotes.as_view(),
+        name='visao_bloco_lotes__get'),
 
     re_path(r'^novo/visao_cd/$',
         visao_cd.VisaoCd.as_view(), name='novo_visao_cd'),
