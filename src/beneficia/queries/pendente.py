@@ -167,6 +167,7 @@ def query(
         )
         SELECT DISTINCT 
           obp.OB
+        , obp.DT
         , obt.GRUPO_MAQUINA GRUP_MAQ
         , obt.SUBGRUPO_MAQUINA SUB_MAQ 
         , obt.NUMERO_MAQUINA NUM_MAQ

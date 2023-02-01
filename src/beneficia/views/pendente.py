@@ -44,6 +44,7 @@ class Pendente(O2BaseGetPostView):
 
     def prepara_dados(self):
         for row in self.dados:
+            row['dt'] = row['dt'].date()
             row['ob|TARGET'] = '_blank'
             row['ob|LINK'] = reverse(
                 'beneficia:ob__get',
@@ -77,6 +78,7 @@ class Pendente(O2BaseGetPostView):
 
     def table_hfs(self):
         TableDefsHpSD({
+            'dt': ["Pendente desde"],
             'ob': ["OB2"],
             'maq': ["Equipamento"],
             'op': ["OP"],
