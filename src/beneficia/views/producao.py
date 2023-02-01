@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 
 from django.urls import reverse
@@ -103,6 +104,18 @@ class Producao(O2BaseGetPostView):
                     'beneficia:ob__get',
                     args=[row['ob']],
                 )
+                if row.get('op'):
+                    op_link = reverse(
+                        'producao:op__get', args=['99999']
+                    ).replace("99999", r"\1")
+                    row['op'] = re.sub(
+                        r'([^, ]+)',
+                        fr'<a href="{op_link}" target="_blank">\1<span '
+                        'class="glyphicon glyphicon-link" '
+                        'aria-hidden="true"></span></a>',
+                        str(row['op']))
+                else:
+                    row['op'] = '-'
 
             totalize_data(
                 data,
@@ -129,6 +142,9 @@ class Producao(O2BaseGetPostView):
                 'rolos': ["Itens", 'r', 0],
                 'quilos': ["Quilos", 'r', 3],
             }).hfs_dict_context(result)
+            result.update({
+                'safe': ['op'],
+            })
 
         self.context['producao'] = result
         self.context['grd_quilos'] = grd_quilos
