@@ -1,5 +1,4 @@
 import operator
-from collections import namedtuple
 from pprint import pprint
 
 from django.urls import reverse
@@ -25,7 +24,6 @@ class VisaoBlocoLotes(O2BaseGetView):
         self.get_args = ['bloco']
         self.get_args2self = True
         self.get_args2context = True
-        self.Key = namedtuple('Key', 'local op ref, cor, tam')
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -44,7 +42,7 @@ class VisaoBlocoLotes(O2BaseGetView):
             row.update(ecd.details_dict)
 
         sort_field = 'order_ap' if local_field == 'endereco' else local_field
-        lotes.sort(key=operator.itemgetter(sort_field, 'op', 'ref', 'cor', 'ordem_tam', 'lote'))
+        lotes.sort(key=operator.itemgetter(sort_field, 'ref', 'cor', 'ordem_tam', 'op', 'lote'))
 
         for row in lotes:
             if 'endereco' in row:
@@ -68,10 +66,10 @@ class VisaoBlocoLotes(O2BaseGetView):
 
         fields = {
             local_field: 'Palete' if local_field == 'palete' else 'Endereço',
-            'op': 'OP',
             'ref': 'Referência',
             'cor': 'Cor',
             'tam': 'Tamanho',
+            'op': 'OP',
             'lote': 'Lote',
             'qtd': 'Quant.(63)',
         }
