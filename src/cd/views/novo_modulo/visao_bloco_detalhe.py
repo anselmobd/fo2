@@ -25,7 +25,7 @@ class VisaoBlocoDetalhe(O2BaseGetView):
         self.get_args = ['bloco']
         self.get_args2self = True
         self.get_args2context = True
-        self.Key = namedtuple('Key', 'local op ref, cor, tam')
+        self.Key = namedtuple('Key', 'local ref, cor, tam')
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -44,32 +44,33 @@ class VisaoBlocoDetalhe(O2BaseGetView):
             row.update(ecd.details_dict)
 
         sort_field = 'order_ap' if local_field == 'endereco' else local_field
-        lotes.sort(key=operator.itemgetter(sort_field, 'op', 'ref', 'cor', 'ordem_tam'))
+        lotes.sort(key=operator.itemgetter(sort_field, 'ref', 'cor', 'ordem_tam'))
 
         itens = {}
         for lote in lotes:
             item = self.Key(
                 local=lote[local_field],
-                op=lote['op'],
                 ref=lote['ref'],
                 cor=lote['cor'],
                 tam=lote['tam'],
             )
             if item not in itens:
                 itens[item] = {
+                    'ops': set(),
                     'lotes': set(),
                     'qtd': 0,
                 }
+            itens[item]['ops'].add(lote['op'])
             itens[item]['lotes'].add(lote['lote'])
             itens[item]['qtd'] += lote['qtd']
 
         dados = [
             {
                 local_field: item.local,
-                'op': item.op,
                 'ref': item.ref,
                 'cor': item.cor,
                 'tam': item.tam,
+                'ops': len(itens[item]['ops']),
                 'lotes': len(itens[item]['lotes']),
                 'qtd': itens[item]['qtd'],
             }
@@ -98,10 +99,10 @@ class VisaoBlocoDetalhe(O2BaseGetView):
 
         fields = {
             local_field: 'Palete' if local_field == 'palete' else 'Endereço',
-            'op': 'OP',
             'ref': 'Referência',
             'cor': 'Cor',
             'tam': 'Tamanho',
+            'ops': 'OPs',
             'lotes': 'Lotes',
             'qtd': 'Quant.(63)',
         }
@@ -112,6 +113,7 @@ class VisaoBlocoDetalhe(O2BaseGetView):
             'data': dados,
             'group': group,
             'style': {
+                5: 'text-align: right;',
                 6: 'text-align: right;',
                 7: 'text-align: right;',
             },
