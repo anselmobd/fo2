@@ -21,7 +21,7 @@ class VisaoBlocoDetalhe(O2BaseGetView):
     def __init__(self, *args, **kwargs):
         super(VisaoBlocoDetalhe, self).__init__(*args, **kwargs)
         self.template_name = 'cd/novo_modulo/visao_bloco_detalhe.html'
-        self.title_name = 'Visão detalhada do bloco'
+        self.title_name = 'Visão detalhada do bloco por item'
         self.get_args = ['bloco']
         self.get_args2self = True
         self.get_args2context = True
