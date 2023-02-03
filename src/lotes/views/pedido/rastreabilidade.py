@@ -287,20 +287,23 @@ class RastreabilidadeView(O2BaseGetPostView):
         return dados
 
     def prep_rows_pedfm(self):
-        for row in self.dados_filial_ped:
-            fld_a_blank(row, 'ped', 'producao:pedido__get', post_process=fld_str)
-            fld_date_dash(row, 'data')
-            fld_str_dash(row, 'obs')
-            fld_a_blank(
-                row,
-                'nf',
-                'contabil:nota_fiscal__get',
-                row['nf_empresa'],
-                row['nf'],
-                default='-',
-                post_process=fld_str,
-            )
-            fld_str_dash(row, 'situacao_descr')
+        PrepRows(
+            self.dados_filial_ped,
+        ).a_blank(
+            'ped',
+            'producao:pedido__get',
+            post_process='str',
+        ).a_blank(
+            'nf',
+            'contabil:nota_fiscal__get',
+            ['nf_empresa', 'nf'],
+            default='-',
+            post_process='str',
+        ).date(
+            'data'
+        ).default(
+            ('obs', 'situacao_descr')
+        ).process()
 
     def table_pedfm(self):
         bloco = self.create_table(
