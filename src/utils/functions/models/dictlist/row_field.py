@@ -162,15 +162,18 @@ def fld_date_dash(row, field):
     fld_date(row, field, default='-')
 
 
-def fld_to_str(row, field):
-    row[field] = str(row[field])
+def fld_to_str(row, field, field_is_empty=None):
+    empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
+    if not empty:
+        row[field] = str(row[field])
 
 
 def fld_str(row, field, default=None):
+    empty = is_empty(row[field])
     if default is None:
-        fld_to_str(row, field)
-    elif not fld_default(row, field, default=default):
-        fld_to_str(row, field)
+        fld_to_str(row, field, field_is_empty=empty)
+    elif not fld_default(row, field, default=default, field_is_empty=empty):
+        fld_to_str(row, field, field_is_empty=empty)
 
 
 def fld_str_dash(row, field):
