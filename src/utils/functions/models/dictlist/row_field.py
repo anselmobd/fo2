@@ -82,6 +82,23 @@ def fld_link(row, field, viewname, *args, **kwargs):
         a_link='LINK')
 
 
+def args_with_fields_to_args(row, *args_with_fields):
+    args = []
+    has_field = False
+    for arg in args_with_fields:
+        if isinstance(arg, set):
+            has_field = True
+            args.append(row[arg.pop()])
+        elif isinstance(arg, list):
+            has_field = True
+            for field in arg:
+                args.append(row[field])
+        else:
+            args.append(arg)
+    if has_field:
+        return args
+    return args_with_fields
+
 def fld_insert_reverse(
     row, field, viewname, *args, a_link=None, target=None
 ):
@@ -89,7 +106,9 @@ def fld_insert_reverse(
         row[f'{field}|TARGET'] = target
     if a_link:
         a_link = a_link.upper()
-        if not args:
+        if args:
+            args = args_with_fields_to_args(row, *args)
+        else:
             args = [row[field]]
         row[f'{field}|{a_link}'] = reverse(
             viewname,
