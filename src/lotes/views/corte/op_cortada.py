@@ -42,9 +42,13 @@ class OpCortada(O2BaseGetPostView):
 
         headers = [
             'OP',
+            'Total lotes',
+            'Lotes movidos na data',
         ]
         fields = [
             'op',
+            'lotes',
+            'movidos',
         ]
 
         self.context.update({

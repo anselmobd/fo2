@@ -36,7 +36,7 @@ def query(cursor, data=None):
             op15.op
           , op15.lotes
           , filtro.dt
-          , COUNT(DISTINCT ml.PCPC040_PERCONF*100000+ml.PCPC040_ORDCONF) move_LOTES
+          , COUNT(DISTINCT ml.PCPC040_PERCONF*100000+ml.PCPC040_ORDCONF) movidos
           FROM filtro, op_com_15 op15, pcpc_045 ml
           WHERE ml.ORDEM_PRODUCAO = op15.OP
             AND ml.PCPC040_ESTCONF = filtro.EST
