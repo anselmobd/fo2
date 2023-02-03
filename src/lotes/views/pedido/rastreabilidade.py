@@ -167,18 +167,6 @@ class RastreabilidadeView(O2BaseGetPostView):
 
     def prep_rolos(self):
         for row in self.rolos_nfs:
-            fld_a_blank(
-                row,
-                'nf',
-                'contabil:nf_recebida__get',
-                '1',
-                row['nf_num'],
-                row['nf_ser'],
-                row['cnpj9'],
-                is_empty_also='-',
-            )
-            row['nf_envia'] = '-'
-            row['empr'] = None
             dados_nfs = nfs_de_forn.query(
                 self.cursor,
                 empr='1',
@@ -189,14 +177,24 @@ class RastreabilidadeView(O2BaseGetPostView):
             if dados_nfs:
                 row['nf_envia'] = dados_nfs[0]['nf_envia']
                 row['empr'] = dados_nfs[0]['empr']
-                fld_a_blank(
-                    row,
-                    'nf_envia',
-                    'contabil:nota_fiscal__get',
-                    row['empr'],
-                    row['nf_envia'],
-                    post_process=fld_str,
-                    )
+            else:
+                row['nf_envia'] = '-'
+                row['empr'] = None
+        PrepRows(
+            self.rolos_nfs,
+        ).a_blank(
+            'nf',
+            'contabil:nf_recebida__get',
+            '1',
+            ['nf_num', 'nf_ser', 'cnpj9'],
+            is_empty_also='-',
+        ).a_blank(
+            'nf_envia',
+            'contabil:nota_fiscal__get',
+            ['empr', 'nf_envia'],
+            is_empty_also='-',
+            post_process=fld_str,
+        ).process()
 
     def info_rolos(self, op):
         self.rolos = self.get_rolos(op)
