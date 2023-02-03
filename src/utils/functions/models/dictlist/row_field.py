@@ -114,23 +114,25 @@ def fld_reverse(row, field, viewname, *args,
         post_process(row, field)
 
 
-def fld_default(row, field, default=None):
-    default = default if default else '-'
-    test = is_empty(row[field])
-    if test and default:
+def fld_default(row, field, default='-', field_is_empty=None):
+    empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
+    if empty and default:
         row[field] = default
-    return test
+        return True
 
 
-def fld_to_date(row, field):
-    row[field] = row[field].date()
+def fld_to_date(row, field, field_is_empty=None):
+    empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
+    if not empty:
+        row[field] = row[field].date()
 
 
 def fld_date(row, field, default=None):
+    empty = is_empty(row[field])
     if default is None:
-        fld_to_date(row, field)
-    elif not fld_default(row, field, default=default):
-        fld_to_date(row, field)
+        fld_to_date(row, field, field_is_empty=empty)
+    elif not fld_default(row, field, default=default, field_is_empty=empty):
+        fld_to_date(row, field, field_is_empty=empty)
 
 
 def fld_date_dash(row, field):
