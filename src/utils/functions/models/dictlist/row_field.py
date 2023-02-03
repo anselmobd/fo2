@@ -197,6 +197,10 @@ class PrepRows():
         self.custom_command(fld_default, *args, **kwargs)
         return self
 
+    def str(self, *args, **kwargs):
+        self.custom_command(fld_str, *args, **kwargs)
+        return self
+
     def process(self):
         for row in self.data:
             for basic_step in self.basic_steps:
