@@ -60,12 +60,6 @@ class RastreabilidadeView(O2BaseGetPostView):
     def prep_rows_pedido(self):
         PrepRows(
             self.dados_pedido,
-            # [
-            #     [fld_a_blank, 'pedido_venda',
-            #         'producao:pedido__get', {'post_process': fld_str,}],
-            #     [fld_date, ('dt_emissao', 'dt_embarque')],
-            #     [fld_default, ('fantasia', 'pedido_cliente', 'observacao')],
-            # ]
         ).a_blank(
             'pedido_venda', 'producao:pedido__get', {'post_process': fld_str,}
         ).date(
@@ -119,15 +113,21 @@ class RastreabilidadeView(O2BaseGetPostView):
         )
 
     def prep_rows_ops(self):
-        for row in self.dados_ops:
-            fld_a_blank(row, 'op_princ', 'producao:op__get', default='-')
-            fld_a_blank(row, 'ref', 'produto:ref__get')
-            fld_str_dash(row, 'op')
-            fld_date_dash(row, 'dt_canc')
-            fld_date_dash(row, 'dt_corte')
-            fld_date_dash(row, 'dt_emit')
-            fld_default(row, 'obs')
-            fld_default(row, 'obs2')
+        PrepRows(
+            self.dados_ops,
+        ).a_blank(
+            'op_princ', 'producao:op__get', default='-'
+        ).a_blank(
+            'ref', 'produto:ref__get'
+        ).str(
+            'op'
+        ).date(
+            'dt_emit'
+        ).date_dash(
+            ('dt_corte', 'dt_canc')
+        ).default(
+            ('obs', 'obs2')
+        ).process()
 
     def table_op_ref(self, dados):
         bloco = self.create_table(dados)
