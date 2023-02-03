@@ -143,3 +143,63 @@ class Lote(models.Model):
 #     class Meta:
 #         db_table = "fo2_cd_caixa_lote"
 #         verbose_name = "lote na caixa"
+
+
+class OpCortadaActiveManager(models.Manager):
+    def get_queryset(self):
+        return super(
+            OpCortadaActiveManager,
+            self).get_queryset().filter(origin_id=0)
+
+
+class OpCortadaInactiveManager(models.Manager):
+    def get_queryset(self):
+        return super(
+            OpCortadaInactiveManager,
+            self).get_queryset().exclude(origin_id=0)
+
+
+class OpCortada(models.Model):
+    op = models.IntegerField(
+        verbose_name='OP')
+
+    # TableHeap - "objects" filter only active rows - start
+    objects = OpCortadaActiveManager()
+    objects_inactive = OpCortadaInactiveManager()
+    objects_all = models.Manager()
+    # TableHeap end
+
+    # TableHeap - heap constructor - start
+    def save_old(self, id, deleted=False):
+        try:
+            old = OpCortada.objects.get(id=id)
+            old.origin_id = old.id
+            old.unique_aux = old.version
+            old.id = None
+            old.deleted = deleted
+            old.save()
+        except Exception:
+            pass
+        # TableHeap end
+
+    def save(self, *args, **kwargs):
+        # TableHeap start
+        if self.id:
+            self.save_old(self.id)
+        self.when = timezone.now()
+        if self.origin_id == 0:
+            self.version += 1
+        # TableHeap end
+
+        super(OpCortada, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # TableHeap start
+        self.save_old(self.id, deleted=True)
+        # TableHeap end
+
+        super(OpCortada, self).delete(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_op_cortada"
+        verbose_name = "OPs cortadas"
