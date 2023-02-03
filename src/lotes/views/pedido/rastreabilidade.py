@@ -4,7 +4,7 @@ from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import Forms2
 from o2.views.base.get_post import O2BaseGetPostView
-from utils.functions.models.dictlist.row_field import PrepRows
+from utils.functions.models.row_field import PrepRows
 from utils.table_defs import TableDefsHpSD
 from utils.views.summarize import brif
 
