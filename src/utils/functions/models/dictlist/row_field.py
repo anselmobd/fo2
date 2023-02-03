@@ -1,20 +1,9 @@
-import numbers
 from pprint import pprint
 
 from django.urls import reverse
 
 
-__all__ = [
-    'fld_a_blank',
-    'fld_a',
-    'fld_link_blank',
-    'fld_link',
-    'fld_default',
-    'fld_date',
-    'fld_date_dash',
-    'fld_str',
-    'fld_str_dash',
-]
+__all__ = ['PrepRows']
 
 
 def is_empty(value, also=None, only=None):
@@ -58,133 +47,6 @@ def is_empty(value, also=None, only=None):
     return result
 
 
-def fld_a_blank(row, field, viewname, *args, **kwargs):
-    fld_reverse(
-        row, field, viewname, *args, **kwargs,
-        a_link='A', target='_blank')
-
-
-def fld_a(row, field, viewname, *args, **kwargs):
-    fld_reverse(
-        row, field, viewname, *args, **kwargs,
-        a_link='A')
-
-
-def fld_link_blank(row, field, viewname, *args, **kwargs):
-    fld_reverse(
-        row, field, viewname, *args, **kwargs,
-        a_link='LINK', target='_blank')
-
-
-def fld_link(row, field, viewname, *args, **kwargs):
-    fld_reverse(
-        row, field, viewname, *args, **kwargs,
-        a_link='LINK')
-
-
-def args_with_fields_to_args(row, *args_with_fields):
-    args = []
-    has_field = False
-    for arg in args_with_fields:
-        if isinstance(arg, set):
-            has_field = True
-            args.append(row[arg.pop()])
-        elif isinstance(arg, list):
-            has_field = True
-            for field in arg:
-                args.append(row[field])
-        else:
-            args.append(arg)
-    if has_field:
-        return args
-    return args_with_fields
-
-def fld_insert_reverse(
-    row, field, viewname, *args, a_link=None, target=None
-):
-    if target:
-        row[f'{field}|TARGET'] = target
-    if a_link:
-        a_link = a_link.upper()
-        if args:
-            args = args_with_fields_to_args(row, *args)
-        else:
-            args = [row[field]]
-        row[f'{field}|{a_link}'] = reverse(
-            viewname,
-            args=args,
-        )
-
-
-def fld_reverse(row, field, viewname, *args,
-    a_link=None, target=None,
-    always_link=False, default=None,
-    is_empty_also=None, is_empty_only=None,
-    post_process=None,
-):
-    field_is_empty = is_empty(
-        row[field], also=is_empty_also, only=is_empty_only)
-    if always_link or not field_is_empty:
-        fld_insert_reverse(
-            row, field, viewname, *args, a_link=a_link, target=target)
-    if field_is_empty and default:
-        row[field] = default
-    else:
-        if post_process:
-            if isinstance(post_process, str):
-                __post_process[post_process](row, field)
-            else:
-                post_process(row, field)
-
-
-def fld_default(row, field, default='-', field_is_empty=None):
-    empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
-    if empty and default:
-        row[field] = default
-        return True
-
-
-def fld_to_date(row, field, field_is_empty=None):
-    empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
-    if not empty:
-        row[field] = row[field].date()
-
-
-def fld_date(row, field, default=None):
-    empty = is_empty(row[field])
-    if default is None:
-        fld_to_date(row, field, field_is_empty=empty)
-    elif not fld_default(row, field, default=default, field_is_empty=empty):
-        fld_to_date(row, field, field_is_empty=empty)
-
-
-def fld_date_dash(row, field):
-    fld_date(row, field, default='-')
-
-
-def fld_to_str(row, field, field_is_empty=None):
-    empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
-    if not empty:
-        row[field] = str(row[field])
-
-
-def fld_str(row, field, default=None):
-    empty = is_empty(row[field])
-    if default is None:
-        fld_to_str(row, field, field_is_empty=empty)
-    elif not fld_default(row, field, default=default, field_is_empty=empty):
-        fld_to_str(row, field, field_is_empty=empty)
-
-
-def fld_str_dash(row, field):
-    fld_str(row, field, default='-')
-
-
-__post_process = {
-    'str': fld_str,
-}
-
-
 class PrepRows():
 
     def __init__(self, data, basic_steps=None) -> None:
@@ -193,6 +55,11 @@ class PrepRows():
             self.prep_args(step)
             for step in basic_steps
         ] if basic_steps else []
+
+        self.__post_process = {
+            'str': self._str,
+        }
+
 
     def prep_args(self, step):
         params = {
@@ -212,6 +79,116 @@ class PrepRows():
                 params['args'].append(value)
         return params
 
+    def _args_with_fields_to_args(self, row, *args_with_fields):
+        args = []
+        has_field = False
+        for arg in args_with_fields:
+            if isinstance(arg, set):
+                has_field = True
+                args.append(row[arg.pop()])
+            elif isinstance(arg, list):
+                has_field = True
+                for field in arg:
+                    args.append(row[field])
+            else:
+                args.append(arg)
+        if has_field:
+            return args
+        return args_with_fields
+
+    def _insert_reverse(
+        self, row, field, viewname, *args, a_link=None, target=None
+    ):
+        if target:
+            row[f'{field}|TARGET'] = target
+        if a_link:
+            a_link = a_link.upper()
+            if args:
+                args = self._args_with_fields_to_args(row, *args)
+            else:
+                args = [row[field]]
+            row[f'{field}|{a_link}'] = reverse(
+                viewname,
+                args=args,
+            )
+
+    def _reverse(
+        self, row, field, viewname, *args,
+        a_link=None, target=None,
+        always_link=False, default=None,
+        is_empty_also=None, is_empty_only=None,
+        post_process=None,
+    ):
+        field_is_empty = is_empty(
+            row[field], also=is_empty_also, only=is_empty_only)
+        if always_link or not field_is_empty:
+            self._insert_reverse(
+                row, field, viewname, *args, a_link=a_link, target=target)
+        if field_is_empty and default:
+            row[field] = default
+        else:
+            if post_process:
+                if isinstance(post_process, str):
+                    self.__post_process[post_process](row, field)
+                else:
+                    post_process(row, field)
+
+    def _a_blank(self, row, field, viewname, *args, **kwargs):
+        self._reverse(
+            row, field, viewname, *args, **kwargs,
+            a_link='A', target='_blank')
+
+    def _a(self, row, field, viewname, *args, **kwargs):
+        self._reverse(
+            row, field, viewname, *args, **kwargs,
+            a_link='A')
+
+    def _link_blank(self, row, field, viewname, *args, **kwargs):
+        self._reverse(
+            row, field, viewname, *args, **kwargs,
+            a_link='LINK', target='_blank')
+
+    def _link(self, row, field, viewname, *args, **kwargs):
+        self._reverse(
+            row, field, viewname, *args, **kwargs,
+            a_link='LINK')
+
+    def _default(self, row, field, default='-', field_is_empty=None):
+        empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
+        if empty and default:
+            row[field] = default
+            return True
+
+    def _to_date(self, row, field, field_is_empty=None):
+        empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
+        if not empty:
+            row[field] = row[field].date()
+
+    def _date(self, row, field, default=None):
+        empty = is_empty(row[field])
+        if default is None:
+            self._to_date(row, field, field_is_empty=empty)
+        elif not self._default(row, field, default=default, field_is_empty=empty):
+            self._to_date(row, field, field_is_empty=empty)
+
+    def _date_dash(self, row, field):
+        self._date(row, field, default='-')
+
+    def _to_str(self, row, field, field_is_empty=None):
+        empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
+        if not empty:
+            row[field] = str(row[field])
+
+    def _str(self, row, field, default=None):
+        empty = is_empty(row[field])
+        if default is None:
+            self._to_str(row, field, field_is_empty=empty)
+        elif not self._default(row, field, default=default, field_is_empty=empty):
+            self._to_str(row, field, field_is_empty=empty)
+
+    def _str_dash(self, row, field):
+        self._str(row, field, default='-')
+
     def custom_command(self, command, *args, **kwargs):
         self.__basic_steps.append(
             self.prep_args([command]+list(args)+[kwargs])
@@ -219,23 +196,23 @@ class PrepRows():
         return self
 
     def a_blank(self, *args, **kwargs):
-        self.custom_command(fld_a_blank, *args, **kwargs)
+        self.custom_command(self._a_blank, *args, **kwargs)
         return self
 
     def date(self, *args, **kwargs):
-        self.custom_command(fld_date, *args, **kwargs)
+        self.custom_command(self._date, *args, **kwargs)
         return self
 
     def date_dash(self, *args, **kwargs):
-        self.custom_command(fld_date_dash, *args, **kwargs)
+        self.custom_command(self._date_dash, *args, **kwargs)
         return self
 
     def default(self, *args, **kwargs):
-        self.custom_command(fld_default, *args, **kwargs)
+        self.custom_command(self._default, *args, **kwargs)
         return self
 
     def str(self, *args, **kwargs):
-        self.custom_command(fld_str, *args, **kwargs)
+        self.custom_command(self._str, *args, **kwargs)
         return self
 
     def process(self):
