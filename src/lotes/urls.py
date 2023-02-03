@@ -10,8 +10,9 @@ from lotes.views import (
 from lotes.views.corte import (
     envio_insumo,
     informa_nf_envio,
-    romaneio_corte,
+    marca_op_cortada,
     op_cortada,
+    romaneio_corte,
 )
 from lotes.views.ops import seq_erro
 from lotes.views.analise import produzir_grade_empenho
@@ -220,6 +221,9 @@ urlpatterns = [
 
     re_path(r'^op_cortada/$',
         op_cortada.OpCortada.as_view(), name='op_cortada'),
+
+    re_path(r'^ajax/marca_op_cortada/(?P<op>[^/]+)/$',
+        marca_op_cortada.MarcaOpCortada.as_view(), name='marca_op_cortada'),
 
     re_path(r'^envio_insumo/$',
         envio_insumo.EnvioInsumo.as_view(), name='envio_insumo'),
