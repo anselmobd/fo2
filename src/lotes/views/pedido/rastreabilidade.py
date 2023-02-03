@@ -61,7 +61,7 @@ class RastreabilidadeView(O2BaseGetPostView):
         PrepRows(
             self.dados_pedido,
         ).a_blank(
-            'pedido_venda', 'producao:pedido__get', {'post_process': fld_str,}
+            'pedido_venda', 'producao:pedido__get', post_process='str'
         ).date(
             ('dt_emissao', 'dt_embarque')
         ).default(
@@ -193,7 +193,7 @@ class RastreabilidadeView(O2BaseGetPostView):
             'contabil:nota_fiscal__get',
             ['empr', 'nf_envia'],
             is_empty_also='-',
-            post_process=fld_str,
+            post_process='str',
         ).process()
 
     def info_rolos(self, op):
