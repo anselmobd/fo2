@@ -129,8 +129,12 @@ def fld_reverse(row, field, viewname, *args,
             row, field, viewname, *args, a_link=a_link, target=target)
     if field_is_empty and default:
         row[field] = default
-    elif post_process:
-        post_process(row, field)
+    else:
+        if post_process:
+            if isinstance(post_process, str):
+                __post_process[post_process](row, field)
+            else:
+                post_process(row, field)
 
 
 def fld_default(row, field, default='-', field_is_empty=None):
@@ -171,6 +175,11 @@ def fld_str(row, field, default=None):
 
 def fld_str_dash(row, field):
     fld_str(row, field, default='-')
+
+
+__post_process = {
+    'str': fld_str,
+}
 
 
 class PrepRows():
