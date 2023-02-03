@@ -11,6 +11,7 @@ from lotes.views.corte import (
     envio_insumo,
     informa_nf_envio,
     romaneio_corte,
+    op_cortada,
 )
 from lotes.views.ops import seq_erro
 from lotes.views.analise import produzir_grade_empenho
@@ -216,6 +217,9 @@ urlpatterns = [
 
     re_path(r'^romaneio_corte/$',
         romaneio_corte.RomaneioCorte.as_view(), name='romaneio_corte'),
+
+    re_path(r'^op_cortada/$',
+        op_cortada.OpCortada.as_view(), name='op_cortada'),
 
     re_path(r'^envio_insumo/$',
         envio_insumo.EnvioInsumo.as_view(), name='envio_insumo'),
