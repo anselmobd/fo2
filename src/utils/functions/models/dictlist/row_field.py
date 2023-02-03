@@ -195,6 +195,10 @@ class PrepRows():
         self.custom_command(fld_date, *args, **kwargs)
         return self
 
+    def date_dash(self, *args, **kwargs):
+        self.custom_command(fld_date_dash, *args, **kwargs)
+        return self
+
     def default(self, *args, **kwargs):
         self.custom_command(fld_default, *args, **kwargs)
         return self
