@@ -24,8 +24,10 @@
       </p>
     {% endif %}
     {% if data %}
-    <p>Lista {{quant_inconsist}} primeira{{quant_inconsist|pluralize}} inconsistência{{quant_inconsist|pluralize}}</p>
-    <table>
+      {% if conta_inconsistentes > quant_inconsist %}
+        <p>Lista {{quant_inconsist}} primeira{{quant_inconsist|pluralize}} inconsistência{{quant_inconsist|pluralize}}</p>
+      {% endif %}
+      <table>
         {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
         {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
       </table>
