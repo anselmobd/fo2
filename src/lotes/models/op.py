@@ -150,6 +150,7 @@ class Lote(models.Model):
 #         verbose_name = "lote na caixa"
 
 
+# TableHeap - Managers definitions - start
 class OpCortadaActiveManager(models.Manager):
     def get_queryset(self):
         return super(
@@ -162,6 +163,7 @@ class OpCortadaDeletedManager(models.Manager):
         return super(
             OpCortadaDeletedManager,
             self).get_queryset().filter(version__isnull=True)
+# TableHeap - Managers definitions - end
 
 
 class OpCortada(models.Model):
@@ -173,12 +175,20 @@ class OpCortada(models.Model):
         on_delete=models.PROTECT,
     )
 
-    # TableHeap - Fields
+    # TableHeap - Fields - start
+    log = models.IntegerField(
+        default=0,
+        verbose_name='log',
+    )
     version = models.IntegerField(
         blank=True,
         null=True,
         default=0,
         verbose_name='versão',
+    )
+    when = models.DateTimeField(
+        default=timezone.now,
+        verbose_name='quando',
     )
     user = models.ForeignKey(
         User,
@@ -186,50 +196,47 @@ class OpCortada(models.Model):
         verbose_name='usuário',
         related_name='user_table_heap1',
     )
-    when = models.DateTimeField(
-        default=timezone.now,
-        verbose_name='quando',
-    )
-    log = models.IntegerField(
-        default=0,
-        verbose_name='log',
-    )
     # TableHeap - Fields - end
 
-    # TableHeap - "objects" filter only active rows - start
+    # TableHeap - Assigning managers - start
     objects = OpCortadaActiveManager()
     objects_deleted = OpCortadaDeletedManager()
     objects_all = models.Manager()
-    # TableHeap end
+    # TableHeap - Assigning managers - end
 
-    # TableHeap - heap constructor - start
-    def save_old(self, id, deleted=False):
-        old = OpCortada.objects.get(id=id)
-        old.log = old.id
-        old.id = None
-        if deleted:
-            old.user = LoggedInUser().user
-            old.when = timezone.now()
-            old.version = None
-        old.save()
-        # TableHeap end
+    # TableHeap - Save functions - start
+    def save_log(self, id):
+        log = OpCortada.objects.get(id=id)
+        log.id = None
+        log.log = log.id
+        log.save()
+
+    def save_deleted(self, id):
+        self.save_log(id)
+        deleted = OpCortada.objects.get(id=id)
+        deleted.id = None
+        deleted.log = deleted.id
+        deleted.version = None
+        deleted.when = timezone.now()
+        deleted.user = LoggedInUser().user
+        deleted.save()
+    # TableHeap - Save functions - end
 
     def save(self, *args, **kwargs):
-        # TableHeap start
-        if self.id:
-            self.save_old(self.id)
-        if self.log == 0:
-            self.user = LoggedInUser().user
-            self.when = timezone.now()
+        # TableHeap - start
+        if self.id:  # is update
+            self.save_log(self.id)
+        if not self.log:  # não é registro de log
             self.version += 1
-        # TableHeap end
+            self.when = timezone.now()
+            self.user = LoggedInUser().user
+        # TableHeap - end
         super(OpCortada, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        # TableHeap start
-        self.save_old(self.id)
-        self.save_old(self.id, deleted=True)
-        # TableHeap end
+        # TableHeap - start
+        self.save_deleted(self.id)
+        # TableHeap - end
         super(OpCortada, self).delete(*args, **kwargs)
 
     class Meta:
