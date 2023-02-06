@@ -17,6 +17,9 @@
       <input type="submit" value="Busca"/>
     </form>
   </div>
+  {% if err_msg %}
+    <h4>{{err_msg}}</h4>
+  {% endif %}
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
     {% if dados %}

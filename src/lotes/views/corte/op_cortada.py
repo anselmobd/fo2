@@ -9,6 +9,8 @@ from fo2.connections import db_cursor_so
 from o2.views.base.get_post import O2BaseGetPostView
 from geral.functions import has_permission
 
+from base.models import Colaborador
+
 from lotes.forms.corte.op_cortada import OpCortadaForm
 from lotes.models.op import OpCortada as Model_OpCortada
 from lotes.queries.producao.romaneio_corte import (
@@ -30,6 +32,13 @@ class OpCortada(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
         locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
+
+        try:
+            _ = Colaborador.objects.get(user__username=self.request.user.username)
+        except Colaborador.DoesNotExist:
+            self.context.update({
+                'err_msg': "Colaborador não cadastrado.",
+            })          
 
         dados = op_cortada.query(self.cursor, self.data)
 
