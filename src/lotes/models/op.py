@@ -167,6 +167,10 @@ class OpCortada(models.Model):
     origin_id = models.IntegerField(
         default=0,
         verbose_name='id de origem')
+    origin_when = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name='quando de origem')
     deleted = models.BooleanField(
         default=False,
         verbose_name='apagado')
