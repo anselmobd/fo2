@@ -177,6 +177,8 @@ class OpCortada(models.Model):
 
     # TableHeap - Fields
     version = models.IntegerField(
+        blank=True,
+        null=True,
         default=0,
         verbose_name='versão',
     )
@@ -259,7 +261,7 @@ class OpCortada(models.Model):
         if self.origin_id == 0:
             self.version += 1
         if deleted:
-            self.version = self.__max_integer
+            self.version = None
         # TableHeap end
 
         print('call super save')
