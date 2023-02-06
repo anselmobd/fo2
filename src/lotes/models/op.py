@@ -220,4 +220,5 @@ class OpCortada(models.Model):
 
     class Meta:
         db_table = "fo2_op_cortada"
-        verbose_name = "OPs cortadas"
+        verbose_name = "OP cortada"
+        verbose_name_plural = "OPs cortadas"
