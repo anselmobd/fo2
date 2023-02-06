@@ -168,8 +168,7 @@ class OpCortada(models.Model):
         default=0,
         verbose_name='id de origem')
     origin_when = models.DateTimeField(
-        blank=True,
-        null=True,
+        default=timezone.now,
         verbose_name='quando de origem')
     deleted = models.BooleanField(
         default=False,
@@ -180,6 +179,8 @@ class OpCortada(models.Model):
     when = models.DateTimeField(
         default=timezone.now,
         verbose_name='quando')
+    # unique_aux foi criado para diferenciar duas alterações
+    # feitas no mesmo timezone.now
     unique_aux = models.IntegerField(
         default=0,
         verbose_name='campo auxiliar para unique_together')
@@ -196,7 +197,6 @@ class OpCortada(models.Model):
         try:
             old = OpCortada.objects.get(id=id)
             old.origin_id = old.id
-            old.origin_when = old.when
             old.unique_aux = old.version
             old.id = None
             old.deleted = deleted
@@ -227,3 +227,4 @@ class OpCortada(models.Model):
         db_table = "fo2_op_cortada"
         verbose_name = "OP cortada"
         verbose_name_plural = "OPs cortadas"
+        unique_together = ("usuario", "tipo_maquina")
