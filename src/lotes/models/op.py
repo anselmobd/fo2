@@ -196,27 +196,6 @@ class OpCortada(models.Model):
         default=0,
         verbose_name='id de origem',
     )
-    # origin_version = models.IntegerField(
-    #     default=0,
-    #     verbose_name='versão de origem',
-    # )
-    # origin_user = models.ForeignKey(
-    #     User,
-    #     blank=True,
-    #     null=True,
-    #     on_delete=models.PROTECT,
-    #     verbose_name='usuário de origem',
-    #     related_name='origin_user_table_heap1',
-    # )
-    # origin_when = models.DateTimeField(
-    #     blank=True,
-    #     null=True,
-    #     verbose_name='quando de origem',
-    # )
-    # deleted = models.BooleanField(
-    #     default=False,
-    #     verbose_name='apagado',
-    # )
     # TableHeap - Fields - end
 
     # TableHeap - "objects" filter only active rows - start
