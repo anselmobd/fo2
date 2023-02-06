@@ -32,3 +32,65 @@
     {% endif %}
   {% endif %}
 {% endblock %}
+
+{% block javascript %}
+{% block javascript.pos %}
+<script type="text/javascript">
+
+  function acao1(op, href) {
+    let el_cortada = document.getElementsByClassName('cortada op_'+op);
+
+    $.ajax({
+      type: 'GET',
+      url: href,
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        erro = '';
+        if (data) {
+          if (data['status'] == 'ERRO') {
+            console.log(data['message']);
+          } else if (data['status'] == 'MARCADA') {
+            console.log(data['status']);
+            el_cortada[0].innerHTML = "Sim";
+          } else {
+            console.log(data['status']);
+            el_cortada[0].innerHTML = "Não";
+          }
+        } else {
+          console.log('Sem retorno');
+        }
+      },
+      error : function(data) {
+        console.log('Erro na requisição');
+      }
+    });
+
+  }
+
+  function trata_acoes() {
+    let tds = document.getElementsByClassName('acao');
+    Object.entries(tds).map(( mapped ) => {
+      let el = mapped[1];
+      let op;
+      for (const el_class of el.classList.values()) {
+        if (el_class.startsWith('op_')) {
+          op = el_class.slice(3);
+        }
+      }
+      let a = el.querySelectorAll('a');
+      if (a.length > 0) {
+        let href = a[0].href;
+        a[0].href="javascript:void(0);";
+        a[0].onclick = function() {acao1(op, href);};
+        console.log(op);
+      }
+    });
+  }
+
+  window.onload = function() {
+    trata_acoes();
+  }
+
+</script>
+{% endblock javascript.pos %}
+{% endblock javascript %}

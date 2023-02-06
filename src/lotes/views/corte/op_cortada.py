@@ -62,6 +62,9 @@ class OpCortada(O2BaseGetPostView):
             else:
                 row['cortada'] = "Não"
                 row['acao'] = "Marca"
+            row['acao'] = "Altera"
+            row['cortada|CLASS'] = f"cortada op_{row['op']}"
+            row['acao|CLASS'] = f"acao op_{row['op']}"
             row['acao|LINK'] = reverse(
                 'producao:marca_op_cortada',
                 args=[row['op']],
@@ -69,17 +72,17 @@ class OpCortada(O2BaseGetPostView):
 
         headers = [
             'OP',
-            'Cortada?',
-            'Ação',
             'Total lotes',
             'Lotes movidos na data',
+            'Corte encerrado?',
+            'Ação',
         ]
         fields = [
             'op',
-            'cortada',
-            'acao',
             'lotes',
             'movidos',
+            'cortada',
+            'acao',
         ]
 
         self.context.update({
