@@ -153,6 +153,7 @@ class OpCortadaAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'op',
+        'colaborador',
         'version',
         'when',
         'origin_id',
