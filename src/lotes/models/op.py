@@ -164,21 +164,22 @@ class OpCortada(models.Model):
         verbose_name='OP')
 
     # TableHeap - Fields
-    origin_id = models.IntegerField(
-        default=0,
-        verbose_name='id de origem')
-    origin_when = models.DateTimeField(
-        default=timezone.now,
-        verbose_name='quando de origem')
-    deleted = models.BooleanField(
-        default=False,
-        verbose_name='apagado')
     version = models.IntegerField(
         default=0,
         verbose_name='versão')
     when = models.DateTimeField(
         default=timezone.now,
         verbose_name='quando')
+    origin_id = models.IntegerField(
+        default=0,
+        verbose_name='id de origem')
+    origin_when = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name='quando de origem')
+    deleted = models.BooleanField(
+        default=False,
+        verbose_name='apagado')
     # unique_aux foi criado para diferenciar duas alterações
     # feitas no mesmo timezone.now
     unique_aux = models.IntegerField(
@@ -197,6 +198,7 @@ class OpCortada(models.Model):
         try:
             old = OpCortada.objects.get(id=id)
             old.origin_id = old.id
+            old.origin_when = old.when
             old.unique_aux = old.version
             old.id = None
             old.deleted = deleted
@@ -227,4 +229,3 @@ class OpCortada(models.Model):
         db_table = "fo2_op_cortada"
         verbose_name = "OP cortada"
         verbose_name_plural = "OPs cortadas"
-        unique_together = ("usuario", "tipo_maquina")
