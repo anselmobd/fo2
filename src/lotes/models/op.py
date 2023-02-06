@@ -165,8 +165,6 @@ class OpCortadaDeletedManager(models.Manager):
 
 
 class OpCortada(models.Model):
-    __max_integer = 2147483647
-
     op = models.IntegerField(
         verbose_name='OP',
     )
