@@ -207,18 +207,18 @@ class OpCortada(models.Model):
     # TableHeap - Save functions - start
     def save_log(self, id):
         log = OpCortada.objects.get(id=id)
-        log.id = None
         log.log = log.id
+        log.id = None
         log.save()
 
     def save_deleted(self, id):
         self.save_log(id)
         deleted = OpCortada.objects.get(id=id)
-        deleted.id = None
         deleted.log = deleted.id
         deleted.version = None
         deleted.when = timezone.now()
         deleted.user = LoggedInUser().user
+        deleted.id = None
         deleted.save()
     # TableHeap - Save functions - end
 
