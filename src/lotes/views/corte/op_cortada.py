@@ -47,17 +47,28 @@ class OpCortada(O2BaseGetPostView):
         ]
 
         for row in dados:
-            row['cortada'] = "Sim" if row['op'] in lista_ops_cortadas else "Não"
+            if row['op'] in lista_ops_cortadas:
+                row['cortada'] = "Sim"
+                row['acao'] = "Desmarca"
+            else:
+                row['cortada'] = "Não"
+                row['acao'] = "Marca"
+            row['acao|LINK'] = reverse(
+                'producao:marca_op_cortada',
+                args=[row['op']],
+            )
 
         headers = [
             'OP',
             'Cortada?',
+            'Ação',
             'Total lotes',
             'Lotes movidos na data',
         ]
         fields = [
             'op',
             'cortada',
+            'acao',
             'lotes',
             'movidos',
         ]
