@@ -21,59 +21,32 @@ from lotes.models.op import OpCortada
 class MarcaOpCortada(View):
 
     def process(self, request, kwargs):
-        return
         cursor = db_cursor_so(request)
 
         op = kwargs['op']
 
-        op_object = OpCortada.objects.get(op=op)
-        if dados:
-            return ('ERRO', "OP não encontrada!")
+        try:
+            op_object = OpCortada.objects.get(op=op)
+        except OpCortada.DoesNotExist:
+            op_object = None
 
-        dados.
-        dados, clientes = producao_ops_finalizadas.query(
-            cursor, data, para_nf=True, cliente_slug=cliente)
-
-        #   exemplos de observações:
-        # MPCFM - Movimentação de Peças Cortadas da Filial p/ Matriz; Data: 2022-03-16
-        # Produção para o cliente Renner. Pedido(5214524)-OP(34023), Pedido(5214547)-OP(34027)
-        #   ou
-        # MPCFM - Movimentação de Peças Cortadas da Filial p/ Matriz; Data: 2022-03-16
-        # Produção para estoque. OP(34082, 34307, 34339, 34262, 34297)
-
-        if cliente == 'estoque':
-            observacao = (
-                f"[MPCFM] Movimentacao de Pecas Cortadas da Filial para Matriz; Data: {data}",
-                f"Producao para estoque: {clientes[cliente]['obs']}",
-            )
-        else:
-            observacao = (
-                f"[MPCFM] Movimentacao de Pecas Cortadas da Filial para Matriz; Data: {data}",
-                f"Producao para o cliente {cliente.capitalize()}: {clientes[cliente]['obs']}",
-            )
-
-        cria_mens_nf(cursor, pedido, observacao)
-
-        altera_pedido_itens(cursor, pedido, 302, 'RJ', dados)
-
-        qtd_itens = 0
-        for row in dados:
-            qtd_itens += row['mov_qtd']
-        altera_pedido(cursor, data, pedido, 3, qtd_itens, "\n".join(observacao))
-
-        if not cria_pedido_compra_matriz(cursor, pedido):
-            return ('ERRO', "Algum erro ocorreu durante a criação do pedido de compra!")
-
-        return ('OK', "OK!")
+        try:
+            if op_object:
+                op_object.detete()
+                return 'DESMARCADA'
+            else:
+                op_object = OpCortada(op=op)
+                op_object.save()
+                return 'MARCADA'
+        except Exception:
+            return 'ERRO'
 
     def response(self, result):
         status, message = result
         return {
             'status': status,
-            'message': message,
         }
 
     def get(self, request, *args, **kwargs):
         result = self.process(request, kwargs)
         return JsonResponse(self.response(result), safe=False)
-
