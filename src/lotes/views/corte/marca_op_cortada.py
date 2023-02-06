@@ -27,10 +27,13 @@ class MarcaOpCortada(View):
     def response(self, kwargs):
         try:
             status = self.process(kwargs)
-        except Exception:
+            message = ""
+        except Exception as e:
             status =  'ERRO'
+            message = repr(e)
         return {
             'status': status,
+            'message': message,
         }
 
     def get(self, request, *args, **kwargs):
