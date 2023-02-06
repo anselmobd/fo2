@@ -227,36 +227,25 @@ class OpCortada(models.Model):
 
     # TableHeap - heap constructor - start
     def save_old(self, id, deleted=False):
-        print('save_old id', id, 'deleted', deleted)
         try:
             old = OpCortada.objects.get(id=id)
             old.origin_id = old.id
-            # old.origin_version = old.version
-            # old.origin_user = old.user
-            # old.origin_when = old.when
             old.id = None
-            # old.deleted = deleted
             old.save(table_heap_deleted=deleted)
         except Exception:
             pass
-        print('FIM de save_old')
         # TableHeap end
 
     def save(self, *args, **kwargs):
         # TableHeap start
-        print('save self.id', self.id)
         if self.id:
             self.save_old(self.id)
-        print('save self.origin_id', self.origin_id)
         deleted = (
             'table_heap_deleted' in kwargs and 
             kwargs['table_heap_deleted']
         )
-        print('save deleted', deleted)
         if self.origin_id == 0 or deleted:
-            print('entrou no if')
-            logged_in = LoggedInUser()
-            self.user = logged_in.user
+            self.user = LoggedInUser().user
             self.when = timezone.now()
         if self.origin_id == 0:
             self.version += 1
@@ -264,11 +253,9 @@ class OpCortada(models.Model):
             self.version = None
         # TableHeap end
 
-        print('call super save')
         if 'table_heap_deleted' in kwargs:
             del(kwargs['table_heap_deleted'])
         super(OpCortada, self).save(*args, **kwargs)
-        print('FIM de save')
 
     def delete(self, *args, **kwargs):
         # TableHeap start
