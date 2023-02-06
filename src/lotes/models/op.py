@@ -238,3 +238,6 @@ class OpCortada(models.Model):
         db_table = "fo2_op_cortada"
         verbose_name = "OP cortada"
         verbose_name_plural = "OPs cortadas"
+        permissions = (
+            ("pode_marcar_op_como_cortada", "Pode marcar OP como cortada"),
+        )
