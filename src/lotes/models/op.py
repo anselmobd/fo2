@@ -196,6 +196,7 @@ class OpCortada(models.Model):
         try:
             old = OpCortada.objects.get(id=id)
             old.origin_id = old.id
+            old.origin_when = old.when
             old.unique_aux = old.version
             old.id = None
             old.deleted = deleted
