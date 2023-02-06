@@ -154,7 +154,7 @@ class OpCortadaActiveManager(models.Manager):
     def get_queryset(self):
         return super(
             OpCortadaActiveManager,
-            self).get_queryset().filter(origin_id=0)
+            self).get_queryset().filter(log=0)
 
 
 class OpCortadaDeletedManager(models.Manager):
@@ -190,9 +190,9 @@ class OpCortada(models.Model):
         default=timezone.now,
         verbose_name='quando',
     )
-    origin_id = models.IntegerField(
+    log = models.IntegerField(
         default=0,
-        verbose_name='id de origem',
+        verbose_name='log',
     )
     # TableHeap - Fields - end
 
@@ -205,7 +205,7 @@ class OpCortada(models.Model):
     # TableHeap - heap constructor - start
     def save_old(self, id, deleted=False):
         old = OpCortada.objects.get(id=id)
-        old.origin_id = old.id
+        old.log = old.id
         old.id = None
         if deleted:
             old.user = LoggedInUser().user
@@ -218,7 +218,7 @@ class OpCortada(models.Model):
         # TableHeap start
         if self.id:
             self.save_old(self.id)
-        if self.origin_id == 0:
+        if self.log == 0:
             self.user = LoggedInUser().user
             self.when = timezone.now()
             self.version += 1
