@@ -157,11 +157,11 @@ class OpCortadaActiveManager(models.Manager):
             self).get_queryset().filter(origin_id=0)
 
 
-class OpCortadaInactiveManager(models.Manager):
+class OpCortadaDeletedManager(models.Manager):
     def get_queryset(self):
         return super(
-            OpCortadaInactiveManager,
-            self).get_queryset().exclude(origin_id=0)
+            OpCortadaDeletedManager,
+            self).get_queryset().filter(version__isnull=True)
 
 
 class OpCortada(models.Model):
@@ -200,7 +200,7 @@ class OpCortada(models.Model):
 
     # TableHeap - "objects" filter only active rows - start
     objects = OpCortadaActiveManager()
-    objects_inactive = OpCortadaInactiveManager()
+    objects_deleted = OpCortadaDeletedManager()
     objects_all = models.Manager()
     # TableHeap end
 
