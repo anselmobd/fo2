@@ -155,11 +155,13 @@ class OpCortadaAdmin(admin.ModelAdmin):
         'op',
         'colaborador',
         'version',
+        'user',
         'when',
         'origin_id',
+        'origin_version',
+        'origin_user',
         'origin_when',
         'deleted',
-        'unique_aux',
     ]
     ordering = [
         '-op',
@@ -167,11 +169,13 @@ class OpCortadaAdmin(admin.ModelAdmin):
     ]
     readonly_fields = [
         'version',
+        'user',
         'when',
         'origin_id',
+        'origin_version',
+        'origin_user',
         'origin_when',
         'deleted',
-        'unique_aux',
     ]
 
     def get_queryset(self, request):

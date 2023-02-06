@@ -7,6 +7,7 @@ from django.utils import timezone
 from base.models import (
     Colaborador,
 )
+from utils.classes import LoggedInUser
 
 
 class Op(models.Model):
@@ -175,25 +176,43 @@ class OpCortada(models.Model):
     # TableHeap - Fields
     version = models.IntegerField(
         default=0,
-        verbose_name='versão')
+        verbose_name='versão',
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        verbose_name='usuário',
+        related_name='user_table_heap1',
+    )
     when = models.DateTimeField(
         default=timezone.now,
-        verbose_name='quando')
+        verbose_name='quando',
+    )
     origin_id = models.IntegerField(
         default=0,
-        verbose_name='id de origem')
+        verbose_name='id de origem',
+    )
+    origin_version = models.IntegerField(
+        default=0,
+        verbose_name='versão de origem',
+    )
+    origin_user = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT,
+        verbose_name='usuário de origem',
+        related_name='origin_user_table_heap1',
+    )
     origin_when = models.DateTimeField(
         blank=True,
         null=True,
-        verbose_name='quando de origem')
+        verbose_name='quando de origem',
+    )
     deleted = models.BooleanField(
         default=False,
-        verbose_name='apagado')
-    # unique_aux foi criado para diferenciar duas alterações
-    # feitas no mesmo timezone.now
-    unique_aux = models.IntegerField(
-        default=0,
-        verbose_name='campo auxiliar para unique_together')
+        verbose_name='apagado',
+    )
     # TableHeap - Fields - end
 
     # TableHeap - "objects" filter only active rows - start
