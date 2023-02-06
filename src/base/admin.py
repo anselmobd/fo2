@@ -71,6 +71,7 @@ class RequisicaoAdmin(admin.ModelAdmin):
         "colaborador", "request_method", "path_info", "http_accept",
         "quando", "ip"
     ]
+    list_filter = ['colaborador']
 
 
 @admin.register(Empresa, site=site)
