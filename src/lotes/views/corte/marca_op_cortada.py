@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 
@@ -8,7 +9,11 @@ from base.models import Colaborador
 from lotes.models.op import OpCortada
 
 
-class MarcaOpCortada(View):
+class MarcaOpCortada(PermissionRequiredMixin, View):
+
+    def __init__(self, *args, **kwargs):
+        super(MarcaOpCortada, self).__init__(*args, **kwargs)
+        self.permission_required = 'lotes.pode_marcar_op_como_cortada'
 
     def process(self, request, kwargs):
         op = kwargs['op']
