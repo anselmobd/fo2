@@ -31,16 +31,18 @@ class OpCortada(PermissionRequiredMixin, O2BaseGetPostView):
         self.get_args2context = True
         self.form_class_has_initial = True
 
-    def mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-        locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
-
+    def pre_mount_context(self):
         try:
             _ = Colaborador.objects.get(user__username=self.request.user.username)
         except Colaborador.DoesNotExist:
             self.context.update({
-                'err_msg': "Colaborador não cadastrado.",
+                'critical_error': f"Usuário '{self.request.user.username}' "
+                                  " não cadastrado como Colaborador.",
             })          
+
+    def mount_context(self):
+        self.cursor = db_cursor_so(self.request)
+        locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
 
         dados = op_cortada.query(self.cursor, self.data)
 

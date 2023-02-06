@@ -10,15 +10,16 @@
 {% endblock %}
 
 {% block content %}
-  <div class="noprint">
-    <form action="{% url 'producao:op_cortada' %}" method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Busca"/>
-    </form>
-  </div>
-  {% if err_msg %}
-    <h4>{{err_msg}}</h4>
+  {% if critical_error %}
+    <h4>{{critical_error}}</h4>
+  {% else %}
+    <div class="noprint">
+      <form action="{% url 'producao:op_cortada' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Busca"/>
+      </form>
+    </div>
   {% endif %}
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
