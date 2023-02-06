@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
+from base.models import (
+    Colaborador,
+)
+
 
 class Op(models.Model):
     op = models.IntegerField(
@@ -161,7 +165,12 @@ class OpCortadaInactiveManager(models.Manager):
 
 class OpCortada(models.Model):
     op = models.IntegerField(
-        verbose_name='OP')
+        verbose_name='OP',
+    )
+    colaborador = models.ForeignKey(
+        Colaborador,
+        on_delete=models.PROTECT,
+    )
 
     # TableHeap - Fields
     version = models.IntegerField(
