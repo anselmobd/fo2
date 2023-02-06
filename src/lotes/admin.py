@@ -158,10 +158,10 @@ class OpCortadaAdmin(admin.ModelAdmin):
         'user',
         'when',
         'origin_id',
-        'origin_version',
-        'origin_user',
-        'origin_when',
-        'deleted',
+        # 'origin_version',
+        # 'origin_user',
+        # 'origin_when',
+        # 'deleted',
     ]
     ordering = [
         '-op',
@@ -172,10 +172,10 @@ class OpCortadaAdmin(admin.ModelAdmin):
         'user',
         'when',
         'origin_id',
-        'origin_version',
-        'origin_user',
-        'origin_when',
-        'deleted',
+        # 'origin_version',
+        # 'origin_user',
+        # 'origin_when',
+        # 'deleted',
     ]
 
     def get_queryset(self, request):

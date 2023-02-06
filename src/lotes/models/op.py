@@ -165,6 +165,8 @@ class OpCortadaInactiveManager(models.Manager):
 
 
 class OpCortada(models.Model):
+    __max_integer = 2147483647
+
     op = models.IntegerField(
         verbose_name='OP',
     )
@@ -209,10 +211,10 @@ class OpCortada(models.Model):
     #     null=True,
     #     verbose_name='quando de origem',
     # )
-    deleted = models.BooleanField(
-        default=False,
-        verbose_name='apagado',
-    )
+    # deleted = models.BooleanField(
+    #     default=False,
+    #     verbose_name='apagado',
+    # )
     # TableHeap - Fields - end
 
     # TableHeap - "objects" filter only active rows - start
@@ -231,7 +233,7 @@ class OpCortada(models.Model):
             # old.origin_user = old.user
             # old.origin_when = old.when
             old.id = None
-            old.deleted = deleted
+            # old.deleted = deleted
             old.save(table_heap_deleted=deleted)
         except Exception:
             pass
@@ -244,23 +246,20 @@ class OpCortada(models.Model):
         if self.id:
             self.save_old(self.id)
         print('save self.origin_id', self.origin_id)
-        print(
-            'save table_heap_deleted', 
+        deleted = (
             'table_heap_deleted' in kwargs and 
             kwargs['table_heap_deleted']
         )
-        if (
-            self.origin_id == 0 or
-            (
-                'table_heap_deleted' in kwargs and 
-                kwargs['table_heap_deleted']
-            )
-        ):
+        print('save deleted', deleted)
+        if self.origin_id == 0 or deleted:
             print('entrou no if')
             logged_in = LoggedInUser()
             self.user = logged_in.user
             self.when = timezone.now()
+        if self.origin_id == 0:
             self.version += 1
+        if deleted:
+            self.version = self.__max_integer
         # TableHeap end
 
         print('call super save')
