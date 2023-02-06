@@ -14,6 +14,7 @@ from .models import (
     InventarioLote,
     Lote,
     ModeloTermica,
+    OpCortada,
     RegraColecao,
     SolicitaLote,
     SolicitaLotePedido,
@@ -145,3 +146,39 @@ class InventarioAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(Inventario, InventarioAdmin)
+
+
+@admin.register(OpCortada, site=intr_adm_site)
+class OpCortadaAdmin(admin.ModelAdmin):
+    list_display = [
+        'id',
+        'op',
+        'version',
+        'when',
+        'origin_id',
+        'origin_when',
+        'deleted',
+        'unique_aux',
+    ]
+    ordering = [
+        '-op',
+        '-when',
+    ]
+    readonly_fields = [
+        'version',
+        'when',
+        'origin_id',
+        'origin_when',
+        'deleted',
+        'unique_aux',
+    ]
+
+    def get_queryset(self, request):
+        # use our manager, rather than the default one
+        qs = self.model.objects_all.get_queryset()
+
+        # we need this from the superclass method
+        # ordering = self.ordering or () # otherwise we might try to *None, which is bad ;)
+        # if ordering:
+        #     qs = qs.order_by(*ordering)
+        return qs
