@@ -17,7 +17,7 @@ class MarcaOpCortada(View):
             op_object = None
 
         if op_object:
-            op_object.detete()
+            op_object.delete()
             return 'DESMARCADA'
         else:
             op_object = OpCortada(op=op)
