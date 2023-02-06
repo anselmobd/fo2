@@ -1,4 +1,3 @@
-import datetime
 import locale
 from pprint import pprint
 
@@ -9,13 +8,10 @@ from fo2.connections import db_cursor_so
 
 from o2.views.base.get_post import O2BaseGetPostView
 from geral.functions import has_permission
-from utils.functions import untuple_keys_concat
-from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms.corte.op_cortada import OpCortadaForm
+from lotes.models.op import OpCortada as Model_OpCortada
 from lotes.queries.producao.romaneio_corte import (
-    pedidos_gerados,
-    producao_ops_finalizadas,
     op_cortada,
 )
 
@@ -40,13 +36,28 @@ class OpCortada(O2BaseGetPostView):
         if not dados:
             return
 
+        lista_ops = [
+            row['op']
+            for row in dados
+        ]
+        ops_cortadas = Model_OpCortada.objects.filter(op__in=lista_ops).values('op')
+        lista_ops_cortadas = [
+            row['op']
+            for row in ops_cortadas
+        ]
+
+        for row in dados:
+            row['cortada'] = "Sim" if row['op'] in lista_ops_cortadas else "Não"
+
         headers = [
             'OP',
+            'Cortada?',
             'Total lotes',
             'Lotes movidos na data',
         ]
         fields = [
             'op',
+            'cortada',
             'lotes',
             'movidos',
         ]
