@@ -20,6 +20,11 @@
           class="{{ row|get_item:field_class }}"
         {% endif %}
       {% endwith %}
+      {% with field|add:'|ID' as field_id %}
+        {% if row|get_item:field_id %}
+          id="{{ row|get_item:field_id }}"
+        {% endif %}
+      {% endwith %}
       style="{% spaceless %}
       {% include "layout/tbody_generic_td_style.html" with count=forloop.counter style=style row=row field=field only %}
       {% endspaceless %}">{% spaceless %}
