@@ -163,6 +163,24 @@ class OpCortada(models.Model):
     op = models.IntegerField(
         verbose_name='OP')
 
+    # TableHeap - Fields
+    origin_id = models.IntegerField(
+        default=0,
+        verbose_name='id de origem')
+    deleted = models.BooleanField(
+        default=False,
+        verbose_name='apagado')
+    version = models.IntegerField(
+        default=0,
+        verbose_name='versão')
+    when = models.DateTimeField(
+        default=timezone.now,
+        verbose_name='quando')
+    unique_aux = models.IntegerField(
+        default=0,
+        verbose_name='campo auxiliar para unique_together')
+    # TableHeap - Fields - end
+
     # TableHeap - "objects" filter only active rows - start
     objects = OpCortadaActiveManager()
     objects_inactive = OpCortadaInactiveManager()
