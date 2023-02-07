@@ -5,6 +5,7 @@ from utils.functions.queries import debug_cursor_execute
 
 
 def query(cursor, data=None):
+    """Lista OPs com alguma movimentação no estágio 15 na data informada"""
     data_value = (
         f"DATE '{data}'"
     ) if data else 'NULL'
@@ -20,6 +21,8 @@ def query(cursor, data=None):
           WHERE {data_value} IS NOT NULL
         )
         , op_com_15 AS 
+        -- seleciona OPs com estágio indicado no filtro e
+        -- conta o total de lotes por OP
         (
           SELECT DISTINCT 
             l.ORDEM_PRODUCAO OP
@@ -31,6 +34,9 @@ def query(cursor, data=None):
         )
         --SELECT * FROM op_com_15;
         , op_dt_move AS 
+        -- Para as OPs selecionas acima, conta quantos lotes tem movimento
+        -- na data indicada no filtro e devolve apenas OPs com essa quantidade
+        -- diferente de zero, lista também a data em questão
         (
           SELECT DISTINCT 
             op15.op
