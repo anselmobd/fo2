@@ -21,7 +21,7 @@
       </form>
     </div>
   {% endif %}
-  {% if request.POST %}
+  {% if request.POST or dados %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
     <h4>Lista OPs com movimentos no estágio 15 na data informada</h4>
     {% if dados %}

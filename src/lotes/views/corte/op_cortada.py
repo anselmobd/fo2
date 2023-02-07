@@ -31,6 +31,7 @@ class OpCortada(O2BaseGetPostView):
         self.cleaned_data2self = True
         self.get_args2context = True
         self.form_class_has_initial = True
+        self.get_args = ['data']
 
     def pre_mount_context(self):
         try:

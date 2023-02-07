@@ -219,7 +219,7 @@ urlpatterns = [
     re_path(r'^romaneio_corte/$',
         romaneio_corte.RomaneioCorte.as_view(), name='romaneio_corte'),
 
-    re_path(r'^op_cortada/$',
+    re_path(r'^op_cortada/(?P<data>[^/]+)?$',
         op_cortada.OpCortada.as_view(), name='op_cortada'),
 
     re_path(r'^ajax/marca_op_cortada/(?P<op>[^/]+)/$',
