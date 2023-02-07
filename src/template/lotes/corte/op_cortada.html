@@ -71,18 +71,6 @@
 
   }
 
-  function trata_cortada() {
-    let tds = document.getElementsByClassName('cortada');
-    Object.entries(tds).map(( mapped ) => {
-      let el = mapped[1];
-      if (el.innerHTML == "Sim") {
-        el.style.color = "darkgreen";
-      } else {
-        el.style.color = "darkred";
-      }
-    });
-  }
-
   function trata_acoes() {
     let tds = document.getElementsByClassName('acao');
     Object.entries(tds).map(( mapped ) => {
@@ -103,7 +91,6 @@
   }
 
   window.onload = function() {
-    trata_cortada();
     trata_acoes();
   }
 

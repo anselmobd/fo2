@@ -81,10 +81,10 @@ class OpCortada(O2BaseGetPostView):
                row['pedido_fm'] = '-'
             if row['op'] in lista_ops_cortadas:
                 row['cortada'] = "Sim"
-                row['acao'] = "Desmarca"
+                row['cortada|STYLE'] = "color:darkgreen"
             else:
                 row['cortada'] = "Não"
-                row['acao'] = "Marca"
+                row['cortada|STYLE'] = "color:darkred"
             row['cortada|CLASS'] = f"cortada op_{row['op']}"
             if row['pedido_fm'] == '-':
                 row['acao'] = "Altera"
