@@ -14,6 +14,9 @@ from base.models import Colaborador
 
 from lotes.forms.corte.op_cortada import OpCortadaForm
 from lotes.models.op import OpCortada as Model_OpCortada
+from lotes.queries.pedido.pedido_filial import (
+    pedidos_filial_na_data,
+)
 from lotes.queries.producao.romaneio_corte import (
     op_cortada,
 )
@@ -49,6 +52,19 @@ class OpCortada(PermissionRequiredMixin, O2BaseGetPostView):
         if not dados:
             return
 
+        pedidos_filial = pedidos_filial_na_data(
+            self.cursor,
+            data_de=self.data,
+        )
+        op_pedido = {}
+        for cliente in pedidos_filial:
+            for pedido in pedidos_filial[cliente]:
+                for op in pedido['op_ped']:
+                    try:
+                        op_pedido[op].add(str(pedido['ped']))
+                    except KeyError:
+                        op_pedido[op] = {str(pedido['ped'])}
+
         lista_ops = [
             row['op']
             for row in dados
@@ -60,24 +76,33 @@ class OpCortada(PermissionRequiredMixin, O2BaseGetPostView):
         ]
 
         for row in dados:
+            row['op'] = f"{row['op']}"
+            if row['op'] in op_pedido:
+               row['pedido_fm'] = ', '.join(list(op_pedido[row['op']]))
+            else:
+               row['pedido_fm'] = '-'
             if row['op'] in lista_ops_cortadas:
                 row['cortada'] = "Sim"
                 row['acao'] = "Desmarca"
             else:
                 row['cortada'] = "Não"
                 row['acao'] = "Marca"
-            row['acao'] = "Altera"
             row['cortada|CLASS'] = f"cortada op_{row['op']}"
-            row['acao|CLASS'] = f"acao op_{row['op']}"
-            row['acao|LINK'] = reverse(
-                'producao:marca_op_cortada',
-                args=[row['op']],
-            )
+            if row['pedido_fm'] == '-':
+                row['acao'] = "Altera"
+                row['acao|CLASS'] = f"acao op_{row['op']}"
+                row['acao|LINK'] = reverse(
+                    'producao:marca_op_cortada',
+                    args=[row['op']],
+                )
+            else:
+                row['acao'] = "-"
 
         headers = [
             'OP',
             'Total lotes',
             'Lotes movidos na data',
+            'Pedido Filial-Matriz',
             'Corte encerrado?',
             'Ação',
         ]
@@ -85,6 +110,7 @@ class OpCortada(PermissionRequiredMixin, O2BaseGetPostView):
             'op',
             'lotes',
             'movidos',
+            'pedido_fm',
             'cortada',
             'acao',
         ]
