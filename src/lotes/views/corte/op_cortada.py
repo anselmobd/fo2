@@ -2,7 +2,6 @@ import locale
 from pprint import pprint
 
 from django.conf import settings
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
 
 from fo2.connections import db_cursor_so
@@ -22,11 +21,10 @@ from lotes.queries.producao.romaneio_corte import (
 )
 
 
-class OpCortada(PermissionRequiredMixin, O2BaseGetPostView):
+class OpCortada(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(OpCortada, self).__init__(*args, **kwargs)
-        self.permission_required = 'lotes.pode_marcar_op_como_cortada'
         self.Form_class = OpCortadaForm
         self.template_name = 'lotes/corte/op_cortada.html'
         self.title_name = 'Indicação de OP cortada'
@@ -104,7 +102,6 @@ class OpCortada(PermissionRequiredMixin, O2BaseGetPostView):
             'Lotes movidos na data',
             'Pedido Filial-Matriz',
             'Corte encerrado?',
-            'Ação',
         ]
         fields = [
             'op',
@@ -112,8 +109,10 @@ class OpCortada(PermissionRequiredMixin, O2BaseGetPostView):
             'movidos',
             'pedido_fm',
             'cortada',
-            'acao',
         ]
+        if has_permission(self.request, 'cd.can_del_lote_de_palete'):
+            headers.append('Ação')
+            fields.append('acao')
 
         self.context.update({
             'headers': headers,
