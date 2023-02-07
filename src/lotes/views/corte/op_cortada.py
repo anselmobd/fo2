@@ -71,7 +71,7 @@ class OpCortada(PermissionRequiredMixin, O2BaseGetPostView):
         ]
         ops_cortadas = Model_OpCortada.objects.filter(op__in=lista_ops).values('op')
         lista_ops_cortadas = [
-            row['op']
+            str(row['op'])
             for row in ops_cortadas
         ]
 
