@@ -39,7 +39,7 @@
 {% block javascript.pos %}
 <script type="text/javascript">
 
-  function acao1(op, href) {
+  function acao(op, href) {
     let el_cortada = document.getElementsByClassName('cortada op_'+op);
 
     $.ajax({
@@ -54,9 +54,11 @@
           } else if (data['status'] == 'MARCADA') {
             console.log(data['status']);
             el_cortada[0].innerHTML = "Sim";
+            el_cortada[0].style.color = "darkgreen";
           } else {
             console.log(data['status']);
             el_cortada[0].innerHTML = "Não";
+            el_cortada[0].style.color = "darkred";
           }
         } else {
           console.log('Sem retorno');
@@ -67,6 +69,18 @@
       }
     });
 
+  }
+
+  function trata_cortada() {
+    let tds = document.getElementsByClassName('cortada');
+    Object.entries(tds).map(( mapped ) => {
+      let el = mapped[1];
+      if (el.innerHTML == "Sim") {
+        el.style.color = "darkgreen";
+      } else {
+        el.style.color = "darkred";
+      }
+    });
   }
 
   function trata_acoes() {
@@ -83,13 +97,13 @@
       if (a.length > 0) {
         let href = a[0].href;
         a[0].href="javascript:void(0);";
-        a[0].onclick = function() {acao1(op, href);};
-        console.log(op);
+        a[0].onclick = function() {acao(op, href);};
       }
     });
   }
 
   window.onload = function() {
+    trata_cortada();
     trata_acoes();
   }
 

@@ -119,4 +119,7 @@ class OpCortada(PermissionRequiredMixin, O2BaseGetPostView):
             'headers': headers,
             'fields': fields,
             'dados': dados,
+            'style': {
+                5: "font-weight: bold;",
+            }
         })
