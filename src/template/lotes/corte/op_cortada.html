@@ -21,6 +21,12 @@
       </form>
     </div>
   {% endif %}
+  {% if anterior %}
+    {% url 'producao:op_cortada' anterior as link_anterior %}
+    {% include "layout/a.html" with link=link_anterior text='Data anterior ('|add:anterior_txt|add:')' only %} -
+    {% url 'producao:op_cortada' proxima as link_proxima %}
+    {% include "layout/a.html" with link=link_proxima text='Próxima data ('|add:proxima_txt|add:')' only %}
+  {% endif %}
   {% if request.POST or dados %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
     <h4>Lista OPs com movimentos no estágio 15 na data informada</h4>

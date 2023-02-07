@@ -1,4 +1,5 @@
 import locale
+from datetime import timedelta
 from pprint import pprint
 
 from django.conf import settings
@@ -40,13 +41,22 @@ class OpCortada(O2BaseGetPostView):
             self.context.update({
                 'critical_error': f"Usuário '{self.request.user.username}' "
                                   " não cadastrado como Colaborador.",
-            })          
+            })
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
         locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
 
         dados = op_cortada.query(self.cursor, self.data)
+
+        anterior = self.data + timedelta(days=-1)
+        proxima = self.data + timedelta(days=1)
+        self.context.update({
+            'anterior': anterior,
+            'anterior_txt': anterior.strftime('%d/%m/%Y'),
+            'proxima': proxima,
+            'proxima_txt': proxima.strftime('%d/%m/%Y'),
+        })
 
         if not dados:
             return
