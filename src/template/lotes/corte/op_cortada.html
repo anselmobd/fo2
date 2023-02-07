@@ -23,6 +23,7 @@
   {% endif %}
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+    <h4>Lista OPs com movimentos no estágio 15 na data informada</h4>
     {% if dados %}
       <table>
         {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
