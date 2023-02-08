@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import JsonResponse
 from django.views import View
@@ -45,7 +46,7 @@ class MarcaOpCortada(PermissionRequiredMixin, View):
             message = ""
         except Exception as e:
             status =  'ERRO'
-            message = repr(e)
+            message = repr(e) if settings.DEBUG else ''
         return {
             'status': status,
             'message': message,
