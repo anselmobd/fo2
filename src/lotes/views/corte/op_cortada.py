@@ -34,15 +34,6 @@ class OpCortada(O2BaseGetPostView):
         self.form_class_has_initial = True
         self.get_args = ['data']
 
-    def pre_mount_context(self):
-        try:
-            _ = Colaborador.objects.get(user__username=self.request.user.username)
-        except Colaborador.DoesNotExist:
-            self.context.update({
-                'critical_error': f"Usuário '{self.request.user.username}' "
-                                  " não cadastrado como Colaborador.",
-            })
-
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
         locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
@@ -122,8 +113,15 @@ class OpCortada(O2BaseGetPostView):
             'cortada',
         ]
         if has_permission(self.request, 'cd.can_del_lote_de_palete'):
-            headers.append('Ação')
-            fields.append('acao')
+            try:
+                _ = Colaborador.objects.get(user__username=self.request.user.username)
+                headers.append('Ação')
+                fields.append('acao')
+            except Colaborador.DoesNotExist:
+                self.context.update({
+                    'hint_colaborador': f"Usuário '{self.request.user.username}' "
+                                    "não cadastrado como Colaborador.",
+                })
 
         self.context.update({
             'headers': headers,

@@ -10,16 +10,15 @@
 {% endblock %}
 
 {% block content %}
-  {% if critical_error %}
-    <h4>{{critical_error}}</h4>
-  {% else %}
-    <div class="noprint">
-      <form action="{% url 'producao:op_cortada' %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Busca"/>
-      </form>
-    </div>
+  <div class="noprint">
+    <form action="{% url 'producao:op_cortada' %}" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Busca"/>
+    </form>
+  </div>
+  {% if hint_colaborador %}
+    <h5>{{hint_colaborador}}</h5>
   {% endif %}
   {% if anterior %}
     {% url 'producao:op_cortada' anterior as link_anterior %}
