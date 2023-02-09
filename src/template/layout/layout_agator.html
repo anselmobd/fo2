@@ -115,6 +115,29 @@
   </main>
   {% block footer %}{% endblock %}
   {% block javascript %}{% endblock %}
+  <script>
+
+    function o2PreventNonNumericalInput(event) {
+      var charStr = String.fromCharCode(event.keyCode);
+      if ( (event.keyCode > 31) && (!charStr.match(/^[0-9]+$/)) )
+        event.preventDefault();
+    }
+
+    function o2CleanNonNumericalInputAndStay(event) {
+      if (event.keyCode === 13) {
+        clean = event.target.value.replace(/\D/g,'');
+        if (event.target.value != clean) {
+          event.preventDefault();
+          event.target.value = clean;
+        }
+      }
+    }
+
+    function o2CleanNonNumericalKeys(event) {
+      event.target.value = event.target.value.replace(/\D/g,'');
+    }
+
+  </script>
   {% block footer_space %}{% endblock %}
 </body>
 </html>
