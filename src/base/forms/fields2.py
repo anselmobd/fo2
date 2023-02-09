@@ -15,13 +15,15 @@ O2FieldModeloForm2 = mount_fields.MountIntegerFieldForm(
 )
 
 
-O2FieldPedidoForm2 = mount_fields.MountIntegerFieldForm(
+O2FieldPedidoForm2 = mount_fields.MountCharFieldForm(
     'pedido',
-    attrs={
-        'min_value': 1,
-        'max_value': 999999,
+    widget_attrs={
+        'size': 6,
+        'pattern': "[0-9]{1,6}",
+        'onkeypress': "o2PreventNonNumericalInput(event)",
+        'onkeydown': "o2CleanNonNumericalInputAndStay(event);",
+        'onblur': "o2CleanNonNumericalKeys(event);",
     },
-    widget_attrs={'size': 6},
 )
 
 O2FieldDepositoForm2 = mount_fields.MountIntegerFieldForm(
