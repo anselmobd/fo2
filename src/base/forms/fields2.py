@@ -5,14 +5,18 @@ from base.forms import mount_fields
 from systextil.models import Colecao
 
 
-O2FieldModeloForm2 = mount_fields.MountIntegerFieldForm(
-    'modelo',
-    attrs={
-        'min_value': 1,
-        'max_value': 99999,
-    },
-    widget_attrs={'size': 5},
-)
+class Fields2():
+
+    @property
+    def O2FieldModeloForm2(self):
+        return mount_fields.MountIntegerFieldForm(
+            'modelo',
+            attrs={
+                'min_value': 1,
+                'max_value': 99999,
+            },
+            widget_attrs={'size': 5},
+        )
 
 
 O2FieldPedidoForm2 = mount_fields.MountCharFieldForm(
@@ -23,7 +27,7 @@ O2FieldPedidoForm2 = mount_fields.MountCharFieldForm(
         'onkeypress': "o2PreventNonNumericalInput(event);",
         'onkeydown': "o2CleanNonNumericalInputAndStay(event);",
         'onblur': "o2CleanNonNumericalKeys(event);",
-        'oninvalid': "this.setCustomValidity('Só números. Até 6 dígitos.');",
+        'oninvalid': "this.setCustomValidity('Apenas números. Até 6 dígitos.');",
         'oninput': "this.setCustomValidity('');",
     },
 )

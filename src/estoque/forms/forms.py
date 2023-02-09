@@ -4,7 +4,7 @@ from django import forms
 
 import geral.functions
 from base.forms.custom import O2BaseForm
-from base.forms.fields2 import O2FieldModeloForm2
+from base.forms.fields2 import Fields2
 
 
 class PorDepositoForm(forms.Form):
@@ -150,7 +150,7 @@ class InventarioExpedicaoForm(forms.Form):
 
 class ReferenciasEstoqueForm(
         O2BaseForm,
-        O2FieldModeloForm2):
+        Fields2().O2FieldModeloForm2):
 
     deposito = forms.ChoiceField(
         label='Depósito', initial='-')

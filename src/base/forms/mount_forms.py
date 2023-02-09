@@ -17,7 +17,7 @@ def MountForm(field=None, **kwargs):
     field_classes = {
         'deposito': fields2.O2FieldDepositoForm2,
         'colecao': fields2.O2FieldColecaoForm2,
-        'modelo': fields2.O2FieldModeloForm2,
+        'modelo': fields2.Fields2().O2FieldModeloForm2,
         'pedido': fields2.O2FieldPedidoForm2,
         'referencia': fields2.O2FieldReferenciaForm2,
     }
