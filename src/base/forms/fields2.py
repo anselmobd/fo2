@@ -20,9 +20,11 @@ O2FieldPedidoForm2 = mount_fields.MountCharFieldForm(
     widget_attrs={
         'size': 6,
         'pattern': "[0-9]{1,6}",
-        'onkeypress': "o2PreventNonNumericalInput(event)",
+        'onkeypress': "o2PreventNonNumericalInput(event);",
         'onkeydown': "o2CleanNonNumericalInputAndStay(event);",
         'onblur': "o2CleanNonNumericalKeys(event);",
+        'oninvalid': "this.setCustomValidity('Só números. Até 6 dígitos.');",
+        'oninput': "this.setCustomValidity('');",
     },
 )
 
