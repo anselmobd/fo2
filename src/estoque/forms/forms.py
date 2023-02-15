@@ -150,7 +150,7 @@ class InventarioExpedicaoForm(forms.Form):
 
 class ReferenciasEstoqueForm(
         O2BaseForm,
-        Fields2().O2FieldModeloForm2):
+        Fields2().Modelo):
 
     deposito = forms.ChoiceField(
         label='Depósito', initial='-')

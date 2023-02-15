@@ -8,7 +8,7 @@ from systextil.models import Colecao
 class Fields2():
 
     @property
-    def O2FieldModeloForm2(self):
+    def Modelo(self):
         return mount_fields.MountIntegerFieldForm(
             'modelo',
             attrs={
@@ -19,7 +19,7 @@ class Fields2():
         )
 
     @property
-    def O2FieldPedidoForm2(self):
+    def Pedido(self):
         return mount_fields.MountCharFieldForm(
             'pedido',
             widget_attrs={
@@ -34,7 +34,7 @@ class Fields2():
         )
 
     @property
-    def O2FieldDepositoForm2(self):
+    def Deposito(self):
         return mount_fields.MountIntegerFieldForm(
             'deposito',
             attrs={
@@ -46,7 +46,7 @@ class Fields2():
         )
 
     @property
-    def O2FieldColecaoForm2(self):
+    def Colecao(self):
         return mount_fields.MountModelChoiceForm(
             'colecao',
             attrs={
@@ -58,7 +58,7 @@ class Fields2():
         )
 
     @property
-    def O2FieldReferenciaForm2(self):
+    def Referencia(self):
         return mount_fields.MountCharFieldForm(
             'referencia',
             widget_attrs={'size': 5},
