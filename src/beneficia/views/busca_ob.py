@@ -19,12 +19,14 @@ from beneficia.queries import busca_ob
 
 class BuscaOb(View):
 
-    Form_class = BuscaObForm
-    template_name = 'beneficia/busca_ob.html'
-    title_name = 'Busca OB'
+    def __init__(self):
+        super(BuscaOb, self).__init__()
+        self.Form_class = BuscaObForm
+        self.template_name = 'beneficia/busca_ob.html'
+        self.title_name = 'Busca OB'
 
-    cleanned_fields_to_context = cleanned_fields_to_context
-    context_to_form_post = context_to_form_post
+        self.cleanned_fields_to_context = cleanned_fields_to_context
+        self.context_to_form_post = context_to_form_post
 
     def __init__(self):
         self.context = {'titulo': self.title_name}
