@@ -14,9 +14,12 @@ import produto.queries as queries
 
 
 class HistNarrativa(View):
-    Form_class = Forms2().Referencia
-    template_name = 'produto/hist_narrativa.html'
-    title_name = 'Histórico de narrativas'
+
+    def __init__(self):
+        super(HistNarrativa, self).__init__()
+        self.Form_class = Forms2().Referencia
+        self.template_name = 'produto/hist_narrativa.html'
+        self.title_name = 'Histórico de narrativas'
 
     def mount_context(self, cursor, referencia):
         context = {'referencia': referencia}
