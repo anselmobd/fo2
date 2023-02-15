@@ -123,7 +123,7 @@
         event.preventDefault();
     }
 
-    function o2CleanNonNumericalInputAndStay(event) {
+    function o2OnEnterCleanNonNumericalInputAndStay(event) {
       if (event.keyCode === 13) {
         clean = event.target.value.replace(/\D/g,'');
         if (event.target.value != clean) {
