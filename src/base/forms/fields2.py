@@ -18,19 +18,21 @@ class Fields2():
             widget_attrs={'size': 5},
         )
 
+    @property
+    def O2FieldPedidoForm2(self):
+        return mount_fields.MountCharFieldForm(
+            'pedido',
+            widget_attrs={
+                'size': 6,
+                'pattern': "[0-9]{1,6}",
+                'onkeypress': "o2PreventNonNumericalInput(event);",
+                'onkeydown': "o2OnEnterCleanNonNumericalInputAndStay(event);",
+                'onblur': "o2CleanNonNumericalKeys(event);",
+                'oninvalid': "this.setCustomValidity('Apenas números. Até 6 dígitos.');",
+                'oninput': "this.setCustomValidity('');",
+            },
+        )
 
-O2FieldPedidoForm2 = mount_fields.MountCharFieldForm(
-    'pedido',
-    widget_attrs={
-        'size': 6,
-        'pattern': "[0-9]{1,6}",
-        'onkeypress': "o2PreventNonNumericalInput(event);",
-        'onkeydown': "o2OnEnterCleanNonNumericalInputAndStay(event);",
-        'onblur': "o2CleanNonNumericalKeys(event);",
-        'oninvalid': "this.setCustomValidity('Apenas números. Até 6 dígitos.');",
-        'oninput': "this.setCustomValidity('');",
-    },
-)
 
 O2FieldDepositoForm2 = mount_fields.MountIntegerFieldForm(
     'deposito',
