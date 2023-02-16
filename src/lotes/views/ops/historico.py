@@ -10,9 +10,12 @@ import lotes.queries.op
 
 
 class Historico(View):
-    Form_class = lotes.forms.HistoricoOpForm
-    template_name = 'lotes/historico_op.html'
-    title_name = 'Histórico de OP'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = lotes.forms.HistoricoOpForm
+        self.template_name = 'lotes/historico_op.html'
+        self.title_name = 'Histórico de OP'
 
     def mount_context(self, op, oc, dia, usuario, descr, page):
         linhas_pagina = 100

@@ -13,9 +13,12 @@ import produto.queries as queries
 
 
 class MultiplasColecoes(View):
-    Form_class = FiltroForm
-    template_name = 'produto/multiplas_colecoes.html'
-    title_name = 'Múltiplas coleções em modelo'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = FiltroForm
+        self.template_name = 'produto/multiplas_colecoes.html'
+        self.title_name = 'Múltiplas coleções em modelo'
 
     def mount_context(self, cursor):
         context = {}

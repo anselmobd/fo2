@@ -21,10 +21,13 @@ __all__ = ['Lote']
 
 
 class Lote(View):
-    Form_class = LoteForm
-    template_name = 'lotes/posicao.html'
-    title_name = 'Lote/OC'
-    request = {}
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = LoteForm
+        self.template_name = 'lotes/posicao.html'
+        self.title_name = 'Lote/OC'
+        self.request = {}
 
     def mount_context(self, cursor, periodo, ordem_confeccao, lote):
         context = {}

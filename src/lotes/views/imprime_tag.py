@@ -16,10 +16,13 @@ from lotes.forms import ImprimeTagForm
 
 
 class ImprimeTag(LoginRequiredMixin, View):
-    login_url = '/intradm/login/'
-    Form_class = ImprimeTagForm
-    template_name = 'lotes/imprime_tag.html'
-    title_name = 'Imprime TAG'
+
+    def __init__(self):
+        super().__init__()
+        self.login_url = '/intradm/login/'
+        self.Form_class = ImprimeTagForm
+        self.template_name = 'lotes/imprime_tag.html'
+        self.title_name = 'Imprime TAG'
 
     def mount_context_and_print(self, cursor, item, quant):
         context = {

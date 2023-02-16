@@ -232,9 +232,12 @@ def stat_niveis(request, nivel):
 
 
 class EstrEstagioDeInsumo(View):
-    Form_class = FiltroForm
-    template_name = 'produto/estr_estagio_de_insumo.html'
-    title_name = 'Estágio de insumo'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = FiltroForm
+        self.template_name = 'produto/estr_estagio_de_insumo.html'
+        self.title_name = 'Estágio de insumo'
 
     def mount_context(self, cursor):
         context = {}
@@ -270,9 +273,12 @@ class EstrEstagioDeInsumo(View):
 
 
 class RoteirosPadraoRef(View):
-    Form_class = forms.GeraRoteirosRefForm
-    template_name = 'produto/roteiros_padrao_ref.html'
-    title_name = 'Roteiros padrão por referência'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.GeraRoteirosRefForm
+        self.template_name = 'produto/roteiros_padrao_ref.html'
+        self.title_name = 'Roteiros padrão por referência'
 
     def mount_context(self, cursor, ref):
         if ref == '':
@@ -516,9 +522,12 @@ class GeraRoteirosPadraoRef(PermissionRequiredMixin, View):
 
 
 class InfoXml(View):
-    Form_class = forms.ReferenciaForm
-    template_name = 'produto/info_xml.html'
-    title_name = 'Informações p/ NFe XML'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.ReferenciaForm
+        self.template_name = 'produto/info_xml.html'
+        self.title_name = 'Informações p/ NFe XML'
 
     def mount_context(self, cursor, ref):
         context = {'ref': ref}
@@ -577,9 +586,12 @@ class InfoXml(View):
 
 
 class PorCliente(View):
-    Form_class = forms.ClienteForm
-    template_name = 'produto/por_cliente.html'
-    title_name = 'Por cliente'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.ClienteForm
+        self.template_name = 'produto/por_cliente.html'
+        self.title_name = 'Por cliente'
 
     def mount_context(self, cursor, cliente):
         context = {'cliente': cliente}

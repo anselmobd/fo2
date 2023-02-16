@@ -13,9 +13,12 @@ from lotes.forms import OpForm
 
 
 class OpCaixa(View):
-    Form_class = OpForm
-    template_name = 'lotes/op_caixa.html'
-    title_name = 'Lista caixas de OP'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = OpForm
+        self.template_name = 'lotes/op_caixa.html'
+        self.title_name = 'Lista caixas de OP'
 
     def mount_context(self, cursor, op):
         self.context['op'] = op

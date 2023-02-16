@@ -11,9 +11,12 @@ import produto.queries as queries
 
 
 class Busca(View):
-    Form_class = forms.FiltroRefForm
-    template_name = 'produto/busca.html'
-    title_name = 'Listagem de produtos'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.FiltroRefForm
+        self.template_name = 'produto/busca.html'
+        self.title_name = 'Listagem de produtos'
 
     def mount_context(self, cursor, filtro, cor, roteiro, alternativa, colecao):
         context = {'filtro': filtro}

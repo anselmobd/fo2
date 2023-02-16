@@ -15,9 +15,12 @@ from logistica.forms import NotafiscalRelForm
 
 
 class NotafiscalRel(View):
-    Form_class = NotafiscalRelForm
-    template_name = 'logistica/notafiscal_rel.html'
-    title_name = 'Consulta de datas de NF'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = NotafiscalRelForm
+        self.template_name = 'logistica/notafiscal_rel.html'
+        self.title_name = 'Consulta de datas de NF'
 
     def mount_context(self, form, form_obj):
         context = dict(form)

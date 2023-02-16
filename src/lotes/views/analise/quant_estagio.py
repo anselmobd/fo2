@@ -10,9 +10,12 @@ import lotes.queries as queries
 
 
 class QuantEstagio(View):
-    Form_class = forms.QuantEstagioForm
-    template_name = 'lotes/quant_estagio.html'
-    title_name = 'Quantidades por estágio'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.QuantEstagioForm
+        self.template_name = 'lotes/quant_estagio.html'
+        self.title_name = 'Quantidades por estágio'
 
     def mount_context(self, cursor, estagio, ref, tipo):
         context = {

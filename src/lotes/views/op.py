@@ -19,9 +19,12 @@ from lotes.queries.lote import get_lotes
 
 
 class ComponentesDeOp(View):
-    Form_class = forms.OpForm
-    template_name = 'lotes/componentes_de_op.html'
-    title_name = 'Grades de produtos componentes de OP'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.OpForm
+        self.template_name = 'lotes/componentes_de_op.html'
+        self.title_name = 'Grades de produtos componentes de OP'
 
     def mount_context(self, cursor, op):
         context = {'op': op}
@@ -220,9 +223,12 @@ class OpConserto(View):
 
 
 class OpPerda(View):
-    Form_class = forms.OpPerdaForm
-    template_name = 'lotes/perda.html'
-    title_name = 'Perdas de produção'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.OpPerdaForm
+        self.template_name = 'lotes/perda.html'
+        self.title_name = 'Perdas de produção'
 
     def mount_context(self, cursor, data_de, data_ate, detalhe):
         context = {

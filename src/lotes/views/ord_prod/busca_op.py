@@ -14,9 +14,12 @@ import lotes.models
 
 
 class BuscaOP(View):
-    Form_class = forms.BuscaOpForm
-    template_name = 'lotes/busca_op.html'
-    title_name = 'Busca OP'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.BuscaOpForm
+        self.template_name = 'lotes/busca_op.html'
+        self.title_name = 'Busca OP'
 
     def mount_context(
             self, cursor, ref, modelo, tam, cor, deposito,

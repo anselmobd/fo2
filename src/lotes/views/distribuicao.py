@@ -13,9 +13,12 @@ import lotes.queries.producao
 
 
 class Distribuicao(View):
-    Form_class = DistribuicaoForm
-    template_name = 'lotes/distribuicao.html'
-    title_name = 'Distribuição Tecelagem'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = DistribuicaoForm
+        self.template_name = 'lotes/distribuicao.html'
+        self.title_name = 'Distribuição Tecelagem'
 
     def mount_context(self, cursor, estagio, data_de, data_ate, familia):
         if data_ate is None and data_de is not None:

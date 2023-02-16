@@ -17,10 +17,13 @@ import lotes.models as models
 
 
 class ImprimeCaixaLotes(LoginRequiredMixin, View):
-    login_url = '/intradm/login/'
-    Form_class = lotes.forms.ImprimeCaixaLotesForm
-    template_name = 'lotes/imprime_caixa_lotes.html'
-    title_name = 'Etiqueta de caixa lotes'
+
+    def __init__(self):
+        super().__init__()
+        self.login_url = '/intradm/login/'
+        self.Form_class = lotes.forms.ImprimeCaixaLotesForm
+        self.template_name = 'lotes/imprime_caixa_lotes.html'
+        self.title_name = 'Etiqueta de caixa lotes'
 
     def mount_context_and_print(
             self, cursor, op, tam, cor, parm_pula, parm_qtd_lotes,

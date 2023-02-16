@@ -19,9 +19,12 @@ from lotes.queries.op import op_disponivel
 
 
 class Op(View):
-    Form_class = forms.OpForm
-    template_name = 'lotes/op.html'
-    title_name = 'OP'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.OpForm
+        self.template_name = 'lotes/op.html'
+        self.title_name = 'OP'
 
     def mount_context(self, cursor, op, request):
         p = Perf(False)

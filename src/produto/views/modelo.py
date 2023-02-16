@@ -11,9 +11,12 @@ import produto.queries as queries
 
 
 class Modelo(View):
-    Form_class = forms.ModeloForm
-    template_name = 'produto/modelo.html'
-    title_name = 'Modelo (número do PA)'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.ModeloForm
+        self.template_name = 'produto/modelo.html'
+        self.title_name = 'Modelo (número do PA)'
 
     def mount_context(self, cursor, modelo):
         context = {'modelo': modelo}

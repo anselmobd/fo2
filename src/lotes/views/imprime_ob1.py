@@ -18,10 +18,13 @@ import lotes.queries as queries
 
 
 class ImprimeOb1(LoginRequiredMixin, View):
-    login_url = '/intradm/login/'
-    Form_class = ImprimeOb1Form
-    template_name = 'lotes/imprime_ob1.html'
-    title_name = 'Imprime etiqueta de OB1'
+
+    def __init__(self):
+        super().__init__()
+        self.login_url = '/intradm/login/'
+        self.Form_class = ImprimeOb1Form
+        self.template_name = 'lotes/imprime_ob1.html'
+        self.title_name = 'Imprime etiqueta de OB1'
 
     def mount_context_and_print(self, cursor, os, caixa_inicial, caixa_final, do_print):
         context = {

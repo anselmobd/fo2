@@ -8,9 +8,12 @@ import produto.models
 
 
 class GtinLog(View):
-    Form_class = produto.forms.GtinLogForm
-    template_name = 'produto/gtin/log.html'
-    title_name = 'Log de alterações GTIN'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = produto.forms.GtinLogForm
+        self.template_name = 'produto/gtin/log.html'
+        self.title_name = 'Log de alterações GTIN'
 
     def mount_context(self, ref, gtin, usuario):
         context = {

@@ -12,9 +12,12 @@ import produto.queries as queries
 
 
 class GtinPesquisa(View):
-    Form_class = forms.GtinPesquisaForm
-    template_name = 'produto/gtin/pesquisa.html'
-    title_name = 'Pesquisa GTIN'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.GtinPesquisaForm
+        self.template_name = 'produto/gtin/pesquisa.html'
+        self.title_name = 'Pesquisa GTIN'
 
     def mount_context(self, cursor, ref, gtin):
         context = {

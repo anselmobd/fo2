@@ -16,9 +16,12 @@ import produto.models as models
 
 
 class Ref(View):
-    Form_class = forms.ReferenciaForm
-    template_name = 'produto/ref.html'
-    title_name = 'Produto'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.ReferenciaForm
+        self.template_name = 'produto/ref.html'
+        self.title_name = 'Produto'
 
     def mount_context(self, request, cursor, ref):
         context = {'ref': ref}

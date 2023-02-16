@@ -16,9 +16,12 @@ import lotes.queries as queries
 
 
 class Expedicao(View):
-    Form_class = forms.ExpedicaoForm
-    template_name = 'lotes/expedicao.html'
-    title_name = 'Expedição'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.ExpedicaoForm
+        self.template_name = 'lotes/expedicao.html'
+        self.title_name = 'Expedição'
 
     def mount_context(
             self, cursor, embarque_de, embarque_ate,

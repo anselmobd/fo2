@@ -14,9 +14,12 @@ import lotes.queries as queries
 
 
 class OpPendente(View):
-    Form_class = OpPendenteForm
-    template_name = 'lotes/op_pendente.html'
-    title_name = 'Ordens pendentes por estágio'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = OpPendenteForm
+        self.template_name = 'lotes/op_pendente.html'
+        self.title_name = 'Ordens pendentes por estágio'
 
     def mount_context(self, cursor, estagio, periodo_de, periodo_ate,
                       data_de, data_ate, colecao, situacao, tipo):

@@ -10,9 +10,12 @@ import lotes.queries as queries
 
 
 class PeriodoAlter(View):
-    Form_class = forms.PeriodoAlterForm
-    template_name = 'lotes/analise/periodo_alter.html'
-    title_name = 'Por período e alternativa'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.PeriodoAlterForm
+        self.template_name = 'lotes/analise/periodo_alter.html'
+        self.title_name = 'Por período e alternativa'
 
     def mount_context(self, cursor, periodo_de, periodo_ate, alternativa):
         # A ser produzido

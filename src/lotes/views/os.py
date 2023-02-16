@@ -14,9 +14,12 @@ import lotes.queries.os
 from lotes.queries.lote import get_lotes
 
 class Os(View):
-    Form_class = OsForm
-    template_name = 'lotes/os.html'
-    title_name = 'OS'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = OsForm
+        self.template_name = 'lotes/os.html'
+        self.title_name = 'OS'
 
     def mount_context(self, cursor, os):
         context = {'os': os}
