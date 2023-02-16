@@ -11,11 +11,14 @@ from email_signature.models import Account
 
 
 class AccountListView(PermissionRequiredMixin, ListView):
-    permission_required = 'email_signature.can_edit_mail_signature'
-    model = Account
-    context_object_name = 'accounts'
-    ordering = ['tipo', 'email']
-    paginate_by = 100
+
+    def __init__(self):
+        self.permission_required = 'email_signature.can_edit_mail_signature'
+        self.model = Account
+        self.context_object_name = 'accounts'
+        self.ordering = ['tipo', 'email']
+        self.paginate_by = 100
+        super().__init__()
 
     def get_queryset(self):
         object_list = self.model.objects
@@ -37,20 +40,29 @@ class AccountListView(PermissionRequiredMixin, ListView):
         return object_list.order_by(*self.ordering)
 
 class AccountCreateView(PermissionRequiredMixin, CreateView):
-    permission_required = 'email_signature.can_edit_mail_signature'
-    model = Account
-    form_class = email_signature.forms.AccountForm
-    success_url = reverse_lazy('email_signature:account_list')
+
+    def __init__(self):
+        self.permission_required = 'email_signature.can_edit_mail_signature'
+        self.model = Account
+        self.form_class = email_signature.forms.AccountForm
+        self.success_url = reverse_lazy('email_signature:account_list')
+        super().__init__()
 
 
 class AccountUpdateView(PermissionRequiredMixin, UpdateView):
-    permission_required = 'email_signature.can_edit_mail_signature'
-    model = Account
-    form_class = email_signature.forms.AccountForm
-    success_url = reverse_lazy('email_signature:account_list')
+
+    def __init__(self):
+        self.permission_required = 'email_signature.can_edit_mail_signature'
+        self.model = Account
+        self.form_class = email_signature.forms.AccountForm
+        self.success_url = reverse_lazy('email_signature:account_list')
+        super().__init__()
 
 
 class AccountDeleteView(PermissionRequiredMixin, DeleteView):
-    permission_required = 'email_signature.can_edit_mail_signature'
-    model = Account
-    success_url = reverse_lazy('email_signature:account_list')
+
+    def __init__(self):
+        self.permission_required = 'email_signature.can_edit_mail_signature'
+        self.model = Account
+        self.success_url = reverse_lazy('email_signature:account_list')
+        super().__init__()
