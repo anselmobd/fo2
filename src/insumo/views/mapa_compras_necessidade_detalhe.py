@@ -15,12 +15,12 @@ import insumo.queries as queries
 
 
 class MapaComprasNecessidadeDetalhe(View):
-    template_name = 'insumo/mapa_compras_necessidade_detalhe.html'
-    title_name = 'Detalhe de necessidade de insumo em uma semana'
 
     def __init__(self, *args, **kwargs):
         super(MapaComprasNecessidadeDetalhe, self).__init__(*args, **kwargs)
         self.new_calc = True
+        self.template_name = 'insumo/mapa_compras_necessidade_detalhe.html'
+        self.title_name = 'Detalhe de necessidade de insumo em uma semana'
 
     def mount_context(self, cursor, nivel, ref, cor, tam, semana):
         context = {}

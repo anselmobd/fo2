@@ -13,12 +13,12 @@ import insumo.functions
 
 
 class MapaCompras(View):
-    template_name = 'insumo/mapa_compras.html'
-    title_name = 'Mapa de compras'
 
     def __init__(self, *args, **kwargs):
         super(MapaCompras, self).__init__(*args, **kwargs)
         self.calc = True
+        self.template_name = 'insumo/mapa_compras.html'
+        self.title_name = 'Mapa de compras'
 
     def mount_context(self, cursor, nivel, ref, cor, tam):
         context = {

@@ -189,8 +189,11 @@ class ComponentesDeOp(View):
 
 
 class OpConserto(View):
-    template_name = 'lotes/conserto.html'
-    title_name = 'Produtos em conserto'
+
+    def __init__(self):
+        super().__init__()
+        self.template_name = 'lotes/conserto.html'
+        self.title_name = 'Produtos em conserto'
 
     def mount_context(self, cursor):
         context = {}
