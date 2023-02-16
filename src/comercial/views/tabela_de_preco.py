@@ -11,9 +11,12 @@ import comercial.queries as queries
 
 
 class TabelaDePreco(View):
-    Form_class = forms.TabelaDePrecoForm
-    template_name = 'comercial/tabela_de_preco.html'
-    title_name = 'Tabela de preços'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.TabelaDePrecoForm
+        self.template_name = 'comercial/tabela_de_preco.html'
+        self.title_name = 'Tabela de preços'
 
     def mount_context(self, cursor, tabela):
         context = {'tabela': tabela}

@@ -13,9 +13,12 @@ import contabil.queries as queries
 
 
 class RemessaIndustrNF(View):
-    Form_class = forms.RemessaIndustrNFForm
-    template_name = 'contabil/remeindunf.html'
-    title_name = 'Industrialização por NF de remessa'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.RemessaIndustrNFForm
+        self.template_name = 'contabil/remeindunf.html'
+        self.title_name = 'Industrialização por NF de remessa'
 
     def get(self, request, *args, **kwargs):
         if 'nf' in kwargs:

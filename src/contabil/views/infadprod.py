@@ -14,9 +14,12 @@ import contabil.queries as queries
 
 
 class InfAdProd(View):
-    Form_class = forms.InfAdProdForm
-    template_name = 'contabil/infadprod.html'
-    title_name = 'Itens de pedido'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.InfAdProdForm
+        self.template_name = 'contabil/infadprod.html'
+        self.title_name = 'Itens de pedido'
 
     def mount_context(self, pedido):
         context = {

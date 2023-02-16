@@ -16,9 +16,12 @@ def index(request):
 
 
 class FichaCliente(View):
-    Form_class = forms.ClienteForm
-    template_name = 'comercial/ficha_cliente.html'
-    titulo = 'Ficha do Cliente (duplicatas)'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.ClienteForm
+        self.template_name = 'comercial/ficha_cliente.html'
+        self.titulo = 'Ficha do Cliente (duplicatas)'
 
     def get(self, request, *args, **kwargs):
         if 'cnpj' not in kwargs:

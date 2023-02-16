@@ -24,14 +24,15 @@ from beneficia.queries import (
 
 class Ob(View):
 
-    Form_class = ObForm
-    template_name = 'beneficia/ob.html'
-    title_name = 'OB'
-
-    cleanned_fields_to_context = cleanned_fields_to_context
-    context_to_form_post = context_to_form_post
-
     def __init__(self):
+        super().__init__()
+        self.Form_class = ObForm
+        self.template_name = 'beneficia/ob.html'
+        self.title_name = 'OB'
+
+        self.cleanned_fields_to_context = cleanned_fields_to_context
+        self.context_to_form_post = context_to_form_post
+
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):

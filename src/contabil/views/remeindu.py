@@ -11,9 +11,12 @@ import contabil.queries as queries
 
 
 class RemessaIndustr(View):
-    Form_class = forms.RemessaIndustrForm
-    template_name = 'contabil/remeindu.html'
-    title_name = 'Industrialização por OP'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.RemessaIndustrForm
+        self.template_name = 'contabil/remeindu.html'
+        self.title_name = 'Industrialização por OP'
 
     def get(self, request):
         context = {'titulo': self.title_name}

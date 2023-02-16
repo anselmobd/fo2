@@ -17,14 +17,15 @@ from beneficia.queries.ot import busca_ot
 
 class Ot(View):
 
-    Form_class = OtForm
-    template_name = 'beneficia/ot.html'
-    title_name = 'OT'
-
-    cleanned_fields_to_context = cleanned_fields_to_context
-    context_to_form_post = context_to_form_post
-
     def __init__(self):
+        super().__init__()
+        self.Form_class = OtForm
+        self.template_name = 'beneficia/ot.html'
+        self.title_name = 'OT'
+
+        self.cleanned_fields_to_context = cleanned_fields_to_context
+        self.context_to_form_post = context_to_form_post
+
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
