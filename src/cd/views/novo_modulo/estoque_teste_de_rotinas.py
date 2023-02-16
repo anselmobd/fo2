@@ -17,7 +17,7 @@ from cd.queries.novo_modulo import refs_em_palets
 class NovoEstoque(O2BaseGetPostView):
 
     def __init__(self):
-        super(NovoEstoque, self).__init__()
+        super().__init__()
         self.Form_class = NovoEstoqueForm
         self.cleaned_data2self = True
         self.template_name = 'cd/novo_modulo/estoque.html'

@@ -25,7 +25,7 @@ from lotes.queries.pedido.ped_inform import ped_inform
 class RastreabilidadeView(O2BaseGetPostView):
 
     def __init__(self):
-        super(RastreabilidadeView, self).__init__()
+        super().__init__()
         self.Form_class = Forms2().Pedido
         self.template_name = 'lotes/rastreabilidade.html'
         self.title_name = 'Rastreabilidade'

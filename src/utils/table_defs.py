@@ -93,7 +93,7 @@ class TableDefs(object):
             Padrões disponíveis para 'style':
                 text-align
         '''
-        super(TableDefs, self).__init__()
+        super().__init__()
         self.kwargs = kwargs
         self.default_kwargs()
 

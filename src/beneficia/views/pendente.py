@@ -18,7 +18,7 @@ from beneficia.queries.pendente import query as pendente_query
 class Pendente(O2BaseGetPostView):
 
     def __init__(self):
-        super(Pendente, self).__init__()
+        super().__init__()
         self.Form_class = PendenteForm
         self.template_name = 'beneficia/pendente.html'
         self.title_name = 'Pendente'

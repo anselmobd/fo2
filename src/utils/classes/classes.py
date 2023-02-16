@@ -35,7 +35,7 @@ class NotLoggedInUserException(Exception):
     '''
     def __init__(self, val='No users have been logged in'):
         self.val = val
-        super(NotLoggedInUserException, self).__init__()
+        super().__init__()
 
     def __str__(self):
         return self.val
@@ -66,7 +66,7 @@ class LoggedInUser(SingletonBaseMeta):
 class AcessoInterno_InternoNotDefined_Exception(Exception):
     def __init__(self, val='Não foi verificado se o acesso é interno'):
         self.val = val
-        super(AcessoInterno_InternoNotDefined_Exception, self).__init__()
+        super().__init__()
 
     def __str__(self):
         return self.val

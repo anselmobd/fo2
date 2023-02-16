@@ -18,7 +18,7 @@ from beneficia.queries.busca_pedido import query as busca_pedido_query
 class BuscaPedido(O2BaseGetPostView):
 
     def __init__(self):
-        super(BuscaPedido, self).__init__()
+        super().__init__()
         self.Form_class = BuscaPedidoForm
         self.template_name = 'beneficia/busca_pedido.html'
         self.title_name = 'Busca Pedido'

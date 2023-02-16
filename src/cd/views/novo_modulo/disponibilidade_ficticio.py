@@ -29,7 +29,7 @@ from cd.queries.novo_modulo import (
 class DisponibilidadeFicticio(PermissionRequiredMixin, O2BaseGetPostView):
 
     def __init__(self):
-        super(DisponibilidadeFicticio, self).__init__()
+        super().__init__()
         self.permission_required = 'cd.can_view_grades_estoque'
         self.Form_class = DisponibilidadeFicticioForm
         self.cleaned_data2self = True

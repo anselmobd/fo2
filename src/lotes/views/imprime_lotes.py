@@ -20,7 +20,7 @@ from lotes.queries.lote import get_lotes
 class ImprimeLotes(LoginRequiredMixin, View):
 
     def __init__(self) -> None:
-        super(ImprimeLotes).__init__()
+        super().__init__()
         self.login_url = '/intradm/login/'
         self.Form_class = ImprimeLotesForm
         self.template_name = 'lotes/imprime_lotes.html'

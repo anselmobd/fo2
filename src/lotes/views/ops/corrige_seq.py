@@ -15,7 +15,7 @@ from lotes.queries.lote import get_per_oc
 class CorrigeSequenciamento(PermissionRequiredMixin, O2BaseGetPostView):
 
     def __init__(self):
-        super(CorrigeSequenciamento, self).__init__()
+        super().__init__()
         self.permission_required = 'lotes.can_repair_seq_op'
         self.Form_class = forms.OpForm
         self.template_name = 'lotes/corrige_sequenciamento.html'

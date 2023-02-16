@@ -20,7 +20,7 @@ from beneficia.queries import busca_ob
 class BuscaOb(View):
 
     def __init__(self):
-        super(BuscaOb, self).__init__()
+        super().__init__()
         self.Form_class = BuscaObForm
         self.template_name = 'beneficia/busca_ob.html'
         self.title_name = 'Busca OB'

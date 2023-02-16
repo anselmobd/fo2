@@ -17,7 +17,7 @@ import lotes.queries as queries
 class Historico(View):
 
     def __init__(self):
-        super(Historico, self).__init__()
+        super().__init__()
         self.Form_class = Forms2().Pedido
         self.template_name = 'lotes/historico.html'
         self.title_name = 'Histórico de pedido'

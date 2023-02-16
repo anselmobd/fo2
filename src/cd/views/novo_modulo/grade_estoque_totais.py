@@ -27,7 +27,7 @@ from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
 
     def __init__(self):
-        super(GradeEstoqueTotais, self).__init__()
+        super().__init__()
         self.permission_required = 'cd.can_view_grades_estoque'
         self.Form_class = cd.forms.GradeEstoqueTotaisForm
         self.cleaned_data2self = True

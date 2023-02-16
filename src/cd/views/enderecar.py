@@ -132,5 +132,5 @@ class Enderecar(PermissionRequiredMixin, View):
 class EnderecarMobile(Enderecar):
 
     def __init__(self):
-        super(EnderecarMobile, self).__init__()
+        super().__init__()
         self.template_name = 'cd/enderecar_m.html'

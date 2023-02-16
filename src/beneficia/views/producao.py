@@ -19,7 +19,7 @@ from beneficia.queries.producao import query as producao_query
 class Producao(O2BaseGetPostView):
 
     def __init__(self):
-        super(Producao, self).__init__()
+        super().__init__()
         self.Form_class = ProducaoForm
         self.template_name = 'beneficia/producao.html'
         self.title_name = 'Producao'

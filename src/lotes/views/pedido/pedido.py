@@ -25,7 +25,7 @@ from lotes.queries.pedido.pedido_filial import (
 class Pedido(View):
 
     def __init__(self):
-        super(Pedido, self).__init__()
+        super().__init__()
         self.Form_class = Forms2().Pedido
         self.title_name = 'Pedido'
         self.template_name = 'lotes/pedido.html'

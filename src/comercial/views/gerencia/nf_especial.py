@@ -15,7 +15,7 @@ from comercial.queries.gerencia import nf_especial
 class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
 
     def __init__(self):
-        super(NfEspecial, self).__init__()
+        super().__init__()
         self.permission_required = 'comercial.can_gerenciar_nf_especial'
         self.Form_class = comercial.forms.NfEspecialForm
         self.cleaned_data2self = True
