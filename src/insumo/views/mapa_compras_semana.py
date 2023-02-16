@@ -13,9 +13,12 @@ from insumo.forms import MapaComprasSemanaForm
 
 
 class MapaComprasSemana(View):
-    Form_class = MapaComprasSemanaForm
-    template_name = 'insumo/mapa_compras_semana.html'
-    title_name = 'Mapa de compras por semana'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = MapaComprasSemanaForm
+        self.template_name = 'insumo/mapa_compras_semana.html'
+        self.title_name = 'Mapa de compras por semana'
 
     def mount_context_pre(self, cursor, periodo, qtd_semanas):
         if periodo is None:

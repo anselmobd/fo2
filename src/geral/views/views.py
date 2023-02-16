@@ -86,10 +86,13 @@ class PainelView(View):
 
 
 class InformativoView(LoginRequiredMixin, View):
-    Form_class = forms.InformacaoModuloForm
-    title_name = 'Informativos'
-    context = {}
-    informativo_id = None
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.InformacaoModuloForm
+        self.title_name = 'Informativos'
+        self.context = {}
+        self.informativo_id = None
 
     def template_name(self, **kwargs):
         if kwargs['modulo'].startswith('agator-'):

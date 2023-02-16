@@ -14,9 +14,12 @@ from estoque import forms, queries
 
 
 class ValorMp(View):
-    Form_class = forms.ValorForm
-    template_name = 'estoque/valor_mp.html'
-    title_name = 'Valor de MP'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.ValorForm
+        self.template_name = 'estoque/valor_mp.html'
+        self.title_name = 'Valor de MP'
 
     def mount_context(
             self, cursor, nivel, positivos, zerados, negativos, preco_zerado,

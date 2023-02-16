@@ -12,9 +12,12 @@ from insumo.queries import rolo_inform
 
 
 class Rolos(View):
-    Form_class = insumo.forms.RolosForm
-    template_name = 'insumo/rolo.html'
-    title_name = 'Rolos'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = insumo.forms.RolosForm
+        self.template_name = 'insumo/rolo.html'
+        self.title_name = 'Rolos'
 
     def mount_context(
             self, cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf, page):

@@ -41,9 +41,12 @@ def index(request):
 
 
 class Busca(View):
-    Form_class = FiltroMpForm
-    template_name = 'insumo/busca.html'
-    title_name = 'Listagem de insumos'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = FiltroMpForm
+        self.template_name = 'insumo/busca.html'
+        self.title_name = 'Listagem de insumos'
 
     def mount_context(self, cursor, filtro, conta_estoque, tipo_conta_estoque):
         context = {'filtro': filtro}
@@ -122,9 +125,12 @@ def rolo_json(request, *args, **kwargs):
 
 
 class RolosBipados(View):
-    Form_class = RolosBipadosForm
-    template_name = 'insumo/rolos_bipados.html'
-    title_name = 'Rolos Bipados'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = RolosBipadosForm
+        self.template_name = 'insumo/rolos_bipados.html'
+        self.title_name = 'Rolos Bipados'
 
     def mount_context(self, cursor, dispositivo, ref, cor, data_de, data_ate):
         context = {}
@@ -225,10 +231,13 @@ class RolosBipados(View):
 
 
 class BipaRolo(PermissionRequiredMixin, View):
-    permission_required = 'geral.can_beep_rolo'
-    Form_class = BipaRoloForm
-    template_name = 'insumo/bipa_rolo.html'
-    title_name = 'Bipa rolo'
+
+    def __init__(self):
+        super().__init__()
+        self.permission_required = 'geral.can_beep_rolo'
+        self.Form_class = BipaRoloForm
+        self.template_name = 'insumo/bipa_rolo.html'
+        self.title_name = 'Bipa rolo'
 
     def mount_context(self, request, form):
         cursor = db_cursor_so(request)
@@ -301,9 +310,12 @@ class BipaRolo(PermissionRequiredMixin, View):
 
 
 class Necessidade(View):
-    Form_class = NecessidadeForm
-    template_name = 'insumo/necessidade.html'
-    title_name = 'Necessidade'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = NecessidadeForm
+        self.template_name = 'insumo/necessidade.html'
+        self.title_name = 'Necessidade'
 
     def mount_context(
             self, cursor, op, data_corte, data_corte_ate, periodo_corte,
@@ -417,9 +429,12 @@ class Necessidade(View):
 
 
 class Receber(View):
-    Form_class = ReceberForm
-    template_name = 'insumo/receber.html'
-    title_name = 'A Receber'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = ReceberForm
+        self.template_name = 'insumo/receber.html'
+        self.title_name = 'A Receber'
 
     def mount_context(self, cursor, insumo, conta_estoque, recebimento):
         context = {}
@@ -508,9 +523,12 @@ class Receber(View):
 
 
 class Estoque(View):
-    Form_class = EstoqueForm
-    template_name = 'insumo/estoque.html'
-    title_name = 'Estoque'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = EstoqueForm
+        self.template_name = 'insumo/estoque.html'
+        self.title_name = 'Estoque'
 
     def mount_context(self, cursor, insumo, conta_estoque):
         context = {}
@@ -591,9 +609,12 @@ class Estoque(View):
 
 
 class MapaPorRefs(View):
-    Form_class = MapaRefsForm
-    template_name = 'insumo/mapa_ref.html'
-    title_name = 'Insumos para mapa de compras'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = MapaRefsForm
+        self.template_name = 'insumo/mapa_ref.html'
+        self.title_name = 'Insumos para mapa de compras'
 
     def mount_context(self, cursor, insumo, conta_estoque, necessidade):
         context = {}
@@ -664,8 +685,11 @@ class MapaPorRefs(View):
 
 
 class MapaNecessidadeDetalhe(View):
-    template_name = 'insumo/necessidade_detalhe.html'
-    title_name = 'Detalhe de necessidade de insumo em uma semana'
+
+    def __init__(self):
+        super().__init__()
+        self.template_name = 'insumo/necessidade_detalhe.html'
+        self.title_name = 'Detalhe de necessidade de insumo em uma semana'
 
     def __init__(self, *args, **kwargs):
         super(MapaNecessidadeDetalhe, self).__init__(*args, **kwargs)
@@ -772,9 +796,12 @@ def float16digits(qtd):
 
 
 class Previsao(View):
-    Form_class = PrevisaoForm
-    template_name = 'insumo/previsao.html'
-    title_name = 'Previsão'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = PrevisaoForm
+        self.template_name = 'insumo/previsao.html'
+        self.title_name = 'Previsão'
 
     def mount_context(self, cursor, periodo):
         context = {}
@@ -853,8 +880,11 @@ class Previsao(View):
 
 
 class Necessidade1Previsao(View):
-    template_name = 'insumo/necessidade_1_previsao.html'
-    title_name = 'Necessidade de insumos da previsão'
+
+    def __init__(self):
+        super().__init__()
+        self.template_name = 'insumo/necessidade_1_previsao.html'
+        self.title_name = 'Necessidade de insumos da previsão'
 
     def mount_context(self, cursor, periodo):
         context = {}
@@ -971,8 +1001,11 @@ class Necessidade1Previsao(View):
 
 
 class NecessidadesPrevisoes(View):
-    template_name = 'insumo/necessidades_previsoes.html'
-    title_name = 'Necessidades das Previsões'
+
+    def __init__(self):
+        super().__init__()
+        self.template_name = 'insumo/necessidades_previsoes.html'
+        self.title_name = 'Necessidades das Previsões'
 
     def mount_context(self, cursor):
         context = {}
@@ -1088,9 +1121,12 @@ class NecessidadesPrevisoes(View):
 
 
 class MapaPorSemana(View):
-    Form_class = MapaPorSemanaForm
-    template_name = 'insumo/mapa_sem.html'
-    title_name = 'Mapa de compras por semana (old1)'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = MapaPorSemanaForm
+        self.template_name = 'insumo/mapa_sem.html'
+        self.title_name = 'Mapa de compras por semana (old1)'
 
     def mount_context_pre(self, cursor, periodo, qtd_semanas):
         if periodo is None:
@@ -1277,9 +1313,12 @@ def mapa_sem_ref(request, item, dtini, nsem):
 
 
 class MapaSemanal(View):
-    Form_class = MapaSemanalForm
-    template_name = 'insumo/mapa_semanal.html'
-    title_name = 'Mapa de compras por semana (Rápido)'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = MapaSemanalForm
+        self.template_name = 'insumo/mapa_semanal.html'
+        self.title_name = 'Mapa de compras por semana (Rápido)'
 
     def mount_context_pre(self, periodo):
         if periodo is None:

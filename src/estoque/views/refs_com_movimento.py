@@ -9,9 +9,12 @@ from estoque import forms, queries
 
 
 class RefsComMovimento(View):
-    Form_class = forms.InventarioExpedicaoForm
-    template_name = 'estoque/refs_com_movimento.html'
-    title_name = 'Referências com movimento'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.InventarioExpedicaoForm
+        self.template_name = 'estoque/refs_com_movimento.html'
+        self.title_name = 'Referências com movimento'
 
     def mount_context(self, cursor, data_ini):
         context = {

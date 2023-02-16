@@ -13,9 +13,11 @@ from estoque import classes, forms, models
 
 class Transferencia(PermissionRequiredMixin, View):
 
-    Form_class = forms.TransferenciaForm
-    template_name = 'estoque/transferencia.html'
-    title_name = 'Movimentações'
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.TransferenciaForm
+        self.template_name = 'estoque/transferencia.html'
+        self.title_name = 'Movimentações'
 
     cleanned_fields_to_context = cleanned_fields_to_context
 

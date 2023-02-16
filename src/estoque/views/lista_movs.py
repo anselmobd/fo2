@@ -16,9 +16,11 @@ from estoque import forms, models
 
 class ListaMovimentos(View):
 
-    Form_class = forms.ListaMovimentosForm
-    template_name = 'estoque/lista_movs.html'
-    title_name = 'Movimentações de um documento'
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.ListaMovimentosForm
+        self.template_name = 'estoque/lista_movs.html'
+        self.title_name = 'Movimentações de um documento'
 
     cleanned_fields_to_context = cleanned_fields_to_context
     context_to_form_post = context_to_form_post

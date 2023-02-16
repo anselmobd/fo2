@@ -11,9 +11,12 @@ from estoque import forms, queries
 
 
 class ConfrontaEstoque(View):
-    Form_class = forms.ConfrontaEstoqueForm
-    template_name = 'estoque/confronta_estoque.html'
-    title_name = 'Confronta estoque e transações'
+
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.ConfrontaEstoqueForm
+        self.template_name = 'estoque/confronta_estoque.html'
+        self.title_name = 'Confronta estoque e transações'
 
     def mount_context(self, request, cursor, ref, tam, cor, deposito, botao):
         context = {

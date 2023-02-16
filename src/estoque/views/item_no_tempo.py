@@ -22,9 +22,11 @@ from estoque.functions import transfo2_num_doc, transfo2_num_doc_dt
 
 class ItemNoTempo(View):
 
-    Form_class = forms.ItemNoTempoForm
-    template_name = 'estoque/item_no_tempo.html'
-    title_name = 'Item no tempo'
+    def __init__(self):
+        super().__init__()
+        self.Form_class = forms.ItemNoTempoForm
+        self.template_name = 'estoque/item_no_tempo.html'
+        self.title_name = 'Item no tempo'
 
     cleanned_fields_to_context = cleanned_fields_to_context
 
