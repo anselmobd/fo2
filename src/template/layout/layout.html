@@ -164,13 +164,13 @@
     //   monkey.getElementsByClassName('content')[0].style.display="none";
     // }
 
-    function o2PreventNonNumericalInput(event) {
+    function o2PreventNonNumInput(event) {
       var charStr = String.fromCharCode(event.keyCode);
       if ( (event.keyCode > 31) && (!charStr.match(/^[0-9]+$/)) )
         event.preventDefault();
     }
 
-    function o2OnEnterCleanNonNumericalInputAndStay(event) {
+    function o2OnEnterCleanNonNumInputAndStay(event) {
       if (event.keyCode === 13) {
         clean = event.target.value.replace(/\D/g,'');
         if (event.target.value != clean) {
@@ -180,17 +180,17 @@
       }
     }
 
-    function o2CleanNonNumericalKeys(event) {
+    function o2CleanNonNumKeys(event) {
       event.target.value = event.target.value.replace(/\D/g,'');
     }
 
-    function o2PreventNonAlphaNumericalInput(event) {
+    function o2PreventNonANumInput(event) {
       var charStr = String.fromCharCode(event.keyCode);
       if ( (event.keyCode > 31) && (!charStr.match(/^[0-9A-Za-z]+$/)) )
         event.preventDefault();
     }
 
-    function o2OnEnterCleanNonAlphaNumericalInputAndStay(event) {
+    function o2OnEnterCleanNonANumInputAndStay(event) {
       if (event.keyCode === 13) {
         clean = event.target.value.replace(/[^0-9A-Za-z]/g,'');
         if (event.target.value != clean) {
@@ -200,17 +200,17 @@
       }
     }
 
-    function o2CleanNonAlphaNumericalKeys(event) {
+    function o2CleanNonANumKeys(event) {
       event.target.value = event.target.value.replace(/[^0-9A-Za-z]/g,'');
     }
 
-    function o2PreventNonUpperAlphaNumericalInput(event) {
+    function o2NoNonUpANumInput(event) {
       var charStr = String.fromCharCode(event.keyCode);
       if ( (event.keyCode > 31) && (!charStr.match(/^[0-9A-Z]+$/)) )
         event.preventDefault();
     }
 
-    function o2OnEnterCleanNonUpperAlphaNumericalInputAndStay(event) {
+    function o2OnEnterCleanNonUpANumInputAndStay(event) {
       if (event.keyCode === 13) {
         clean = event.target.value.replace(/[^0-9A-Z]/g,'');
         if (event.target.value != clean) {
@@ -220,7 +220,7 @@
       }
     }
 
-    function o2CleanNonUpperAlphaNumericalKeys(event) {
+    function o2CleanNonUpANumKeys(event) {
       event.target.value = event.target.value.replace(/[^0-9A-Z]/g,'');
     }
 
