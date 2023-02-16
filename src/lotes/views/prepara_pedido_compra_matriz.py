@@ -62,6 +62,7 @@ def cria_pedido_compra_matriz(cursor, pedido_filial):
 
         return False
 
+
 class PreparaPedidoCompraMatriz(View):
 
     def process(self, request, kwargs):
@@ -96,4 +97,3 @@ class PreparaPedidoCompraMatriz(View):
     def get(self, request, *args, **kwargs):
         result = self.process(request, kwargs)
         return JsonResponse(self.response(result), safe=False)
-

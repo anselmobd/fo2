@@ -13,6 +13,7 @@ import lotes.queries.lote
 import lotes.queries.os
 from lotes.queries.lote import get_lotes
 
+
 class Os(View):
 
     def __init__(self):
