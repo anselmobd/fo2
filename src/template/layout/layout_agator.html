@@ -137,6 +137,46 @@
       event.target.value = event.target.value.replace(/\D/g,'');
     }
 
+    function o2PreventNonAlphaNumericalInput(event) {
+      var charStr = String.fromCharCode(event.keyCode);
+      if ( (event.keyCode > 31) && (!charStr.match(/^[0-9A-Za-z]+$/)) )
+        event.preventDefault();
+    }
+
+    function o2OnEnterCleanNonAlphaNumericalInputAndStay(event) {
+      if (event.keyCode === 13) {
+        clean = event.target.value.replace(/[^0-9A-Za-z]/g,'');
+        if (event.target.value != clean) {
+          event.preventDefault();
+          event.target.value = clean;
+        }
+      }
+    }
+
+    function o2CleanNonAlphaNumericalKeys(event) {
+      event.target.value = event.target.value.replace(/[^0-9A-Za-z]/g,'');
+    }
+
+    function o2PreventNonUpperAlphaNumericalInput(event) {
+      var charStr = String.fromCharCode(event.keyCode);
+      if ( (event.keyCode > 31) && (!charStr.match(/^[0-9A-Z]+$/)) )
+        event.preventDefault();
+    }
+
+    function o2OnEnterCleanNonUpperAlphaNumericalInputAndStay(event) {
+      if (event.keyCode === 13) {
+        clean = event.target.value.replace(/[^0-9A-Z]/g,'');
+        if (event.target.value != clean) {
+          event.preventDefault();
+          event.target.value = clean;
+        }
+      }
+    }
+
+    function o2CleanNonUpperAlphaNumericalKeys(event) {
+      event.target.value = event.target.value.replace(/[^0-9A-Z]/g,'');
+    }
+
   </script>
   {% block footer_space %}{% endblock %}
 </body>

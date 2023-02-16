@@ -61,5 +61,13 @@ class Fields2():
     def Referencia(self):
         return mount_fields.MountCharFieldForm(
             'referencia',
-            widget_attrs={'size': 5},
+            widget_attrs={
+                'size': 5,
+                'pattern': "[0-9A-Z]{5}",
+                'onkeypress': "o2PreventNonUpperAlphaNumericalInput(event);",
+                'onkeydown': "o2OnEnterCleanNonUpperAlphaNumericalInputAndStay(event);",
+                'onblur': "o2CleanNonUpperAlphaNumericalKeys(event);",
+                'oninvalid': "this.setCustomValidity('Apenas letras e números. Com 5 caracteres.');",
+                'oninput': "this.setCustomValidity('');",
+            },
         )
