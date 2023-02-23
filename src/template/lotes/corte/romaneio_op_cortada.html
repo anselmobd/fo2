@@ -46,7 +46,7 @@
 {% block content %}
   <h4>Gera pedidos para NF para OPs apontadas como cortadas pelo Corte</h4>
   <div class="noprint">
-    <form action="{% url 'producao:romaneio_corte' %}" method="post">
+    <form action="{% url 'producao:romaneio_op_cortada' %}" method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <input type="submit" value="Busca"/>
