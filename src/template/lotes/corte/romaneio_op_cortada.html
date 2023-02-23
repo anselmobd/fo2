@@ -44,7 +44,7 @@
 {% endblock %}
 
 {% block content %}
-  <h4>Gera pedidos para NF para OPs apontadas como cortadas pelo Corte</h4>
+  <h4>Gera pedidos para NF de OPs apontadas como cortadas pelo Corte</h4>
   <div class="noprint">
     <form action="{% url 'producao:romaneio_op_cortada' %}" method="post">
       {% csrf_token %}
@@ -54,6 +54,12 @@
   </div>
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+    {% if teste.dados %}
+      <table>
+        {% include "layout/thead_generic.html" with data=teste.headers style=teste.style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=teste.fields data=teste.dados group=teste.group style=teste.style only %}
+      </table>
+    {% endif %}
     {% if dados %}
       <table>
         {% if legenda %}
