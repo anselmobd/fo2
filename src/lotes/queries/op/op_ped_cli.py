@@ -9,6 +9,22 @@ __all__ = ['query']
 
 
 def query(cursor, op):
+    """Busca informações de pedido e cliente de OP
+    Parametro:
+        op - uma OP ou uma lista de OPs
+    Retorno:
+        dictlist
+    """
+    
+    if isinstance(op, (tuple, list)):
+        ops = ", ".join(map(str, op))
+        condicao = f"IN ({ops})"
+    else:
+        condicao = f"= {op}"
+    filtra_op = f"""--
+        AND op.ORDEM_PRODUCAO {condicao}
+    """
+
     sql = f"""
         SELECT
           op.ORDEM_PRODUCAO OP
@@ -32,7 +48,8 @@ def query(cursor, op):
           ON cli.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND cli.CGC_4 = ped.CLI_PED_CGC_CLI4
          AND cli.CGC_2 = ped.CLI_PED_CGC_CLI2
-        WHERE op.ORDEM_PRODUCAO = {op}
+        WHERE 1=1
+          {filtra_op} -- filtra_op
         ORDER BY 
           op.ORDEM_PRODUCAO
     """
