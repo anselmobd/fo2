@@ -13,6 +13,7 @@ from lotes.views.corte import (
     marca_op_cortada,
     op_cortada,
     romaneio_corte,
+    romaneio_op_cortada,
 )
 from lotes.views.ops import seq_erro
 from lotes.views.analise import produzir_grade_empenho
@@ -218,6 +219,9 @@ urlpatterns = [
 
     re_path(r'^romaneio_corte/$',
         romaneio_corte.RomaneioCorte.as_view(), name='romaneio_corte'),
+
+    re_path(r'^romaneio_op_cortada/$',
+        romaneio_op_cortada.RomaneioOpCortada.as_view(), name='romaneio_op_cortada'),
 
     re_path(r'^op_cortada/(?P<data>[^/]+)?$',
         op_cortada.OpCortada.as_view(), name='op_cortada'),
