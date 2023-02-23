@@ -96,7 +96,7 @@ def pedidos_filial_na_data(
     Filtros
     - data: data do pedido (data de finalização do estágio 15 das OPs)
     - data_de: data do pedido mínima
-    - fansatia: nome fantasia do cliente do pedido da OP ou "estque"
+    - fantasia: nome fantasia do cliente do pedido da OP ou "estoque"
         em caso de OP de estoque
     - op: OP produzida na filial
     - pedido_cliente: código de pedido do cliente
