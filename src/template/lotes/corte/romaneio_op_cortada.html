@@ -119,7 +119,7 @@
       return false;
     }
 
-    var link = '{% url 'producao:prepara_pedido_corte' '0000-00-00' 'cliente' 'ped999' %}';
+    var link = '{% url 'producao:prepara_pedido_op_cortada' '0000-00-00' 'cliente' 'ped999' %}';
     link = link.replace('0000-00-00', '{{form.data.value}}');
     link = link.replace('cliente', slug);
     link = link.replace('ped999', pedido);
