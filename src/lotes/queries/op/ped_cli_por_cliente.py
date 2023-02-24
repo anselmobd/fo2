@@ -1,8 +1,15 @@
 from collections import OrderedDict
 from pprint import pprint
 
-from lotes.models.op import OpCortada
+from django.core.cache import cache
 
+from utils.cache import timeout
+from utils.functions import (
+    fo2logger,
+    my_make_key_cache_slug,
+)
+
+from lotes.models.op import OpCortada
 from lotes.queries.op import (
     op_itens,
     op_ped_cli,
@@ -57,9 +64,24 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
     return clientes
 
 
-def mount(cursor, dt, cliente_slug=None):
-    """Monta informações para pedidos para NF filial-matriz"""
+def mount(cursor, dt, cliente_slug=None, get_cached=False):
+    """
+    Monta informações para pedidos para NF filial-matriz
+    em dict por cliente_slug
+    """
     
+    key_cache = my_make_key_cache_slug(
+        'lotes/queries/op/ped_cli_por_cliente/mount',
+        dt, cliente_slug,
+    )
+    if get_cached:
+        dados = cache.get(key_cache)
+        if dados:
+            fo2logger.info('cached '+key_cache)
+            return dados
+        else:
+            return {}
+
     dados_ops = OpCortada.objects.filter(when__date__lte=dt)
     dados_ops = dados_ops.values()
     ops = [
@@ -76,4 +98,9 @@ def mount(cursor, dt, cliente_slug=None):
 
     itens_ops = op_itens.query(cursor, op=ops)
 
-    return ped_cli_por_cliente(ped_cli_ops, itens_ops)
+    dados = ped_cli_por_cliente(ped_cli_ops, itens_ops)
+
+    cache.set(key_cache, dados, timeout=timeout.HOUR)
+    fo2logger.info('calculated '+key_cache)
+
+    return dados
