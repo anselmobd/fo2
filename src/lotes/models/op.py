@@ -174,6 +174,10 @@ class OpCortada(models.Model):
         Colaborador,
         on_delete=models.PROTECT,
     )
+    pedido_filial = models.IntegerField(
+        null=True,
+        blank=True,
+    )
 
     # TableHeap - Fields - start
     log = models.IntegerField(
