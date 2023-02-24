@@ -8,6 +8,7 @@ import time
 from pprint import pprint, pformat
 
 from django.conf import settings
+from django.utils.text import slugify
 
 from utils.classes import AcessoInterno
 
@@ -267,6 +268,10 @@ def my_make_key_cache(*args):
     key = hashlib.md5(key.encode('utf-8')).hexdigest()
     key = '_'.join([args[0], key])
     return key
+
+
+def my_make_key_cache_slug(*args):
+    return slugify(my_make_key_cache(*args))
 
 
 def make_key_cache_OFF(ignore=[], obey=[]):
