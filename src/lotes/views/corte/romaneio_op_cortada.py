@@ -15,13 +15,12 @@ from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms.corte.romaneio_op_cortada import RomaneioOpCortadaForm
 from lotes.models.op import OpCortada
-from lotes.queries.producao.romaneio_corte import (
-    producao_ops_finalizadas,
-)
 from lotes.queries.op import (
     op_itens,
     op_ped_cli,
 )
+
+__all__ = ['RomaneioOpCortada']
 
 
 class RomaneioOpCortada(O2BaseGetPostView):
@@ -85,23 +84,17 @@ class RomaneioOpCortada(O2BaseGetPostView):
         locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
 
         dados_ops = OpCortada.objects.filter(when__date__lte=self.data)
-        print(dados_ops.query)
         dados_ops = dados_ops.values()
-        pprint(dados_ops)
         ops = [
             row['op']
             for row in dados_ops
         ]
-        pprint(ops)
 
         itens_ops = op_itens.query(self.cursor, op=ops)
-        pprint(itens_ops)
 
         ped_cli_ops = op_ped_cli.query(self.cursor, op=ops)
-        pprint(ped_cli_ops)
 
         clientes = self.ped_cli_por_cliente(ped_cli_ops, itens_ops)
-        pprint(clientes)
 
         cli_dados = []
         for cli_vals in clientes.values():
@@ -109,9 +102,7 @@ class RomaneioOpCortada(O2BaseGetPostView):
                 'cliente': cli_vals['cliente'],
                 'obs': cli_vals['obs'],
             }
-            pprint(cli_vals['itens'])
             for item in cli_vals['itens']:
-                pprint(item)
                 row = row_cli.copy()
                 row['item'] = item
                 row['qtd'] = cli_vals['itens'][item]
@@ -166,7 +157,7 @@ class RomaneioOpCortada(O2BaseGetPostView):
         ):
             self.context.update({
                 'clientes': {
-                    c: clientes[c]['cliente']
-                    for c in clientes
+                    cliente: clientes[cliente]['cliente']
+                    for cliente in clientes
                 },
             })
