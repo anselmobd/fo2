@@ -44,7 +44,7 @@
 {% endblock %}
 
 {% block content %}
-  <h4>Gera pedidos para NF de OPs apontadas como cortadas pelo Corte</h4>
+  <h4>Gera pedidos para NF filial-matriz de OPs apontadas como cortadas pelo Corte</h4>
   <div class="noprint">
     <form action="{% url 'producao:romaneio_op_cortada' %}" method="post">
       {% csrf_token %}
@@ -59,44 +59,35 @@
         {% include "layout/thead_generic.html" with data=teste.headers style=teste.style thclass='sticky' only %}
         {% include "layout/tbody_generic.html" with fields=teste.fields data=teste.dados group=teste.group style=teste.style only %}
       </table>
-    {% endif %}
-    {% if dados %}
-      <table>
-        {% if legenda %}
-          <p>{{ legenda|safe }}</p>
-        {% endif %}
-        {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
-        {% include "layout/tbody_generic.html" with fields=fields data=dados group=group style=style only %}
-      </table>
-      {% if clientes %}
-        <h3>Prepara pedidos Filial->Matriz</h3>
-        <ul>
-        {% for cliente in clientes %}
-          <li><label>{{clientes|get_item:cliente}}</label></li>
-          <ul>
-            <li>Pedido: <span id="pedido_preparado_{{cliente}}" style="display:none"></span>
-            <input type="decimal" placeholder="000" required
-              name="pedido_{{cliente}}" id="pedido_{{cliente}}"
-              maxlength="6" size="6">
-            <input type="submit" 
-              name="submit_{{cliente}}" id="submit_{{cliente}}"
-              value="Prepara" onclick="return Prepara('{{cliente}}');">
-            <span class="load-3" id="running_{{cliente}}" style="display:none">
-              <div class="line"></div>
-              <div class="line"></div>
-              <div class="line"></div>
-            </span>
-            <span id="mensagem_{{cliente}}" style="display:none"></span>
-            <span class="glyphicon glyphicon-ok-sign" id="runok_{{cliente}}" style="display:none;font-size:1em;color:darkgreen" aria-hidden="true"></span>
-            <span class="glyphicon glyphicon-alert" id="runerr_{{cliente}}" style="display:none;font-size:1em;color:darkred" aria-hidden="true"></span>
-            </span>
-            </li>
-          </ul>
-        {% endfor %}
-      </ul>
-      {% endif %}
     {% else %}
       <h4>Nenhuma produção encontrada</h4>
+    {% endif %}
+    {% if clientes %}
+      <h3>Prepara pedidos Filial->Matriz</h3>
+      <ul>
+      {% for cliente in clientes %}
+        <li><label>{{clientes|get_item:cliente}}</label></li>
+        <ul>
+          <li>Pedido: <span id="pedido_preparado_{{cliente}}" style="display:none"></span>
+          <input type="decimal" placeholder="000" required
+            name="pedido_{{cliente}}" id="pedido_{{cliente}}"
+            maxlength="6" size="6">
+          <input type="submit" 
+            name="submit_{{cliente}}" id="submit_{{cliente}}"
+            value="Prepara" onclick="return Prepara('{{cliente}}');">
+          <span class="load-3" id="running_{{cliente}}" style="display:none">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+          </span>
+          <span id="mensagem_{{cliente}}" style="display:none"></span>
+          <span class="glyphicon glyphicon-ok-sign" id="runok_{{cliente}}" style="display:none;font-size:1em;color:darkgreen" aria-hidden="true"></span>
+          <span class="glyphicon glyphicon-alert" id="runerr_{{cliente}}" style="display:none;font-size:1em;color:darkred" aria-hidden="true"></span>
+          </span>
+          </li>
+        </ul>
+      {% endfor %}
+    </ul>
     {% endif %}
   {% endif %}
 {% endblock %}
