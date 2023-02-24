@@ -110,6 +110,15 @@
     runok_el.style.display = "none";
     runerr_el.style.display = "none";
 
+    if (pedido == '') {
+      console.log('Sem pedido');
+      msg_el.innerHTML = 'Sem pedido';
+      msg_el.style.display = "inline";
+      runerr_el.style.display = "inline";
+      running_el.style.display = "none";
+      return false;
+    }
+
     var link = '{% url 'producao:prepara_pedido_corte' '0000-00-00' 'cliente' 'ped999' %}';
     link = link.replace('0000-00-00', '{{form.data.value}}');
     link = link.replace('cliente', slug);
