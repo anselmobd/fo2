@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from pprint import pprint
 
 from django.http import JsonResponse
@@ -11,9 +12,13 @@ from lotes.queries.pedido.ped_alter import (
     altera_pedido,
     altera_pedido_itens,
 )
+from lotes.queries.op import ped_cli_por_cliente
 from lotes.queries.pedido.mensagem_nf import cria_mens_nf
 from lotes.queries.producao.romaneio_corte import producao_ops_finalizadas
 from lotes.views.prepara_pedido_compra_matriz import cria_pedido_compra_matriz
+
+
+__all__ = ['PreparaPedidoOpCortada']
 
 
 class PreparaPedidoOpCortada(View):
@@ -21,12 +26,18 @@ class PreparaPedidoOpCortada(View):
     def process(self, request, kwargs):
         cursor = db_cursor_so(request)
 
-        data = kwargs['data']
+        data = datetime.strptime(kwargs['data'], '%Y-%m-%d').date()
         cliente = kwargs['cliente']
         pedido = kwargs['pedido']
 
-        return ('ERRO', "Em desenvolvimento!")
+        clientes = ped_cli_por_cliente.get_cached(
+            cursor, dt=data, cliente_slug=cliente)
 
+        pprint(clientes)
+
+        if not clientes:
+            return ('ERRO', f"Dados de '{cliente}' não encontrados!")
+    
         dados = lotes.queries.pedido.ped_inform(cursor, pedido, empresa=3)
         if not dados:
             return ('ERRO', "Pedido não encontrado!")
@@ -38,14 +49,14 @@ class PreparaPedidoOpCortada(View):
             if re.search('^\[MPCFM\] ', dados[0]['OBSERVACAO']):
                 return ('ERRO', "Pedido já preparado!")
 
-        dados, clientes = producao_ops_finalizadas.query(
-            cursor, data, para_nf=True, cliente_slug=cliente)
+        # dados, clientes = producao_ops_finalizadas.query(
+        #     cursor, data, para_nf=True, cliente_slug=cliente)
 
         #   exemplos de observações:
-        # MPCFM - Movimentação de Peças Cortadas da Filial p/ Matriz; Data: 2022-03-16
+        # MOPCFM - Movimentação de OPs Cortadas da Filial p/ Matriz; Data: 2022-03-16
         # Produção para o cliente Renner. Pedido(5214524)-OP(34023), Pedido(5214547)-OP(34027)
         #   ou
-        # MPCFM - Movimentação de Peças Cortadas da Filial p/ Matriz; Data: 2022-03-16
+        # MOPCFM - Movimentação de OPs Cortadas da Filial p/ Matriz; Data: 2022-03-16
         # Produção para estoque. OP(34082, 34307, 34339, 34262, 34297)
 
         if cliente == 'estoque':
@@ -60,6 +71,7 @@ class PreparaPedidoOpCortada(View):
             )
 
         cria_mens_nf(cursor, pedido, observacao)
+        return ('ERRO', "Em desenvolvimento!")
 
         altera_pedido_itens(cursor, pedido, 302, 'RJ', dados)
 
