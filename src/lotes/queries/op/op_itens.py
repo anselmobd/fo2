@@ -33,7 +33,7 @@ def query(cursor, op):
         , l.PROCONF_ITEM COR
         , t.ORDEM_TAMANHO
         , l.PROCONF_SUBGRUPO TAM
-        , sum(l.QTDE_PECAS_PROG) QTD
+        , sum(l.QTDE_PECAS_PROG) MOV_QTD
         , l.ORDEM_PRODUCAO OP
         FROM PCPC_040 l -- lotes
         LEFT JOIN BASI_220 t -- tamanhos

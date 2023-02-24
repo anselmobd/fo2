@@ -64,16 +64,16 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
         cli_dict['dados'] = []
         for item_op in itens_ops_cli:
             try:
-                cli_dict['itens'][item_op['item']] += item_op['qtd']
+                cli_dict['itens'][item_op['item']] += item_op['mov_qtd']
             except KeyError:
-                cli_dict['itens'][item_op['item']] = item_op['qtd']
+                cli_dict['itens'][item_op['item']] = item_op['mov_qtd']
             cli_dict_dados_item = [
                 row
                 for row in cli_dict['dados']
                 if row['item'] == item_op['item']
             ]
             if cli_dict_dados_item:
-                cli_dict_dados_item[0]['mov_qtd'] += item_op['qtd']
+                cli_dict_dados_item[0]['mov_qtd'] += item_op['mov_qtd']
             else:
                 cli_dict['dados'].append({
                     'item': item_op['item'],
@@ -81,7 +81,7 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
                     'ref': item_op['ref'],
                     'tam': item_op['tam'],
                     'cor': item_op['cor'],
-                    'mov_qtd': item_op['qtd'],
+                    'mov_qtd': item_op['mov_qtd'],
                 })
 
     return clientes
