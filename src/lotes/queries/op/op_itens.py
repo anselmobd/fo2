@@ -14,6 +14,9 @@ def query(cursor, op):
         dictlist
     """
     
+    if not op:
+        return []
+
     if isinstance(op, (tuple, list)):
         ops = ", ".join(map(str, op))
         condicao = f"IN ({ops})"
