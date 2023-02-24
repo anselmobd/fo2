@@ -7,6 +7,8 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from utils.functions.strings import only_digits
+
 from lotes.queries.pedido import ped_inform
 from lotes.models.op import OpCortada
 from lotes.queries.pedido.ped_alter import (
@@ -29,6 +31,11 @@ class PreparaPedidoOpCortada(View):
         data = datetime.strptime(kwargs['data'], '%Y-%m-%d').date()
         cliente = kwargs['cliente']
         pedido = kwargs['pedido']
+
+        try:
+            pedido = int(only_digits(pedido))
+        except ValueError:
+            return ('ERRO', "Pedido inválido!")
 
         clientes = ped_cli_por_cliente.get_cached(
             cursor, dt=data, cliente_slug=cliente)
