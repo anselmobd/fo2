@@ -15,7 +15,7 @@ from lotes.queries.op import (
     op_ped_cli,
 )
 
-__all__ = ['mount']
+__all__ = ['mount', 'mount_all_and_cache', 'get_cached']
 
 
 def ped_cli_por_cliente(pedidos_ops, itens_ops):
@@ -64,7 +64,7 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
     return clientes
 
 
-def mount(cursor, dt, cliente_slug=None, get_cached=False):
+def mount(cursor, dt, cliente_slug=None, get_cached=False, or_calculate=False):
     """
     Monta informações para pedidos para NF filial-matriz
     em dict por cliente_slug
@@ -78,9 +78,16 @@ def mount(cursor, dt, cliente_slug=None, get_cached=False):
         dados = cache.get(key_cache)
         if dados:
             fo2logger.info('cached '+key_cache)
+            if cliente_slug:
+                dados = {
+                    cliente: dados[cliente]
+                    for cliente in dados
+                    if cliente == cliente_slug
+                }
             return dados
         else:
-            return {}
+            if not or_calculate:
+                return {}
 
     dados_ops = OpCortada.objects.filter(when__date__lte=dt)
     dados_ops = dados_ops.values()
@@ -104,3 +111,11 @@ def mount(cursor, dt, cliente_slug=None, get_cached=False):
     fo2logger.info('calculated '+key_cache)
 
     return dados
+
+
+def mount_all_and_cache(cursor, dt):
+    return mount(cursor, dt)
+
+
+def get_cached(cursor, dt, cliente_slug=None):
+    return mount(cursor, dt, cliente_slug=cliente_slug, get_cached=True)
