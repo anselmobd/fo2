@@ -35,7 +35,8 @@ class RomaneioOpCortada(O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
         locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
 
-        clientes = ped_cli_por_cliente.mount(self.cursor, dt=self.data)
+        clientes = ped_cli_por_cliente.mount_all_and_cache(
+            self.cursor, dt=self.data)
 
         if not clientes:
             return
