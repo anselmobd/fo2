@@ -15,6 +15,7 @@ from lotes.queries.op import (
     op_ped_cli,
 )
 
+
 __all__ = ['mount', 'mount_all_and_cache', 'get_cached']
 
 
@@ -60,13 +61,31 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
             if item_ops['op'] in cli_dict['ops']
         ]
         cli_dict['itens'] = OrderedDict()
+        cli_dict['dados'] = []
         for item_op in itens_ops_cli:
             try:
                 cli_dict['itens'][item_op['item']] += item_op['qtd']
             except KeyError:
                 cli_dict['itens'][item_op['item']] = item_op['qtd']
+            cli_dict_dados_item = [
+                row
+                for row in cli_dict['dados']
+                if row['item'] == item_op['item']
+            ]
+            if cli_dict_dados_item:
+                cli_dict_dados_item[0]['mov_qtd'] += item_op['qtd']
+            else:
+                cli_dict['dados'].append({
+                    'item': item_op['item'],
+                    'nivel': item_op['nivel'],
+                    'ref': item_op['ref'],
+                    'tam': item_op['tam'],
+                    'cor': item_op['cor'],
+                    'mov_qtd': item_op['qtd'],
+                })
 
     return clientes
+
 
 def mount(cursor, dt, cliente_slug=None, get_cached=False, or_calculate=False):
     """
@@ -117,8 +136,10 @@ def mount(cursor, dt, cliente_slug=None, get_cached=False, or_calculate=False):
 
     return dados
 
+
 def mount_all_and_cache(cursor, dt):
     return mount(cursor, dt)
+
 
 def get_cached(cursor, dt, cliente_slug=None):
     return mount(cursor, dt, cliente_slug=cliente_slug, get_cached=True)
