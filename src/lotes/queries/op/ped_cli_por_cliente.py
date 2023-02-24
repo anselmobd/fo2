@@ -57,7 +57,7 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
     return clientes
 
 
-def mount(cursor, dt):
+def mount(cursor, dt, cliente_slug=None):
     """Monta informações para pedidos para NF filial-matriz"""
     
     dados_ops = OpCortada.objects.filter(when__date__lte=dt)
@@ -67,8 +67,13 @@ def mount(cursor, dt):
         for row in dados_ops
     ]
 
-    itens_ops = op_itens.query(cursor, op=ops)
+    ped_cli_ops = op_ped_cli.query(cursor, op=ops, cliente_slug=cliente_slug)
 
-    ped_cli_ops = op_ped_cli.query(cursor, op=ops)
+    ops = [
+        row['op']
+        for row in ped_cli_ops
+    ]
+
+    itens_ops = op_itens.query(cursor, op=ops)
 
     return ped_cli_por_cliente(ped_cli_ops, itens_ops)
