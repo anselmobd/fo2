@@ -8,7 +8,7 @@ from utils.functions.queries import debug_cursor_execute
 __all__ = ['query']
 
 
-def query(cursor, op):
+def query(cursor, op, cliente_slug=None):
     """Busca informações de pedido e cliente de OP
     Parametro:
         op - uma OP ou uma lista de OPs
@@ -62,5 +62,12 @@ def query(cursor, op):
         if not row['ped_cli']:
             row['ped_cli'] = '-'
         row['cliente_slug'] = slugify(row['cliente'])
+
+    if cliente_slug:
+        dados = [
+            row
+            for row in dados
+            if row['cliente_slug'] == cliente_slug
+        ]
 
     return dados
