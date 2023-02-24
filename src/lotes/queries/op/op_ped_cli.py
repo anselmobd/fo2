@@ -15,7 +15,10 @@ def query(cursor, op, cliente_slug=None):
     Retorno:
         dictlist
     """
-    
+
+    if not op:
+        return []
+
     if isinstance(op, (tuple, list)):
         ops = ", ".join(map(str, op))
         condicao = f"IN ({ops})"
