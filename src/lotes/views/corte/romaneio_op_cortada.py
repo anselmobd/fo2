@@ -13,9 +13,8 @@ from utils.functions import untuple_keys_concat
 from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms.corte.romaneio_op_cortada import RomaneioOpCortadaForm
-from lotes.queries.op import (
-    ped_cli_por_cliente,
-)
+from lotes.queries.op import ped_cli_por_cliente
+
 
 __all__ = ['RomaneioOpCortada']
 
