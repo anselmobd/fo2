@@ -19,6 +19,7 @@ __all__ = ['mount', 'mount_all_and_cache', 'get_cached']
 
 
 def ped_cli_por_cliente(pedidos_ops, itens_ops):
+
     # Separa OPs por clientes e pedidos
     clientes = {}
     for pedido_op in pedidos_ops:
@@ -35,9 +36,11 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
         else:
             pedidos_do_cliente[pedido_op['ped_cli']].add(pedido_op['op'])
         clientes[slug]['ops'].add(pedido_op['op'])
+
     # Monta dados para pedido de faturamento filial-matriz
     for cli in clientes:
         cli_dict = clientes[cli]
+
         # Monta observação
         if cli == 'estoque':
             ops = ', '.join(map(str, cli_dict['pedidos']['-']))
@@ -49,6 +52,7 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
                 ops = ', '.join(map(str, cli_dict['pedidos'][ped]))
                 cli_dict['obs'] += sep + f"Pedido({ped})-OP({ops})"
                 sep = ', '
+
         # Monta itens
         itens_ops_cli = [
             item_ops
@@ -61,18 +65,18 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
                 cli_dict['itens'][item_op['item']] += item_op['qtd']
             except KeyError:
                 cli_dict['itens'][item_op['item']] = item_op['qtd']
-    return clientes
 
+    return clientes
 
 def mount(cursor, dt, cliente_slug=None, get_cached=False, or_calculate=False):
     """
     Monta informações para pedidos para NF filial-matriz
     em dict por cliente_slug
     """
-    
+
     key_cache = my_make_key_cache_slug(
         'lotes/queries/op/ped_cli_por_cliente/mount',
-        dt, cliente_slug,
+        dt,
     )
     if get_cached:
         dados = cache.get(key_cache)
@@ -91,6 +95,7 @@ def mount(cursor, dt, cliente_slug=None, get_cached=False, or_calculate=False):
 
     dados_ops = OpCortada.objects.filter(when__date__lte=dt)
     dados_ops = dados_ops.values()
+
     ops = [
         row['op']
         for row in dados_ops
@@ -112,10 +117,8 @@ def mount(cursor, dt, cliente_slug=None, get_cached=False, or_calculate=False):
 
     return dados
 
-
 def mount_all_and_cache(cursor, dt):
     return mount(cursor, dt)
-
 
 def get_cached(cursor, dt, cliente_slug=None):
     return mount(cursor, dt, cliente_slug=cliente_slug, get_cached=True)
