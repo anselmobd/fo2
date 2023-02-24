@@ -67,10 +67,10 @@ class PreparaPedidoOpCortada(View):
 
         cria_mens_nf(cursor, pedido, observacao)
 
-        altera_pedido_itens(cursor, pedido, 302, 'RJ', clientes[cliente]['dados'])
+        altera_pedido_itens(cursor, pedido, 302, 'RJ', clientes[cliente]['itens'])
 
         qtd_itens = 0
-        for row in clientes[cliente]['dados']:
+        for row in clientes[cliente]['itens']:
             qtd_itens += row['mov_qtd']
         altera_pedido(cursor, data, pedido, 3, qtd_itens, "\n".join(observacao))
 

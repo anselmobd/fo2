@@ -60,17 +60,17 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
             for item_ops in itens_ops
             if item_ops['op'] in cli_dict['ops']
         ]
-        cli_dict['dados'] = []
+        cli_dict['itens'] = []
         for item_op in itens_ops_cli:
-            cli_dict_dados_item = [
+            cli_dict_item = [
                 row
-                for row in cli_dict['dados']
+                for row in cli_dict['itens']
                 if row['item'] == item_op['item']
             ]
-            if cli_dict_dados_item:
-                cli_dict_dados_item[0]['mov_qtd'] += item_op['mov_qtd']
+            if cli_dict_item:
+                cli_dict_item[0]['mov_qtd'] += item_op['mov_qtd']
             else:
-                cli_dict['dados'].append({
+                cli_dict['itens'].append({
                     'item': item_op['item'],
                     'nivel': item_op['nivel'],
                     'ref': item_op['ref'],

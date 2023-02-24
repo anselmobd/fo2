@@ -46,7 +46,7 @@ class RomaneioOpCortada(O2BaseGetPostView):
                 'cliente': cli_vals['cliente'],
                 'obs': cli_vals['obs'],
             }
-            for item in cli_vals['dados']:
+            for item in cli_vals['itens']:
                 row = row_cli.copy()
                 row.update(item)
                 cli_dados.append(row)
