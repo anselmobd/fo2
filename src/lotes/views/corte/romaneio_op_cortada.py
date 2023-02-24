@@ -37,6 +37,9 @@ class RomaneioOpCortada(O2BaseGetPostView):
 
         clientes = ped_cli_por_cliente.mount(self.cursor, dt=self.data)
 
+        if not clientes:
+            return
+
         cli_dados = []
         for cli_vals in clientes.values():
             row_cli = {
@@ -48,9 +51,6 @@ class RomaneioOpCortada(O2BaseGetPostView):
                 row['item'] = item
                 row['qtd'] = cli_vals['itens'][item]
                 cli_dados.append(row)
-
-        if not cli_dados:
-            return
 
         cli_group = ['cliente', 'obs']
         cli_sum_fields = ['qtd']
