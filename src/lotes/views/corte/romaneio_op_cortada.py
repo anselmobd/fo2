@@ -46,14 +46,13 @@ class RomaneioOpCortada(O2BaseGetPostView):
                 'cliente': cli_vals['cliente'],
                 'obs': cli_vals['obs'],
             }
-            for item in cli_vals['itens']:
+            for item in cli_vals['dados']:
                 row = row_cli.copy()
-                row['item'] = item
-                row['qtd'] = cli_vals['itens'][item]
+                row.update(item)
                 cli_dados.append(row)
 
         cli_group = ['cliente', 'obs']
-        cli_sum_fields = ['qtd']
+        cli_sum_fields = ['mov_qtd']
         cli_label_tot_field = 'obs'
 
         cli_headers = [
@@ -66,7 +65,7 @@ class RomaneioOpCortada(O2BaseGetPostView):
             'cliente',
             'obs',
             'item',
-            'qtd',
+            'mov_qtd',
         ]
         cli_style_center = (1)
         cli_style_right = (4)
