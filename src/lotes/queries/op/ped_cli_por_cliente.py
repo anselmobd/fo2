@@ -60,13 +60,8 @@ def ped_cli_por_cliente(pedidos_ops, itens_ops):
             for item_ops in itens_ops
             if item_ops['op'] in cli_dict['ops']
         ]
-        cli_dict['itens'] = OrderedDict()
         cli_dict['dados'] = []
         for item_op in itens_ops_cli:
-            try:
-                cli_dict['itens'][item_op['item']] += item_op['mov_qtd']
-            except KeyError:
-                cli_dict['itens'][item_op['item']] = item_op['mov_qtd']
             cli_dict_dados_item = [
                 row
                 for row in cli_dict['dados']
