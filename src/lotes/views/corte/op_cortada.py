@@ -38,10 +38,21 @@ class OpCortada(O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
         locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
 
-        dados = op_cortada.query(self.cursor, self.data)
+        weekday = self.data.isoweekday() % 7
+        dada_de = self.data + timedelta(days=-weekday)
+        data_ate = dada_de + timedelta(days=6)
+        dados = op_cortada.query(
+            self.cursor,
+            data_de=dada_de,
+            data_ate=data_ate,
+        )
+        self.context.update({
+            'data_de': dada_de,
+            'data_ate': data_ate,
+        })
 
-        anterior = self.data + timedelta(days=-1)
-        proxima = self.data + timedelta(days=1)
+        anterior = self.data + timedelta(days=-7)
+        proxima = self.data + timedelta(days=7)
         self.context.update({
             'anterior': anterior,
             'anterior_txt': anterior.strftime('%d/%m/%Y'),
