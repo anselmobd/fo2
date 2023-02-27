@@ -4,11 +4,19 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def query(cursor, data=None):
+def query(cursor, data_de=None, data_ate=None):
     """Lista OPs com alguma movimentação no estágio 15 na data informada"""
-    data_value = (
-        f"DATE '{data}'"
-    ) if data else 'NULL'
+
+    if not data_ate:
+        data_ate = data_de
+
+    data_de_value = (
+        f"DATE '{data_de}'"
+    ) if data_de else 'NULL'
+
+    data_ate_value = (
+        f"DATE '{data_ate}'"
+    ) if data_ate else 'NULL'
 
     sql = f'''
         WITH
@@ -16,9 +24,10 @@ def query(cursor, data=None):
         (
           SELECT 
             15 EST
-          , {data_value} DT 
+          , {data_de_value} DT_DE 
+          , {data_ate_value} DT_ATE 
           FROM dual 
-          WHERE {data_value} IS NOT NULL
+          WHERE {data_de_value} IS NOT NULL
         )
         , op_com_15 AS 
         -- seleciona OPs com estágio indicado no filtro e
@@ -41,18 +50,21 @@ def query(cursor, data=None):
           SELECT DISTINCT 
             op15.op
           , op15.lotes
-          , filtro.dt
+          , filtro.DT_DE
+          , filtro.DT_ATE
           , COUNT(DISTINCT ml.PCPC040_PERCONF*100000+ml.PCPC040_ORDCONF) movidos
           FROM filtro, op_com_15 op15, pcpc_045 ml
           WHERE ml.ORDEM_PRODUCAO = op15.OP
             AND ml.PCPC040_ESTCONF = filtro.EST
-            AND ml.DATA_PRODUCAO = filtro.DT
+            AND ml.DATA_PRODUCAO >= filtro.DT_DE
+            AND ml.DATA_PRODUCAO <= filtro.DT_ATE
           HAVING
             SUM(COALESCE(ml.QTDE_PRODUZIDA, 0)) > 0
           GROUP BY 
             op15.op
           , op15.lotes
-          , filtro.dt
+          , filtro.DT_DE
+          , filtro.DT_ATE
         )
         SELECT * FROM op_dt_move
     '''
