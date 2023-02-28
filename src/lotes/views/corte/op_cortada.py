@@ -41,7 +41,7 @@ class OpCortada(O2BaseGetPostView):
         weekday = self.data.isoweekday() % 7
         dada_de = self.data + timedelta(days=-weekday)
         data_ate = dada_de + timedelta(days=6)
-        dados = op_cortada.query(
+        dados_ops_corte = op_cortada.query(
             self.cursor,
             data_de=dada_de,
             data_ate=data_ate,
@@ -60,7 +60,7 @@ class OpCortada(O2BaseGetPostView):
             'proxima_txt': proxima.strftime('%d/%m/%Y'),
         })
 
-        if not dados:
+        if not dados_ops_corte:
             return
 
         pedidos_filial = pedidos_filial_na_data(
@@ -76,22 +76,23 @@ class OpCortada(O2BaseGetPostView):
                     except KeyError:
                         op_pedido[op] = {str(pedido['ped'])}
 
-        lista_ops = [
+        ops_corte = [
             row['op']
-            for row in dados
+            for row in dados_ops_corte
         ]
-        ops_cortadas = Model_OpCortada.objects.filter(op__in=lista_ops).values('op')
+        ops_cortadas = Model_OpCortada.objects.filter(op__in=ops_corte).values('op')
         lista_ops_cortadas = [
             str(row['op'])
             for row in ops_cortadas
         ]
 
-        for row in dados:
+        for row in dados_ops_corte:
+            row['dt_corte'] = row['dt_corte'].date()
             row['op'] = f"{row['op']}"
             if row['op'] in op_pedido:
-               row['pedido_fm'] = ', '.join(list(op_pedido[row['op']]))
+                row['pedido_fm'] = ', '.join(list(op_pedido[row['op']]))
             else:
-               row['pedido_fm'] = '-'
+                row['pedido_fm'] = '-'
             if row['op'] in lista_ops_cortadas:
                 row['cortada'] = "Sim"
                 row['cortada|STYLE'] = "color:darkgreen"
@@ -110,13 +111,15 @@ class OpCortada(O2BaseGetPostView):
                 row['acao'] = "-"
 
         headers = [
+            'Data',
             'OP',
             'Total lotes',
-            'Lotes movidos na data',
+            'Lotes cortados na semana',
             'Pedido Filial-Matriz',
             'Corte encerrado?',
         ]
         fields = [
+            'dt_corte',
             'op',
             'lotes',
             'movidos',
@@ -137,7 +140,7 @@ class OpCortada(O2BaseGetPostView):
         self.context.update({
             'headers': headers,
             'fields': fields,
-            'dados': dados,
+            'dados': dados_ops_corte,
             'style': {
                 5: "font-weight: bold;",
             }
