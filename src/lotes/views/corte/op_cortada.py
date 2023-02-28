@@ -41,7 +41,7 @@ class OpCortada(O2BaseGetPostView):
         weekday = self.data.isoweekday() % 7
         dada_de = self.data + timedelta(days=-weekday)
         data_ate = dada_de + timedelta(days=6)
-        dados_ops_corte = op_cortada.query(
+        dados_ops_cortadas = op_cortada.query(
             self.cursor,
             data_de=dada_de,
             data_ate=data_ate,
@@ -60,46 +60,51 @@ class OpCortada(O2BaseGetPostView):
             'proxima_txt': proxima.strftime('%d/%m/%Y'),
         })
 
-        if not dados_ops_corte:
+        if not dados_ops_cortadas:
             return
 
-        pedidos_filial = pedidos_filial_na_data(
+        clientes_pedidos_filial = pedidos_filial_na_data(
             self.cursor,
-            data_de=self.data,
+            data_de=dada_de,
         )
         op_pedido = {}
-        for cliente in pedidos_filial:
-            for pedido in pedidos_filial[cliente]:
+        for cliente in clientes_pedidos_filial:
+            pedidos_filial = clientes_pedidos_filial[cliente]
+            for pedido in pedidos_filial:
                 for op in pedido['op_ped']:
                     try:
                         op_pedido[op].add(str(pedido['ped']))
                     except KeyError:
                         op_pedido[op] = {str(pedido['ped'])}
 
-        ops_corte = [
+        ops_cortadas = [
             row['op']
-            for row in dados_ops_corte
+            for row in dados_ops_cortadas
         ]
-        ops_cortadas = Model_OpCortada.objects.filter(op__in=ops_corte).values('op')
-        lista_ops_cortadas = [
-            str(row['op'])
-            for row in ops_cortadas
-        ]
+        dados_ops_marcadas = Model_OpCortada.objects.filter(
+            op__in=ops_cortadas).values(
+            'op', 'pedido_filial')
+        dict_ops_marcadas = {
+            str(row['op']): row
+            for row in dados_ops_marcadas
+        }
 
-        for row in dados_ops_corte:
-            row['dt_corte'] = row['dt_corte'].date()
+        for row in dados_ops_cortadas:
             row['op'] = f"{row['op']}"
-            if row['op'] in op_pedido:
-                row['pedido_fm'] = ', '.join(list(op_pedido[row['op']]))
-            else:
-                row['pedido_fm'] = '-'
-            if row['op'] in lista_ops_cortadas:
+            row['dt_corte'] = row['dt_corte'].date()
+            if row['op'] in dict_ops_marcadas:
                 row['cortada'] = "Sim"
                 row['cortada|STYLE'] = "color:darkgreen"
+                pedido_filial = dict_ops_marcadas[row['op']]['pedido_filial']
+                pedido_fm = [f"<{pedido_filial}>"]
             else:
                 row['cortada'] = "Não"
                 row['cortada|STYLE'] = "color:darkred"
+                pedido_fm = []
             row['cortada|CLASS'] = f"cortada op_{row['op']}"
+            if row['op'] in op_pedido:
+                pedido_fm = pedido_fm + list(op_pedido[row['op']])
+            row['pedido_fm'] = ', '.join(map(str, pedido_fm)) if pedido_fm else '-'
             if row['pedido_fm'] == '-':
                 row['acao'] = "Altera"
                 row['acao|CLASS'] = f"acao op_{row['op']}"
@@ -140,8 +145,8 @@ class OpCortada(O2BaseGetPostView):
         self.context.update({
             'headers': headers,
             'fields': fields,
-            'dados': dados_ops_corte,
+            'dados': dados_ops_cortadas,
             'style': {
-                5: "font-weight: bold;",
+                6: "font-weight: bold;",
             }
         })
