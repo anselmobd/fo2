@@ -90,6 +90,9 @@ class OpCortada(O2BaseGetPostView):
 
         for row in dados_ops_cortadas:
             row['op'] = f"{row['op']}"
+            row['op|TARGET'] = '_blank'
+            row['op|LINK'] = reverse(
+                'producao:op__get', args=[row['op']])
             row['dt_corte'] = row['dt_corte'].date()
             if row['op'] in dict_ops_marcadas:
                 row['cortada'] = "Sim"
