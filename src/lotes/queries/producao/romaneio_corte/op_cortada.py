@@ -50,11 +50,12 @@ def query(cursor, data_de=None, data_ate=None):
         -- diferente de zero, lista também a data em questão
         (
           SELECT DISTINCT 
-            op15.op
+            MAX(ml.DATA_PRODUCAO) DT_CORTE
+          , op15.op
           , op15.lotes
           , filtro.DT_DE
           , filtro.DT_ATE
-          , COUNT(DISTINCT ml.PCPC040_PERCONF*100000+ml.PCPC040_ORDCONF) movidos
+          , COUNT(DISTINCT ml.PCPC040_PERCONF*100000+ml.PCPC040_ORDCONF) MOVIDOS
           FROM filtro, op_com_15 op15, pcpc_045 ml
           WHERE ml.ORDEM_PRODUCAO = op15.OP
             AND ml.PCPC040_ESTCONF = filtro.EST
@@ -67,6 +68,9 @@ def query(cursor, data_de=None, data_ate=None):
           , op15.lotes
           , filtro.DT_DE
           , filtro.DT_ATE
+          ORDER BY 
+            1  -- DT_CORTE
+          , op15.op
         )
         SELECT * FROM op_dt_move
     '''
