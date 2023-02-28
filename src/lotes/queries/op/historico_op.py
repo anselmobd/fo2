@@ -3,6 +3,10 @@ from pprint import pprint
 from django.db import connections
 
 from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import debug_cursor_execute
+
+
+__all__ = ['historico_op']
 
 
 def historico_op(op, oc=None, dia=None, usuario=None, descr=None):
@@ -38,5 +42,5 @@ def historico_op(op, oc=None, dia=None, usuario=None, descr=None):
       , h.ordem_confeccao
       , h.data_ocorr
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
