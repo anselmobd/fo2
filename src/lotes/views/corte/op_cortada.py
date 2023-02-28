@@ -38,27 +38,26 @@ class OpCortada(O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
         locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
 
+        anterior = self.data + timedelta(days=-7)
+        proxima = self.data + timedelta(days=7)
+        self.context.update({
+            'anterior': anterior,
+            'proxima': proxima,
+        })
+
         weekday = self.data.isoweekday() % 7
         dada_de = self.data + timedelta(days=-weekday)
         data_ate = dada_de + timedelta(days=6)
-        dados_ops_cortadas = op_cortada.query(
-            self.cursor,
-            data_de=dada_de,
-            data_ate=data_ate,
-        )
         self.context.update({
             'data_de': dada_de,
             'data_ate': data_ate,
         })
 
-        anterior = self.data + timedelta(days=-7)
-        proxima = self.data + timedelta(days=7)
-        self.context.update({
-            'anterior': anterior,
-            'anterior_txt': anterior.strftime('%d/%m/%Y'),
-            'proxima': proxima,
-            'proxima_txt': proxima.strftime('%d/%m/%Y'),
-        })
+        dados_ops_cortadas = op_cortada.query(
+            self.cursor,
+            data_de=dada_de,
+            data_ate=data_ate,
+        )
 
         if not dados_ops_cortadas:
             return
@@ -116,7 +115,7 @@ class OpCortada(O2BaseGetPostView):
                 row['acao'] = "-"
 
         headers = [
-            'Data',
+            'Data final',
             'OP',
             'Total lotes',
             'Lotes cortados na semana',
