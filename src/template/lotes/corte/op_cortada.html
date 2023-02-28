@@ -26,17 +26,15 @@
     {% url 'producao:op_cortada' proxima as link_proxima %}
     {% include "layout/a.html" with link=link_proxima text='Próxima' only %}
   {% endif %}
-  {% if request.POST or dados %}
+  {% if data_de %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
     <h5>Semana de {{data_de}} (domingo) até {{data_ate}} (sábado)</h5>
-    <h4>Lista OPs com movimentos no estágio 15 na semana selecionada</h4>
+    <h4>{% if dados %}OPs{% else %}Nenhuma OP{% endif %} com movimentos no estágio 15 na semana selecionada</h4>
     {% if dados %}
       <table>
         {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
         {% include "layout/tbody_generic.html" with fields=fields data=dados group=group style=style only %}
       </table>
-    {% else %}
-      <h4>Nenhuma OP encontrada</h4>
     {% endif %}
   {% endif %}
 {% endblock %}
