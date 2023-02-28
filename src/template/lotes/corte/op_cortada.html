@@ -22,14 +22,14 @@
   {% endif %}
   {% if anterior %}
     {% url 'producao:op_cortada' anterior as link_anterior %}
-    {% include "layout/a.html" with link=link_anterior text='Semana anterior ('|add:anterior_txt|add:')' only %} -
+    {% include "layout/a.html" with link=link_anterior text='Anterior' only %} -
     {% url 'producao:op_cortada' proxima as link_proxima %}
-    {% include "layout/a.html" with link=link_proxima text='Próxima semana ('|add:proxima_txt|add:')' only %}
+    {% include "layout/a.html" with link=link_proxima text='Próxima' only %}
   {% endif %}
   {% if request.POST or dados %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
-    <h5>Data de {{data_de}} até {{data_ate}}</h5>
-    <h4>Lista OPs com movimentos no estágio 15 na data informada</h4>
+    <h5>Semana de {{data_de}} (domingo) até {{data_ate}} (sábado)</h5>
+    <h4>Lista OPs com movimentos no estágio 15 na semana selecionada</h4>
     {% if dados %}
       <table>
         {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}

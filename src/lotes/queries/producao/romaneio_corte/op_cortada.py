@@ -5,7 +5,9 @@ from utils.functions.queries import debug_cursor_execute
 
 
 def query(cursor, data_de=None, data_ate=None):
-    """Lista OPs com alguma movimentação no estágio 15 na data informada"""
+    """Lista OPs com alguma movimentação no estágio 15
+    na data ou período informado
+    """
 
     if not data_ate:
         data_ate = data_de
