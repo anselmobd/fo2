@@ -118,7 +118,7 @@ class OpCortada(O2BaseGetPostView):
             'Data final',
             'OP',
             'Total lotes',
-            'Lotes cortados na semana',
+            'Lotes cortados',
             'Pedido Filial-Matriz',
             'Corte encerrado?',
         ]
@@ -126,7 +126,7 @@ class OpCortada(O2BaseGetPostView):
             'dt_corte',
             'op',
             'lotes',
-            'movidos',
+            'cortados',
             'pedido_fm',
             'cortada',
         ]
