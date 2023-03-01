@@ -55,7 +55,7 @@ def query(cursor, data_de=None, data_ate=None):
           , op15.lotes
           , fi.DT_DE
           , fi.DT_ATE
-          , COUNT(DISTINCT ml.PCPC040_PERCONF*100000+ml.PCPC040_ORDCONF) CORTADOS
+          , COUNT(DISTINCT ml.PCPC040_PERCONF*100000+ml.PCPC040_ORDCONF) cortados_periodo
           FROM op_com_15 op15
           JOIN filtro fi
             ON 1=1
@@ -77,6 +77,13 @@ def query(cursor, data_de=None, data_ate=None):
         )
         SELECT
           ocdt.*
+        , ( SELECT 
+              COUNT(*)
+            FROM filtro fi
+            JOIN pcpc_040 l
+              ON l.ORDEM_PRODUCAO = ocdt.OP
+             AND l.CODIGO_ESTAGIO = fi.EST
+          ) cortados
         , op.REFERENCIA_PECA REF
         , op.PEDIDO_VENDA ped
         , ped.COD_PED_CLIENTE PED_CLI
