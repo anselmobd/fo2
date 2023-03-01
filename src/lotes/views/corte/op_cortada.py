@@ -98,10 +98,13 @@ class OpCortada(O2BaseGetPostView):
                 row['cortada'] = "Sim"
                 row['cortada|STYLE'] = "color:darkgreen"
                 pedido_filial = dict_ops_marcadas[row['op']]['pedido_filial']
-                pedido_fm = [f"<{pedido_filial}>"]
             else:
                 row['cortada'] = "Não"
                 row['cortada|STYLE'] = "color:darkred"
+                pedido_filial = None
+            if pedido_filial:
+                pedido_fm = [f"<{pedido_filial}>"]
+            else:
                 pedido_fm = []
             row['cortada|CLASS'] = f"cortada op_{row['op']}"
             if row['op'] in op_pedido:
