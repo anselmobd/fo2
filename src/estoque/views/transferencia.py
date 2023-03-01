@@ -6,22 +6,18 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.views import cleanned_fields_to_context
+from utils.functions.views import Fo2ViewMethods
 
 from estoque import classes, forms, models
 
 
-class Transferencia(PermissionRequiredMixin, View):
+class Transferencia(PermissionRequiredMixin, View, Fo2ViewMethods):
 
     def __init__(self):
         super().__init__()
         self.Form_class = forms.TransferenciaForm
         self.template_name = 'estoque/transferencia.html'
         self.title_name = 'Movimentações'
-
-    cleanned_fields_to_context = cleanned_fields_to_context
-
-    def __init__(self):
         self.permission_required = 'estoque.can_transferencia'
         self.context = {'titulo': self.title_name}
 
