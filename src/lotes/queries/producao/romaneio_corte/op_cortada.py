@@ -69,8 +69,8 @@ def query(cursor, data_de=None, data_ate=None):
           , filtro.DT_DE
           , filtro.DT_ATE
           ORDER BY 
-            1  -- DT_CORTE
-          , op15.op
+            1 DESC  -- DT_CORTE
+          , op15.op DESC
         )
         SELECT * FROM op_dt_move
     '''
