@@ -8,7 +8,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from utils.functions import untuple_keys_concat
-from utils.functions.views import cleanned_fields_to_context
+from utils.functions.views import Fo2ViewMethods
 from utils.views import totalize_data
 
 import lotes.models
@@ -20,9 +20,7 @@ from estoque import forms, queries
 from estoque.functions import transfo2_num_doc, transfo2_num_doc_dt
 
 
-class ItemNoTempo(View):
-
-    cleanned_fields_to_context = cleanned_fields_to_context
+class ItemNoTempo(View, Fo2ViewMethods):
 
     def __init__(self):
         super().__init__()
