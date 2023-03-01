@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+  <h5>Busca OPs que passaram pelo corte na semana</h5>
   <div class="noprint">
     <form action="{% url 'producao:op_cortada' %}" method="post">
       {% csrf_token %}
