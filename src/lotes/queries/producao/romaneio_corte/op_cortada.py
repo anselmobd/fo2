@@ -44,14 +44,13 @@ def query(cursor, data_de=None, data_ate=None):
             l.ORDEM_PRODUCAO
         )
         --SELECT * FROM op_com_15;
-        , op_dt_move AS 
-        -- Para as OPs selecionas acima, conta quantos lotes tem movimento
+        , op_corte_dt AS 
+        -- Para as OPs selecionas acima, conta quantos lotes tem corte
         -- no período de datas indicado no filtro e devolve apenas OPs com
         -- essa quantidade diferente de zero, lista também as datas em questão
         (
           SELECT DISTINCT 
             MAX(ml.DATA_PRODUCAO) DT_CORTE
-          , op.REFERENCIA_PECA REF
           , op15.op
           , op15.lotes
           , fi.DT_DE
@@ -65,21 +64,42 @@ def query(cursor, data_de=None, data_ate=None):
            AND ml.PCPC040_ESTCONF = fi.EST
            AND ml.DATA_PRODUCAO >= fi.DT_DE
            AND ml.DATA_PRODUCAO <= fi.DT_ATE
-          JOIN pcpc_020 op
-            ON op.ORDEM_PRODUCAO = op15.OP
           HAVING
             SUM(COALESCE(ml.QTDE_PRODUZIDA, 0)) > 0
           GROUP BY 
             op15.op
           , op15.lotes
-          , op.REFERENCIA_PECA
           , fi.DT_DE
           , fi.DT_ATE
           ORDER BY 
             1 DESC  -- DT_CORTE
           , op15.op DESC
         )
-        SELECT * FROM op_dt_move
+        SELECT
+          ocdt.*
+        , op.REFERENCIA_PECA REF
+        , op.PEDIDO_VENDA ped
+        , ped.COD_PED_CLIENTE PED_CLI
+        , CASE WHEN c.NOME_CLIENTE IS NULL THEN
+            NULL
+          ELSE 
+            c.NOME_CLIENTE
+            || ' (' || lpad(c.CGC_9, 8, '0')
+            || '/' || lpad(c.CGC_4, 4, '0')
+            || '-' || lpad(c.CGC_2, 2, '0')
+            || ')'
+          END CLI
+        FROM op_corte_dt ocdt
+        JOIN pcpc_020 op
+          ON op.ORDEM_PRODUCAO = ocdt.OP
+        LEFT JOIN PEDI_100 ped -- pedido de venda
+          ON op.PEDIDO_VENDA > 0
+         AND ped.PEDIDO_VENDA = op.PEDIDO_VENDA
+        LEFT JOIN PEDI_010 c -- cliente - do pedido de venda
+          ON op.PEDIDO_VENDA > 0
+         AND c.CGC_9 = ped.CLI_PED_CGC_CLI9
+         AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+         AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
     '''
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
