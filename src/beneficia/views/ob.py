@@ -7,10 +7,7 @@ from django.views import View
 from fo2.connections import  db_cursor_so
 
 from utils.functions.strings import is_only_digits
-from utils.functions.views import (
-    cleanned_fields_to_context,
-    context_to_form_post,
-)
+from utils.functions.views import Fo2ViewMethods
 from utils.views import totalize_data
 
 from beneficia.forms.main import ObForm
@@ -22,17 +19,16 @@ from beneficia.queries import (
 )
 
 
-class Ob(View):
+__all__ = ['Ob']
+
+
+class Ob(View, Fo2ViewMethods):
 
     def __init__(self):
         super().__init__()
         self.Form_class = ObForm
         self.template_name = 'beneficia/ob.html'
         self.title_name = 'OB'
-
-        self.cleanned_fields_to_context = cleanned_fields_to_context
-        self.context_to_form_post = context_to_form_post
-
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
