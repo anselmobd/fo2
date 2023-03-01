@@ -8,27 +8,19 @@ from fo2.connections import db_cursor_so
 
 from utils.functions import untuple_keys_concat
 from utils.functions.strings import is_only_digits
-from utils.functions.views import (
-    cleanned_fields_to_context,
-    context_to_form_post,
-)
+from utils.functions.views import Fo2ViewMethods
 
 from beneficia.forms.main import BuscaObForm
 from beneficia.queries import busca_ob
 
 
-class BuscaOb(View):
+class BuscaOb(View, Fo2ViewMethods):
 
     def __init__(self):
         super().__init__()
         self.Form_class = BuscaObForm
         self.template_name = 'beneficia/busca_ob.html'
         self.title_name = 'Busca OB'
-
-        self.cleanned_fields_to_context = cleanned_fields_to_context
-        self.context_to_form_post = context_to_form_post
-
-    def __init__(self):
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
