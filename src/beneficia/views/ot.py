@@ -6,26 +6,19 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.views import (
-    cleanned_fields_to_context,
-    context_to_form_post,
-)
+from utils.functions.views import Fo2ViewMethods
 
 from beneficia.forms.main import OtForm
 from beneficia.queries.ot import busca_ot
 
 
-class Ot(View):
+class Ot(View, Fo2ViewMethods):
 
     def __init__(self):
         super().__init__()
         self.Form_class = OtForm
         self.template_name = 'beneficia/ot.html'
         self.title_name = 'OT'
-
-        self.cleanned_fields_to_context = cleanned_fields_to_context
-        self.context_to_form_post = context_to_form_post
-
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
