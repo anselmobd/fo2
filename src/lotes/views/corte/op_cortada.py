@@ -94,7 +94,7 @@ class OpCortada(O2BaseGetPostView):
             row['ped_cli'] = row['ped_cli'] if row['ped_cli'] else '-'
             row['cli'] = row['cli'] if row['cli'] else '-'
             row['op|TARGET'] = '_blank'
-            row['op|LINK'] = reverse(
+            row['op|A'] = reverse(
                 'producao:op__get', args=[row['op']])
             row['dt_corte'] = row['dt_corte'].date()
             if row['op'] in dict_ops_marcadas:
@@ -114,7 +114,8 @@ class OpCortada(O2BaseGetPostView):
                 pedido_fm = pedido_fm + list(op_pedido[row['op']])
             row['pedido_fm'] = ', '.join(map(str, pedido_fm)) if pedido_fm else '-'
             if row['pedido_fm'] == '-':
-                row['acao'] = "Altera"
+                row['acao'] = ""
+                row['acao|GLYPHICON'] = 'glyphicon-refresh'
                 row['acao|CLASS'] = f"acao op_{row['op']}"
                 row['acao|LINK'] = reverse(
                     'producao:marca_op_cortada',
@@ -130,10 +131,10 @@ class OpCortada(O2BaseGetPostView):
             'Pedido',
             'Pedido no cliente',
             'Cliente',
-            'Total lotes',
-            'Cortados na semana',
+            'Qtd. lotes',
+            'Lotes cortados',
             'Pedido Filial-Matriz',
-            'Corte encerrado?',
+            'Marcada?',
         ]
         fields = [
             'dt_corte',
@@ -150,7 +151,7 @@ class OpCortada(O2BaseGetPostView):
         if has_permission(self.request, 'cd.can_del_lote_de_palete'):
             try:
                 _ = Colaborador.objects.get(user__username=self.request.user.username)
-                headers.append('Ação')
+                headers.append('Altera')
                 fields.append('acao')
             except Colaborador.DoesNotExist:
                 self.context.update({
