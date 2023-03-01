@@ -46,28 +46,35 @@ def query(cursor, data_de=None, data_ate=None):
         --SELECT * FROM op_com_15;
         , op_dt_move AS 
         -- Para as OPs selecionas acima, conta quantos lotes tem movimento
-        -- na data indicada no filtro e devolve apenas OPs com essa quantidade
-        -- diferente de zero, lista também a data em questão
+        -- no período de datas indicado no filtro e devolve apenas OPs com
+        -- essa quantidade diferente de zero, lista também as datas em questão
         (
           SELECT DISTINCT 
             MAX(ml.DATA_PRODUCAO) DT_CORTE
+          , op.REFERENCIA_PECA REF
           , op15.op
           , op15.lotes
-          , filtro.DT_DE
-          , filtro.DT_ATE
+          , fi.DT_DE
+          , fi.DT_ATE
           , COUNT(DISTINCT ml.PCPC040_PERCONF*100000+ml.PCPC040_ORDCONF) CORTADOS
-          FROM filtro, op_com_15 op15, pcpc_045 ml
-          WHERE ml.ORDEM_PRODUCAO = op15.OP
-            AND ml.PCPC040_ESTCONF = filtro.EST
-            AND ml.DATA_PRODUCAO >= filtro.DT_DE
-            AND ml.DATA_PRODUCAO <= filtro.DT_ATE
+          FROM op_com_15 op15
+          JOIN filtro fi
+            ON 1=1
+          JOIN pcpc_045 ml
+            ON ml.ORDEM_PRODUCAO = op15.OP
+           AND ml.PCPC040_ESTCONF = fi.EST
+           AND ml.DATA_PRODUCAO >= fi.DT_DE
+           AND ml.DATA_PRODUCAO <= fi.DT_ATE
+          JOIN pcpc_020 op
+            ON op.ORDEM_PRODUCAO = op15.OP
           HAVING
             SUM(COALESCE(ml.QTDE_PRODUZIDA, 0)) > 0
           GROUP BY 
             op15.op
           , op15.lotes
-          , filtro.DT_DE
-          , filtro.DT_ATE
+          , op.REFERENCIA_PECA
+          , fi.DT_DE
+          , fi.DT_ATE
           ORDER BY 
             1 DESC  -- DT_CORTE
           , op15.op DESC
