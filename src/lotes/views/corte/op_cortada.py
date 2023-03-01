@@ -90,6 +90,9 @@ class OpCortada(O2BaseGetPostView):
 
         for row in dados_ops_cortadas:
             row['op'] = f"{row['op']}"
+            row['ped'] = f"{row['ped']}" if row['ped'] else '-'
+            row['ped_cli'] = row['ped_cli'] if row['ped_cli'] else '-'
+            row['cli'] = row['cli'] if row['cli'] else '-'
             row['op|TARGET'] = '_blank'
             row['op|LINK'] = reverse(
                 'producao:op__get', args=[row['op']])
@@ -123,14 +126,22 @@ class OpCortada(O2BaseGetPostView):
         headers = [
             'Data final',
             'OP',
+            'Referência',
+            'Pedido',
+            'Pedido no cliente',
+            'Cliente',
             'Total lotes',
-            'Lotes cortados',
+            'Cortados na semana',
             'Pedido Filial-Matriz',
             'Corte encerrado?',
         ]
         fields = [
             'dt_corte',
             'op',
+            'ref',
+            'ped',
+            'ped_cli',
+            'cli',
             'lotes',
             'cortados',
             'pedido_fm',
@@ -152,6 +163,6 @@ class OpCortada(O2BaseGetPostView):
             'fields': fields,
             'dados': dados_ops_cortadas,
             'style': {
-                6: "font-weight: bold;",
+                10: "font-weight: bold;",
             }
         })
