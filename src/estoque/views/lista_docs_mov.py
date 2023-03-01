@@ -7,24 +7,18 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.views import (cleanned_fields_to_context,
-                                   context_to_form_post)
+from utils.functions.views import Fo2ViewMethods
 
 from estoque import forms, models
 
 
-class ListaDocsMovimentacao(View):
+class ListaDocsMovimentacao(View, Fo2ViewMethods):
 
     def __init__(self):
         super().__init__()
         self.Form_class = forms.ListaDocsMovimentacaoForm
         self.template_name = 'estoque/lista_docs_mov.html'
         self.title_name = 'Documentos de movimentações'
-
-    cleanned_fields_to_context = cleanned_fields_to_context
-    context_to_form_post = context_to_form_post
-
-    def __init__(self):
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
