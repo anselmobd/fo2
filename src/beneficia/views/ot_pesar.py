@@ -6,26 +6,19 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.views import (
-    cleanned_fields_to_context,
-    context_to_form_post,
-)
+from utils.functions.views import Fo2ViewMethods
 
 from beneficia import forms
 from beneficia import queries
 
 
-class OtPesar(View):
+class OtPesar(View, Fo2ViewMethods):
 
     def __init__(self):
         super().__init__()
         self.Form_class = forms.ot_pesar.OtPesarForm
         self.template_name = 'beneficia/ot_pesar.html'
         self.title_name = 'Insumos a pesar'
-
-        self.cleanned_fields_to_context = cleanned_fields_to_context
-        self.context_to_form_post = context_to_form_post
-
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
