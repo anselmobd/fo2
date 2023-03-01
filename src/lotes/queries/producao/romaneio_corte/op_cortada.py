@@ -83,6 +83,7 @@ def query(cursor, data_de=None, data_ate=None):
             JOIN pcpc_040 l
               ON l.ORDEM_PRODUCAO = ocdt.OP
              AND l.CODIGO_ESTAGIO = fi.EST
+            WHERE l.QTDE_PECAS_PROD > 0
           ) cortados
         , op.REFERENCIA_PECA REF
         , op.PEDIDO_VENDA ped
