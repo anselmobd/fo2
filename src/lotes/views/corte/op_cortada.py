@@ -13,7 +13,7 @@ from geral.functions import has_permission
 from base.models import Colaborador
 
 from lotes.forms.corte.op_cortada import OpCortadaForm
-from lotes.models.op import OpCortada as Model_OpCortada
+from lotes import models
 from lotes.queries.pedido.pedido_filial import (
     pedidos_filial_na_data,
 )
@@ -22,10 +22,10 @@ from lotes.queries.producao.romaneio_corte import (
 )
 
 
-class OpCortada(O2BaseGetPostView):
+class OpCortadaView(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
-        super(OpCortada, self).__init__(*args, **kwargs)
+        super(OpCortadaView, self).__init__(*args, **kwargs)
         self.Form_class = OpCortadaForm
         self.template_name = 'lotes/corte/op_cortada.html'
         self.title_name = 'Marca OPs cortadas'
@@ -80,7 +80,7 @@ class OpCortada(O2BaseGetPostView):
             row['op']
             for row in dados_ops_cortadas
         ]
-        dados_ops_marcadas = Model_OpCortada.objects.filter(
+        dados_ops_marcadas = models.op.OpCortada.objects.filter(
             op__in=ops_cortadas).values(
             'op', 'pedido_filial')
         dict_ops_marcadas = {
@@ -105,10 +105,7 @@ class OpCortada(O2BaseGetPostView):
                 row['cortada'] = "Não"
                 row['cortada|STYLE'] = "color:darkred"
                 pedido_filial = None
-            if pedido_filial:
-                pedido_fm = [f"<{pedido_filial}>"]
-            else:
-                pedido_fm = []
+            pedido_fm = [f"<{pedido_filial}>"] if pedido_filial else []
             row['cortada|CLASS'] = f"cortada op_{row['op']}"
             if row['op'] in op_pedido:
                 pedido_fm = pedido_fm + list(op_pedido[row['op']])
