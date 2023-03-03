@@ -35,7 +35,7 @@ class MarcaOpCortada(PermissionRequiredMixin, View):
         else:
             op_object = OpComCorte(
                 op=op,
-                colaborador=colab,
+                cortado_colab=colab,
             )
             op_object.save()
             return 'MARCADA'
