@@ -258,8 +258,8 @@ class OpComCorte(models.Model):
 
     class Meta:
         db_table = "fo2_op_com_corte"
-        verbose_name = "OP cortada"
-        verbose_name_plural = "OPs cortadas"
+        verbose_name = "OP com corte"
+        verbose_name_plural = "OPs com corte"
         permissions = (
             ("pode_marcar_op_como_cortada", "Pode marcar OP como cortada"),
         )
