@@ -107,7 +107,7 @@ def mount(cursor, dt, cliente_slug=None, get_cached=False, or_calculate=False):
             if not or_calculate:
                 return {}
 
-    dados_ops = OpComCorte.objects.filter(when__date__lte=dt, pedido_filial__isnull=True)
+    dados_ops = OpComCorte.objects.filter(when__date__lte=dt, pedido_fm_num__isnull=True)
     dados_ops = dados_ops.values()
 
     ops = [
