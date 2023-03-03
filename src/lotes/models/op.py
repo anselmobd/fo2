@@ -193,12 +193,12 @@ class OpComCorte(models.Model):
         null=True,
         blank=True,
     )
-    # pedido_fm_colab = models.ForeignKey(
-    #     Colaborador,
-    #     verbose_name="Pedido-FM colaborador",
-    #     on_delete=models.PROTECT,
-    #     # related_name='cortado_colabuser_table_heap1',
-    # )
+    pedido_fm_colab = models.ForeignKey(
+        Colaborador,
+        verbose_name="Pedido-FM colaborador",
+        on_delete=models.PROTECT,
+        related_name='op_pedido_fm_colab',
+    )
 
     # evento = models.CharField(
     #     max_length=1,
