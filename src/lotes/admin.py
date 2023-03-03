@@ -152,6 +152,7 @@ intr_adm_site.register(Inventario, InventarioAdmin)
 class OpComCorteAdmin(admin.ModelAdmin):
     list_display = [
         'id',
+        'evento',
         'op',
         'colaborador',
         'log',
