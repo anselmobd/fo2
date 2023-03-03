@@ -257,7 +257,7 @@ class OpComCorte(models.Model):
         super(OpComCorte, self).delete(*args, **kwargs)
 
     class Meta:
-        db_table = "fo2_op_cortada"
+        db_table = "fo2_op_com_corte"
         verbose_name = "OP cortada"
         verbose_name_plural = "OPs cortadas"
         permissions = (
