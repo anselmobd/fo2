@@ -176,12 +176,16 @@ class OpComCorte(models.Model):
     #     NF_REC = 'R', 'Recebe NF da filial na matriz'
 
     op = models.IntegerField(
-        verbose_name='OP',
+        verbose_name="OP",
     )
     cortado_colab = models.ForeignKey(
         Colaborador,
         verbose_name="Cortado colaborador",
         on_delete=models.PROTECT,
+    )
+    cortado_quando = models.DateTimeField(
+        verbose_name="Cortado quando",
+        default=timezone.now,
     )
     pedido_filial = models.IntegerField(
         null=True,
