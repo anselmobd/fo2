@@ -154,7 +154,7 @@ class OpComCorteAdmin(admin.ModelAdmin):
         'id',
         # 'evento',
         'op',
-        'colaborador',
+        'cortado_colab',
         'log',
         'version',
         'when',

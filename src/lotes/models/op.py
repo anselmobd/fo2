@@ -178,8 +178,9 @@ class OpComCorte(models.Model):
     op = models.IntegerField(
         verbose_name='OP',
     )
-    colaborador = models.ForeignKey(
+    cortado_colab = models.ForeignKey(
         Colaborador,
+        verbose_name="Cortado colaborador",
         on_delete=models.PROTECT,
     )
     pedido_filial = models.IntegerField(
