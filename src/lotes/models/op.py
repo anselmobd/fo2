@@ -195,8 +195,10 @@ class OpComCorte(models.Model):
     )
     pedido_fm_colab = models.ForeignKey(
         Colaborador,
-        verbose_name="Pedido-FM colaborador",
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        verbose_name="Pedido-FM colaborador",
         related_name='op_pedido_fm_colab',
     )
     pedido_fm_quando = models.DateTimeField(
