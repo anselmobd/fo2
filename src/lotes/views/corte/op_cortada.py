@@ -13,7 +13,7 @@ from geral.functions import has_permission
 from base.models import Colaborador
 
 from lotes.forms.corte.op_cortada import OpCortadaForm
-from lotes import models
+from lotes.models.op import OpComCorte
 from lotes.queries.pedido.pedido_filial import (
     pedidos_filial_na_data,
 )
@@ -80,9 +80,12 @@ class OpCortadaView(O2BaseGetPostView):
             row['op']
             for row in dados_ops_cortadas
         ]
-        dados_ops_marcadas = models.op.OpComCorte.objects.filter(
-            op__in=ops_cortadas).values(
-            'op', 'pedido_filial')
+        dados_ops_marcadas = OpComCorte.objects.filter(
+            op__in=ops_cortadas
+        ).values(
+            'op',
+            'pedido_filial',
+        )
         dict_ops_marcadas = {
             str(row['op']): row
             for row in dados_ops_marcadas
