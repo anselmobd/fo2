@@ -182,7 +182,7 @@ class OpComCorte(models.Model):
         Colaborador,
         verbose_name="Cortada colaborador",
         on_delete=models.PROTECT,
-        # related_name='cortado_colabuser_table_heap1',
+        related_name='op_cortada_colab',
     )
     cortada_quando = models.DateTimeField(
         verbose_name="Cortada quando",
@@ -193,6 +193,12 @@ class OpComCorte(models.Model):
         null=True,
         blank=True,
     )
+    # pedido_fm_colab = models.ForeignKey(
+    #     Colaborador,
+    #     verbose_name="Pedido-FM colaborador",
+    #     on_delete=models.PROTECT,
+    #     # related_name='cortado_colabuser_table_heap1',
+    # )
 
     # evento = models.CharField(
     #     max_length=1,
