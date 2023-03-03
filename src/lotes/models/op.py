@@ -199,6 +199,10 @@ class OpComCorte(models.Model):
         on_delete=models.PROTECT,
         related_name='op_pedido_fm_colab',
     )
+    pedido_fm_quando = models.DateTimeField(
+        verbose_name="Pedido-FM quando",
+        default=timezone.now,
+    )
 
     # evento = models.CharField(
     #     max_length=1,
