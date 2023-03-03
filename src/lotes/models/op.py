@@ -168,12 +168,12 @@ class OpCortadaDeletedManager(models.Manager):
 
 class OpComCorte(models.Model):
 
-    class Evento(models.TextChoices):
-        CORTADA = 'C', 'OP cortada'
-        PEDIDO_FM = 'F', 'Pedido de venda da filial para a matriz'
-        PEDIDO_CM = 'M', 'Pedido de compra na matriz'
-        NF = 'N', 'Gera NF de pedido da filial'
-        NF_REC = 'R', 'Recebe NF da filial na matriz'
+    # class Evento(models.TextChoices):
+    #     CORTADA = 'C', 'OP cortada'
+    #     PEDIDO_FM = 'F', 'Pedido de venda da filial para a matriz'
+    #     PEDIDO_CM = 'M', 'Pedido de compra na matriz'
+    #     NF = 'N', 'Gera NF de pedido da filial'
+    #     NF_REC = 'R', 'Recebe NF da filial na matriz'
 
     op = models.IntegerField(
         verbose_name='OP',
@@ -186,11 +186,12 @@ class OpComCorte(models.Model):
         null=True,
         blank=True,
     )
-    evento = models.CharField(
-        max_length=1,
-        choices=Evento.choices,
-        default=Evento.CORTADA,
-    )
+
+    # evento = models.CharField(
+    #     max_length=1,
+    #     choices=Evento.choices,
+    #     default=Evento.CORTADA,
+    # )
 
     # TableHeap - Fields - start
     log = models.IntegerField(
