@@ -152,9 +152,10 @@ intr_adm_site.register(Inventario, InventarioAdmin)
 class OpComCorteAdmin(admin.ModelAdmin):
     list_display = [
         'id',
-        # 'evento',
         'op',
-        'cortado_colab',
+        'cortada_colab',
+        'cortada_quando',
+        'pedido_fm_num',
         'log',
         'version',
         'when',
