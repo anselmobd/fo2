@@ -81,10 +81,10 @@ class PreparaPedidoOpCortada(View):
             qtd_itens += row['mov_qtd']
         altera_pedido(cursor, data, pedido, 3, qtd_itens, "\n".join(observacao))
 
-        ops_cortadas = OpComCorte.objects.filter(op__in=clientes[cliente]['ops'])
-        for op_cortada in ops_cortadas:
-            op_cortada.pedido_filial = pedido
-            op_cortada.save()
+        ops_com_corte = OpComCorte.objects.filter(op__in=clientes[cliente]['ops'])
+        for op_com_corte in ops_com_corte:
+            op_com_corte.pedido_fm_num = pedido
+            op_com_corte.save()
 
         if not cria_pedido_compra_matriz(cursor, pedido):
             return ('ERRO', "Algum erro ocorreu durante a criação do pedido de compra!")

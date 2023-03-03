@@ -84,7 +84,7 @@ class OpCortadaView(O2BaseGetPostView):
             op__in=ops_cortadas
         ).values(
             'op',
-            'pedido_filial',
+            'pedido_fm_num',
         )
         dict_ops_marcadas = {
             str(row['op']): row
@@ -103,16 +103,16 @@ class OpCortadaView(O2BaseGetPostView):
             if row['op'] in dict_ops_marcadas:
                 row['cortada'] = "Sim"
                 row['cortada|STYLE'] = "color:darkgreen"
-                pedido_filial = dict_ops_marcadas[row['op']]['pedido_filial']
+                pedido_fm_num = dict_ops_marcadas[row['op']]['pedido_fm_num']
             else:
                 row['cortada'] = "Não"
                 row['cortada|STYLE'] = "color:darkred"
-                pedido_filial = None
-            pedido_fm = [f"<{pedido_filial}>"] if pedido_filial else []
+                pedido_fm_num = None
+            pedido_fm_num = [f"<{pedido_fm_num}>"] if pedido_fm_num else []
             row['cortada|CLASS'] = f"cortada op_{row['op']}"
             if row['op'] in op_pedido:
-                pedido_fm = pedido_fm + list(op_pedido[row['op']])
-            row['pedido_fm'] = ', '.join(map(str, pedido_fm)) if pedido_fm else '-'
+                pedido_fm_num = pedido_fm_num + list(op_pedido[row['op']])
+            row['pedido_fm'] = ', '.join(map(str, pedido_fm_num)) if pedido_fm_num else '-'
             if row['pedido_fm'] == '-':
                 row['acao'] = ""
                 row['acao|GLYPHICON'] = 'glyphicon-refresh'

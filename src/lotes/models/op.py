@@ -187,7 +187,8 @@ class OpComCorte(models.Model):
         verbose_name="Cortado quando",
         default=timezone.now,
     )
-    pedido_filial = models.IntegerField(
+    pedido_fm_num = models.IntegerField(
+        verbose_name="Pedido-FM número",
         null=True,
         blank=True,
     )
