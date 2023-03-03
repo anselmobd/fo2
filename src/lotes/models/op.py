@@ -178,13 +178,14 @@ class OpComCorte(models.Model):
     op = models.IntegerField(
         verbose_name="OP",
     )
-    cortado_colab = models.ForeignKey(
+    cortada_colab = models.ForeignKey(
         Colaborador,
-        verbose_name="Cortado colaborador",
+        verbose_name="Cortada colaborador",
         on_delete=models.PROTECT,
+        # related_name='cortado_colabuser_table_heap1',
     )
-    cortado_quando = models.DateTimeField(
-        verbose_name="Cortado quando",
+    cortada_quando = models.DateTimeField(
+        verbose_name="Cortada quando",
         default=timezone.now,
     )
     pedido_fm_num = models.IntegerField(

@@ -153,8 +153,8 @@ class OpComCorteAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'op',
-        'cortado_colab',
-        'cortado_quando',
+        'cortada_colab',
+        'cortada_quando',
         'pedido_fm_num',
         'log',
         'version',
