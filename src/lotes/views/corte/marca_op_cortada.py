@@ -30,8 +30,11 @@ class MarcaOpCortada(PermissionRequiredMixin, View):
             colab = None
 
         if op_object:
-            op_object.delete()
-            return 'DESMARCADA'
+            if op_object.pedido_fm_num == 0:
+                op_object.delete()
+                return 'DESMARCADA'
+            else:
+                raise AttributeError("Pedido FM já gerado")
         else:
             op_object = OpComCorte(
                 op=op,
