@@ -201,7 +201,8 @@ class OpComCorte(models.Model):
     )
     pedido_fm_quando = models.DateTimeField(
         verbose_name="Pedido-FM quando",
-        default=timezone.now,
+        null=True,
+        blank=True,
     )
 
     # evento = models.CharField(
