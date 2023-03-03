@@ -166,7 +166,7 @@ class OpCortadaDeletedManager(models.Manager):
 # TableHeap - Managers definitions - end
 
 
-class OpCortada(models.Model):
+class OpComCorte(models.Model):
 
     class Evento(models.TextChoices):
         CORTADA = 'C', 'OP cortada'
@@ -223,14 +223,14 @@ class OpCortada(models.Model):
 
     # TableHeap - Save functions - start
     def save_log(self, id):
-        log = OpCortada.objects.get(id=id)
+        log = OpComCorte.objects.get(id=id)
         log.log = log.id
         log.id = None
         log.save()
 
     def save_deleted(self, id):
         self.save_log(id)
-        deleted = OpCortada.objects.get(id=id)
+        deleted = OpComCorte.objects.get(id=id)
         deleted.log = deleted.id
         deleted.version = None
         deleted.when = timezone.now()
@@ -248,13 +248,13 @@ class OpCortada(models.Model):
             self.when = timezone.now()
             self.user = LoggedInUser().user
         # TableHeap - end
-        super(OpCortada, self).save(*args, **kwargs)
+        super(OpComCorte, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         # TableHeap - start
         self.save_deleted(self.id)
         # TableHeap - end
-        super(OpCortada, self).delete(*args, **kwargs)
+        super(OpComCorte, self).delete(*args, **kwargs)
 
     class Meta:
         db_table = "fo2_op_cortada"

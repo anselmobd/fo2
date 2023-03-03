@@ -80,7 +80,7 @@ class OpCortadaView(O2BaseGetPostView):
             row['op']
             for row in dados_ops_cortadas
         ]
-        dados_ops_marcadas = models.op.OpCortada.objects.filter(
+        dados_ops_marcadas = models.op.OpComCorte.objects.filter(
             op__in=ops_cortadas).values(
             'op', 'pedido_filial')
         dict_ops_marcadas = {

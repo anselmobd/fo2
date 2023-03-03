@@ -14,7 +14,7 @@ from .models import (
     InventarioLote,
     Lote,
     ModeloTermica,
-    OpCortada,
+    OpComCorte,
     RegraColecao,
     SolicitaLote,
     SolicitaLotePedido,
@@ -148,7 +148,7 @@ class InventarioAdmin(admin.ModelAdmin):
 intr_adm_site.register(Inventario, InventarioAdmin)
 
 
-@admin.register(OpCortada, site=intr_adm_site)
+@admin.register(OpComCorte, site=intr_adm_site)
 class OpCortadaAdmin(admin.ModelAdmin):
     list_display = [
         'id',

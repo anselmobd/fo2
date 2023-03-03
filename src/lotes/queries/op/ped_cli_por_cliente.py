@@ -9,7 +9,7 @@ from utils.functions import (
     my_make_key_cache_slug,
 )
 
-from lotes.models.op import OpCortada
+from lotes.models.op import OpComCorte
 from lotes.queries.op import (
     op_itens,
     op_ped_cli,
@@ -107,7 +107,7 @@ def mount(cursor, dt, cliente_slug=None, get_cached=False, or_calculate=False):
             if not or_calculate:
                 return {}
 
-    dados_ops = OpCortada.objects.filter(when__date__lte=dt, pedido_filial__isnull=True)
+    dados_ops = OpComCorte.objects.filter(when__date__lte=dt, pedido_filial__isnull=True)
     dados_ops = dados_ops.values()
 
     ops = [

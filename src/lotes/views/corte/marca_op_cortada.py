@@ -7,7 +7,7 @@ from django.views import View
 
 from base.models import Colaborador
 
-from lotes.models.op import OpCortada
+from lotes.models.op import OpComCorte
 
 
 class MarcaOpCortada(PermissionRequiredMixin, View):
@@ -20,8 +20,8 @@ class MarcaOpCortada(PermissionRequiredMixin, View):
         op = kwargs['op']
 
         try:
-            op_object = OpCortada.objects.get(op=op)
-        except OpCortada.DoesNotExist:
+            op_object = OpComCorte.objects.get(op=op)
+        except OpComCorte.DoesNotExist:
             op_object = None
 
         try:
@@ -33,7 +33,7 @@ class MarcaOpCortada(PermissionRequiredMixin, View):
             op_object.delete()
             return 'DESMARCADA'
         else:
-            op_object = OpCortada(
+            op_object = OpComCorte(
                 op=op,
                 colaborador=colab,
             )

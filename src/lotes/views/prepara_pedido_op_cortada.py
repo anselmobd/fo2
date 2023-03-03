@@ -10,7 +10,7 @@ from fo2.connections import db_cursor_so
 from utils.functions.strings import only_digits
 
 from lotes.queries.pedido import ped_inform
-from lotes.models.op import OpCortada
+from lotes.models.op import OpComCorte
 from lotes.queries.pedido.ped_alter import (
     altera_pedido,
     altera_pedido_itens,
@@ -81,7 +81,7 @@ class PreparaPedidoOpCortada(View):
             qtd_itens += row['mov_qtd']
         altera_pedido(cursor, data, pedido, 3, qtd_itens, "\n".join(observacao))
 
-        ops_cortadas = OpCortada.objects.filter(op__in=clientes[cliente]['ops'])
+        ops_cortadas = OpComCorte.objects.filter(op__in=clientes[cliente]['ops'])
         for op_cortada in ops_cortadas:
             op_cortada.pedido_filial = pedido
             op_cortada.save()
