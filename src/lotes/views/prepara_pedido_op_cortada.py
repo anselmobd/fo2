@@ -4,9 +4,11 @@ from pprint import pprint
 
 from django.http import JsonResponse
 from django.views import View
+from django.utils import timezone
 
 from fo2.connections import db_cursor_so
 
+from base.models import Colaborador
 from utils.functions.strings import only_digits
 
 from lotes.queries.pedido import ped_inform
@@ -31,6 +33,11 @@ class PreparaPedidoOpCortada(View):
         data = datetime.strptime(kwargs['data'], '%Y-%m-%d').date()
         cliente = kwargs['cliente']
         pedido = kwargs['pedido']
+
+        try:
+            colab = Colaborador.objects.get(user__username=request.user.username)
+        except Colaborador.DoesNotExist:
+            colab = None
 
         try:
             pedido = int(only_digits(pedido))
@@ -84,6 +91,8 @@ class PreparaPedidoOpCortada(View):
         ops_com_corte = OpComCorte.objects.filter(op__in=clientes[cliente]['ops'])
         for op_com_corte in ops_com_corte:
             op_com_corte.pedido_fm_num = pedido
+            op_com_corte.pedido_fm_colab = colab
+            op_com_corte.pedido_fm_quando = timezone.now()
             op_com_corte.save()
 
         if not cria_pedido_compra_matriz(cursor, pedido):
