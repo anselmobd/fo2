@@ -46,13 +46,20 @@ DEBUG_CURSOR_EXECUTE_PRT = True
 
 ALLOWED_HOSTS = [
     # production
-    '192.168.1.96', '177.23.138.90', ' 192.141.163.26',
-    'in.cuecasduomo.com.br', 'vox.cuecasduomo.com', 'velosat.cuecasduomo.com',
+    '192.168.1.96',
+    'in.cuecasduomo.com.br',
+    '177.23.138.90',
+    'vox.cuecasduomo.com',
+    '192.141.163.26',
+    'velosat.cuecasduomo.com',
+    '177.11.1.188',
+    'redeon.cuecasduomo.com',
     'intranet', 'intranet.tussor',
     'alterintranet', 'alterintranet.tussor',
     'intranet.tussor.com.br',
     'alterintranet.tussor.com.br',
-    'intranet.cuecasduomo.com', 'intranet.cuecasduomo.com.br', 'velosat.cuecasduomo.com.br',
+    'intranet.cuecasduomo.com', 'intranet.cuecasduomo.com.br',
+    'velosat.cuecasduomo.com.br',
     'alterintranet.cuecasduomo.com', 'alterintranet.cuecasduomo.com.br',
     'intranet.agator.com', 'intranet.agator.com.br',
     'alterintranet.agator.com', 'alterintranet.agator.com.br',
