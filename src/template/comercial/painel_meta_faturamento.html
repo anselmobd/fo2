@@ -846,6 +846,18 @@
         },
         'delay_file': 14000,
         'n_loops': 12,
+      },
+      '2023_mulher': {
+        'dtde': new Date('03/07/2023'),
+        'dtate': new Date('03/10/2023'),
+        'cartaz': {
+          'path': '/media/videos',
+          'files': [
+            '2023mulher.mp4',
+          ]
+        },
+        'delay_file': 159000,
+        'n_loops': 4,
       }
     }
 
@@ -940,8 +952,8 @@
         for (var key = 1; key <= nimagens; key++) {
           if (key == imgloop) {
             if (elsimg[key].src.endsWith(".mp4")) {
-              elsdiv[key].style.visibility = 'visible';
               elsimg[key].play();
+              elsdiv[key].style.visibility = 'visible';
             } else {
               post_div = elsdiv[key];
               elsimg[key].addEventListener('load', post_div_visible)
@@ -957,6 +969,7 @@
         } else {
           var demora = delay_file;
         }
+        console.log(demora);
 
         window.setTimeout(function () {
           mostra_imagem();
