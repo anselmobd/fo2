@@ -11,6 +11,7 @@ from o2.views.base.get_post import O2BaseGetPostView
 from geral.functions import has_permission
 
 from base.models import Colaborador
+from utils.functions import untuple_keys_concat
 
 from lotes.forms.corte.op_cortada import OpCortadaForm
 from lotes.models.op import OpComCorte
@@ -142,7 +143,7 @@ class OpCortadaView(O2BaseGetPostView):
             'Pedido no cliente',
             'Cliente',
             'Qtd. lotes',
-            'Lotes cortados',
+            'Cortados',
             'Pedido Filial-Matriz',
             'Marcada?',
             'Usuário',
@@ -177,7 +178,9 @@ class OpCortadaView(O2BaseGetPostView):
             'headers': headers,
             'fields': fields,
             'dados': dados_ops_cortadas,
-            'style': {
-                10: "font-weight: bold;",
-            }
+            'style': untuple_keys_concat({
+                (7, 8): 'text-align: right;',
+                (9, 10, 11, 12, 13): 'text-align: center;',
+                10: 'font-weight: bold;',
+            }),
         })
