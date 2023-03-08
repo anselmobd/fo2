@@ -9,7 +9,7 @@
 
     {% if group and field in group %}
       {% if row|get_item:'rowspan' != 0 %}
-        <td rowspan="{{ row|get_item:'rowspan' }}"
+        <td rowspan="{{ row|get_item:'rowspan'|safe }}"
       {% endif %}
     {% else %}
       <td
