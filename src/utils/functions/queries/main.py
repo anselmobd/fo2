@@ -64,7 +64,7 @@ def sql_where(
             else:
                 tests = [
                     f"{field} {operation} {value_quoted(item)}"
-                    for item in value:
+                    for item in value
                 ]
             or_tests = ' OR '.join(tests)
             return f"{conector} ({or_tests})"
