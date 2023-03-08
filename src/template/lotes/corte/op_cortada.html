@@ -46,6 +46,8 @@
 
   function acao(op, href) {
     let el_cortada = document.getElementsByClassName('cortada op_'+op);
+    let el_cortada_colab = document.getElementsByClassName('cortada_colab op_'+op);
+    let el_cortada_quando = document.getElementsByClassName('cortada_quando op_'+op);
 
     $.ajax({
       type: 'GET',
@@ -59,10 +61,14 @@
           } else if (data['status'] == 'MARCADA') {
             console.log(data['status']);
             el_cortada[0].innerHTML = "Sim";
+            el_cortada_colab[0].innerHTML = data['cortada_colab'];
+            el_cortada_quando[0].innerHTML = data['cortada_quando'];
             el_cortada[0].style.color = "darkgreen";
           } else {
             console.log(data['status']);
             el_cortada[0].innerHTML = "Não";
+            el_cortada_colab[0].innerHTML = "-";
+            el_cortada_quando[0].innerHTML = "-";
             el_cortada[0].style.color = "darkred";
           }
         } else {
