@@ -89,7 +89,7 @@
       let a = el.querySelectorAll('a');
       if (a.length > 0) {
         let href = a[0].href;
-        a[0].href="javascript:void(0);";
+        a[0].href="javascript:void(0);"+a[0].href;
         a[0].onclick = function() {acao(op, href);};
       }
     });
