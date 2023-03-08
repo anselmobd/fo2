@@ -18,6 +18,7 @@ class MarcaOpCortada(PermissionRequiredMixin, View):
 
     def process(self, request, kwargs):
         op = kwargs['op']
+        acao = None
 
         try:
             op_object = OpComCorte.objects.get(op=op)
@@ -34,26 +35,28 @@ class MarcaOpCortada(PermissionRequiredMixin, View):
                 raise AttributeError("Pedido FM já gerado")
             else:
                 op_object.delete()
-                return 'DESMARCADA'
+                op_object = None
+                acao = 'DESMARCADA'
         else:
             op_object = OpComCorte(
                 op=op,
                 cortada_colab=colab,
             )
             op_object.save()
-            return 'MARCADA'
+            acao = 'MARCADA'
+        return acao, op_object
 
     def response(self, request, kwargs):
+        result = {}
         try:
-            status = self.process(request, kwargs)
-            message = ""
+            result['status'], op_object = self.process(request, kwargs)
+            if op_object:
+                result['cortada_colab'] = op_object.cortada_colab.user.username
+                result['cortada_quando'] = op_object.cortada_quando.date().strftime("%d/%m/%Y")
         except Exception as e:
-            status =  'ERRO'
-            message = repr(e) if settings.DEBUG else ''
-        return {
-            'status': status,
-            'message': message,
-        }
+            result['status'] =  'ERRO'
+            result['message'] = repr(e) if settings.DEBUG else ''
+        return result
 
     def get(self, request, *args, **kwargs):
         return JsonResponse(self.response(request, kwargs), safe=False)
