@@ -44,16 +44,21 @@ class PreparaPedidoOpCortada(View):
         except ValueError:
             return ('ERRO', "Pedido inválido!")
 
-        op_objects = OpComCorte.objects.filter(pedido_fm_num=pedido)
-        if op_objects:
-            return ('ERRO', "Número de pedido já utilizado!")
-
         clientes = ped_cli_por_cliente.get_cached(
             cursor, dt=data, cliente_slug=cliente)
 
         if not clientes:
             return ('ERRO', f"Dados de '{cliente}' não encontrados!")
     
+        op_objects = OpComCorte.objects.filter(pedido_fm_num=pedido).values('op')
+        if op_objects:
+            ops_pedido = [
+                row['op']
+                for row in op_objects
+            ]
+            if set(ops_pedido) != clientes[cliente]['ops']:
+                return ('ERRO', "Número de pedido já utilizado para outras OPs!")
+
         dados = ped_inform(cursor, pedido, empresa=3)
         if not dados:
             return ('ERRO', "Pedido não encontrado!")
@@ -114,4 +119,3 @@ class PreparaPedidoOpCortada(View):
     def get(self, request, *args, **kwargs):
         result = self.process(request, kwargs)
         return JsonResponse(self.response(result), safe=False)
-
