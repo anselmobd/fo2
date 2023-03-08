@@ -61,14 +61,13 @@ def sql_where(
                     f"{field} {operation} ({values_row})"
                     for values_row in values
                 ]
-                or_tests = ' OR '.join(tests)
-                return f"{conector} ({or_tests})"
             else:
-                tests = []
-                for item in value:
-                    tests.append(f"{field} {operation} {value_quoted(item)}")
-                or_tests = ' OR '.join(tests)
-                return f"{conector} ({or_tests})"
+                tests = [
+                    f"{field} {operation} {value_quoted(item)}"
+                    for item in value:
+                ]
+            or_tests = ' OR '.join(tests)
+            return f"{conector} ({or_tests})"
         else:
             return f"{conector} {field} {operation} {value_quoted(value)}"
     return ""
