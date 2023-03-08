@@ -85,6 +85,8 @@ class OpCortadaView(O2BaseGetPostView):
         ).values(
             'op',
             'pedido_fm_num',
+            'cortada_colab__user__username',
+            'cortada_quando',
         )
         dict_ops_marcadas = {
             str(row['op']): row
@@ -103,10 +105,16 @@ class OpCortadaView(O2BaseGetPostView):
             if row['op'] in dict_ops_marcadas:
                 row['cortada'] = "Sim"
                 row['cortada|STYLE'] = "color:darkgreen"
+                row['cortada_colab'] = \
+                    dict_ops_marcadas[row['op']]['cortada_colab__user__username']
+                row['cortada_quando'] = \
+                    dict_ops_marcadas[row['op']]['cortada_quando'].date()
                 pedido_fm_num = dict_ops_marcadas[row['op']]['pedido_fm_num']
             else:
                 row['cortada'] = "Não"
                 row['cortada|STYLE'] = "color:darkred"
+                row['cortada_colab'] = "-"
+                row['cortada_quando'] = "-"
                 pedido_fm_num = None
             pedido_fm_num = [f"<{pedido_fm_num}>"] if pedido_fm_num else []
             row['cortada|CLASS'] = f"cortada op_{row['op']}"
@@ -135,6 +143,8 @@ class OpCortadaView(O2BaseGetPostView):
             'Lotes cortados',
             'Pedido Filial-Matriz',
             'Marcada?',
+            'Usuário',
+            'Data',
         ]
         fields = [
             'dt_corte',
@@ -147,6 +157,8 @@ class OpCortadaView(O2BaseGetPostView):
             'cortados',
             'pedido_fm',
             'cortada',
+            'cortada_colab',
+            'cortada_quando',
         ]
         if has_permission(self.request, 'cd.can_del_lote_de_palete'):
             try:
