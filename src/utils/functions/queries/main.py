@@ -22,6 +22,18 @@ def sql_where(
             value_quoted = right_transform.format(value_quoted)
         return value_quoted
 
+    def join1000(value):
+        size = 999  # um a menos que 1000 apenas por margem de segurança
+        values = []
+        for chunk in range((len(value) // size) + 1):
+            values.append(
+                ", ".join([
+                    f"{value_quoted(item)}"
+                    for item in value[chunk*size:chunk*size+size]
+                ])
+            )
+        return values
+
     if bool(field) and value is not None:
         if full_transform:
             left_transform = full_transform
@@ -39,21 +51,23 @@ def sql_where(
                 quote = ""
         if isinstance(value, tuple):
             if operation.upper() in ("=", "<>", "IN", "NOT IN"):
-                values = ", ".join([
-                    f"{value_quoted(item)}"
-                    for item in value
-                ])
+                values = join1000(value)
                 if "IN" not in operation.upper():
                     if operation == "=":
                         operation = "IN"
                     else:
                         operation = "NOT IN"
-                return f"{conector} {field} {operation} ({values})"
+                tests = [
+                    f"{field} {operation} ({values_row})"
+                    for values_row in values
+                ]
+                or_tests = ' OR '.join(tests)
+                return f"{conector} ({or_tests})"
             else:
                 tests = []
                 for item in value:
                     tests.append(f"{field} {operation} {value_quoted(item)}")
-                or_tests = ' OR '.join(tests) 
+                or_tests = ' OR '.join(tests)
                 return f"{conector} ({or_tests})"
         else:
             return f"{conector} {field} {operation} {value_quoted(value)}"
