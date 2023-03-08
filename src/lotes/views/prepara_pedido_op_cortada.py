@@ -44,6 +44,10 @@ class PreparaPedidoOpCortada(View):
         except ValueError:
             return ('ERRO', "Pedido inválido!")
 
+        op_objects = OpComCorte.objects.filter(pedido_fm_num=pedido)
+        if op_objects:
+            return ('ERRO', "Número de pedido já utilizado!")
+
         clientes = ped_cli_por_cliente.get_cached(
             cursor, dt=data, cliente_slug=cliente)
 
