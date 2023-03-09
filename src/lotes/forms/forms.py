@@ -636,6 +636,8 @@ class ExpedicaoForm(forms.Form):
             for x in (
                 'embarque_de',
                 'embarque_ate',
+                'emissao_de',
+                'emissao_ate',
                 'pedido_tussor',
                 'pedido_cliente',
                 'cliente',
@@ -644,6 +646,8 @@ class ExpedicaoForm(forms.Form):
             list_msg = ['Ao menos um destes campos deve ser preenchido']
             self._errors['embarque_de'] = self.error_class(list_msg)
             self._errors['embarque_ate'] = self.error_class(list_msg)
+            self._errors['emissao_de'] = self.error_class(list_msg)
+            self._errors['emissao_ate'] = self.error_class(list_msg)
             self._errors['pedido_tussor'] = self.error_class(list_msg)
             self._errors['pedido_cliente'] = self.error_class(list_msg)
             self._errors['cliente'] = self.error_class(list_msg)
