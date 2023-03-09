@@ -10,16 +10,16 @@ from utils.views import totalize_grouped_data, group_rowspan
 
 from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
 
-import lotes.forms as forms
 import lotes.models as models
 import lotes.queries as queries
+from lotes.forms.expedicao import ExpedicaoForm
 
 
 class Expedicao(View):
 
     def __init__(self):
         super().__init__()
-        self.Form_class = forms.ExpedicaoForm
+        self.Form_class = ExpedicaoForm
         self.template_name = 'lotes/expedicao.html'
         self.title_name = 'Expedição'
 
