@@ -41,7 +41,7 @@ def cria_pedido_compra_matriz(cursor, pedido_filial):
 
             emite_pedido_compra_matriz(cursor, pedido_compra)
 
-        return True
+        return pedido_compra
 
     except Exception:
         if pedido_compra:
@@ -60,7 +60,7 @@ def cria_pedido_compra_matriz(cursor, pedido_filial):
             except Exception:
                 pass
 
-        return False
+        return None
 
 
 class PreparaPedidoCompraMatriz(View):
