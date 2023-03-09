@@ -180,6 +180,7 @@ class Expedicao(View):
             else:
                 row['SOLICITACAO'] = '-'
             qtd_total += row['QTD']
+            row['VALOR|DECIMALS'] = 2
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
             row['PEDIDO_VENDA|LINK'] = reverse(
@@ -276,6 +277,8 @@ class Expedicao(View):
             headers.append('Cor')
             headers.append('Tamanho')
         headers.append('Quant.')
+        if detalhe == 'p':
+            headers.append('Valor')
 
         safe = []
 
@@ -300,6 +303,8 @@ class Expedicao(View):
             fields.append('COR')
             fields.append('TAM')
         fields.append('QTD')
+        if detalhe == 'p':
+            fields.append('VALOR')
 
         quant_col = 8
         # if detalhe in ('r', 'c'):
@@ -307,6 +312,8 @@ class Expedicao(View):
         if detalhe == 'c':
             quant_col += 2
         style = {quant_col: 'text-align: right;'}
+        if detalhe == 'p':
+            style.update({quant_col+1: 'text-align: right;'})
 
         context.update({
             'headers': headers,
