@@ -44,7 +44,7 @@
 {% endblock %}
 
 {% block content %}
-  <h4>Gera pedidos para NF filial-matriz de OPs apontadas como cortadas pelo Corte</h4>
+  <h4>Gera pedidos para "NF Filial->Matriz" de OPs apontadas como cortadas pela filial</h4>
   <div class="noprint">
     <form action="{% url 'producao:romaneio_op_cortada' %}" method="post">
       {% csrf_token %}
@@ -60,10 +60,10 @@
         {% include "layout/tbody_generic.html" with fields=teste.fields data=teste.dados group=teste.group style=teste.style only %}
       </table>
     {% else %}
-      <h4>Nenhuma produção encontrada</h4>
+      <h4>Nenhuma OP marcada como cortada no dia</h4>
     {% endif %}
     {% if clientes %}
-      <h3>Prepara pedidos Filial->Matriz</h3>
+      <h3>Prepara pedidos para "NF Filial->Matriz"</h3>
       <ul>
       {% for cliente in clientes %}
         <li><label>{{clientes|get_item:cliente}}</label></li>

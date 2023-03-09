@@ -29,7 +29,7 @@ class OpCortadaView(O2BaseGetPostView):
         super(OpCortadaView, self).__init__(*args, **kwargs)
         self.Form_class = OpCortadaForm
         self.template_name = 'lotes/corte/op_cortada.html'
-        self.title_name = 'Marca OPs cortadas'
+        self.title_name = 'Marca OP cortada'
         self.cleaned_data2self = True
         self.get_args2context = True
         self.form_class_has_initial = True
