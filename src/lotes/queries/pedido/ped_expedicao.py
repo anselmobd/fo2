@@ -134,7 +134,8 @@ def ped_expedicao(
             , i.CD_IT_PE_ITEM COR
             , i.CD_IT_PE_SUBGRUPO TAM"""
     sql += """ --
-        , sum(i.QTDE_PEDIDA) QTD"""
+        , sum(i.QTDE_PEDIDA) QTD
+        , sum(i.QTDE_PEDIDA * i.VALOR_UNITARIO) VALOR """
     if detalhe == 'p':
         sql += """ --
             , CASE WHEN cg.PEDIDO_VENDA IS NULL THEN 'N'
