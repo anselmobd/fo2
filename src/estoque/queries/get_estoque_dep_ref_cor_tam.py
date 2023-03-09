@@ -1,4 +1,10 @@
+from pprint import pprint
+
 from utils.functions.models.dictlist import dictlist_lower
+from utils.functions.queries import debug_cursor_execute
+
+
+__all__ = ['get_estoque_dep_niv_ref_cor_tam', 'get_estoque_dep_ref_cor_tam']
 
 
 def get_estoque_dep_niv_ref_cor_tam(cursor, deposito, niv, ref, cor, tam):
@@ -13,7 +19,7 @@ def get_estoque_dep_niv_ref_cor_tam(cursor, deposito, niv, ref, cor, tam):
           AND e.CDITEM_ITEM = '{cor}'
           AND e.DEPOSITO = {deposito}
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)
 
 
