@@ -1,6 +1,10 @@
-import datetime
+from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
+from utils.functions.queries import debug_cursor_execute
+
+
+__all__ = ['item_no_tempo']
 
 
 def item_no_tempo(
@@ -124,5 +128,5 @@ def item_no_tempo(
         ORDER BY
           q.DATA DESC
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)
