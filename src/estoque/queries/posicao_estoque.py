@@ -1,4 +1,10 @@
+from pprint import pprint
+
 from utils.functions.models.dictlist import dictlist_lower
+from utils.functions.queries import debug_cursor_execute
+
+
+__all__=['posicao_estoque']
 
 
 def posicao_estoque(
@@ -214,5 +220,5 @@ def posicao_estoque(
           e.CDITEM_NIVEL99
         {order_by} -- order_by
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)
