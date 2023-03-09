@@ -240,11 +240,6 @@ class Expedicao(View):
                     referencias,
                 )
 
-        if detalhe == 'o':
-            group = ['PEDIDO_VENDA', 'AGRUPADOR', 'SOLICITACAO', 'PEDIDO_CLIENTE',
-                     'DT_EMISSAO', 'DT_EMBARQUE',
-                     'CLIENTE']
-
         if detalhe not in ['p', 'o']:
             group = ['PEDIDO_VENDA', 'SOLICITACAO', 'PEDIDO_CLIENTE',
                      'DT_EMISSAO', 'DT_EMBARQUE',
