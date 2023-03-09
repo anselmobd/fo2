@@ -298,16 +298,12 @@ class Expedicao(View):
             fields.append('COR')
             fields.append('TAM')
         fields.append('QTD')
+
+        quant_col = len(fields)
+        style = {quant_col: 'text-align: right;'}
+
         if detalhe == 'p':
             fields.append('VALOR')
-
-        quant_col = 8
-        # if detalhe in ('r', 'c'):
-        #     quant_col += 0
-        if detalhe == 'c':
-            quant_col += 2
-        style = {quant_col: 'text-align: right;'}
-        if detalhe == 'p':
             style.update({quant_col+1: 'text-align: right;'})
 
         context.update({
