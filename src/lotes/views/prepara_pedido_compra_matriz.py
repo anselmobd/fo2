@@ -25,12 +25,15 @@ def cria_pedido_compra_matriz(cursor, pedido_filial):
         if pedido_compra_matriz:
             pedido_compra = pedido_compra_matriz[0]['pedido_compra']
 
-            referencias =  get_pedido_compra_matriz_itens(cursor, pedido_compra)
-            if len(referencias) == 0:
-                exclui_pedido_compra_matriz_capa(cursor, pedido_compra)
+            emite_pedido_compra_matriz(cursor, pedido_compra, emite=False)
 
-        if not pedido_compra_matriz:
-            inclui_pedido_compra_matriz_capa(cursor, pedido_filial)
+            referencias =  get_pedido_compra_matriz_itens(cursor, pedido_compra)
+            if len(referencias) != 0:
+                exclui_pedido_compra_matriz_itens(cursor, pedido_compra)
+
+            exclui_pedido_compra_matriz_capa(cursor, pedido_compra)
+
+        inclui_pedido_compra_matriz_capa(cursor, pedido_filial)
 
         pedido_compra_matriz = pedido_matriz_de_pedido_filial(cursor, pedido_filial)
 
