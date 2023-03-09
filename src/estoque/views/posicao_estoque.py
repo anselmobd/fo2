@@ -9,7 +9,7 @@ from base.paginator import paginator_basic
 from o2.views.base.get_post import O2BaseGetPostView
 from geral.functions import has_permission
 from utils.table_defs import TableDefs
-from utils.views import totalize_data
+from utils.views import totalize_data, get_total_row
 
 from estoque import forms, queries
 
@@ -92,31 +92,36 @@ class PosicaoEstoque(O2BaseGetPostView):
     def pre_form(self):
         self.form_create_kwargs = {'cursor': self.cursor}
 
-    def totalize_data(self, data, sum, descr):
-        totalize_data(data, {
+    def totalize_data(self, data, sum, descr, get=False):
+        tot_func = get_total_row if get else totalize_data
+        return tot_func(data, {
             'sum': sum,
             'descr': descr,
             'row_style': 'font-weight: bold;',
         })
 
-    def totalizers(self, data, sum_text):
+
+    def totalizers(self, data, sum_text, get=False):
         if self.agrupamento in ['r', 'd']:
-            self.totalize_data(
+            return self.totalize_data(
                 data,
                 ['qtd_positiva', 'qtd_negativa', 'qtd'],
                 {'dep_descr': sum_text},
+                get=get,
             )
         elif self.agrupamento in ['tc', 'ct']:
-            self.totalize_data(
+            return self.totalize_data(
                 data,
                 ['qtd_positiva', 'qtd_negativa', 'qtd'],
                 {'cor': sum_text},
+                get=get,
             )
         elif self.agrupamento in ['rctd', 'rtcd']:
-            self.totalize_data(
+            return self.totalize_data(
                 data,
                 ['qtd'],
                 {'dep_descr': sum_text},
+                get=get,
             )
 
     def mount_context(self):
@@ -133,8 +138,6 @@ class PosicaoEstoque(O2BaseGetPostView):
         if not data:
             return
 
-        self.totalizers(data, 'Totais gerais:')
-
         agrup = self.agrupamento
         if self.agrupamento == 'rtcd':
             for row in data:
@@ -142,18 +145,15 @@ class PosicaoEstoque(O2BaseGetPostView):
                     agrup = 'rtcd+'
                     break
 
-        row_totalizer = data[-1].copy()
+        row_totalizer = self.totalizers(data, 'Totais gerais:', get=True)
 
         data = paginator_basic(data, self.por_pagina, self.page)
 
         if data.paginator.num_pages > 1:
-            if len(data.object_list) > 2:
-                if self.page == data.paginator.num_pages:
-                    data.object_list = data.object_list[:-1]
+            self.totalizers(data.object_list, 'Totais da página:')
 
-                self.totalizers(data.object_list, 'Totais da página:')
-
-                data.object_list.append(row_totalizer)
+        if row_totalizer:
+            data.object_list.append(row_totalizer)
 
         self.table.cols(
             *self.agrup_fields[agrup]
