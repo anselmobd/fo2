@@ -64,6 +64,13 @@ def posicao_estoque(
     if not zerados:
         filtro_zerados = "AND e.qtde_estoque_atu != 0"
 
+    qtd_pos_e_neg = '''--
+        , sum(e.qtde_estoque_atu) qtd
+        , sum(case when e.qtde_estoque_atu > 0
+                then e.qtde_estoque_atu else 0 end) qtd_positiva
+        , sum(case when e.qtde_estoque_atu < 0
+                then e.qtde_estoque_atu else 0 end) qtd_negativa'''
+
     if group in ['', 'rtcd']:
         select_fields = '''--
             , e.cditem_grupo ref
@@ -103,12 +110,7 @@ def posicao_estoque(
             , e.cditem_grupo ref
             , e.deposito
             , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
-        field_quantidade = '''--
-            , sum(e.qtde_estoque_atu) qtd
-            , sum(case when e.qtde_estoque_atu > 0
-                  then e.qtde_estoque_atu else 0 end) qtd_positiva
-            , sum(case when e.qtde_estoque_atu < 0
-                  then e.qtde_estoque_atu else 0 end) qtd_negativa'''
+        field_quantidade = qtd_pos_e_neg
         group_fields = '''--
             GROUP BY
               e.cditem_nivel99
@@ -120,12 +122,7 @@ def posicao_estoque(
             , e.deposito'''
     elif group == 'ref':
         select_fields = ''', e.cditem_grupo ref'''
-        field_quantidade = '''--
-            , sum(e.qtde_estoque_atu) qtd
-            , sum(case when e.qtde_estoque_atu > 0
-                  then e.qtde_estoque_atu else 0 end) qtd_positiva
-            , sum(case when e.qtde_estoque_atu < 0
-                  then e.qtde_estoque_atu else 0 end) qtd_negativa'''
+        field_quantidade = qtd_pos_e_neg
         group_fields = '''--
             GROUP BY
               e.cditem_nivel99
@@ -136,12 +133,7 @@ def posicao_estoque(
         select_fields = '''--
             , e.deposito
             , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
-        field_quantidade = '''--
-            , sum(e.qtde_estoque_atu) qtd
-            , sum(case when e.qtde_estoque_atu > 0
-                  then e.qtde_estoque_atu else 0 end) qtd_positiva
-            , sum(case when e.qtde_estoque_atu < 0
-                  then e.qtde_estoque_atu else 0 end) qtd_negativa'''
+        field_quantidade = qtd_pos_e_neg
         group_fields = '''--
             GROUP BY
               e.cditem_nivel99
@@ -153,12 +145,7 @@ def posicao_estoque(
         select_fields = '''--
             , e.cditem_subgrupo tam
             , e.cditem_item cor'''
-        field_quantidade = '''--
-            , sum(e.qtde_estoque_atu) qtd
-            , sum(case when e.qtde_estoque_atu > 0
-                  then e.qtde_estoque_atu else 0 end) qtd_positiva
-            , sum(case when e.qtde_estoque_atu < 0
-                  then e.qtde_estoque_atu else 0 end) qtd_negativa'''
+        field_quantidade = qtd_pos_e_neg
         group_fields = '''--
             GROUP BY
               e.cditem_nivel99
@@ -173,12 +160,7 @@ def posicao_estoque(
         select_fields = '''--
             , e.cditem_subgrupo tam
             , e.cditem_item cor'''
-        field_quantidade = '''--
-            , sum(e.qtde_estoque_atu) qtd
-            , sum(case when e.qtde_estoque_atu > 0
-                  then e.qtde_estoque_atu else 0 end) qtd_positiva
-            , sum(case when e.qtde_estoque_atu < 0
-                  then e.qtde_estoque_atu else 0 end) qtd_negativa'''
+        field_quantidade = qtd_pos_e_neg
         group_fields = '''--
             GROUP BY
               e.cditem_nivel99
