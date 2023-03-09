@@ -121,13 +121,17 @@ class OpCortadaView(O2BaseGetPostView):
                 row['cortada_quando'] = "-"
                 pedido_fm_num = None
                 pedido_cm_num = None
-            pedido_fm_num = [f"<{pedido_fm_num}>"] if pedido_fm_num else []
+            pedido_fm_num = [f"{pedido_fm_num}"] if pedido_fm_num else []
             row['pedido_cm'] = f"{pedido_cm_num}" if pedido_cm_num else "-"
             row['cortada|CLASS'] = f"cortada op_{row['op']}"
             row['cortada_colab|CLASS'] = f"cortada_colab op_{row['op']}"
             row['cortada_quando|CLASS'] = f"cortada_quando op_{row['op']}"
             if row['op'] in op_pedido:
-                pedido_fm_num = pedido_fm_num + list(op_pedido[row['op']])
+                pedidos_antigos = [
+                    f"\{pedido_antigo}"
+                    for pedido_antigo in list(op_pedido[row['op']])
+                ]
+                pedido_fm_num = pedido_fm_num + pedidos_antigos
             row['pedido_fm'] = ', '.join(map(str, pedido_fm_num)) if pedido_fm_num else '-'
             if row['pedido_fm'] == '-':
                 row['acao'] = ""
