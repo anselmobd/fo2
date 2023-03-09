@@ -4,6 +4,34 @@ from utils.functions.models.dictlist import dictlist_lower
 def posicao_estoque(
         cursor, nivel, ref, tam, cor, deposito='999', zerados=True, group='',
         tipo='t', modelo=None, empresa=None):
+    """Retorna quantidades de itens nos depósitos
+    Recebe filtros por:
+        nivel
+        ref: referência
+        tam: tamanho
+        cor
+        deposito
+        zerados: boleano se mostra itens sem estoque
+        tipo:
+            t: todos
+            a: PA
+            g: PG
+            b: PB
+            p: PG/PB
+            v: PA/PG/PB
+            m: MD (MP)
+        modelo
+        empresa: depósitos da empresa
+    Recebe configuração:
+        group: indica campos a serem devolvidos e agrupados, 
+               campos totalizados e ordenação
+            rtcd: Referência/Tamanho/Cor/Depósito -> qtd
+            rctd: Referência/Cor/Tamanho/Depósito -> qtd
+            r: Referência/Depósito -> qtd+, qtd- e qtd
+            tc: Tamanho/Cor -> qtd+, qtd- e qtd
+            ct: Cor/Tamanho -> qtd+, qtd- e qtd
+            d: Depósito -> qtd+, qtd- e qtd
+    """
     filtro_nivel = ''
     if nivel is not None:
         filtro_nivel = f"AND e.CDITEM_NIVEL99 = {nivel}"
