@@ -187,7 +187,7 @@ class OpCortadaView(O2BaseGetPostView):
             'dados': dados_ops_cortadas,
             'style': untuple_keys_concat({
                 (7, 8): 'text-align: right;',
-                (9, 10, 11, 12, 13): 'text-align: center;',
-                10: 'font-weight: bold;',
+                (9, 10, 11, 12, 13, 14): 'text-align: center;',
+                11: 'font-weight: bold;',
             }),
         })
