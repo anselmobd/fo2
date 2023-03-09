@@ -37,8 +37,12 @@ def posicao_estoque(
             tc: Tamanho/Cor -> qtd+, qtd- e qtd
             ct: Cor/Tamanho -> qtd+, qtd- e qtd
             r: Referência -> qtd+, qtd- e qtd
+            m: Modelo -> qtd+, qtd- e qtd
             d: Depósito -> qtd+, qtd- e qtd
     """
+
+    sql_modelo = "REGEXP_SUBSTR(e.CDITEM_GRUPO, '[1-9][0-9]*')"
+
     filtro_nivel = ''
     if nivel is not None:
         filtro_nivel = f"AND e.CDITEM_NIVEL99 = {nivel}"
@@ -49,7 +53,7 @@ def posicao_estoque(
 
     filtro_modelo = ''
     if modelo is not None:
-        filtro_modelo = f"AND REGEXP_SUBSTR(e.CDITEM_GRUPO, '[1-9][0-9]*') = '{modelo}'"
+        filtro_modelo = f"AND {sql_modelo} = '{modelo}'"
 
     filtro_tam = ''
     if tam != '':
@@ -135,6 +139,15 @@ def posicao_estoque(
             , e.cditem_grupo'''
         order_by = '''--
             , e.cditem_grupo'''
+    elif group == 'm':
+        select_fields = f", {sql_modelo} modelo"
+        field_quantidade = qtd_pos_e_neg
+        group_fields = f'''--
+            GROUP BY
+              e.cditem_nivel99
+            , {sql_modelo}'''
+        order_by = f'''--
+            , {sql_modelo}'''
     elif group == 'd':
         select_fields = '''--
             , e.deposito

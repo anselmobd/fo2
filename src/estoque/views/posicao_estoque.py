@@ -31,6 +31,7 @@ class PosicaoEstoque(O2BaseGetPostView):
                 'ref': ['Referência'],
                 'cor': [],
                 'tam': ['Tamanho'],
+                'modelo': ['Modelo'],
                 'dep_descr': ['Depósito'],
                 'lote_acomp': ['Lote do produto'],
                 'qtd_positiva': ['Quant. Positiva', 'r'],
@@ -59,6 +60,10 @@ class PosicaoEstoque(O2BaseGetPostView):
             ),
             'r': (
                 'nivel', 'ref',
+                'qtd_positiva', 'qtd_negativa',  'qtd'
+            ),
+            'm': (
+                'nivel', 'modelo',
                 'qtd_positiva', 'qtd_negativa',  'qtd'
             ),
             'd': (
@@ -118,6 +123,13 @@ class PosicaoEstoque(O2BaseGetPostView):
                 data,
                 ['qtd_positiva', 'qtd_negativa', 'qtd'],
                 {'ref': sum_text},
+                get=get,
+            )
+        elif self.agrupamento in ['m']:
+            return self.totalize_data(
+                data,
+                ['qtd_positiva', 'qtd_negativa', 'qtd'],
+                {'modelo': sum_text},
                 get=get,
             )
         elif self.agrupamento in ['tc', 'ct']:

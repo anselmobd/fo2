@@ -36,6 +36,7 @@ class PorDepositoForm(forms.Form):
         ('tc', 'Tamanho/Cor'),
         ('ct', 'Cor/Tamanho'),
         ('r', 'Referência'),
+        ('m', 'Modelo'),
         ('d', 'Depósito'),
     ]
     agrupamento = forms.ChoiceField(
