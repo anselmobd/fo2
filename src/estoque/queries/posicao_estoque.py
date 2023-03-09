@@ -34,6 +34,7 @@ def posicao_estoque(
             rtcd: Referência/Tamanho/Cor/Depósito -> qtd
             rctd: Referência/Cor/Tamanho/Depósito -> qtd
             rd: Referência/Depósito -> qtd+, qtd- e qtd
+            md: Modelo/Depósito -> qtd+, qtd- e qtd
             tc: Tamanho/Cor -> qtd+, qtd- e qtd
             ct: Cor/Tamanho -> qtd+, qtd- e qtd
             r: Referência -> qtd+, qtd- e qtd
@@ -129,6 +130,21 @@ def posicao_estoque(
             , d.DESCRICAO'''
         order_by = '''--
             , e.cditem_grupo
+            , e.deposito'''
+    elif group == 'md':
+        select_fields = f'''--
+            , {sql_modelo} modelo
+            , e.deposito
+            , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
+        field_quantidade = qtd_pos_e_neg
+        group_fields = f'''--
+            GROUP BY
+              e.cditem_nivel99
+            , {sql_modelo}
+            , e.deposito
+            , d.DESCRICAO'''
+        order_by = f'''--
+            , {sql_modelo}
             , e.deposito'''
     elif group == 'r':
         select_fields = ''', e.cditem_grupo ref'''

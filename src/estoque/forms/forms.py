@@ -33,6 +33,7 @@ class PorDepositoForm(forms.Form):
         ('rtcd', 'Referência/Tamanho/Cor/Depósito'),
         ('rctd', 'Referência/Cor/Tamanho/Depósito'),
         ('rd', 'Referência/Depósito'),
+        ('md', 'Modelo/Depósito'),
         ('tc', 'Tamanho/Cor'),
         ('ct', 'Cor/Tamanho'),
         ('r', 'Referência'),

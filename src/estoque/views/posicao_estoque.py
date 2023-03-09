@@ -58,6 +58,10 @@ class PosicaoEstoque(O2BaseGetPostView):
                 'nivel', 'ref', 'dep_descr',
                 'qtd_positiva', 'qtd_negativa',  'qtd'
             ),
+            'md': (
+                'nivel', 'modelo', 'dep_descr',
+                'qtd_positiva', 'qtd_negativa',  'qtd'
+            ),
             'r': (
                 'nivel', 'ref',
                 'qtd_positiva', 'qtd_negativa',  'qtd'
@@ -111,7 +115,7 @@ class PosicaoEstoque(O2BaseGetPostView):
 
 
     def totalizers(self, data, sum_text, get=False):
-        if self.agrupamento in ['rd', 'd']:
+        if self.agrupamento in ['rd', 'md', 'd']:
             return self.totalize_data(
                 data,
                 ['qtd_positiva', 'qtd_negativa', 'qtd'],
