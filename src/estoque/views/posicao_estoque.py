@@ -57,6 +57,10 @@ class PosicaoEstoque(O2BaseGetPostView):
                 'nivel', 'ref', 'dep_descr',
                 'qtd_positiva', 'qtd_negativa',  'qtd'
             ),
+            'ref': (
+                'nivel', 'ref',
+                'qtd_positiva', 'qtd_negativa',  'qtd'
+            ),
             'd': (
                 'dep_descr',
                 'qtd_positiva', 'qtd_negativa',  'qtd'
@@ -109,6 +113,13 @@ class PosicaoEstoque(O2BaseGetPostView):
                 {'dep_descr': sum_text},
                 get=get,
             )
+        elif self.agrupamento in ['ref']:
+            return self.totalize_data(
+                data,
+                ['qtd_positiva', 'qtd_negativa', 'qtd'],
+                {'ref': sum_text},
+                get=get,
+            )
         elif self.agrupamento in ['tc', 'ct']:
             return self.totalize_data(
                 data,
@@ -116,7 +127,7 @@ class PosicaoEstoque(O2BaseGetPostView):
                 {'cor': sum_text},
                 get=get,
             )
-        elif self.agrupamento in ['rctd', 'rtcd']:
+        elif self.agrupamento in ['rctd', 'rtcd', 'rtcd+']:
             return self.totalize_data(
                 data,
                 ['qtd'],
@@ -138,11 +149,10 @@ class PosicaoEstoque(O2BaseGetPostView):
         if not data:
             return
 
-        agrup = self.agrupamento
         if self.agrupamento == 'rtcd':
             for row in data:
                 if row['lote_acomp'] != 0:
-                    agrup = 'rtcd+'
+                    self.agrupamento = 'rtcd+'
                     break
 
         row_totalizer = self.totalizers(data, 'Totais gerais:', get=True)
@@ -156,7 +166,7 @@ class PosicaoEstoque(O2BaseGetPostView):
             data.object_list.append(row_totalizer)
 
         self.table.cols(
-            *self.agrup_fields[agrup]
+            *self.agrup_fields[self.agrupamento]
         )
 
         if self.agrupamento == 'r':
