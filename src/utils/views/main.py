@@ -6,7 +6,7 @@ from pprint import pprint
 from geral.functions import request_user
 
 
-def totalize_data(data, config):
+def totalize_data(data, config, return_not_append=False):
     if 'flags' in config and 'NO_TOT_1' in config['flags']:
         if len(data) < 2:
             return
@@ -40,7 +40,14 @@ def totalize_data(data, config):
         for key in config['count']:
             totrow[key] = len(data)
 
-    data.append(totrow)
+    if return_not_append:
+        return totrow
+    else:
+        data.append(totrow)
+
+
+def get_total_row(data, config):
+    return totalize_data(data, config, return_not_append=True)
 
 
 def totalize_grouped_data(data, config):
