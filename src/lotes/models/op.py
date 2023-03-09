@@ -206,6 +206,11 @@ class OpComCorte(models.Model):
         null=True,
         blank=True,
     )
+    pedido_cm_num = models.IntegerField(
+        verbose_name="Pedido de compra da Matriz",
+        null=True,
+        blank=True,
+    )
 
     # evento = models.CharField(
     #     max_length=1,
