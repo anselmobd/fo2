@@ -53,11 +53,11 @@ class PosicaoEstoque(O2BaseGetPostView):
             }
         )
         self.agrup_fields = {
-            'r': (
+            'rd': (
                 'nivel', 'ref', 'dep_descr',
                 'qtd_positiva', 'qtd_negativa',  'qtd'
             ),
-            'ref': (
+            'r': (
                 'nivel', 'ref',
                 'qtd_positiva', 'qtd_negativa',  'qtd'
             ),
@@ -106,14 +106,14 @@ class PosicaoEstoque(O2BaseGetPostView):
 
 
     def totalizers(self, data, sum_text, get=False):
-        if self.agrupamento in ['r', 'd']:
+        if self.agrupamento in ['rd', 'd']:
             return self.totalize_data(
                 data,
                 ['qtd_positiva', 'qtd_negativa', 'qtd'],
                 {'dep_descr': sum_text},
                 get=get,
             )
-        elif self.agrupamento in ['ref']:
+        elif self.agrupamento in ['r']:
             return self.totalize_data(
                 data,
                 ['qtd_positiva', 'qtd_negativa', 'qtd'],
@@ -169,7 +169,7 @@ class PosicaoEstoque(O2BaseGetPostView):
             *self.agrup_fields[self.agrupamento]
         )
 
-        if self.agrupamento == 'r':
+        if self.agrupamento == 'rd':
             if has_permission(
                 self.request,
                 'estoque.pode_zerar_depositos'

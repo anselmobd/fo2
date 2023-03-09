@@ -27,10 +27,10 @@ def posicao_estoque(
                campos totalizados e ordenação
             rtcd: Referência/Tamanho/Cor/Depósito -> qtd
             rctd: Referência/Cor/Tamanho/Depósito -> qtd
-            r: Referência/Depósito -> qtd+, qtd- e qtd
+            rd: Referência/Depósito -> qtd+, qtd- e qtd
             tc: Tamanho/Cor -> qtd+, qtd- e qtd
             ct: Cor/Tamanho -> qtd+, qtd- e qtd
-            ref: Referência -> qtd+, qtd- e qtd
+            r: Referência -> qtd+, qtd- e qtd
             d: Depósito -> qtd+, qtd- e qtd
     """
     filtro_nivel = ''
@@ -105,7 +105,7 @@ def posicao_estoque(
             , e.cditem_subgrupo
             , e.deposito
             , e.lote_acomp'''
-    elif group == 'r':
+    elif group == 'rd':
         select_fields = '''--
             , e.cditem_grupo ref
             , e.deposito
@@ -120,7 +120,7 @@ def posicao_estoque(
         order_by = '''--
             , e.cditem_grupo
             , e.deposito'''
-    elif group == 'ref':
+    elif group == 'r':
         select_fields = ''', e.cditem_grupo ref'''
         field_quantidade = qtd_pos_e_neg
         group_fields = '''--
