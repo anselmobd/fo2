@@ -15,12 +15,9 @@ def posicao_estoque(
     filtro_modelo = ''
     if modelo is not None:
         filtro_modelo = """--
-            AND TRIM( LEADING '0' FROM
-                  REGEXP_REPLACE(
-                    e.CDITEM_GRUPO,
-                    '^[a-zA-Z]?([0123456789]+)[a-zA-Z]*$',
-                    '\\1'
-                  )
+            AND REGEXP_SUBSTR(
+                  e.CDITEM_GRUPO,
+                  '[1-9][0-9]*'
                 ) = '{}'
         """.format(modelo)
 
