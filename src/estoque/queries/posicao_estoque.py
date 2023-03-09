@@ -6,36 +6,30 @@ def posicao_estoque(
         tipo='t', modelo=None, empresa=None):
     filtro_nivel = ''
     if nivel is not None:
-        filtro_nivel = "AND e.CDITEM_NIVEL99 = {nivel}".format(nivel=nivel)
+        filtro_nivel = f"AND e.CDITEM_NIVEL99 = {nivel}"
 
     filtro_ref = ''
     if ref != '':
-        filtro_ref = "AND e.CDITEM_GRUPO = '{ref}'".format(ref=ref)
+        filtro_ref = f"AND e.CDITEM_GRUPO = '{ref}'"
 
     filtro_modelo = ''
     if modelo is not None:
-        filtro_modelo = """--
-            AND REGEXP_SUBSTR(
-                  e.CDITEM_GRUPO,
-                  '[1-9][0-9]*'
-                ) = '{}'
-        """.format(modelo)
+        filtro_modelo = f"AND REGEXP_SUBSTR(e.CDITEM_GRUPO, '[1-9][0-9]*') = '{modelo}'"
 
     filtro_tam = ''
     if tam != '':
-        filtro_tam = "AND e.CDITEM_SUBGRUPO = '{tam}'".format(tam=tam)
+        filtro_tam = f"AND e.CDITEM_SUBGRUPO = '{tam}'"
 
     filtro_cor = ''
     if cor != '':
-        filtro_cor = "AND e.CDITEM_ITEM = '{cor}'".format(cor=cor)
+        filtro_cor = f"AND e.CDITEM_ITEM = '{cor}'"
 
     if deposito == '999':
         filtro_deposito = ''
     elif deposito == 'A00':
         filtro_deposito = "AND e.DEPOSITO IN (101, 102, 231)"
     else:
-        filtro_deposito = "AND e.DEPOSITO = '{deposito}'".format(
-            deposito=deposito)
+        filtro_deposito = f"AND e.DEPOSITO = '{deposito}'"
 
     filtro_zerados = ''
     if not zerados:
