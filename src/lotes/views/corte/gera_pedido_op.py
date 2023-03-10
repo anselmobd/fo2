@@ -12,19 +12,19 @@ from geral.functions import has_permission
 from utils.functions import untuple_keys_concat
 from utils.views import totalize_grouped_data, group_rowspan
 
-from lotes.forms.corte.romaneio_op_cortada import RomaneioOpCortadaForm
+from lotes.forms.corte.gera_pedido_op import GeraPedidoOpForm
 from lotes.queries.op import ped_cli_por_cliente
 
 
-__all__ = ['RomaneioOpCortada']
+__all__ = ['GeraPedidoOpView']
 
 
-class RomaneioOpCortada(O2BaseGetPostView):
+class GeraPedidoOpView(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.Form_class = RomaneioOpCortadaForm
-        self.template_name = 'lotes/corte/romaneio_op_cortada.html'
+        self.Form_class = GeraPedidoOpForm
+        self.template_name = 'lotes/corte/gera_pedido_op.html'
         self.title_name = 'Gera pedidos para OPs'
         self.cleaned_data2self = True
         self.get_args2context = True

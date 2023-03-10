@@ -46,7 +46,7 @@
 {% block content %}
   <h4>Gera pedidos para "NF Filial->Matriz" de OPs apontadas como cortadas pela filial</h4>
   <div class="noprint">
-    <form action="{% url 'producao:romaneio_op_cortada' %}" method="post">
+    <form action="{% url 'producao:gera_pedido_op' %}" method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <input type="submit" value="Busca"/>

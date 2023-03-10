@@ -2,10 +2,13 @@ from pprint import pprint
 
 from django import forms
 
-from systextil.models import Familia, Estagio
 from utils.functions.date import yesterday_ymd
 
-class RomaneioOpCortadaForm(forms.Form):
+
+__all__ = ['GeraPedidoOpForm']
+
+
+class GeraPedidoOpForm(forms.Form):
     data = forms.DateField(
         label='Data',
         widget=forms.DateInput(
