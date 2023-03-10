@@ -10,7 +10,7 @@ urlpatterns = [
 
     path(
         'ajax_marca_op_cortada/<int:op>/',
-        ajax_marca_op_cortada.MarcaOpCortada.as_view(),
+        ajax_marca_op_cortada.AjaxMarcaOpCortadaView.as_view(),
         name='corte-ajax_marca_op_cortada',
     ),
 

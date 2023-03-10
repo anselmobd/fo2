@@ -13,13 +13,13 @@ from lotes.models.op import OpComCorte
 from lotes.queries.producao.romaneio_corte import op_cortada
 
 
-__all__ = ['MarcaOpCortada']
+__all__ = ['AjaxMarcaOpCortadaView']
 
 
-class MarcaOpCortada(PermissionRequiredMixin, View):
+class AjaxMarcaOpCortadaView(PermissionRequiredMixin, View):
 
     def __init__(self, *args, **kwargs):
-        super(MarcaOpCortada, self).__init__(*args, **kwargs)
+        super(AjaxMarcaOpCortadaView, self).__init__(*args, **kwargs)
         self.permission_required = 'lotes.pode_marcar_op_como_cortada'
 
     def process(self, request, kwargs):
