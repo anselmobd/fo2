@@ -17,11 +17,15 @@
       <input type="submit" value="Busca"/>
     </form>
   </div>
-  {% include "layout/form_inputs_report.html" with form=form h=5 only %}
-  {% if dados %}
-    <table>
-      {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=dados group=group style=style only %}
-    </table>
+  {% if fields %}
+    {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+    {% if dados %}
+      <table>
+        {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=dados group=group style=style only %}
+      </table>
+    {% else %}
+      <h5>Nenhum pedido encontrado</h5>
+    {% endif %}
   {% endif %}
 {% endblock %}

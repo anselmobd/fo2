@@ -25,13 +25,15 @@ class PedidosGeradosView(O2BaseGetPostView):
         self.get_args = ['data']
 
     def mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-        locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
 
         dados = OpComCorte.objects.filter(
             pedido_fm_num__isnull=False,
-            pedido_fm_quando__date=self.data,
-        ).values(
+        )
+        if self.data:
+            dados = dados.filter(
+                pedido_fm_quando__date=self.data,
+            )
+        dados = dados.values(
             'pedido_fm_quando',
             'pedido_fm_num',
             'pedido_fm_colab__user__username',
