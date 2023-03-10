@@ -28,34 +28,39 @@ class PedidosGeradosView(O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
         locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
 
-        dados = OpComCorte.objects.all().values()
-        pprint(dados)
+        dados = OpComCorte.objects.filter(
+            pedido_fm_num__isnull=False,
+            pedido_fm_quando__date=self.data,
+        ).values(
+            'pedido_fm_quando',
+            'pedido_fm_num',
+            'pedido_fm_colab__user__username',
+            'op',
+            'pedido_cm_num',
+        ).order_by(
+            '-pedido_fm_quando',
+            '-pedido_fm_num',
+            '-op',
+        )
+
+        for row in dados:
+            row['pedido_fm_num'] = f"{row['pedido_fm_num']}"
+            row['op'] = f"{row['op']}"
+            row['pedido_cm_num'] = f"{row['pedido_cm_num']}"
 
         headers = [
-            'op',
-            'cortada_colab_id',
-            'cortada_quando',
-            'pedido_fm_num',
-            'pedido_fm_colab_id',
-            'pedido_fm_quando',
-            'pedido_cm_num',
-            'log',
-            'version',
-            'when',
-            'user_id',
+            'Pedido criado em',
+            'Pedido venda filial',
+            'Criado por',
+            'OP',
+            'Pedido compra matriz',
         ]
         fields = [
-            'op',
-            'cortada_colab_id',
-            'cortada_quando',
-            'pedido_fm_num',
-            'pedido_fm_colab_id',
             'pedido_fm_quando',
+            'pedido_fm_num',
+            'pedido_fm_colab__user__username',
+            'op',
             'pedido_cm_num',
-            'log',
-            'version',
-            'when',
-            'user_id',
         ]
 
         self.context.update({
