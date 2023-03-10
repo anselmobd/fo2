@@ -116,6 +116,9 @@ def query(cursor, data_de=None, data_ate=None, op1=None):
          AND c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
          AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
+        ORDER BY
+            ocdt.DT_CORTE DESC
+          , ocdt.op DESC
     '''
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
