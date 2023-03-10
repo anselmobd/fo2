@@ -9,7 +9,6 @@ from lotes.views import (
     prepara_pedido_compra_matriz,
 )
 from lotes.views.corte import (
-    informa_nf_envio,
     romaneio_corte,
 )
 from lotes.views.ops import seq_erro
@@ -218,9 +217,6 @@ urlpatterns = [
 
     re_path(r'^romaneio_corte/$',
         romaneio_corte.RomaneioCorte.as_view(), name='romaneio_corte'),
-
-    re_path(r'^corte/informa_nf_envio/(?P<empresa>[0-9]+)/(?P<nf>[0-9]+)/(?P<nf_ser>[0-9]+)/(?P<cnpj>[^/]+)/$',
-        informa_nf_envio.InformaNfEnvio.as_view(), name='informa_nf_envio'),
 
     re_path(r'^ajax/prepara_pedido_corte/(?P<data>[^/]+)/(?P<cliente>[^/]+)/(?P<pedido>[^/]+)/$',
         prepara_pedido_corte.PreparaPedidoCorte.as_view(), name='prepara_pedido_corte'),

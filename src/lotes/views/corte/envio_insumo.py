@@ -108,7 +108,7 @@ class EnvioInsumo(O2BaseGetPostView):
 
         for row in rec_data:
             editar_link = reverse(
-                'producao:informa_nf_envio',
+                'producao:corte-informa_nf_envio',
                 args=[
                     row['empr'],
                     row['nf_num'],
