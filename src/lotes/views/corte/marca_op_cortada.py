@@ -13,7 +13,7 @@ from geral.functions import has_permission
 from base.models import Colaborador
 from utils.functions import untuple_keys_concat
 
-from lotes.forms.corte.op_cortada import OpCortadaForm
+from lotes.forms.corte.marca_op_cortada import MarcaOpCortadaForm
 from lotes.models.op import OpComCorte
 from lotes.queries.pedido.pedido_filial import (
     pedidos_filial_na_data,
@@ -23,12 +23,12 @@ from lotes.queries.producao.romaneio_corte import (
 )
 
 
-class OpCortadaView(O2BaseGetPostView):
+class MarcaOpCortadaView(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
-        super(OpCortadaView, self).__init__(*args, **kwargs)
-        self.Form_class = OpCortadaForm
-        self.template_name = 'lotes/corte/op_cortada.html'
+        super(MarcaOpCortadaView, self).__init__(*args, **kwargs)
+        self.Form_class = MarcaOpCortadaForm
+        self.template_name = 'lotes/corte/marca_op_cortada.html'
         self.title_name = 'Marca OP cortada'
         self.cleaned_data2self = True
         self.get_args2context = True

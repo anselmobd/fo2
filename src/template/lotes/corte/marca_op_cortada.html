@@ -12,7 +12,7 @@
 {% block content %}
   <h5>Busca OPs que passaram pelo corte na semana</h5>
   <div class="noprint">
-    <form action="{% url 'producao:op_cortada' %}" method="post">
+    <form action="{% url 'producao:marca_op_cortada' %}" method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <input type="submit" value="Busca"/>
@@ -22,9 +22,9 @@
     <h5>{{hint_colaborador}}</h5>
   {% endif %}
   {% if anterior %}
-    {% url 'producao:op_cortada' anterior as link_anterior %}
+    {% url 'producao:marca_op_cortada' anterior as link_anterior %}
     {% include "layout/a.html" with link=link_anterior text='Anterior' only %} -
-    {% url 'producao:op_cortada' proxima as link_proxima %}
+    {% url 'producao:marca_op_cortada' proxima as link_proxima %}
     {% include "layout/a.html" with link=link_proxima text='Próxima' only %}
   {% endif %}
   {% if data_de %}
