@@ -155,9 +155,9 @@ class OpCortadaView(O2BaseGetPostView):
             'Cortados',
             'Pedido Filial-Matriz',
             'Pedido Compra',
-            'Marcada?',
+            'Cortada?',
+            'Cordada em',
             'Usuário',
-            'Data',
         ]
         fields = [
             'dt_corte',
@@ -171,8 +171,8 @@ class OpCortadaView(O2BaseGetPostView):
             'pedido_fm',
             'pedido_cm',
             'cortada',
-            'cortada_colab',
             'cortada_quando',
+            'cortada_colab',
         ]
         if has_permission(self.request, 'lotes.pode_marcar_op_como_cortada'):
             try:
