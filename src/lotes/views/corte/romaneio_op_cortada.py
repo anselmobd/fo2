@@ -25,7 +25,7 @@ class RomaneioOpCortada(O2BaseGetPostView):
         super().__init__(*args, **kwargs)
         self.Form_class = RomaneioOpCortadaForm
         self.template_name = 'lotes/corte/romaneio_op_cortada.html'
-        self.title_name = 'Romaneio de OPs cortadas'
+        self.title_name = 'Gera pedidos para OPs'
         self.cleaned_data2self = True
         self.get_args2context = True
         self.form_class_has_initial = True
