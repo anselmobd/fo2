@@ -89,6 +89,7 @@ class OpCortadaView(O2BaseGetPostView):
             'cortada_quando',
             'pedido_fm_num',
             'pedido_cm_num',
+            'when',
         )
         dict_ops_marcadas = {
             str(row['op']): row
@@ -111,6 +112,8 @@ class OpCortadaView(O2BaseGetPostView):
                     dict_ops_marcadas[row['op']]['cortada_colab__user__username']
                 row['cortada_quando'] = \
                     dict_ops_marcadas[row['op']]['cortada_quando'].date()
+                row['when'] = \
+                    dict_ops_marcadas[row['op']]['when']
                 pedido_fm_num = dict_ops_marcadas[row['op']]['pedido_fm_num']
                 pedido_cm_num = \
                     dict_ops_marcadas[row['op']]['pedido_cm_num']
@@ -119,6 +122,7 @@ class OpCortadaView(O2BaseGetPostView):
                 row['cortada|STYLE'] = "color:darkred"
                 row['cortada_colab'] = "-"
                 row['cortada_quando'] = "-"
+                row['when'] = "-"
                 pedido_fm_num = None
                 pedido_cm_num = None
             pedido_fm_num = [f"{pedido_fm_num}"] if pedido_fm_num else []
@@ -126,6 +130,7 @@ class OpCortadaView(O2BaseGetPostView):
             row['cortada|CLASS'] = f"cortada op_{row['op']}"
             row['cortada_colab|CLASS'] = f"cortada_colab op_{row['op']}"
             row['cortada_quando|CLASS'] = f"cortada_quando op_{row['op']}"
+            row['when|CLASS'] = f"when op_{row['op']}"
             if row['op'] in op_pedido:
                 pedidos_antigos = [
                     f"\{pedido_antigo}"
@@ -158,6 +163,7 @@ class OpCortadaView(O2BaseGetPostView):
             'Cortada?',
             'Cordada em',
             'Usuário',
+            'Quando',
         ]
         fields = [
             'dt_corte',
@@ -173,6 +179,7 @@ class OpCortadaView(O2BaseGetPostView):
             'cortada',
             'cortada_quando',
             'cortada_colab',
+            'when',
         ]
         if has_permission(self.request, 'lotes.pode_marcar_op_como_cortada'):
             try:
@@ -191,7 +198,7 @@ class OpCortadaView(O2BaseGetPostView):
             'dados': dados_ops_cortadas,
             'style': untuple_keys_concat({
                 (7, 8): 'text-align: right;',
-                (9, 10, 11, 12, 13, 14): 'text-align: center;',
+                (9, 10, 11, 12, 13, 14, 15): 'text-align: center;',
                 11: 'font-weight: bold;',
             }),
         })
