@@ -17,12 +17,12 @@ class RomaneioCorteForm(forms.Form):
         initial=yesterday_ymd,
     )
     CHOICES = [
-        ('n', 'Gera pedidos para NF (OPs completadas no estágio 16 na data)'),
+        # ('n', 'Gera pedidos para NF (OPs completadas no estágio 16 na data)'),
         ('g', 'Pedidos gerados para NF e faturados'),
         ('c', 'Visualiza OPs completadas no estágio 16 na data'),
         ('p', 'Visualiza a produção do estágio 16 na data'),
     ]
     tipo = forms.ChoiceField(
         choices=CHOICES,
-        initial='n',
+        initial='g',
     )
