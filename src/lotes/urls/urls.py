@@ -10,7 +10,6 @@ from lotes.views import (
 )
 from lotes.views.corte import (
     informa_nf_envio,
-    marca_op_cortada,
     op_cortada,
     romaneio_corte,
     romaneio_op_cortada,
@@ -227,9 +226,6 @@ urlpatterns = [
 
     re_path(r'^op_cortada/(?P<data>[^/]+)?$',
         op_cortada.OpCortadaView.as_view(), name='op_cortada'),
-
-    re_path(r'^ajax/marca_op_cortada/(?P<op>[^/]+)/$',
-        marca_op_cortada.MarcaOpCortada.as_view(), name='marca_op_cortada'),
 
     re_path(r'^corte/informa_nf_envio/(?P<empresa>[0-9]+)/(?P<nf>[0-9]+)/(?P<nf_ser>[0-9]+)/(?P<cnpj>[^/]+)/$',
         informa_nf_envio.InformaNfEnvio.as_view(), name='informa_nf_envio'),

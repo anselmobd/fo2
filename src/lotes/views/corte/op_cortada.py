@@ -143,7 +143,7 @@ class OpCortadaView(O2BaseGetPostView):
                 row['acao|GLYPHICON'] = 'glyphicon-refresh'
                 row['acao|CLASS'] = f"acao op_{row['op']}"
                 row['acao|LINK'] = reverse(
-                    'producao:marca_op_cortada',
+                    'producao:corte-marca_op_cortada',
                     args=[row['op']],
                 )
             else:
