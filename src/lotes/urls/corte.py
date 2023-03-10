@@ -1,17 +1,17 @@
 from django.urls import path
 
 from lotes.views.corte import (
+    ajax_marca_op_cortada,
     envio_insumo,
-    marca_op_cortada,
     pedidos_gerados,
 )
 
 urlpatterns = [
 
     path(
-        'ajax/marca_op_cortada/<int:op>/',
-        marca_op_cortada.MarcaOpCortada.as_view(),
-        name='corte-marca_op_cortada',
+        'ajax_marca_op_cortada/<int:op>/',
+        ajax_marca_op_cortada.MarcaOpCortada.as_view(),
+        name='corte-ajax_marca_op_cortada',
     ),
 
     path(
