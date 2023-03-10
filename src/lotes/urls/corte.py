@@ -7,6 +7,7 @@ from lotes.views.corte import (
     informa_nf_envio,
     marca_op_cortada,
     pedidos_gerados,
+    romaneio_corte,
 )
 
 urlpatterns = [
@@ -40,5 +41,10 @@ urlpatterns = [
         "pedidos_gerados/",
         pedidos_gerados.PedidosGeradosView.as_view(),
         name='corte-pedidos_gerados',
+    ),
+    path(
+        "romaneio_corte/",
+        romaneio_corte.RomaneioCorte.as_view(),
+        name='corte-romaneio_corte',
     ),
 ]

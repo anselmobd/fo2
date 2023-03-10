@@ -45,7 +45,7 @@
 
 {% block content %}
   <div class="noprint">
-    <form action="{% url 'producao:romaneio_corte' %}" method="post">
+    <form action="{% url 'producao:corte-romaneio_corte' %}" method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <input type="submit" value="Busca"/>
