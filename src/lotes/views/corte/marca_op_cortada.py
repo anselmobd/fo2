@@ -5,9 +5,15 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
 from base.models import Colaborador
 
 from lotes.models.op import OpComCorte
+from lotes.queries.producao.romaneio_corte import op_cortada
+
+
+__all__ = ['MarcaOpCortada']
 
 
 class MarcaOpCortada(PermissionRequiredMixin, View):
@@ -38,9 +44,16 @@ class MarcaOpCortada(PermissionRequiredMixin, View):
                 op_object = None
                 acao = 'DESMARCADA'
         else:
+            self.cursor = db_cursor_so(self.request)
+            dados_op_cortada = op_cortada.query(
+                self.cursor,
+                op1=op,
+            )
+
             op_object = OpComCorte(
                 op=op,
                 cortada_colab=colab,
+                cortada_quando=dados_op_cortada[0]['dt_corte'],
             )
             op_object.save()
             acao = 'MARCADA'
