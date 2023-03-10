@@ -66,6 +66,7 @@ class MarcaOpCortada(PermissionRequiredMixin, View):
             if op_object:
                 result['cortada_colab'] = op_object.cortada_colab.user.username
                 result['cortada_quando'] = op_object.cortada_quando.date().strftime("%d/%m/%Y")
+                result['when'] = op_object.when.strftime('%d/%m/%Y %H:%M:%S')
         except Exception as e:
             result['status'] =  'ERRO'
             result['message'] = repr(e) if settings.DEBUG else ''
