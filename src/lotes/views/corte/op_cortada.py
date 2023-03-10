@@ -174,7 +174,7 @@ class OpCortadaView(O2BaseGetPostView):
             'cortada_colab',
             'cortada_quando',
         ]
-        if has_permission(self.request, 'cd.can_del_lote_de_palete'):
+        if has_permission(self.request, 'lotes.pode_marcar_op_como_cortada'):
             try:
                 _ = Colaborador.objects.get(user__username=self.request.user.username)
                 headers.append('Altera')
