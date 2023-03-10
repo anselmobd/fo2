@@ -1,6 +1,6 @@
-from django.urls import re_path
+from django.urls import include, path, re_path
 
-from . import views
+import lotes.views as views
 from lotes.views import (
     lote,
     por_celula,
@@ -13,7 +13,6 @@ from lotes.views.corte import (
     informa_nf_envio,
     marca_op_cortada,
     op_cortada,
-    pedidos_gerados,
     romaneio_corte,
     romaneio_op_cortada,
 )
@@ -26,6 +25,8 @@ from lotes.views.pedido.rastreabilidade import RastreabilidadeView
 app_name = 'producao'
 urlpatterns = [
     re_path(r'^$', views.index, name='index'),
+
+    path('corte/', include('lotes.urls.corte')),
 
     re_path(r'^a_produzir/$', views.AProduzir.as_view(), name='a_produzir'),
 
@@ -227,9 +228,6 @@ urlpatterns = [
 
     re_path(r'^op_cortada/(?P<data>[^/]+)?$',
         op_cortada.OpCortadaView.as_view(), name='op_cortada'),
-
-    re_path(r'^pedidos_gerados/(?P<data>[^/]+)?$',
-        pedidos_gerados.PedidosGeradosView.as_view(), name='pedidos_gerados'),
 
     re_path(r'^ajax/marca_op_cortada/(?P<op>[^/]+)/$',
         marca_op_cortada.MarcaOpCortada.as_view(), name='marca_op_cortada'),
