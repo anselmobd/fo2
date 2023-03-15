@@ -7,8 +7,7 @@ from fo2.connections import db_cursor_so
 
 from utils.views import totalize_grouped_data, group_rowspan
 
-import lotes.functions
-import lotes.queries
+from lotes.data import lotes_em_caixa
 from lotes.forms import OpForm
 
 
@@ -23,7 +22,7 @@ class OpCaixa(View):
     def mount_context(self, cursor, op):
         self.context['op'] = op
 
-        if not lotes.functions.lotes_em_caixa(self, cursor, op):
+        if not lotes_em_caixa.data(self, cursor, op):
             return
         data = self.context['data']
 

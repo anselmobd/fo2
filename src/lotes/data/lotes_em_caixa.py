@@ -6,7 +6,10 @@ import lotes.queries
 from lotes.queries.lote import get_lotes
 
 
-def lotes_em_caixa(view_obj, cursor, op):
+__all__ = ['data']
+
+
+def data(view_obj, cursor, op):
     data_op = lotes.queries.op.op_inform(cursor, op, cached=False)
     if len(data_op) == 0:
         view_obj.context.update({

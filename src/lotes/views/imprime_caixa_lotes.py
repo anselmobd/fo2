@@ -10,10 +10,10 @@ from fo2.connections import db_cursor_so
 from utils.classes import TermalPrint
 
 import lotes.forms
-import lotes.functions
 import lotes.queries.op
 import lotes.queries.lote
 import lotes.models as models
+from lotes.data import lotes_em_caixa
 
 
 class ImprimeCaixaLotes(LoginRequiredMixin, View):
@@ -29,7 +29,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             self, cursor, op, tam, cor, parm_pula, parm_qtd_lotes,
             ultimo, ultima_cx, impresso, obs1, obs2, do_print):
 
-        if not lotes.functions.lotes_em_caixa(self, cursor, op):
+        if not lotes_em_caixa.data(self, cursor, op):
             return
 
         data = self.context['data']
