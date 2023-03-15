@@ -139,6 +139,7 @@ def data(cursor, op):
 
     result.update({
         'data': data,
+        'total_cx_op': total_cx_op,
         'result': True,
     })
 
