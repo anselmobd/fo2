@@ -9,28 +9,32 @@ from lotes.queries.lote import get_lotes
 __all__ = ['data']
 
 
-def data(view_obj, cursor, op):
+def data(cursor, op):
+    result = {}
     data_op = lotes.queries.op.op_inform(cursor, op, cached=False)
     if len(data_op) == 0:
-        view_obj.context.update({
+        result.update({
             'msg_erro': 'OP não encontrada',
+            'result': False,
         })
-        return False
+        return result
 
     row_op = data_op[0]
     if row_op['TIPO_REF'] not in ['MD', 'MP']:
-        view_obj.context.update({
+        result.update({
             'msg_erro': 'Lotes agrupados em caixas é utilizado apenas para MD e MP',
+            'result': False,
         })
-        return False
+        return result
 
     if row_op['COD_SITUACAO'] == 9:
-        view_obj.context.update({
+        result.update({
             'msg_erro': 'OP cancelada!',
+            'result': False,
         })
-        return False
+        return result
 
-    view_obj.context.update({
+    result.update({
         'ref': row_op['REF'],
         'descr_ref': row_op['DESCR_REF'],
         'tipo_ref': row_op['TIPO_REF'],
@@ -40,30 +44,32 @@ def data(view_obj, cursor, op):
     # Lotes order 'r' = referência + cor + tamanho + OC
     data = get_lotes.get_imprime_lotes(cursor, op=op, order='r')
     if len(data) == 0:
-        view_obj.context.update({
+        result.update({
             'msg_erro': 'Lotes não encontrados',
+            'result': False,
         })
-        return False
+        return result
 
     try:
         rc = lotes.models.RegraColecao.objects_referencia.get(
-            colecao=data[0]['colecao'], referencia=view_obj.context['ref'][0])
-        view_obj.context.update({
+            colecao=data[0]['colecao'], referencia=result['ref'][0])
+        result.update({
             'ini_ref': rc.referencia,
         })
     except lotes.models.RegraColecao.DoesNotExist:
         try:
             rc = lotes.models.RegraColecao.objects.get(
                 colecao=data[0]['colecao'])
-            view_obj.context.update({
+            result.update({
                 'ini_ref': '',
             })
         except lotes.models.RegraColecao.DoesNotExist:
-            view_obj.context.update({
+            result.update({
                 'msg_erro': 'Regra de coleção e referência não encontrados',
+            'result': False,
             })
-            return False
-    view_obj.context.update({
+            return result
+    result.update({
         'lotes_caixa': rc.lotes_caixa,
     })
 
@@ -131,8 +137,9 @@ def data(view_obj, cursor, op):
         lote['situacao'] = row_op['SITUACAO']
     # fim
 
-    view_obj.context.update({
+    result.update({
         'data': data,
+        'result': True,
     })
 
-    return True
+    return result

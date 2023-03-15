@@ -22,9 +22,11 @@ class OpCaixa(View):
     def mount_context(self, cursor, op):
         self.context['op'] = op
 
-        if not lotes_em_caixa.data(self, cursor, op):
+        dados_caixas = lotes_em_caixa.data(cursor, op)
+        if not dados_caixas['result']:
             return
-        data = self.context['data']
+        self.context.update(dados_caixas)
+        data = dados_caixas['data']
 
         totalize_grouped_data(data, {
             'group': ['cor'],
@@ -39,6 +41,7 @@ class OpCaixa(View):
         group = ['op', 'ref', 'num_caixa_txt',
                     'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_lote_caixa', 'qtd_caixa']
         group_rowspan(data, group)
+
         self.context.update({
             'headers': ('OP', 'Referência', 'Cx.OP',
                         'Cor', 'Tamanho', 'Cx.C/T', 'Lotes', 'Peças',

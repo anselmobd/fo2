@@ -29,8 +29,10 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             self, cursor, op, tam, cor, parm_pula, parm_qtd_lotes,
             ultimo, ultima_cx, impresso, obs1, obs2, do_print):
 
-        if not lotes_em_caixa.data(self, cursor, op):
+        dados_caixas = lotes_em_caixa.data(cursor, op)
+        if not dados_caixas['result']:
             return
+        self.context.update(dados_caixas)
 
         data = self.context['data']
         lotes_caixa = self.context['lotes_caixa']
