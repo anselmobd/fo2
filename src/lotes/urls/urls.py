@@ -8,6 +8,7 @@ from lotes.views import (
     prepara_pedido_op_cortada,
     prepara_pedido_compra_matriz,
 )
+from lotes.views import perda
 from lotes.views.ops import seq_erro
 from lotes.views.analise import produzir_grade_empenho
 from lotes.views.ajax import produzir_modelo_grade as ajax_produzir_modelo_grade
@@ -173,7 +174,7 @@ urlpatterns = [
         name='faturavel_modelo__get'),
 
     re_path(r'^perda/$',
-        views.OpPerda.as_view(), name='perda'),
+        perda.OpPerda.as_view(), name='perda'),
 
     re_path(r'^lote/$', lote.Lote.as_view(), name='lote'),
     re_path(r'^lote/(?P<lote>\d+)/$', lote.Lote.as_view(),
