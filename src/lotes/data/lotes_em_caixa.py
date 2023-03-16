@@ -5,7 +5,7 @@ from django.urls import reverse
 from utils.classes import Perf
 
 import lotes.queries
-from lotes.queries.op import busca_op_simples
+from lotes.queries.op import op_inform_basico
 from lotes.queries.lote import get_lotes
 
 
@@ -16,7 +16,7 @@ def data(cursor, op):
     p = Perf(id='lotes_em_caixa.data', on=False)
     result = {}
     # data_op = lotes.queries.op.op_inform(cursor, op, cached=False)
-    data_op = busca_op_simples.query(cursor, op)
+    data_op = op_inform_basico.query(cursor, op)
     p.prt('op_inform')
     if len(data_op) == 0:
         result.update({
