@@ -21,6 +21,13 @@ def op_perda(cursor, data_de, data_ate, detalhe):
               SUM( l.QTDE_PECAS_PROG )
             FROM pcpc_040 l
             WHERE l.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
+    """
+    if detalhe == 'c':
+        sql += """
+              AND l.PROCONF_ITEM = lote.PROCONF_ITEM 
+              AND l.PROCONF_SUBGRUPO = lote.PROCONF_SUBGRUPO 
+        """
+    sql += """
               AND l.SEQUENCIA_ESTAGIO = 1
           ) QTDOP
         FROM PCPC_040 lote
