@@ -368,10 +368,10 @@ def busca_op(
           ELSE 'Avulsa'
           END TIPO_OP
         , CASE
-          WHEN o.ORDEM_PRINCIPAL <> 0 THEN 'Filha de'
           WHEN LISTAGG(ofi.ORDEM_PRODUCAO, ', ')
             WITHIN GROUP (ORDER BY ofi.ORDEM_PRODUCAO)
               IS NOT NULL THEN 'Mãe de'
+          WHEN o.ORDEM_PRINCIPAL <> 0 THEN 'Filha de'
           ELSE 'Avulsa'
           END TIPO_FM_OP
         , coalesce( LISTAGG(ofi.ORDEM_PRODUCAO, ', ')
