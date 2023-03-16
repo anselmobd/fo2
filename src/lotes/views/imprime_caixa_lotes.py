@@ -31,6 +31,9 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
 
         dados_caixas = lotes_em_caixa.data(cursor, op)
         if not dados_caixas['result']:
+            self.context.update({
+                'msg_erro': dados_caixas['msg_erro'],
+            })
             return
         self.context.update(dados_caixas)
 
