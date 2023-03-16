@@ -5,29 +5,34 @@ from utils.functions.queries import debug_cursor_execute
 
 
 def query(cursor, data_de, data_ate, detalhe):
-    sql = """
+    
+    fields = """--
+        , lote.PROCONF_ITEM COR
+        , lote.PROCONF_SUBGRUPO TAM
+    """ if detalhe == 'c' else ''
+
+    filtra_qtdop = """--
+        AND l.PROCONF_ITEM = lote.PROCONF_ITEM 
+        AND l.PROCONF_SUBGRUPO = lote.PROCONF_SUBGRUPO 
+    """ if detalhe == 'c' else ''
+
+    group_order = """--
+        , lote.PROCONF_ITEM
+        , tam.ORDEM_TAMANHO
+        , lote.PROCONF_SUBGRUPO
+    """ if detalhe == 'c' else ''
+
+    sql = f"""
         SELECT
           lote.PROCONF_GRUPO REF
-    """
-    if detalhe == 'c':
-        sql += """
-            , lote.PROCONF_ITEM COR
-            , lote.PROCONF_SUBGRUPO TAM
-        """
-    sql += """
+        {fields} -- fields
         , lote.ORDEM_PRODUCAO OP
         , sum(lote.QTDE_PERDAS ) QTD
         , ( SELECT
               SUM( l.QTDE_PECAS_PROG )
             FROM pcpc_040 l
             WHERE l.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
-    """
-    if detalhe == 'c':
-        sql += """
-              AND l.PROCONF_ITEM = lote.PROCONF_ITEM 
-              AND l.PROCONF_SUBGRUPO = lote.PROCONF_SUBGRUPO 
-        """
-    sql += """
+              {filtra_qtdop} -- filtra_totop
               AND l.SEQUENCIA_ESTAGIO = 1
           ) QTDOP
         FROM PCPC_040 lote
@@ -35,32 +40,19 @@ def query(cursor, data_de, data_ate, detalhe):
           ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
-        WHERE o.DATA_ENTRADA_CORTE >= %s
-          AND o.DATA_ENTRADA_CORTE <= %s
+        WHERE o.DATA_ENTRADA_CORTE >= '{data_de}'
+          AND o.DATA_ENTRADA_CORTE <= '{data_ate}'
         GROUP BY
           lote.PROCONF_GRUPO
-    """
-    if detalhe == 'c':
-        sql += """
-            , lote.PROCONF_ITEM
-            , tam.ORDEM_TAMANHO
-            , lote.PROCONF_SUBGRUPO
-        """
-    sql += """
+        {group_order} -- group_order
         , lote.ORDEM_PRODUCAO
         HAVING
           sum(lote.QTDE_PERDAS ) > 0
         ORDER BY
           lote.PROCONF_GRUPO
-    """
-    if detalhe == 'c':
-        sql += """
-            , lote.PROCONF_ITEM
-            , tam.ORDEM_TAMANHO
-            , lote.PROCONF_SUBGRUPO
-        """
-    sql += """
+        {group_order} -- group_order
         , lote.ORDEM_PRODUCAO
     """
-    debug_cursor_execute(cursor, sql, [data_de, data_ate])
+
+    debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
