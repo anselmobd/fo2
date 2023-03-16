@@ -137,7 +137,8 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             return
 
         # busca informação de OP mãe
-        opi_data = lotes.queries.op.op_inform(cursor, op)
+        # opi_data = lotes.queries.op.op_inform(cursor, op)
+        opi_data = op_inform_basico.query(cursor, op)
         opi_row = opi_data[0]
         op_mae = ''
         ref_mae = ''
