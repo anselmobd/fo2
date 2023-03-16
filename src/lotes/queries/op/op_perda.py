@@ -4,16 +4,29 @@ from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
-def query(cursor, data_de, data_ate, detalhe):
-    
+def query(cursor, data_de, data_ate, colecao, detalhe):
+
+    filtra_data_de = f"""--
+        AND o.DATA_ENTRADA_CORTE >= '{data_de}'
+    """ if data_de else ''
+
+    filtra_data_ate = f"""--
+        AND o.DATA_ENTRADA_CORTE <= '{data_ate}'
+    """ if data_ate else ''
+
+    filtra_colecao = f"""--
+        AND r.COLECAO = '{colecao}'
+    """ if colecao else ''
+
+
     fields = """--
         , lote.PROCONF_ITEM COR
         , lote.PROCONF_SUBGRUPO TAM
     """ if detalhe == 'c' else ''
 
     filtra_qtdop = """--
-        AND l.PROCONF_ITEM = lote.PROCONF_ITEM 
-        AND l.PROCONF_SUBGRUPO = lote.PROCONF_SUBGRUPO 
+        AND l.PROCONF_ITEM = lote.PROCONF_ITEM
+        AND l.PROCONF_SUBGRUPO = lote.PROCONF_SUBGRUPO
     """ if detalhe == 'c' else ''
 
     group_order = """--
@@ -25,6 +38,7 @@ def query(cursor, data_de, data_ate, detalhe):
     sql = f"""
         SELECT
           lote.PROCONF_GRUPO REF
+        , r.COLECAO
         {fields} -- fields
         , lote.ORDEM_PRODUCAO OP
         , sum(lote.QTDE_PERDAS ) QTD
@@ -38,12 +52,18 @@ def query(cursor, data_de, data_ate, detalhe):
         FROM PCPC_040 lote
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
+        JOIN basi_030 r
+          ON r.NIVEL_ESTRUTURA = 1
+         AND r.REFERENCIA = o.REFERENCIA_PECA
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
-        WHERE o.DATA_ENTRADA_CORTE >= '{data_de}'
-          AND o.DATA_ENTRADA_CORTE <= '{data_ate}'
+        WHERE 1=1
+          {filtra_data_de} --  filtra_data_de
+          {filtra_data_ate} --  filtra_data_ate
+          {filtra_colecao} --  filtra_colecao
         GROUP BY
           lote.PROCONF_GRUPO
+        , r.COLECAO
         {group_order} -- group_order
         , lote.ORDEM_PRODUCAO
         HAVING
