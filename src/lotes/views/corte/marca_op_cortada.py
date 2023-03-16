@@ -13,6 +13,7 @@ from geral.functions import has_permission
 from base.models import Colaborador
 from utils.functions import untuple_keys_concat
 
+from lotes.data import lotes_em_caixa
 from lotes.forms.corte.marca_op_cortada import MarcaOpCortadaForm
 from lotes.models.op import OpComCorte
 from lotes.queries.pedido.pedido_filial import (
@@ -97,6 +98,12 @@ class MarcaOpCortadaView(O2BaseGetPostView):
         }
 
         for row in dados_ops_cortadas:
+            dados_caixas = lotes_em_caixa.data(self.cursor, row['op'])
+            if dados_caixas['result']:
+                row['total_cx_op'] = dados_caixas['total_cx_op']
+            else:
+                row['total_cx_op'] = 0
+
             row['op'] = f"{row['op']}"
             row['ped'] = f"{row['ped']}" if row['ped'] else '-'
             row['ped_cli'] = row['ped_cli'] if row['ped_cli'] else '-'
@@ -156,6 +163,7 @@ class MarcaOpCortadaView(O2BaseGetPostView):
             'Pedido',
             'Pedido no cliente',
             'Cliente',
+            'Caixas',
             'Qtd. lotes',
             'Cortados',
             'Pedido Filial-Matriz',
@@ -172,6 +180,7 @@ class MarcaOpCortadaView(O2BaseGetPostView):
             'ped',
             'ped_cli',
             'cli',
+            'total_cx_op',
             'lotes',
             'cortados',
             'pedido_fm',
