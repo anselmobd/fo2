@@ -5,6 +5,7 @@ import logging
 import hashlib
 import sys
 import time
+from dateutil.relativedelta import relativedelta
 from pprint import pprint, pformat
 
 from django.conf import settings
@@ -31,6 +32,10 @@ def arg_def(kwargs, arg, default):
     if arg in kwargs:
         return kwargs[arg]
     return default
+
+
+def inc_mes(dt, months=1):
+    return dt + relativedelta(months=months)
 
 
 def inc_month(dt, months=1):
