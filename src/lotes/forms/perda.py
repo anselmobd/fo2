@@ -1,7 +1,9 @@
 from pprint import pprint
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django import forms
+
+from utils.functions.functions import inc_dias_mes_menos1
 
 from systextil.models import Colecao
 
@@ -43,9 +45,7 @@ class OpPerdaForm(forms.Form):
     def clean_data_ate(self):
         data_ate = self.cleaned_data['data_ate']
         if data_ate is None:
-            data_ate = self.cleaned_data['data_de']
-            data_ate = data_ate.replace(
-                month=data_ate.month % 12 + 1)-timedelta(days=1)
+            data_ate = inc_dias_mes_menos1(self.cleaned_data['data_de'])
             data = self.data.copy()
             data['data_ate'] = data_ate
             self.data = data
