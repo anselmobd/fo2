@@ -164,7 +164,7 @@ class MarcaOpCortadaView(O2BaseGetPostView):
             'Pedido no cliente',
             'Cliente',
             'Caixas',
-            'Qtd. lotes',
+            'Lotes',
             'Cortados',
             'Pedido Filial-Matriz',
             'Pedido Compra',
