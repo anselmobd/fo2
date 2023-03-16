@@ -2,7 +2,10 @@ from pprint import pprint
 
 from django.urls import reverse
 
+from utils.classes import Perf
+
 import lotes.queries
+from lotes.queries.op import busca_op_simples
 from lotes.queries.lote import get_lotes
 
 
@@ -10,8 +13,11 @@ __all__ = ['data']
 
 
 def data(cursor, op):
+    p = Perf(id='lotes_em_caixa.data', on=False)
     result = {}
-    data_op = lotes.queries.op.op_inform(cursor, op, cached=False)
+    # data_op = lotes.queries.op.op_inform(cursor, op, cached=False)
+    data_op = busca_op_simples.query(cursor, op)
+    p.prt('op_inform')
     if len(data_op) == 0:
         result.update({
             'msg_erro': 'OP não encontrada',
@@ -43,6 +49,7 @@ def data(cursor, op):
 
     # Lotes order 'r' = referência + cor + tamanho + OC
     data = get_lotes.get_imprime_lotes(cursor, op=op, order='r')
+    p.prt('get_imprime_lotes')
     if len(data) == 0:
         result.update({
             'msg_erro': 'Lotes não encontrados',
@@ -142,5 +149,6 @@ def data(cursor, op):
         'total_cx_op': total_cx_op,
         'result': True,
     })
+    p.prt('fim')
 
     return result
