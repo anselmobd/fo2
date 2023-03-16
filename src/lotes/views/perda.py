@@ -8,15 +8,15 @@ from fo2.connections import db_cursor_so
 
 from utils.views import totalize_grouped_data, group_rowspan
 
-import lotes.forms as forms
 import lotes.queries.op
+from lotes.forms.perda import OpPerdaForm
 
 
 class OpPerda(View):
 
     def __init__(self):
         super().__init__()
-        self.Form_class = forms.OpPerdaForm
+        self.Form_class = OpPerdaForm
         self.template_name = 'lotes/perda.html'
         self.title_name = 'Perdas de produção'
 
