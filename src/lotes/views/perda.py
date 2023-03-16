@@ -20,14 +20,17 @@ class OpPerda(View):
         self.template_name = 'lotes/perda.html'
         self.title_name = 'Perdas de produção'
 
-    def mount_context(self, cursor, data_de, data_ate, detalhe):
+    def mount_context(self, cursor, data_de, data_ate, colecao, detalhe):
         context = {
             'data_de': data_de,
             'data_ate': data_ate,
+            'colecao': colecao,
             'detalhe': detalhe,
         }
+        colecao_codigo = colecao.colecao if colecao else None
 
-        data = op_perda.query(cursor, data_de, data_ate, detalhe)
+        data = op_perda.query(
+            cursor, data_de, data_ate, colecao_codigo, detalhe)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma perda de produção encontrada',
@@ -90,9 +93,10 @@ class OpPerda(View):
         if form.is_valid():
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
+            colecao = form.cleaned_data['colecao']
             detalhe = form.cleaned_data['detalhe']
             cursor = db_cursor_so(request)
             context.update(self.mount_context(
-                cursor, data_de, data_ate, detalhe))
+                cursor, data_de, data_ate, colecao, detalhe))
         context['form'] = form
         return render(request, self.template_name, context)
