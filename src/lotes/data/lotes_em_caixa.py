@@ -6,7 +6,7 @@ from utils.classes import Perf
 
 import lotes.queries
 from lotes.queries.op import op_inform_basico
-from lotes.queries.lote import get_lotes
+from lotes.queries.lote import lotes_basico
 
 
 __all__ = ['data']
@@ -48,7 +48,8 @@ def data(cursor, op):
     })
 
     # Lotes order 'r' = referência + cor + tamanho + OC
-    data = get_lotes.get_imprime_lotes(cursor, op=op, order='r')
+    # data = get_lotes.get_imprime_lotes(cursor, op=op, order='r')
+    data = lotes_basico.query(cursor, op=op, order='r')
     p.prt('get_imprime_lotes')
     if len(data) == 0:
         result.update({
