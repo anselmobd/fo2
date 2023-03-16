@@ -3,6 +3,11 @@ from datetime import datetime, timedelta
 
 from django import forms
 
+from systextil.models import Colecao
+
+
+__all__ = ['OpPerdaForm']
+
 
 class OpPerdaForm(forms.Form):
     data_de = forms.DateField(
@@ -15,6 +20,11 @@ class OpPerdaForm(forms.Form):
         label='Até', required=False,
         help_text='Padrão: Período de um mês',
         widget=forms.DateInput(attrs={'type': 'date'}))
+
+    colecao = forms.ModelChoiceField(
+        label='Coleção da referência', required=False,
+        queryset=Colecao.objects.exclude(colecao=0).order_by(
+            'colecao'), empty_label="(Todas)")
 
     CHOICES = [('r', 'Por referência'),
                ('c', 'Por referência-cor-tamanho')]
