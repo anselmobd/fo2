@@ -1,12 +1,12 @@
 import datetime
 import inspect
-import ipware
 import logging
 import hashlib
 import sys
 import time
+from calendar import monthrange
 from dateutil.relativedelta import relativedelta
-from pprint import pprint, pformat
+from pprint import pprint
 
 from django.conf import settings
 from django.utils.text import slugify
@@ -36,6 +36,10 @@ def arg_def(kwargs, arg, default):
 
 def inc_mes(dt, months=1):
     return dt + relativedelta(months=months)
+
+
+def inc_dias_mes_menos1(dt):
+    return dt + datetime.timedelta(monthrange(dt.year, dt.month)[1] - 1)
 
 
 def inc_month(dt, months=1):
