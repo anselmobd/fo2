@@ -53,18 +53,20 @@ class OpPerda(View):
         group_rowspan(data, group)
 
         if detalhe == 'c':
-            headers = ('Referência', 'Cor', 'Tamanho', 'OP', 'Quantidade', '%')
-            fields = ('REF', 'COR', 'TAM', 'OP', 'QTD', 'PERC')
+            headers = ('Referência', 'Cor', 'Tamanho', 'OP', 'Quantidade OP item', 'Perda OP item', '%')
+            fields = ('REF', 'COR', 'TAM', 'OP', 'QTDOP', 'QTD', 'PERC')
             style = {
                 5: 'text-align: right;',
                 6: 'text-align: right;',
+                7: 'text-align: right;',
             }
         else:
-            headers = ('Referência', 'OP', 'Quantidade', '%')
-            fields = ('REF', 'OP', 'QTD', 'PERC')
+            headers = ('Referência', 'OP', 'Quantidade OP', 'Perda OP', '%')
+            fields = ('REF', 'OP', 'QTDOP', 'QTD', 'PERC')
             style = {
                 3: 'text-align: right;',
                 4: 'text-align: right;',
+                5: 'text-align: right;',
             }
         context.update({
             'headers': headers,
