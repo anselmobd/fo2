@@ -4,7 +4,7 @@ from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
-def op_perda(cursor, data_de, data_ate, detalhe):
+def query(cursor, data_de, data_ate, detalhe):
     sql = """
         SELECT
           lote.PROCONF_GRUPO REF

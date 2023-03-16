@@ -8,7 +8,7 @@ from fo2.connections import db_cursor_so
 
 from utils.views import totalize_grouped_data, group_rowspan
 
-import lotes.queries.op
+from lotes.queries.op import op_perda
 from lotes.forms.perda import OpPerdaForm
 
 
@@ -26,8 +26,8 @@ class OpPerda(View):
             'data_ate': data_ate,
             'detalhe': detalhe,
         }
-        # Peças em perda
-        data = lotes.queries.op.op_perda(cursor, data_de, data_ate, detalhe)
+
+        data = op_perda.query(cursor, data_de, data_ate, detalhe)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma perda de produção encontrada',
