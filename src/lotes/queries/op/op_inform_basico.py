@@ -37,6 +37,29 @@ def query(
           ELSE ' '
           END SITUACAO
         , o.REFERENCIA_PECA REF
+        , CASE
+            WHEN
+              ( SELECT 
+                  LISTAGG(ofi.ORDEM_PRODUCAO, ', ')
+                    WITHIN GROUP (ORDER BY ofi.ORDEM_PRODUCAO)
+                FROM PCPC_020 ofi
+                WHERE ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
+              ) IS NOT NULL THEN
+              'Mãe de'
+            WHEN o.ORDEM_PRINCIPAL <> 0 THEN
+              'Filha de'
+            ELSE
+              'Avulsa'
+          END TIPO_FM_OP
+        , ( SELECT 
+              coalesce(
+                LISTAGG(ofi.ORDEM_PRODUCAO, ', ')
+                  WITHIN GROUP (ORDER BY ofi.ORDEM_PRODUCAO)
+              , CAST(o.ORDEM_PRINCIPAL AS varchar2(8))
+              )
+            FROM PCPC_020 ofi
+            WHERE ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
+          ) OP_REL
         , o.DATA_ENTRADA_CORTE DT_CORTE
         , r.DESCR_REFERENCIA DESCR_REF
         , r.COLECAO
