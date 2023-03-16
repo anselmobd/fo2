@@ -43,7 +43,7 @@ class OpPerda(View):
             row['PERC'] = row['QTD'] / row['QTDOP'] * 100
             row['PERC|DECIMALS'] = 2
 
-        group = ['REF']
+        group = ['REF', 'COLECAO']
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QTD'],
@@ -56,20 +56,20 @@ class OpPerda(View):
         group_rowspan(data, group)
 
         if detalhe == 'c':
-            headers = ('Referência', 'Cor', 'Tamanho', 'OP', 'Quantidade OP item', 'Perda OP item', '%')
-            fields = ('REF', 'COR', 'TAM', 'OP', 'QTDOP', 'QTD', 'PERC')
+            headers = ("Referência", "Coleção", "Cor", "Tamanho", "OP", "Quantidade OP item", "Perda OP item", "%")
+            fields = ('REF', 'COLECAO', 'COR', 'TAM', 'OP', 'QTDOP', 'QTD', 'PERC')
             style = {
-                5: 'text-align: right;',
                 6: 'text-align: right;',
                 7: 'text-align: right;',
+                8: 'text-align: right;',
             }
         else:
-            headers = ('Referência', 'OP', 'Quantidade OP', 'Perda OP', '%')
-            fields = ('REF', 'OP', 'QTDOP', 'QTD', 'PERC')
+            headers = ("Referência", "Coleção", "OP", "Quantidade OP", "Perda OP", "%")
+            fields = ('REF', 'COLECAO', 'OP', 'QTDOP', 'QTD', 'PERC')
             style = {
-                3: 'text-align: right;',
                 4: 'text-align: right;',
                 5: 'text-align: right;',
+                6: 'text-align: right;',
             }
         context.update({
             'headers': headers,
