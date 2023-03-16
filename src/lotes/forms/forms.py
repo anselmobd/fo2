@@ -569,7 +569,7 @@ class OpPerdaForm(forms.Form):
     CHOICES = [('r', 'Por referência'),
                ('c', 'Por referência-cor-tamanho')]
     detalhe = forms.ChoiceField(
-        label='Detalhe', choices=CHOICES, initial='c')
+        label='Detalhe', choices=CHOICES, initial='r')
 
     def clean_data_de(self):
         data_de = self.cleaned_data['data_de']
