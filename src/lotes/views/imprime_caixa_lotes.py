@@ -14,6 +14,7 @@ import lotes.queries.op
 import lotes.queries.lote
 import lotes.models as models
 from lotes.data import lotes_em_caixa
+from lotes.queries.op import op_inform_basico
 
 
 class ImprimeCaixaLotes(LoginRequiredMixin, View):
@@ -142,7 +143,8 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
         ref_mae = ''
         if opi_row['TIPO_FM_OP'] == 'Filha de':
             op_mae = '{}'.format(opi_row['OP_REL'])
-            opmaei_data = lotes.queries.op.op_inform(cursor, op_mae)
+            # opmaei_data = lotes.queries.op.op_inform(cursor, op_mae)
+            opmaei_data = op_inform_basico.query(cursor, op_mae)
             opmaei_row = opmaei_data[0]
             ref_mae = opmaei_row['REF']
         for row in l_data:
