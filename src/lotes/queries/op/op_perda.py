@@ -21,12 +21,7 @@ def op_perda(cursor, data_de, data_ate, detalhe):
               SUM( l.QTDE_PECAS_PROG )
             FROM pcpc_040 l
             WHERE l.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
-              AND l.SEQ_OPERACAO = (
-                SELECT
-                  MIN( ls.SEQ_OPERACAO )
-                FROM pcpc_040 ls
-                WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-              )
+              AND l.SEQUENCIA_ESTAGIO = 1
           ) QTDOP
         FROM PCPC_040 lote
         JOIN PCPC_020 o
