@@ -38,7 +38,7 @@ def query(cursor, data_de, data_ate, colecao, detalhe):
     sql = f"""
         SELECT
           lote.PROCONF_GRUPO REF
-        , r.COLECAO
+        , r.COLECAO || '-' || cole.DESCR_COLECAO COLECAO
         {fields} -- fields
         , lote.ORDEM_PRODUCAO OP
         , sum(lote.QTDE_PERDAS ) QTD
@@ -55,6 +55,8 @@ def query(cursor, data_de, data_ate, colecao, detalhe):
         JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = 1
          AND r.REFERENCIA = o.REFERENCIA_PECA
+        JOIN BASI_140 cole
+          ON cole.COLECAO = r.COLECAO
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
         WHERE 1=1
@@ -64,6 +66,7 @@ def query(cursor, data_de, data_ate, colecao, detalhe):
         GROUP BY
           lote.PROCONF_GRUPO
         , r.COLECAO
+        , cole.DESCR_COLECAO
         {group_order} -- group_order
         , lote.ORDEM_PRODUCAO
         HAVING
