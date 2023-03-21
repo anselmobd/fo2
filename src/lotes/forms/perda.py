@@ -28,8 +28,10 @@ class OpPerdaForm(forms.Form):
         queryset=Colecao.objects.exclude(colecao=0).order_by(
             'colecao'), empty_label="(Todas)")
 
-    CHOICES = [('r', 'Por referência'),
-               ('c', 'Por referência-cor-tamanho')]
+    CHOICES = [
+        ('r', 'Por referência'),
+        ('i', 'Por referência-cor-tamanho'),
+    ]
     detalhe = forms.ChoiceField(
         label='Detalhe', choices=CHOICES, initial='r')
 

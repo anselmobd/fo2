@@ -22,18 +22,18 @@ def query(cursor, data_de, data_ate, colecao, detalhe):
     fields = """--
         , lote.PROCONF_ITEM COR
         , lote.PROCONF_SUBGRUPO TAM
-    """ if detalhe == 'c' else ''
+    """ if detalhe == 'i' else ''
 
     filtra_qtdop = """--
         AND l.PROCONF_ITEM = lote.PROCONF_ITEM
         AND l.PROCONF_SUBGRUPO = lote.PROCONF_SUBGRUPO
-    """ if detalhe == 'c' else ''
+    """ if detalhe == 'i' else ''
 
     group_order = """--
         , lote.PROCONF_ITEM
         , tam.ORDEM_TAMANHO
         , lote.PROCONF_SUBGRUPO
-    """ if detalhe == 'c' else ''
+    """ if detalhe == 'i' else ''
 
     sql = f"""
         SELECT

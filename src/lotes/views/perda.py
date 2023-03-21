@@ -55,7 +55,7 @@ class OpPerda(View):
         })
         group_rowspan(data, group)
 
-        if detalhe == 'c':
+        if detalhe == 'i':
             headers = ("Referência", "Coleção", "Cor", "Tamanho", "OP", "Quantidade OP item", "Perda OP item", "%")
             fields = ('REF', 'COLECAO', 'COR', 'TAM', 'OP', 'QTDOP', 'QTD', 'PERC')
             style = {
