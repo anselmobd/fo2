@@ -19,27 +19,52 @@ def query(cursor, data_de, data_ate, colecao, detalhe):
     """ if colecao else ''
 
 
-    fields = """--
-        , lote.PROCONF_ITEM COR
-        , lote.PROCONF_SUBGRUPO TAM
-    """ if detalhe == 'i' else ''
+    if detalhe == 'ref':
+        fields = """--
+              lote.PROCONF_GRUPO REF
+            , r.COLECAO || '-' || cole.DESCR_COLECAO COLECAO
+        """
+    elif detalhe == 'item':
+        fields = """--
+              lote.PROCONF_GRUPO REF
+            , r.COLECAO || '-' || cole.DESCR_COLECAO COLECAO
+            , lote.PROCONF_ITEM COR
+            , lote.PROCONF_SUBGRUPO TAM
+        """
+    elif detalhe == 'col':
+        fields = """--
+            r.COLECAO || '-' || cole.DESCR_COLECAO COLECAO
+        """
 
     filtra_qtdop = """--
         AND l.PROCONF_ITEM = lote.PROCONF_ITEM
         AND l.PROCONF_SUBGRUPO = lote.PROCONF_SUBGRUPO
-    """ if detalhe == 'i' else ''
+    """ if detalhe == 'item' else ''
 
-    group_order = """--
-        , lote.PROCONF_ITEM
-        , tam.ORDEM_TAMANHO
-        , lote.PROCONF_SUBGRUPO
-    """ if detalhe == 'i' else ''
+    if detalhe == 'ref':
+        group_order = """--
+              lote.PROCONF_GRUPO
+            , r.COLECAO
+            , cole.DESCR_COLECAO
+        """
+    elif detalhe == 'item':
+        group_order = """--
+              lote.PROCONF_GRUPO
+            , r.COLECAO
+            , cole.DESCR_COLECAO
+            , lote.PROCONF_ITEM
+            , tam.ORDEM_TAMANHO
+            , lote.PROCONF_SUBGRUPO
+        """
+    elif detalhe == 'col':
+        group_order = """--
+              r.COLECAO
+            , cole.DESCR_COLECAO
+        """
 
     sql = f"""
         SELECT
-          lote.PROCONF_GRUPO REF
-        , r.COLECAO || '-' || cole.DESCR_COLECAO COLECAO
-        {fields} -- fields
+          {fields} -- fields
         , lote.ORDEM_PRODUCAO OP
         , sum(lote.QTDE_PERDAS ) QTD
         , ( SELECT
@@ -64,16 +89,12 @@ def query(cursor, data_de, data_ate, colecao, detalhe):
           {filtra_data_ate} --  filtra_data_ate
           {filtra_colecao} --  filtra_colecao
         GROUP BY
-          lote.PROCONF_GRUPO
-        , r.COLECAO
-        , cole.DESCR_COLECAO
-        {group_order} -- group_order
+          {group_order} -- group_order
         , lote.ORDEM_PRODUCAO
         HAVING
           sum(lote.QTDE_PERDAS ) > 0
         ORDER BY
-          lote.PROCONF_GRUPO
-        {group_order} -- group_order
+          {group_order} -- group_order
         , lote.ORDEM_PRODUCAO
     """
 

@@ -29,11 +29,12 @@ class OpPerdaForm(forms.Form):
             'colecao'), empty_label="(Todas)")
 
     CHOICES = [
-        ('r', 'Por referência'),
-        ('i', 'Por referência-cor-tamanho'),
+        ('ref', 'Por referência'),
+        ('item', 'Por referência-cor-tamanho'),
+        ('col', 'Por coleção'),
     ]
     detalhe = forms.ChoiceField(
-        label='Detalhe', choices=CHOICES, initial='r')
+        label='Detalhe', choices=CHOICES, initial='ref')
 
     def clean_data_de(self):
         data_de = self.cleaned_data['data_de']

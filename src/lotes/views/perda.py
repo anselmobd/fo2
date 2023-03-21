@@ -39,11 +39,16 @@ class OpPerda(View):
 
         for row in data:
             row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
-            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+            if 'REF' in row:
+                row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             row['PERC'] = row['QTD'] / row['QTDOP'] * 100
             row['PERC|DECIMALS'] = 2
 
-        group = ['REF', 'COLECAO']
+        if detalhe in ['ref', 'item']:
+            group = ['REF', 'COLECAO']
+        elif detalhe == 'col':
+            group = ['COLECAO']
+
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QTD'],
@@ -52,18 +57,11 @@ class OpPerda(View):
             'flags': ['NO_TOT_1'],
             'global_sum': ['QTD'],
             'global_descr': {'OP': 'Total geral:'},
+            'row_style': 'font-weight: bold;',
         })
         group_rowspan(data, group)
 
-        if detalhe == 'i':
-            headers = ("Referência", "Coleção", "Cor", "Tamanho", "OP", "Quantidade OP item", "Perda OP item", "%")
-            fields = ('REF', 'COLECAO', 'COR', 'TAM', 'OP', 'QTDOP', 'QTD', 'PERC')
-            style = {
-                6: 'text-align: right;',
-                7: 'text-align: right;',
-                8: 'text-align: right;',
-            }
-        else:
+        if detalhe == 'ref':
             headers = ("Referência", "Coleção", "OP", "Quantidade OP", "Perda OP", "%")
             fields = ('REF', 'COLECAO', 'OP', 'QTDOP', 'QTD', 'PERC')
             style = {
@@ -71,6 +69,23 @@ class OpPerda(View):
                 5: 'text-align: right;',
                 6: 'text-align: right;',
             }
+        elif detalhe == 'item':
+            headers = ("Referência", "Coleção", "Cor", "Tamanho", "OP", "Quantidade OP item", "Perda OP item", "%")
+            fields = ('REF', 'COLECAO', 'COR', 'TAM', 'OP', 'QTDOP', 'QTD', 'PERC')
+            style = {
+                6: 'text-align: right;',
+                7: 'text-align: right;',
+                8: 'text-align: right;',
+            }
+        elif detalhe == 'col':
+            headers = ("Coleção", "OP", "Quantidade OP", "Perda OP", "%")
+            fields = ('COLECAO', 'OP', 'QTDOP', 'QTD', 'PERC')
+            style = {
+                3: 'text-align: right;',
+                4: 'text-align: right;',
+                5: 'text-align: right;',
+            }
+        
         context.update({
             'headers': headers,
             'fields': fields,
