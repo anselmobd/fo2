@@ -13,13 +13,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 from . import __version__, __version__date__
 
-from .db_password import (
-    DBPASS,
-    DBPASS_SO,
-    DBPASS_PERSONA,
-    DBPASS_F1,
-    DBPASS_SH,
-)
+from .db_password import *
 
 
 PROJ_VERSION = __version__

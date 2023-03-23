@@ -2,14 +2,6 @@
 
 from .settings import *
 
-from .db_password import (
-    DBPASS,
-    DBPASS_STLOG,
-    DBPASS_SO,
-    DBPASS_PERSONA,
-    DBPASS_F1,
-    DBPASS_SH,
-)
 
 DEBUG = False
 
@@ -20,10 +12,12 @@ TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "tussor_fo2_production",
-        'USER': "tussor_fo2",
-        'PASSWORD': DBPASS,
+        'ENGINE': DB_default_ENGINE,
+        'HOST': DB_default_HOST,
+        'PORT': DB_default_PORT,
+        'USER': DB_default_USER,
+        'PASSWORD': DB_default_PASSWORD,
+        'NAME': DB_default_NAME,
     },
     'systextil_log': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
