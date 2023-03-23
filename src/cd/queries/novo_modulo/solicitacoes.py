@@ -78,11 +78,14 @@ def get_solicitacoes(
     ):
         solicitacao_nula = ""
     else:
-        solicitacao_nula = "AND sl.SOLICITACAO IS NOT NULL"
+        solicitacao_nula = """--
+            AND sl.SOLICITACAO IS NOT NULL
+            AND sl.SOLICITACAO <> 0
+        """
 
     sql = f"""
         SELECT DISTINCT
-          sl.SOLICITACAO 
+          COALESCE(sl.SOLICITACAO, 0) SOLICITACAO 
         , sum(CASE WHEN sl.SITUACAO = 1 THEN 1 ELSE 0 END) l1
         , sum(CASE WHEN sl.SITUACAO = 1 THEN sl.QTDE ELSE 0 END) q1
         , sum(CASE WHEN sl.SITUACAO = 2 THEN 1 ELSE 0 END) l2
@@ -135,9 +138,9 @@ def get_solicitacoes(
           {filtra_com_lotes_situacao_de} -- filtra_com_lotes_situacao_de
           {filtra_com_lotes_situacao_ate} -- filtra_com_lotes_situacao_ate
         GROUP BY 
-          sl.SOLICITACAO
+          COALESCE(sl.SOLICITACAO, 0)
         ORDER BY 
-          sl.SOLICITACAO {"DESC" if desc else ""}
+          COALESCE(sl.SOLICITACAO, 0) {"DESC" if desc else ""}
     """
     debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)
