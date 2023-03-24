@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 
 from django.views import View
@@ -153,9 +154,24 @@ class PosicaoEstoque(O2BaseGetPostView):
 
     def mount_context(self):
         self.modelo = None
-        if len(self.ref) % 5 != 0:
-            self.modelo = self.ref.lstrip("0")
-            self.ref = ''
+
+        if any([ch in self.ref for ch in ' ,-']):
+            filtro_refs = [
+                filtro
+                for filtro in re.split(r'[\s,-]', self.ref)
+                if filtro
+            ]
+            self.ref = []
+            self.modelo = []
+            for filtro in filtro_refs:
+                if len(filtro) % 5 != 0:
+                    self.modelo.append(filtro.lstrip("0"))
+                else:
+                    self.ref.append(filtro)
+        else:
+            if len(self.ref) % 5 != 0:
+                self.modelo = self.ref.lstrip("0")
+                self.ref = ''
 
         data = queries.posicao_estoque(
             self.cursor, self.nivel, self.ref, self.tam, self.cor,
