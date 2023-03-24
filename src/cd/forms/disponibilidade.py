@@ -59,6 +59,7 @@ class DisponibilidadeForm(forms.Form):
         ('p 63', 'Lotes paletizados com quantidade no 63-CD'),
         ('n <63', 'Lotes não paletizados com quantidade antes do 63-CD'),
         ('* *', 'Lotes independente de ser paletizado com quantidade em qualquer estágio'),
+        ('* <63', 'Lotes independente de ser paletizado com quantidade antes do 63-CD'),
     ]
     tipo_inventario = forms.ChoiceField(
         label='Inventário',

@@ -121,10 +121,13 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             selecao_lotes = '63'
         elif self.tipo_inventario == 'n <63':
             paletizado = 'n'
-            selecao_lotes = 'qq'
+            selecao_lotes = '<63'
         elif self.tipo_inventario == '* *':
             paletizado = 't'
             selecao_lotes = 'qq'
+        elif self.tipo_inventario == '* <63':
+            paletizado = 't'
+            selecao_lotes = '<63'
 
         inventario = refs_em_palets.query(
             self.cursor,
