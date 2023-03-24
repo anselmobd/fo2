@@ -14,6 +14,7 @@ def posicao_estoque(
     Recebe filtros por:
         nivel
         ref: referência
+            pode ser uma referência ou uma lista
         tam: tamanho
         cor
         deposito
@@ -27,6 +28,7 @@ def posicao_estoque(
             v: PA/PG/PB
             m: MD (MP)
         modelo
+            pode ser uma modelo ou uma lista
         empresa: depósitos da empresa
     Recebe configuração:
         group: indica campos a serem devolvidos e agrupados, 
@@ -48,13 +50,29 @@ def posicao_estoque(
     if nivel is not None:
         filtro_nivel = f"AND e.CDITEM_NIVEL99 = {nivel}"
 
-    filtro_ref = ''
-    if ref != '':
-        filtro_ref = f"AND e.CDITEM_GRUPO = '{ref}'"
+    if ref:
+        if isinstance(ref, (tuple, list)):
+            refs = set(ref)
+        else:
+            refs = {ref, }
+        refs_sql = ', '.join([f"'{r1}'" for r1 in list(refs)])
+        filtro_ref = f"""--
+            AND e.CDITEM_GRUPO in ({refs_sql})
+        """
+    else:
+        filtro_ref = ''
 
-    filtro_modelo = ''
-    if modelo is not None:
-        filtro_modelo = f"AND {sql_modelo} = '{modelo}'"
+    if modelo:
+        if isinstance(modelo, (tuple, list)):
+            modelos = set(modelo)
+        else:
+            modelos = {modelo, }
+        modelos_sql = ', '.join([f"'{m1}'" for m1 in list(modelos)])
+        filtro_modelo = f"""--
+            AND {sql_modelo} in ({modelos_sql})
+        """
+    else:
+        filtro_modelo = ''
 
     filtro_tam = ''
     if tam != '':
