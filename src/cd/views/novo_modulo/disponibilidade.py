@@ -61,12 +61,26 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         tabela_codigo = None if self.tabela == '' else self.tabela
         self.referencia = None if self.referencia == '' else self.referencia
         self.modelo = None if self.modelo == '' else int(self.modelo)
+        if self.tipo_inventario == 'p 63':
+            paletizado = 's'
+            selecao_lotes = '63'
+        elif self.tipo_inventario == 'n <63':
+            paletizado = 'n'
+            selecao_lotes = '<63'
+        elif self.tipo_inventario == '* *':
+            paletizado = 't'
+            selecao_lotes = 'qq'
+        elif self.tipo_inventario == '* <63':
+            paletizado = 't'
+            selecao_lotes = '<63'
 
         referencias = refs_em_palets.query(
             self.cursor,
             ref=self.referencia,
             colecao=colecao_codigo,
             modelo=self.modelo,
+            paletizado=paletizado,
+            selecao_lotes=selecao_lotes,
         )
         p.prt('referencias')
 
@@ -115,19 +129,6 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             row['ref']
             for row in referencias
         ]
-
-        if self.tipo_inventario == 'p 63':
-            paletizado = 's'
-            selecao_lotes = '63'
-        elif self.tipo_inventario == 'n <63':
-            paletizado = 'n'
-            selecao_lotes = '<63'
-        elif self.tipo_inventario == '* *':
-            paletizado = 't'
-            selecao_lotes = 'qq'
-        elif self.tipo_inventario == '* <63':
-            paletizado = 't'
-            selecao_lotes = '<63'
 
         inventario = refs_em_palets.query(
             self.cursor,
