@@ -94,7 +94,7 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
             'msgs_erro': [],
         })
 
-        self.acessa_oracle_db(settings.DATABASES, 'so')
-        self.acessa_oracle_db(settings.DATABASES_EXTRAS, 'sn')
-        self.acessa_oracle_db(settings.DATABASES_EXTRAS, 'sh')
+        # self.acessa_oracle_db(settings.DATABASES, 'so')
+        # self.acessa_oracle_db(settings.DATABASES_EXTRAS, 'sn')
+        # self.acessa_oracle_db(settings.DATABASES_EXTRAS, 'sh')
         self.acessa_fdb_db(settings.DATABASES_EXTRAS, 'f1')

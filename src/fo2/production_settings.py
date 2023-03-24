@@ -27,14 +27,14 @@ DATABASES = {
         'HOST': '192.168.1.84',
         'PORT': '5432',
     },
-    'so': {  # Systextil Oficial
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'xe',
-        'USER': 'systextil',
-        'PASSWORD': DBPASS_SO,
-        'HOST': '192.168.1.28',
-        'PORT': '1521',
-    },
+    # 'so': {  # Systextil Oficial
+    #     'ENGINE': 'django.db.backends.oracle',
+    #     'NAME': 'xe',
+    #     'USER': 'systextil',
+    #     'PASSWORD': DBPASS_SO,
+    #     'HOST': '192.168.1.28',
+    #     'PORT': '1521',
+    # },
     'sn': {  # Systextil OC (nuvem)
         'ENGINE': 'django.db.backends.oracle',
         'NAME': '10.0.0.3:1521/db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
@@ -68,14 +68,14 @@ DATABASES_EXTRAS = {
         'AUTOCOMMIT': None,
         'DIALECT': 3,
     },
-    'sh': {  # Systextil homologação
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
-        'USER': 'systextil',
-        'PASSWORD': DBPASS_SH,
-        'HOST': '10.0.0.3',
-        'PORT': '1521',
-    },
+    # 'sh': {  # Systextil homologação
+    #     'ENGINE': 'django.db.backends.oracle',
+    #     'NAME': 'db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
+    #     'USER': 'systextil',
+    #     'PASSWORD': DBPASS_SH,
+    #     'HOST': '10.0.0.3',
+    #     'PORT': '1521',
+    # },
 }
 
 CACHES = {
