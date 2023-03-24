@@ -1,14 +1,10 @@
-# -*- coding: utf-8 -*-
-
 from .settings import *
 
 
 DEBUG = False
-
-# DEBUG_CURSOR_EXECUTE = False
-DEBUG_CURSOR_EXECUTE_PRT = False
-
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
+
+DEBUG_CURSOR_EXECUTE_PRT = False
 
 DATABASES = {
     'default': {
@@ -27,14 +23,6 @@ DATABASES = {
         'HOST': '192.168.1.84',
         'PORT': '5432',
     },
-    # 'so': {  # Systextil Oficial
-    #     'ENGINE': 'django.db.backends.oracle',
-    #     'NAME': 'xe',
-    #     'USER': 'systextil',
-    #     'PASSWORD': DBPASS_SO,
-    #     'HOST': '192.168.1.28',
-    #     'PORT': '1521',
-    # },
     'sn': {  # Systextil OC (nuvem)
         'ENGINE': 'django.db.backends.oracle',
         'NAME': '10.0.0.3:1521/db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
@@ -58,8 +46,6 @@ DATABASES_EXTRAS = {
         'NAME': '/dados/db/f1/f1.cdb',
         'USER': 'sysdba',
         'PASSWORD': DBPASS_F1,
-        # 'HOST': 'localhost',
-        # 'PORT': 13050,
         'HOST': '192.168.1.98',
         'PORT': 3050,
         'OPTIONS': {'charset': 'WIN1252'},
@@ -68,14 +54,6 @@ DATABASES_EXTRAS = {
         'AUTOCOMMIT': None,
         'DIALECT': 3,
     },
-    # 'sh': {  # Systextil homologação
-    #     'ENGINE': 'django.db.backends.oracle',
-    #     'NAME': 'db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
-    #     'USER': 'systextil',
-    #     'PASSWORD': DBPASS_SH,
-    #     'HOST': '10.0.0.3',
-    #     'PORT': '1521',
-    # },
 }
 
 CACHES = {
