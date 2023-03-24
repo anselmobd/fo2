@@ -85,7 +85,7 @@ def get_solicitacoes(
 
     sql = f"""
         SELECT DISTINCT
-          COALESCE(sl.SOLICITACAO, 0) SOLICITACAO 
+          NULLIF(sl.SOLICITACAO, 0) SOLICITACAO 
         , sum(CASE WHEN sl.SITUACAO = 1 THEN 1 ELSE 0 END) l1
         , sum(CASE WHEN sl.SITUACAO = 1 THEN sl.QTDE ELSE 0 END) q1
         , sum(CASE WHEN sl.SITUACAO = 2 THEN 1 ELSE 0 END) l2
@@ -138,9 +138,9 @@ def get_solicitacoes(
           {filtra_com_lotes_situacao_de} -- filtra_com_lotes_situacao_de
           {filtra_com_lotes_situacao_ate} -- filtra_com_lotes_situacao_ate
         GROUP BY 
-          COALESCE(sl.SOLICITACAO, 0)
+          NULLIF(sl.SOLICITACAO, 0)
         ORDER BY 
-          COALESCE(sl.SOLICITACAO, 0) {"DESC" if desc else ""}
+          NULLIF(sl.SOLICITACAO, 0) {"DESC" if desc else ""}
     """
     debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)
