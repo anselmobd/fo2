@@ -35,18 +35,18 @@
       <div class="mod_{{ grade.refnum|safe }}">
       {% if grade.modelo %}
         <hr>
-        <h4 style="padding-left: 2em;">Modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.modelo %}">{{ grade.modelo|safe }}</a></b></h4>
+        <h4 style="padding-left: 2em;margin: 20px 0px 0px 0px;">Modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.modelo %}">{{ grade.modelo|safe }}</a></b></h4>
       {% endif %}
       {% if grade.total_modelo %}
         {% if grade.total_modelo == 'geral' %}
           <hr>
-          <h4 style="padding-left: 8em;"><b>Total geral das grades acima</b></h4>
+          <h4 style="padding-left: 8em;margin: 20px 0px 0px 0px;"><b>Total geral das grades acima</b></h4>
         {% else %}
-          <h4 style="padding-left: 6em;">Total do modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.total_modelo %}">{{ grade.total_modelo|safe }}</a></b></h4>
+          <h4 style="padding-left: 6em;margin: 20px 0px 0px 0px;">Total do modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.total_modelo %}">{{ grade.total_modelo|safe }}</a></b></h4>
         {% endif %}
       {% endif %}
       {% if grade.ref %}
-        <h4 style="padding-left: 4em;">Referência: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
+        <h4 style="padding-left: 4em;margin: 20px 0px 0px 0px;">Referência: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
       {% endif %}
       <table class="layout">
         <tr>
