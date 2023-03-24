@@ -110,7 +110,7 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
             self.context.update({
                 'erro': "Nenhuma referência selecionada",
             })
-            return            
+            return
 
         dados_modelos, modelos = list_paginator_basic(
             modelos, modelos_por_pagina, self.page)
@@ -179,7 +179,7 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
                 total_modelo = None
 
             gzerada = None
-    
+
             grade_invent_ref = self.grade_dados(inventario, referencia)
             gzerada = og.update_gzerada(gzerada, grade_invent_ref)
             p.prt(f"{referencia} grade_invent_ref")
