@@ -10,14 +10,14 @@ from geral.functions import has_permission
 
 import systextil.models
 
-import lotes.forms as forms
 import lotes.models as models
+from lotes.forms.parametros import RegrasLoteMinTamanhoForm
 
 
 class RegrasLoteMinTamanho(View):
 
     def __init__(self):
-        self.Form_class = forms.RegrasLoteMinTamanhoForm
+        self.Form_class = RegrasLoteMinTamanhoForm
         self.template_name = 'lotes/regras_lote_min_tamanho.html'
         self.title_name = 'Regras de lote mínimo por tamanho'
         self.id = None

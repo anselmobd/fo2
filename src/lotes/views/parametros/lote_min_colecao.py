@@ -9,15 +9,15 @@ from geral.functions import has_permission
 
 import systextil.models
 
-import lotes.forms as forms
 import lotes.models as models
+from lotes.forms.parametros import LoteMinColecaoForm
 from lotes.models.functions.sync_regra_colecao import sync_regra_colecao
 
 
 class LoteMinColecao(View):
 
     def __init__(self):
-        self.Form_class = forms.LoteMinColecaoForm
+        self.Form_class = LoteMinColecaoForm
         self.template_name = 'lotes/lote_min_colecao.html'
         self.title_name = 'Lote mínimo por coleção'
         self.id = None

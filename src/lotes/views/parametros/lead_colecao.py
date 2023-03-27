@@ -11,8 +11,8 @@ from geral.functions import has_permission
 
 import systextil.models
 
-import lotes.forms as forms
 import lotes.models as models
+from lotes.forms.parametros import LeadColecaoForm
 from lotes.models.functions.meta import calculaMetaGiroTodas
 from lotes.models.functions.sync_regra_colecao import sync_regra_colecao
 
@@ -20,7 +20,7 @@ from lotes.models.functions.sync_regra_colecao import sync_regra_colecao
 class LeadColecao(View):
 
     def __init__(self):
-        self.Form_class = forms.LeadColecaoForm
+        self.Form_class = LeadColecaoForm
         self.template_name = 'lotes/lead_colecao.html'
         self.title_name = 'Lead por coleção'
         self.id = None
