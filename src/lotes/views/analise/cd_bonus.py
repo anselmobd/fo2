@@ -5,6 +5,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from o2.views.base.get_post import O2BaseGetPostView
+from utils.functions.models.row_field import PrepRows
 from utils.table_defs import TableDefsHpS
 
 from lotes.forms.analise import CdBonusViewForm
@@ -37,13 +38,12 @@ class CdBonusView(O2BaseGetPostView):
             self.cursor,
             data=self.data,
         )
-        if not dados:
-            return
 
-        for row in dados:
-            row['ref|TARGET'] = '_blank'
-            row['ref|A'] = reverse(
-                'produto:ref__get', args=[row['ref']])
+        PrepRows(
+            dados,
+        ).a_blank(
+            'ref', 'produto:ref__get'
+        ).process()
 
         self.context['dados'] = dados
         self.table_defs.hfs_dict_context(self.context)
