@@ -23,7 +23,7 @@ class ImprimeOb1(LoginRequiredMixin, View):
         super().__init__()
         self.login_url = '/intradm/login/'
         self.Form_class = ImprimeOb1Form
-        self.template_name = 'lotes/imprime_ob1.html'
+        self.template_name = 'lotes/impressao/imprime_ob1.html'
         self.title_name = 'Imprime etiqueta de OB1'
 
     def mount_context_and_print(self, cursor, os, caixa_inicial, caixa_final, do_print):
