@@ -11,18 +11,18 @@ import systextil.models
 
 import lotes.models
 from lotes.forms.parametros import (
-    AddRegrasLoteCaixaForm,
-    RegrasLoteCaixaForm,
+    LoteCaixaAddForm,
+    LoteCaixaForm,
 )
 from lotes.models.functions.sync_regra_colecao import sync_regra_colecao
 
 
-class RegrasLoteCaixa(View):
+class LoteCaixa(View):
 
     def __init__(self):
-        self.Form_class = RegrasLoteCaixaForm
-        self.Form_class_add = AddRegrasLoteCaixaForm
-        self.template_name = 'lotes/parametros/regras_lote_caixa.html'
+        self.Form_class = LoteCaixaForm
+        self.Form_class_add = LoteCaixaAddForm
+        self.template_name = 'lotes/parametros/lote_caixa.html'
         self.title_name = 'Lotes por caixa'
         self.id = None
         self.context = {'titulo': self.title_name}

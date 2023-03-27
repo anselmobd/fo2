@@ -5,7 +5,25 @@ from django import forms
 from systextil.models import Colecao
 
 
-class AddRegrasLoteCaixaForm(forms.Form):
+class LeadColecaoForm(forms.Form):
+    lead = forms.IntegerField(
+        required=False, min_value=0, max_value=100,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+
+class LoteMinColecaoForm(forms.Form):
+    lm_tam = forms.IntegerField(
+        label='Lote mínimo por tamanho',
+        required=False, min_value=0, max_value=10000,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    lm_cor = forms.IntegerField(
+        label='Lote mínimo por cor',
+        required=False, min_value=0, max_value=10000,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+
+class LoteCaixaAddForm(forms.Form):
     colecao = forms.ModelChoiceField(
         label='Coleção', required=True,
         queryset=Colecao.objects.exclude(colecao=0).order_by('colecao'))
@@ -30,25 +48,7 @@ class AddRegrasLoteCaixaForm(forms.Form):
         return referencia
 
 
-class LeadColecaoForm(forms.Form):
-    lead = forms.IntegerField(
-        required=False, min_value=0, max_value=100,
-        widget=forms.TextInput(attrs={'type': 'number'}))
-
-
-class LoteMinColecaoForm(forms.Form):
-    lm_tam = forms.IntegerField(
-        label='Lote mínimo por tamanho',
-        required=False, min_value=0, max_value=10000,
-        widget=forms.TextInput(attrs={'type': 'number'}))
-
-    lm_cor = forms.IntegerField(
-        label='Lote mínimo por cor',
-        required=False, min_value=0, max_value=10000,
-        widget=forms.TextInput(attrs={'type': 'number'}))
-
-
-class RegrasLoteCaixaForm(forms.Form):
+class LoteCaixaForm(forms.Form):
     lotes_caixa = forms.IntegerField(
         label='Lotes por caixa',
         min_value=0, max_value=10,

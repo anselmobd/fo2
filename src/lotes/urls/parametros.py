@@ -2,8 +2,8 @@ from django.urls import path, re_path, include
 
 from lotes.views.parametros import (
     lead_colecao,
+    lote_caixa,
     lote_min_colecao,
-    regras_lote_caixa,
     regras_lote_min_tamanho,
 )
 
@@ -28,12 +28,12 @@ urlpatterns = [
         include([
             path(
                 "",
-                regras_lote_caixa.RegrasLoteCaixa.as_view(),
+                lote_caixa.LoteCaixa.as_view(),
                 name=name('regras_lote_caixa'),
             ),
             re_path(
                 r"(?P<colecao>[0-9\-]+)/(?P<referencia>[A-Z0-9\-]+)/(?P<ead>[ead])/$",
-                regras_lote_caixa.RegrasLoteCaixa.as_view(),
+                lote_caixa.LoteCaixa.as_view(),
                 name=name('regras_lote_caixa'),
             ),
         ]),
