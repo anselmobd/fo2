@@ -28,6 +28,7 @@ class CdBonusView(O2BaseGetPostView):
         self.table_defs = TableDefsHpS({
             'usuario': ["Usuário"],
             'ref': ["Referência"],
+            'op': ["OP"],
             'qtd': ["Quantidade", 'r'],
         })
 
@@ -43,6 +44,8 @@ class CdBonusView(O2BaseGetPostView):
             dados,
         ).a_blank(
             'ref', 'produto:ref__get'
+        ).a_blank(
+            'op', 'producao:op__get'
         ).process()
 
         self.context['dados'] = dados

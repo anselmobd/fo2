@@ -18,6 +18,7 @@ def cd_bonus_query(
         SELECT
           u.USUARIO
         , l.PROCONF_GRUPO REF
+        , l.ORDEM_PRODUCAO OP
         , sum(ml.QTDE_PRODUZIDA) qtd
         --, ml.*
         FROM PCPC_045 ml
@@ -25,6 +26,8 @@ def cd_bonus_query(
           ON l.PERIODO_PRODUCAO = ml.PCPC040_PERCONF 
          AND l.ORDEM_CONFECCAO = ml.PCPC040_ORDCONF 
          AND l.CODIGO_ESTAGIO = ml.PCPC040_ESTCONF 
+        JOIN PCPC_020 op
+          ON op.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO 
         JOIN HDOC_030 u 
           ON u.CODIGO_USUARIO = ml.CODIGO_USUARIO
         WHERE 1=1
@@ -33,9 +36,11 @@ def cd_bonus_query(
         GROUP BY 
           u.USUARIO
         , l.PROCONF_GRUPO
+        , l.ORDEM_PRODUCAO
         ORDER BY 
           u.USUARIO
         , l.PROCONF_GRUPO
+        , l.ORDEM_PRODUCAO
     """
     debug_cursor_execute(cursor, sql)
     data = dictlist_lower(cursor)
