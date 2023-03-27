@@ -22,6 +22,7 @@ urlpatterns = [
     path('corte/', include('lotes.urls.corte')),
     path('parametros/', include('lotes.urls.parametros')),
     path('impressao/', include('lotes.urls.impressao')),
+    path('analise/', include('lotes.urls.analise')),
 
     re_path(r'^a_produzir/$', views.AProduzir.as_view(), name='a_produzir'),
 
@@ -39,12 +40,6 @@ urlpatterns = [
 
     re_path(r'^ajax/pedido_lead_modelo/(?P<modelo>[^/]+)/$',
         views.pedido_lead_modelo, name='pedido_lead_modelo'),
-
-    re_path(r'^analise/dtcorte_alter/$',
-        views.analise.DtCorteAlter.as_view(), name='analise_dtcorte_alter'),
-    re_path(r'^analise/dtcorte_alter/(?P<data>\d+)/$',
-        views.analise.DtCorteAlter.as_view(),
-        name='analise_dtcorte_alter__get'),
 
     re_path(r'^analise/grade_pedidos/$',
         views.analise.GradePedidos.as_view(), name='analise_grade_pedidos'),
