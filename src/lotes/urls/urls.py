@@ -116,7 +116,7 @@ urlpatterns = [
         views.ListaLotes.as_view(), name='lista_lotes'),
 
     re_path(r'^meta_giro/$',
-        views.MetaGiro.as_view(), name='meta_giro'),
+        views.analise.MetaGiro.as_view(), name='meta_giro'),
 
     re_path(r'^meta_total/$',
         views.MetaTotal.as_view(), name='meta_total'),
