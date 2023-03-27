@@ -18,7 +18,7 @@ class RegrasLoteMinTamanho(View):
 
     def __init__(self):
         self.Form_class = RegrasLoteMinTamanhoForm
-        self.template_name = 'lotes/regras_lote_min_tamanho.html'
+        self.template_name = 'lotes/parametros/regras_lote_min_tamanho.html'
         self.title_name = 'Regras de lote mínimo por tamanho'
         self.id = None
         self.context = {'titulo': self.title_name}

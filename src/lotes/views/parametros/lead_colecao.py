@@ -21,7 +21,7 @@ class LeadColecao(View):
 
     def __init__(self):
         self.Form_class = LeadColecaoForm
-        self.template_name = 'lotes/lead_colecao.html'
+        self.template_name = 'lotes/parametros/lead_colecao.html'
         self.title_name = 'Lead por coleção'
         self.id = None
         self.context = {'titulo': self.title_name}

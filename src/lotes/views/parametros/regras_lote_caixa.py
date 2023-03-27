@@ -22,7 +22,7 @@ class RegrasLoteCaixa(View):
     def __init__(self):
         self.Form_class = RegrasLoteCaixaForm
         self.Form_class_add = AddRegrasLoteCaixaForm
-        self.template_name = 'lotes/regras_lote_caixa.html'
+        self.template_name = 'lotes/parametros/regras_lote_caixa.html'
         self.title_name = 'Lotes por caixa'
         self.id = None
         self.context = {'titulo': self.title_name}

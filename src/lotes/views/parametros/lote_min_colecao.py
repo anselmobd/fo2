@@ -18,7 +18,7 @@ class LoteMinColecao(View):
 
     def __init__(self):
         self.Form_class = LoteMinColecaoForm
-        self.template_name = 'lotes/lote_min_colecao.html'
+        self.template_name = 'lotes/parametros/lote_min_colecao.html'
         self.title_name = 'Lote mínimo por coleção'
         self.id = None
         self.context = {'titulo': self.title_name}
