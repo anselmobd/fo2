@@ -1,7 +1,5 @@
-import locale
 from pprint import pprint
 
-from django.conf import settings
 from django.urls import reverse
 
 from fo2.connections import db_cursor_so
@@ -9,6 +7,7 @@ from fo2.connections import db_cursor_so
 from o2.views.base.get_post import O2BaseGetPostView
 
 from lotes.forms.analise import CdBonusViewForm
+from lotes.queries.analise.cd_bonus import cd_bonus_query
 
 
 class CdBonusView(O2BaseGetPostView):
@@ -19,27 +18,26 @@ class CdBonusView(O2BaseGetPostView):
         self.template_name = 'lotes/analise/cd_bonus.html'
         self.title_name = 'Análise - Produzido - CD (bônus)'
         self.cleaned_data2self = True
+        self.cleaned_data2context = True
         self.get_args2context = True
         self.form_class_has_initial = True
         self.get_args = ['data']
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
-        locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
 
-        dados = []
-        # xyz.query(
-        #     self.cursor,
-        #     data=data,
-        # )
+        dados = cd_bonus_query(
+            self.cursor,
+            data=self.data,
+        )
 
         if not dados:
             return
 
         for row in dados:
-            row['op|TARGET'] = '_blank'
-            row['op|A'] = reverse(
-                'producao:op__get', args=[row['op']])
+            row['ref|TARGET'] = '_blank'
+            row['ref|A'] = reverse(
+                'produto:ref__get', args=[row['ref']])
 
         headers = [
             'Usuário',
