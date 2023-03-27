@@ -21,6 +21,7 @@ urlpatterns = [
 
     path('corte/', include('lotes.urls.corte')),
     path('parametros/', include('lotes.urls.parametros')),
+    path('impressao/', include('lotes.urls.impressao')),
 
     re_path(r'^a_produzir/$', views.AProduzir.as_view(), name='a_produzir'),
 
@@ -102,9 +103,6 @@ urlpatterns = [
 
     re_path(r'^imprime_caixa_lotes/$',
         views.ImprimeCaixaLotes.as_view(), name='imprime_caixa_lotes'),
-
-    re_path(r'^imprime_lotes/$',
-        views.ImprimeLotes.as_view(), name='imprime_lotes'),
 
     re_path(r'^imprime_ob1/$',
         views.ImprimeOb1.as_view(), name='imprime_ob1'),

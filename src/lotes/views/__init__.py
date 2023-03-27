@@ -7,7 +7,6 @@ from .ajax import *
 from .a_produzir import *
 from .distribuicao import *
 from .imprime_caixa_lotes import *
-from .imprime_lotes import *
 from .imprime_ob1 import *
 from .imprime_tag import *
 from .op_caixa import *

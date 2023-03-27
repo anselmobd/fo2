@@ -21,16 +21,16 @@ class ImprimeLotes(LoginRequiredMixin, View):
 
     def __init__(self) -> None:
         super().__init__()
-        self.login_url = '/intradm/login/'
+        self.login_url = "/intradm/login/"
         self.Form_class = ImprimeLotesForm
-        self.template_name = 'lotes/imprime_lotes.html'
-        self.title_name = 'Imprime "Cartela de Lote"'
+        self.template_name = "lotes/imprime_lotes.html"
+        self.title_name = "Impressão - Cartela de Lote"
 
     def est_list(self, est):
-        estagios = est.split(' & ')
+        estagios = est.split(" & ")
         estList = []
         for estagio in estagios:
-            estList.append(re.sub(r'^([0-9]+).*$', r'\1', estagio))
+            estList.append(re.sub(r"^([0-9]+).*$", r"\1", estagio))
         return estList
 
     def mount_context_and_print(self, cursor, op, estagio, tam, cor, order,
@@ -53,13 +53,13 @@ class ImprimeLotes(LoginRequiredMixin, View):
             pula, qtd_lotes)
         if len(l_data) == 0:
             context.update({
-                'msg_erro': 'Nehum lote selecionado',
+                'msg_erro': "Nehum lote selecionado",
             })
             return context
 
         if l_data[0]['op_situacao'] == 9:
             context.update({
-                'msg_erro': 'OP cancelada!',
+                'msg_erro': "OP cancelada!",
             })
             l_data = []
             return context
@@ -68,17 +68,17 @@ class ImprimeLotes(LoginRequiredMixin, View):
         pula_lote = ultimo != ''
         data = []
         for row in l_data:
-            row['num_lote'] = '{}/{}'.format(row['nlote'], row['totlotes'])
-            row['datahora'] = format(datetime.now(), '%d/%m/%y %H:%M')
+            row['num_lote'] = "{nlote}/{totlotes}".format(**row)
+            row['datahora'] = datetime.now().strftime("%d/%m/%y %H:%M")
             row['qtdtot'] = None
             row['parcial'] = None
-            row['narrativa'] = ' '.join((
+            row['narrativa'] = " ".join((
                 row['descr_referencia'],
                 row['descr_cor'],
                 row['descr_tamanho']))
-            row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
+            row['lote'] = '{periodo}{oc:05}'.format(**row)
             if row['oc'] == row['oc1']:
-                row['prim'] = '*'
+                row['prim'] = "*"
             else:
                 row['prim'] = ''
             if row['divisao'] is None:
@@ -95,7 +95,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                     data.append(row)
                 else:
                     estagios = self.est_list(row['est'])
-                    quants = row['quants'].split(';')
+                    quants = row['quants'].split(";")
                     if estagio in estagios:
                         iestagio = estagios.index(estagio)
                         do_append = False
@@ -112,8 +112,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                             row['qtdtot'] = row['qtd']
                             row['estagio'] = estagio
                             row['qtd'] = quants[iestagio]
-                            row['qtd_tela'] = '{} ({})'.format(
-                                row['qtd'], row['qtdtot'])
+                            row['qtd_tela'] = "{qtd} ({qtdtot})".format(**row)
                             data.append(row)
 
         context.update({
@@ -121,7 +120,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         })
         if len(data) == 0:
             context.update({
-                'msg_erro': 'Nehum lote selecionado',
+                'msg_erro': "Nehum lote selecionado",
             })
             return context
 
@@ -132,7 +131,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         opi_row = opi_data[0]
         op_mae = ''
         ref_mae = ''
-        if opi_row['TIPO_FM_OP'] == 'Filha de':
+        if opi_row['TIPO_FM_OP'] == "Filha de":
             op_mae = opi_row['OP_REL']
             opmaei_data = lotes.queries.op.op_inform(cursor, op_mae)
             opmaei_row = opmaei_data[0]
@@ -143,13 +142,13 @@ class ImprimeLotes(LoginRequiredMixin, View):
 
         # prepara dados selecionados
         if impresso == 'A':
-            cod_impresso = 'Cartela de Lote Adesiva'
+            cod_impresso = "Cartela de Lote Adesiva"
         elif impresso == 'C':
-            cod_impresso = 'Cartela de Lote Cartão'
+            cod_impresso = "Cartela de Lote Cartão"
         elif impresso == 'F':
-            cod_impresso = 'Cartela de Fundo'
+            cod_impresso = "Cartela de Fundo"
         elif impresso == 'E':
-            cod_impresso = 'Etiqueta de caixa de lotes'
+            cod_impresso = "Etiqueta de caixa de lotes"
         context.update({
             'count': len(data),
             'cod_impresso': cod_impresso,
@@ -166,9 +165,9 @@ class ImprimeLotes(LoginRequiredMixin, View):
             'qtd_lotes': qtd_lotes,
             'oc_inicial': oc_inicial,
             'oc_final': oc_final,
-            'headers': ('Tamanho', 'Cor', 'Narrativa',
-                        'Período', 'OC', '1º', 'Quant.',
-                        'Lote', 'Estágio', 'Unidade', '#'),
+            'headers': ("Tamanho", "Cor", "Narrativa",
+                        "Período", "OC", "1º", "Quant.",
+                        "Lote", "Estágio", "Unidade", "#"),
             'fields': ('tam', 'cor', 'narrativa',
                        'periodo', 'oc', 'prim', 'qtd_tela',
                        'lote', 'est', 'descricao_divisao', 'num_lote'),
@@ -183,7 +182,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 impresso = None
             if impresso is None:
                 context.update({
-                    'msg_erro': 'Impresso não cadastrado',
+                    'msg_erro': "Impresso não cadastrado",
                 })
                 do_print = False
 
@@ -195,7 +194,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 usuario_impresso = None
             if usuario_impresso is None:
                 context.update({
-                    'msg_erro': 'Impresso não cadastrado para o usuário',
+                    'msg_erro': "Impresso não cadastrado para o usuário",
                 })
                 do_print = False
 
@@ -208,17 +207,17 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 usuario_impresso.impressora_termica.nome,
                 file_dir="impresso/cartela/%Y/%m"
             )
-            teg.template(usuario_impresso.modelo.gabarito, '\r\n')
+            teg.template(usuario_impresso.modelo.gabarito, "\r\n")
             teg.printer_start()
             try:
                 for row in data:
                     row['obs1'] = obs1
                     row['obs2'] = obs2
-                    row['op'] = '{}'.format(row['op'])
-                    row['periodo'] = '{}'.format(row['periodo'])
-                    row['oc'] = '{:05}'.format(row['oc'])
-                    row['oc1'] = '{:05}'.format(row['oc1'])
-                    row['lote'] = '{}'.format(row['lote'])
+                    row['op'] = f"{row['op']}"
+                    row['periodo'] = f"{row['periodo']}"
+                    row['oc'] = f"{row['oc']:05}"
+                    row['oc1'] = f"{row['oc1']:05}"
+                    row['lote'] = f"{row['lote']}"
                     if row['data_entrada_corte']:
                         row['data_entrada_corte'] = \
                             row['data_entrada_corte'].date()
@@ -230,7 +229,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                         teg.printer_send()
                     except Exception as e:
                         context.update({
-                            'msg_erro': f'Erro ao imprimir <{e}>',
+                            'msg_erro': f"Erro ao imprimir <{e}>",
                         })
                         return context
             except Exception as e:
