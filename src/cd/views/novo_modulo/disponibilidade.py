@@ -180,7 +180,7 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         total_geral = None
         for row_ref in referencias:
             referencia = row_ref['ref']
-            op = row_ref['op']
+            # op = row_ref['op']
             modelo = row_ref['modelo']
 
             if modelo_ant not in (-1, modelo):
