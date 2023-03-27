@@ -23,12 +23,19 @@ class O2BaseGetPostView(CustomView):
         self.form_create_kwargs = {}
         self.get_args2form = True
         self.cleaned_data2self = False
+        self.cleaned_data2context = False
         self.cleaned_data2data = False
 
     def do_cleaned_data2self(self):
         if self.cleaned_data2self:
             for field in self.form.cleaned_data:
                 setattr(self, field, self.form.cleaned_data[field])
+
+    def do_cleaned_data2context(self):
+        if self.cleaned_data2context:
+            for field in self.form.cleaned_data:
+                value = self.form.cleaned_data[field]
+                self.context.update({field: value})
 
     def do_cleaned_data2data(self):
         if self.cleaned_data2data:
@@ -40,6 +47,7 @@ class O2BaseGetPostView(CustomView):
         self.pre_mount_context()
         if self.form.is_valid():
             self.do_cleaned_data2self()
+            self.do_cleaned_data2context()
             self.do_cleaned_data2data()
             self.mount_context()
         self.context['form'] = self.form
