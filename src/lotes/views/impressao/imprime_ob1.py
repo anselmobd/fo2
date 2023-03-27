@@ -10,11 +10,11 @@ from fo2.connections import db_cursor_so
 
 from utils.classes import TermalPrint
 
-from lotes.forms import ImprimeOb1Form
 import lotes.queries.ob
 import lotes.queries.os
 import lotes.models as models
 import lotes.queries as queries
+from lotes.forms.impressao import ImprimeOb1Form
 
 
 class ImprimeOb1(LoginRequiredMixin, View):

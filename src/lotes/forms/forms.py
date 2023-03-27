@@ -438,16 +438,3 @@ class QuantEstagioForm(forms.Form):
         data['ref'] = ref
         self.data = data
         return ref
-
-
-class ImprimeOb1Form(forms.Form):
-    os = forms.IntegerField(
-        label='OS',
-        widget=forms.TextInput(attrs={'type': 'number',
-                               'autofocus': 'autofocus'}))
-    caixa_inicial = forms.IntegerField(
-        label='Caixa inicial', required=False,
-        widget=forms.TextInput(attrs={'type': 'number'}))
-    caixa_final = forms.IntegerField(
-        label='Caixa final', required=False,
-        widget=forms.TextInput(attrs={'type': 'number'}))

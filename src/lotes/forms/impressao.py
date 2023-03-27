@@ -1,10 +1,8 @@
 from pprint import pprint
-from datetime import datetime, timedelta
 
 from django import forms
 
 from produto.models import ProdutoItem
-from systextil.models import Colecao, Familia
 
 
 class ImprimeCaixaLotesForm(forms.Form):
@@ -131,6 +129,19 @@ class ImprimeLotesForm(forms.Form):
         data['cor'] = cor
         self.data = data
         return cor
+
+
+class ImprimeOb1Form(forms.Form):
+    os = forms.IntegerField(
+        label='OS',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+    caixa_inicial = forms.IntegerField(
+        label='Caixa inicial', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    caixa_final = forms.IntegerField(
+        label='Caixa final', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
 
 
 class ImprimeTagForm(forms.Form):
