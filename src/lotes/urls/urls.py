@@ -104,9 +104,6 @@ urlpatterns = [
     re_path(r'^imprime_ob1/$',
         views.ImprimeOb1.as_view(), name='imprime_ob1'),
 
-    re_path(r'^imprime_tag/$',
-        views.ImprimeTag.as_view(), name='imprime_tag'),
-
     re_path(r'^lista_lotes/$',
         views.ListaLotes.as_view(), name='lista_lotes'),
 
