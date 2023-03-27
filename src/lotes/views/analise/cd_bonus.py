@@ -5,6 +5,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from o2.views.base.get_post import O2BaseGetPostView
+from utils.table_defs import TableDefsHpS
 
 from lotes.forms.analise import CdBonusViewForm
 from lotes.queries.analise.cd_bonus import cd_bonus_query
@@ -23,6 +24,12 @@ class CdBonusView(O2BaseGetPostView):
         self.form_class_has_initial = True
         self.get_args = ['data']
 
+        self.table_defs = TableDefsHpS({
+            'usuario': ["Usuário"],
+            'ref': ["Referência"],
+            'qtd': ["Quantidade", 'r'],
+        })
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
@@ -30,7 +37,6 @@ class CdBonusView(O2BaseGetPostView):
             self.cursor,
             data=self.data,
         )
-
         if not dados:
             return
 
@@ -39,22 +45,5 @@ class CdBonusView(O2BaseGetPostView):
             row['ref|A'] = reverse(
                 'produto:ref__get', args=[row['ref']])
 
-        headers = [
-            'Usuário',
-            'Referência',
-            'Quantidade',
-        ]
-        fields = [
-            'usuario',
-            'ref',
-            'qtd',
-        ]
-
-        self.context.update({
-            'headers': headers,
-            'fields': fields,
-            'dados': dados,
-            'style': {
-                3: 'text-align: right;',
-            },
-        })
+        self.context['dados'] = dados
+        self.table_defs.hfs_dict_context(self.context)
