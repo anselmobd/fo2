@@ -30,7 +30,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         estagios = est.split(' & ')
         estList = []
         for estagio in estagios:
-            estList.append(re.sub(r'^([1234567890]+).*$', r'\1', estagio))
+            estList.append(re.sub(r'^([0-9]+).*$', r'\1', estagio))
         return estList
 
     def mount_context_and_print(self, cursor, op, estagio, tam, cor, order,
