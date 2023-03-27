@@ -123,7 +123,9 @@ class RegrasLoteMinTamanho(View):
                          '<span class="glyphicon glyphicon-pencil" '
                          'aria-hidden="true"></span></a>'
                          ).format(reverse(
-                            'producao:regras_lote_min_tamanho', args=[key])),
+                            'producao:parametros-regras_lote_min_tamanho',
+                            args=[key]
+                         )),
             })
             data.append(regras[key])
 
@@ -222,4 +224,4 @@ class RegrasLoteMinTamanho(View):
             self.lista()
         else:
             self.context['form'] = form
-        return redirect('producao:regras_lote_min_tamanho')
+        return redirect('producao:parametros-regras_lote_min_tamanho')
