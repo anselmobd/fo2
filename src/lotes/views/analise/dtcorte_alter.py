@@ -8,16 +8,16 @@ from fo2.connections import db_cursor_so
 
 from utils.views import group_rowspan
 
-import lotes.forms as forms
 import lotes.models as models
 import lotes.queries as queries
+from lotes.forms.analise import DtCorteAlterForm
 
 
 class DtCorteAlter(View):
 
     def __init__(self):
         super().__init__()
-        self.Form_class = forms.DtCorteAlterForm
+        self.Form_class = DtCorteAlterForm
         self.template_name = 'lotes/analise/dtcorte_alter.html'
         self.title_name = 'Por data de corte e alternativa'
 
