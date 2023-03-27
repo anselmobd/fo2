@@ -101,9 +101,6 @@ urlpatterns = [
     re_path(r'^expedicao/(?P<cliente>\d+)/(?P<pedido_cliente>.+)/$',
         views.pedido.Expedicao.as_view(), name='expedicao__get'),
 
-    re_path(r'^imprime_caixa_lotes/$',
-        views.ImprimeCaixaLotes.as_view(), name='imprime_caixa_lotes'),
-
     re_path(r'^imprime_ob1/$',
         views.ImprimeOb1.as_view(), name='imprime_ob1'),
 
