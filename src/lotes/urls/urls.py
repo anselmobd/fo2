@@ -119,7 +119,7 @@ urlpatterns = [
         views.analise.MetaGiro.as_view(), name='meta_giro'),
 
     re_path(r'^meta_total/$',
-        views.MetaTotal.as_view(), name='meta_total'),
+        views.analise.MetaTotal.as_view(), name='meta_total'),
 
     re_path(r'^op/$', views.ops.op.Op.as_view(), name='op'),
     re_path(r'^op/(?P<op>\d+)/$', views.ops.op.Op.as_view(), name='op__get'),
