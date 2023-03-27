@@ -43,7 +43,7 @@ class LeadColecao(View):
                          '<span class="glyphicon glyphicon-pencil" '
                          'aria-hidden="true"></span></a>'
                          ).format(reverse(
-                            'producao:lead_colecao', args=[row['colecao']]))
+                            'producao:parametros-lead_colecao', args=[row['colecao']]))
 
         headers = ['Coleção', 'Descrição', 'Lead (dias)']
         fields = ['colecao', 'descr_colecao', 'lead']

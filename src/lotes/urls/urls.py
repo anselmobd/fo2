@@ -20,6 +20,7 @@ urlpatterns = [
     re_path(r'^$', views.index, name='index'),
 
     path('corte/', include('lotes.urls.corte')),
+    path('parametros/', include('lotes.urls.parametros')),
 
     re_path(r'^a_produzir/$', views.AProduzir.as_view(), name='a_produzir'),
 
@@ -110,9 +111,6 @@ urlpatterns = [
 
     re_path(r'^imprime_tag/$',
         views.ImprimeTag.as_view(), name='imprime_tag'),
-
-    re_path(r'^lead_colecao/(?P<id>[^/]+)?$',
-        views.LeadColecao.as_view(), name='lead_colecao'),
 
     re_path(r'^lista_lotes/$',
         views.ListaLotes.as_view(), name='lista_lotes'),

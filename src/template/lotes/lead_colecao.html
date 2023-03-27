@@ -14,9 +14,9 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if form %}
-  <p><a title="Listar" href="{% url 'producao:lead_colecao' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a></p>
+  <p><a title="Listar" href="{% url 'producao:parametros-lead_colecao' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a></p>
   <h3>Edita lead da coleção: {{id}} - {{descr_colecao}}</h3>
-  <form action="{% url 'producao:lead_colecao' id %}" method="post">
+  <form action="{% url 'producao:parametros-lead_colecao' id %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Grava"/>
