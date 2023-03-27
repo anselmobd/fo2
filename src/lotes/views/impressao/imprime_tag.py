@@ -12,7 +12,7 @@ from fo2.connections import db_cursor_so
 from utils.classes import TermalPrint
 
 import lotes.models as models
-from lotes.forms import ImprimeTagForm
+from lotes.forms.impressao import ImprimeTagForm
 
 
 class ImprimeTag(LoginRequiredMixin, View):

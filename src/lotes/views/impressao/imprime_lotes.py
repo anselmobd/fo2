@@ -10,7 +10,7 @@ from fo2.connections import db_cursor_so
 
 from utils.classes import TermalPrint
 
-from lotes.forms import ImprimeLotesForm
+from lotes.forms.impressao import ImprimeLotesForm
 import lotes.queries.op
 import lotes.models as models
 import lotes.queries as queries

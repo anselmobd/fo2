@@ -9,11 +9,11 @@ from fo2.connections import db_cursor_so
 
 from utils.classes import TermalPrint
 
-import lotes.forms
 import lotes.queries.op
 import lotes.queries.lote
 import lotes.models as models
 from lotes.data import lotes_em_caixa
+from lotes.forms.impressao import ImprimeCaixaLotesForm
 from lotes.queries.op import op_inform_basico
 
 
@@ -22,7 +22,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
     def __init__(self):
         super().__init__()
         self.login_url = '/intradm/login/'
-        self.Form_class = lotes.forms.ImprimeCaixaLotesForm
+        self.Form_class = ImprimeCaixaLotesForm
         self.template_name = 'lotes/imprime_caixa_lotes.html'
         self.title_name = 'Etiqueta de caixa lotes'
 
