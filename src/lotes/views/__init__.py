@@ -6,7 +6,6 @@ from . import pedido
 from .ajax import *
 from .a_produzir import *
 from .distribuicao import *
-from .imprime_ob1 import *
 from .op_caixa import *
 from .op_pendente import *
 from .op import *
