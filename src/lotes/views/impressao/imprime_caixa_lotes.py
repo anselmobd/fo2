@@ -23,7 +23,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
         super().__init__()
         self.login_url = '/intradm/login/'
         self.Form_class = ImprimeCaixaLotesForm
-        self.template_name = 'lotes/imprime_caixa_lotes.html'
+        self.template_name = 'lotes/impressao/imprime_caixa_lotes.html'
         self.title_name = 'Etiqueta de caixa lotes'
 
     def mount_context_and_print(

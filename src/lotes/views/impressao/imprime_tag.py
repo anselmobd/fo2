@@ -21,7 +21,7 @@ class ImprimeTag(LoginRequiredMixin, View):
         super().__init__()
         self.login_url = '/intradm/login/'
         self.Form_class = ImprimeTagForm
-        self.template_name = 'lotes/imprime_tag.html'
+        self.template_name = 'lotes/impressao/imprime_tag.html'
         self.title_name = 'Imprime TAG'
 
     def mount_context_and_print(self, cursor, item, quant):

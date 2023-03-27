@@ -23,7 +23,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         super().__init__()
         self.login_url = "/intradm/login/"
         self.Form_class = ImprimeLotesForm
-        self.template_name = "lotes/imprime_lotes.html"
+        self.template_name = "lotes/impressao/imprime_lotes.html"
         self.title_name = "Impressão - Cartela de Lote"
 
     def est_list(self, est):
