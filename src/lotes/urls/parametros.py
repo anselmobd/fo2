@@ -4,7 +4,7 @@ from lotes.views.parametros import (
     lead_colecao,
     lote_caixa,
     lote_min_colecao,
-    regras_lote_min_tamanho,
+    lote_min_tamanho,
 )
 
 
@@ -40,7 +40,7 @@ urlpatterns = [
     ),
     re_path(
         r"^regras_lote_min_tamanho/(?P<id>[^/]+)?$",
-        regras_lote_min_tamanho.RegrasLoteMinTamanho.as_view(),
+        lote_min_tamanho.LoteMinTamanho.as_view(),
         name=name('regras_lote_min_tamanho'),
     ),
 ]

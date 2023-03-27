@@ -55,7 +55,7 @@ class LoteCaixaForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number'}))
 
 
-class RegrasLoteMinTamanhoForm(forms.Form):
+class LoteMinTamanhoForm(forms.Form):
     min_para_lm = forms.IntegerField(
         label='% mínimo para aplicação do lote mínimo por tamanho',
         required=False, min_value=0, max_value=100,
