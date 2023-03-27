@@ -17,6 +17,10 @@ __all__ = ['query']
 
 fields_tuple = {
     'ref': ('ref', ),
+    'op': (
+        'op',
+        'ref',
+    ),
     'inv': (
         'op',
         'per',
@@ -128,6 +132,7 @@ def query(
     fields: define os campos a serem buscados
         lista de campos (list ou tuple); ou
         'ref': busca apenas referências
+        'op': busca apenas referências e OPs
         'inv': dados suficientes para grade de inventário
         'emp': dados suficientes para grade de empenhos (empenhos
                sem número de solicitação)
