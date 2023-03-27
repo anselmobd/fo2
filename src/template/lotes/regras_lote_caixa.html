@@ -14,11 +14,11 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if form %}
-  <p><a title="Listar" href="{% url 'producao:regras_lote_caixa' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a></p>
+  <p><a title="Listar" href="{% url 'producao:parametros-regras_lote_caixa' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a></p>
   {% if ead == 'e' %}
     <h3>Coleção: {{colecao}} ({{descr_colecao}}){% if referencia %} - Referência "{{referencia}}"{%endif%}</h3>
   {% endif %}
-  <form action="{% url 'producao:regras_lote_caixa__get' colecao referencia ead %}" method="post">
+  <form action="{% url 'producao:parametros-regras_lote_caixa' colecao referencia ead %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Grava"/>
@@ -26,7 +26,7 @@
 {% endif %}
 {% if data %}
   {% if has_perm %}
-    <p><a title="Inserir" href="{% url 'producao:regras_lote_caixa__get' '-' '-' 'a' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a></p>
+    <p><a title="Inserir" href="{% url 'producao:parametros-regras_lote_caixa' '-' '-' 'a' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a></p>
   {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}

@@ -195,11 +195,6 @@ urlpatterns = [
         name='rastreabilidade__get'
     ),
 
-    re_path(r'^regras_lote_caixa/$',
-        views.RegrasLoteCaixa.as_view(), name='regras_lote_caixa'),
-    re_path(r'^regras_lote_caixa/(?P<colecao>[^/]+)?/(?P<referencia>[^/]+)?/(?P<ead>[^/]+)?/$',
-        views.RegrasLoteCaixa.as_view(), name='regras_lote_caixa__get'),
-
     re_path(r'^respons/$', views.analise.respons, name='respons'),
 
     re_path(r'^respons_todos/$', views.analise.respons_todos,

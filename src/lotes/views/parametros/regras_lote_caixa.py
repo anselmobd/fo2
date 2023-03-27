@@ -39,7 +39,7 @@ class RegrasLoteCaixa(View):
             if not row['referencia']:
                 row['referencia'] = '-'
             link_e = reverse(
-                'producao:regras_lote_caixa__get',
+                'producao:parametros-regras_lote_caixa',
                 args=[
                     row['colecao'],
                     row['referencia'],
@@ -47,7 +47,7 @@ class RegrasLoteCaixa(View):
                 ]
             )
             link_d = reverse(
-                'producao:regras_lote_caixa__get',
+                'producao:parametros-regras_lote_caixa',
                 args=[
                     row['colecao'],
                     row['referencia'],
