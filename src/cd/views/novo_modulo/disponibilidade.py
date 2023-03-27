@@ -73,9 +73,12 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         elif self.tipo_inventario == '* <63':
             paletizado = 't'
             selecao_lotes = '<63'
+        self.detalhe = 'r'  # ou 'o'
+        fields = 'ref' if self.detalhe == 'r' else 'op'
 
         referencias = refs_em_palets.query(
             self.cursor,
+            fields=fields,
             ref=self.referencia,
             colecao=colecao_codigo,
             modelo=self.modelo,
@@ -115,15 +118,24 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         dados_modelos, modelos = list_paginator_basic(
             modelos, modelos_por_pagina, self.page)
 
+        sort_key = ('modelo', 'ref', 'op') if self.detalhe == 'o' else ('modelo', 'ref')
+
         referencias = sorted(
             [
                 row
                 for row in referencias
                 if row['modelo'] in modelos
             ],
-            key=itemgetter('modelo', 'ref')
+            key=itemgetter(*sort_key)
         )
         p.prt('paginator')
+
+        for row in referencias:
+            row['detalhe'] = (
+                f"{row['ref']}-{row['op']}"
+                if self.detalhe == 'o' else
+                row['ref']
+            )
 
         filtra_ref = [
             row['ref']
@@ -168,6 +180,7 @@ class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
         total_geral = None
         for row_ref in referencias:
             referencia = row_ref['ref']
+            op = row_ref['op']
             modelo = row_ref['modelo']
 
             if modelo_ant not in (-1, modelo):
