@@ -40,7 +40,7 @@ class LoteMinColecao(View):
                          '<span class="glyphicon glyphicon-pencil" '
                          'aria-hidden="true"></span></a>'
                          ).format(reverse(
-                            'producao:lote_min_colecao', args=[row['colecao']]))
+                            'producao:parametros-lote_min_colecao', args=[row['colecao']]))
 
         headers = ['Coleção', 'Descrição',
                    'Lote mínimo por tamanho', 'Lote mínimo por cor']

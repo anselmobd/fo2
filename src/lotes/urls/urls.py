@@ -115,9 +115,6 @@ urlpatterns = [
     re_path(r'^lista_lotes/$',
         views.ListaLotes.as_view(), name='lista_lotes'),
 
-    re_path(r'^lote_min_colecao/(?P<id>[^/]+)?$',
-        views.LoteMinColecao.as_view(), name='lote_min_colecao'),
-
     re_path(r'^meta_giro/$',
         views.MetaGiro.as_view(), name='meta_giro'),
 
