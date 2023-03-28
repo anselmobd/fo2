@@ -37,6 +37,10 @@ class RolosForm(forms.Form):
         label='OP', max_length=7, required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
+    nf = forms.CharField(
+        label='NF (número)', max_length=9, required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
     reserva_de = forms.DateField(
         label='Data da reserva: De', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
@@ -97,6 +101,7 @@ class RolosForm(forms.Form):
                 'ref',
                 'cor',
                 'op',
+                'nf',
                 'reserva_de',
                 'reserva_ate',
                 'est_res',

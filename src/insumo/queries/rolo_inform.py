@@ -11,7 +11,7 @@ __all__ = ['query']
 
 def query(
         cursor, rolo=None, sit=None, ref=None, cor=None, op=None,
-        reserva_de=None, reserva_ate=None, est_res=None,
+        nf=None, reserva_de=None, reserva_ate=None, est_res=None,
         est_aloc=None, est_conf=None):
 
     filtro_rolo = f"""--
@@ -33,6 +33,10 @@ def query(
     filtro_op = f"""--
         AND re.ORDEM_PRODUCAO = '{op}'
     """ if op else ''
+
+    filtro_nf = f"""--
+        AND ro.NOTA_FISCAL_ENT = '{nf}'
+    """ if nf else ''
 
     filtro_reserva_de = ''
     if reserva_de:
@@ -107,6 +111,7 @@ def query(
           {filtro_ref} -- filtro_ref
           {filtro_cor} -- filtro_cor
           {filtro_op} -- filtro_op
+          {filtro_nf} -- filtro_nf
           {filtro_reserva_de} -- filtro_reserva_de
           {filtro_reserva_ate} -- filtro_reserva_ate
           {filtro_est_res} -- filtro_est_res

@@ -20,7 +20,7 @@ class Rolos(View):
         self.title_name = 'Rolos'
 
     def mount_context(
-            self, cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf, page):
+            self, cursor, rolo, sit, ref, cor, op, nf, reserva_de, reserva_ate, est_res, est_aloc, est_conf, page):
 
         linhas_pagina = 100
 
@@ -57,6 +57,7 @@ class Rolos(View):
             'ref': ref,
             'cor': cor,
             'op': op,
+            'nf': nf,
             'reserva_de': reserva_de,
             'reserva_ate': reserva_ate,
             'est_res': est_res,
@@ -70,7 +71,7 @@ class Rolos(View):
         }
 
         data = rolo_inform.query(
-            cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf)
+            cursor, rolo, sit, ref, cor, op, nf, reserva_de, reserva_ate, est_res, est_aloc, est_conf)
 
         quant_rolos = len(data)
         if quant_rolos == 0:
@@ -156,6 +157,7 @@ class Rolos(View):
             ref = form.cleaned_data['ref']
             cor = form.cleaned_data['cor']
             op = form.cleaned_data['op']
+            nf = form.cleaned_data['nf']
             reserva_de = form.cleaned_data['reserva_de']
             reserva_ate = form.cleaned_data['reserva_ate']
             est_res = form.cleaned_data['est_res']
@@ -164,6 +166,6 @@ class Rolos(View):
             page = form.cleaned_data['page']
             cursor = db_cursor_so(request)
             context.update(self.mount_context(
-                cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf, page))
+                cursor, rolo, sit, ref, cor, op, nf, reserva_de, reserva_ate, est_res, est_aloc, est_conf, page))
         context['form'] = form
         return render(request, self.template_name, context)
