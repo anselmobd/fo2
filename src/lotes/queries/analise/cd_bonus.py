@@ -1,3 +1,4 @@
+import collections.abc
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
@@ -9,11 +10,19 @@ __all__ = ['cd_bonus_query']
 def cd_bonus_query(
     cursor,
     data=None,
+    usuario=None,
 ):
     filtra_data = f"""--
         AND ml.DATA_PRODUCAO >= DATE '{data}'
         AND ml.DATA_PRODUCAO < DATE '{data}' + 1
     """ if data else ''
+
+    if (not isinstance(usuario, collections.abc.Sequence)) or isinstance(usuario, str):
+        usuario = (usuario, )
+    filtra_usuario = f"""--
+        AND ml.CODIGO_USUARIO IN ({', '.join(map(str, usuario))})
+    """
+
     sql = f"""
         WITH
           move_lote AS
@@ -36,6 +45,7 @@ def cd_bonus_query(
             ON u.CODIGO_USUARIO = ml.CODIGO_USUARIO
           WHERE 1=1
             {filtra_data} -- filtra_data
+            {filtra_usuario} -- filtra_usuario
             AND ml.PCPC040_ESTCONF = 63
           GROUP BY 
             u.USUARIO
