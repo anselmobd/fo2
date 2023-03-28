@@ -30,39 +30,51 @@ class CdBonusView(O2BaseGetPostView):
             'usuario': ["Usuário"],
             'ref': ["Referência"],
             'op': ["OP"],
+            'ref_dest': ["Ref. destino"],
             'qtd': ["Quantidade", 'r'],
         })
+
+    def monta_dados_dest(self, dest):
+        dados_dest = [
+            row
+            for row in self.dados
+            if row['dest'] == dest
+        ]
+        group = ['usuario']
+        if dados_dest:
+            totalize_grouped_data(dados_dest, {
+                'group': group,
+                'sum': ['qtd'],
+                'count': [],
+                'descr': {'usuario': 'Total:'},
+                'global_sum': ['qtd'],
+                'global_descr': {'usuario': 'Total geral:'},
+                'row_style': 'font-weight: bold;',
+            })
+            group_rowspan(dados_dest, group)
+        self.context[dest] = {
+            'titulo': dest.capitalize(),
+            'data': dados_dest,
+            'group': group,
+            'vazio': "Sem produção no dia"
+        }
+        self.table_defs.hfs_dict_context(self.context[dest])
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        dados = cd_bonus_query(
+        self.dados = cd_bonus_query(
             self.cursor,
             data=self.data,
         )
 
         PrepRows(
-            dados,
+            self.dados,
         ).a_blank(
             'ref', 'produto:ref__get'
         ).a_blank(
             'op', 'producao:op__get'
         ).process()
 
-        group = ['usuario']
-        totalize_grouped_data(dados, {
-            'group': group,
-            'sum': ['qtd'],
-            'count': [],
-            'descr': {'usuario': 'Total:'},
-            'global_sum': ['qtd'],
-            'global_descr': {'usuario': 'Total geral:'},
-            'row_style': 'font-weight: bold;',
-        })
-        group_rowspan(dados, group)
-
-        self.context.update({
-            'dados': dados,
-            'group': group,
-        })
-        self.table_defs.hfs_dict_context(self.context)
+        self.monta_dados_dest('atacado')
+        self.monta_dados_dest('varejo')
