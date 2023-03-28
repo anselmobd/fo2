@@ -58,7 +58,11 @@ def cd_bonus_query(
         ( SELECT 
             ml.*
           , resh.GRUPO_DESTINO REF_DEST
-          , CASE WHEN res.PEDIDO_DESTINO >= 999000000 
+          , CASE WHEN
+              REGEXP_LIKE(
+                resh.GRUPO_DESTINO,
+               '^[0-9].*[0-9A]$'
+              )
             THEN 'varejo'
             ELSE 'atacado'
             END DEST
