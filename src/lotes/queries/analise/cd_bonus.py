@@ -61,7 +61,7 @@ def cd_bonus_query(
           , CASE WHEN
               REGEXP_LIKE(
                 resh.GRUPO_DESTINO,
-               '^[0-9].*[0-9A]$'
+               '^[0-9]*[0-9A]$'
               )
             THEN 'varejo'
             ELSE 'atacado'
