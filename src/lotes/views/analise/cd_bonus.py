@@ -8,6 +8,7 @@ from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.models.row_field import PrepRows
 from utils.table_defs import TableDefsHpS
 from utils.views import group_rowspan, totalize_grouped_data
+from base.models import Colaborador
 
 from lotes.forms.analise import CdBonusViewForm
 from lotes.queries.analise.cd_bonus import cd_bonus_query
@@ -63,9 +64,18 @@ class CdBonusView(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
+        colaboradores = Colaborador.objects.filter(
+            cd_bonus=True
+        ).values('matricula')
+        usuarios = [
+            colaborador['matricula']
+            for colaborador in colaboradores
+        ]
+
         self.dados = cd_bonus_query(
             self.cursor,
             data=self.data,
+            usuario=usuarios,
         )
 
         PrepRows(
