@@ -15,32 +15,73 @@ def cd_bonus_query(
         AND ml.DATA_PRODUCAO < DATE '{data}' + 1
     """ if data else ''
     sql = f"""
-        SELECT
-          u.USUARIO
-        , l.PROCONF_GRUPO REF
-        , l.ORDEM_PRODUCAO OP
-        , sum(ml.QTDE_PRODUZIDA) qtd
-        --, ml.*
-        FROM PCPC_045 ml
-        JOIN PCPC_040 l
-          ON l.PERIODO_PRODUCAO = ml.PCPC040_PERCONF 
-         AND l.ORDEM_CONFECCAO = ml.PCPC040_ORDCONF 
-         AND l.CODIGO_ESTAGIO = ml.PCPC040_ESTCONF 
-        JOIN PCPC_020 op
-          ON op.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO 
-        JOIN HDOC_030 u 
-          ON u.CODIGO_USUARIO = ml.CODIGO_USUARIO
-        WHERE 1=1
-          {filtra_data} -- filtra_data
-          AND ml.PCPC040_ESTCONF = 63
+        WITH
+          move_lote AS
+        ( SELECT
+            u.USUARIO
+          , l.PROCONF_GRUPO REF
+          , l.ORDEM_PRODUCAO OP
+          , l.ORDEM_CONFECCAO OC
+          , ml.DATA_PRODUCAO DT
+          , sum(ml.QTDE_PRODUZIDA) qtd
+          --, ml.*
+          FROM PCPC_045 ml
+          JOIN PCPC_040 l
+            ON l.PERIODO_PRODUCAO = ml.PCPC040_PERCONF 
+           AND l.ORDEM_CONFECCAO = ml.PCPC040_ORDCONF 
+           AND l.CODIGO_ESTAGIO = ml.PCPC040_ESTCONF 
+          JOIN PCPC_020 op
+            ON op.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO 
+          JOIN HDOC_030 u 
+            ON u.CODIGO_USUARIO = ml.CODIGO_USUARIO
+          WHERE 1=1
+            {filtra_data} -- filtra_data
+            AND ml.PCPC040_ESTCONF = 63
+          GROUP BY 
+            u.USUARIO
+          , l.PROCONF_GRUPO
+          , l.ORDEM_PRODUCAO
+          , l.ORDEM_CONFECCAO
+          , ml.DATA_PRODUCAO
+        )
+        , destino AS
+        ( SELECT 
+            ml.*
+          , resh.GRUPO_DESTINO REF_DEST
+          , CASE WHEN res.PEDIDO_DESTINO >= 999000000 
+            THEN 'varejo'
+            ELSE 'atacado'
+            END DEST
+          FROM move_lote ml
+          JOIN PCPC_044 res
+            ON res.ORDEM_PRODUCAO = ml.OP
+           AND res.ORDEM_CONFECCAO = ml.OC
+          JOIN PCPC_044_HIST resh
+            ON resh.ORDEM_PRODUCAO = res.ORDEM_PRODUCAO
+           AND resh.ORDEM_CONFECCAO = res.ORDEM_CONFECCAO
+           AND resh.SOLICITACAO = res.SOLICITACAO
+           AND resh.CAMBIO = ml.DT
+           AND resh.SITUACAO = 5
+        )
+        SELECT 
+          d.USUARIO
+        , d."REF"
+        , d.OP
+        , d.REF_DEST
+        , d.DEST
+        , sum(d.QTD) QTD
+        FROM destino d
         GROUP BY 
-          u.USUARIO
-        , l.PROCONF_GRUPO
-        , l.ORDEM_PRODUCAO
+          d.USUARIO
+        , d."REF"
+        , d.OP
+        , d.REF_DEST
+        , d.DEST
         ORDER BY 
-          u.USUARIO
-        , l.PROCONF_GRUPO
-        , l.ORDEM_PRODUCAO
+          d.DEST
+        , d.USUARIO
+        , d."REF"
+        , d.OP
     """
     debug_cursor_execute(cursor, sql)
     data = dictlist_lower(cursor)
