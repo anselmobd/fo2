@@ -54,7 +54,7 @@ class TamanhoAdmin(admin.ModelAdmin):
 class ColaboradorAdmin(admin.ModelAdmin):
     fields = [
         "user", "matricula", "nome", "nascimento", "cpf", "obs",
-        "logged", "quando", "ip_interno"
+        "logged", "quando", "ip_interno", 'cd_bonus',
     ]
     list_display = [
         "user", "matricula", "nome", "cpf", "obs",

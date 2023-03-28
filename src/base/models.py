@@ -40,6 +40,9 @@ class Colaborador(models.Model):
         null=True, blank=True)
     ip_interno = models.BooleanField(
         default=False)
+    cd_bonus = models.BooleanField(
+        default=False,
+        verbose_name='Participa do bônus do CD')
 
     def __str__(self):
         return f"{self.user} ({self.matricula}) {self.nome}"
