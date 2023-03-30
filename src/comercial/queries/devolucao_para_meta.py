@@ -82,6 +82,7 @@ def query(cursor, ano, mes=None, tipo='total', empresa=1, ref=None):
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = fe.CGC_CLI_FOR_9
          AND c.CGC_4 = fe.CGC_CLI_FOR_4
+         AND c.CGC_2 = fe.CGC_CLI_FOR_2
         --WHERE fe.DOCUMENTO = 208240
         JOIN ESTQ_005 tre -- transações de estoque
           ON tre.CODIGO_TRANSACAO = fe.CODIGO_TRANSACAO
