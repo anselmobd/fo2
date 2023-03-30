@@ -300,7 +300,7 @@ class MountProduzirGradeEmpenho():
             'dias_alem_lead': dias_alem_lead,
         })
 
-        self.periodo = '' if self.lead == 0 else self.lead + dias_alem_lead
+        self.periodo = '' if self.lead == -1 else self.lead + dias_alem_lead
 
         gped, total_ped = self.to_grade_e_total(
             dados=self.get_grade_pedido(modelo=self.modelo)
