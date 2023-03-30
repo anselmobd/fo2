@@ -1,6 +1,6 @@
 import base64
 import re
-from pprint import pprint
+from pprint import pprint, pformat
 
 from django.template.defaulttags import register
 
@@ -22,6 +22,11 @@ def git_ver():
 @register.filter
 def get_type(value):
     return type(value).__name__
+
+
+@register.filter
+def get_set_item(set_, key):
+    return list(set_)[key]
 
 
 @register.filter
