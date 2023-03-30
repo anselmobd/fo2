@@ -158,6 +158,16 @@ class ReferenciasEstoqueForm(
     deposito = forms.ChoiceField(
         label='Depósito', initial='-')
 
+    CHOICES = [
+        ('t', "Todos"),
+        ('n', "Não zerados"),
+    ]
+    lista = forms.ChoiceField(
+        choices=CHOICES,
+        required=False,
+        initial='t',
+    )
+
     def __init__(self, *args, cursor=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.cursor = cursor

@@ -25,10 +25,11 @@ class ReferenciaDeposito(View):
             'str_depositos': self.str_depositos(),
         }
 
-    def mount_context(self, request, cursor, deposito, modelo):
+    def mount_context(self, request, cursor, deposito, modelo, lista):
         context = {
             'deposito': deposito,
             'modelo': modelo,
+            'lista': lista,
         }
         try:
             imodelo = int(modelo)
@@ -59,7 +60,16 @@ class ReferenciaDeposito(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
+        dados = []
         for row in data:
+            if lista == 'n':
+                if row['estoque'] != 0 or row['falta'] != 0:
+                    dados.append(row)
+                else:
+                    continue
+            else:
+                dados.append(row)
+
             if imodelo:
                 row['dep|TARGET'] = '_blank'
                 row['dep|LINK'] = reverse(
@@ -82,8 +92,8 @@ class ReferenciaDeposito(View):
                 'global_sum': ['estoque', 'falta', 'soma'],
                 'global_descr': {'ref': 'Totais gerais:'},
             })
-        totalize_grouped_data(data, tot_conf)
-        group_rowspan(data, group)
+        totalize_grouped_data(dados, tot_conf)
+        group_rowspan(dados, group)
 
         context.update({
             'headers': ['Depósito', 'Referência', 'Estoque positivo',
@@ -91,7 +101,7 @@ class ReferenciaDeposito(View):
             'fields': ['dep', 'ref', 'estoque',
                        'falta', 'soma'],
             'group': group,
-            'data': data,
+            'data': dados,
             'style': {
                 3: 'text-align: right;',
                 4: 'text-align: right;',
@@ -118,7 +128,8 @@ class ReferenciaDeposito(View):
         if form.is_valid():
             deposito = form.cleaned_data['deposito']
             modelo = form.cleaned_data['modelo']
+            lista = form.cleaned_data['lista']
             self.context.update(self.mount_context(
-                request, cursor, deposito, modelo))
+                request, cursor, deposito, modelo, lista))
         self.context['form'] = form
         return render(request, self.template_name, self.context)
