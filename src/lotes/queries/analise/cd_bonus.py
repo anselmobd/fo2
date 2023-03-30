@@ -74,6 +74,7 @@ def cd_bonus_query(
             ON resh.ORDEM_PRODUCAO = res.ORDEM_PRODUCAO
            AND resh.ORDEM_CONFECCAO = res.ORDEM_CONFECCAO
            AND resh.SOLICITACAO = res.SOLICITACAO
+           AND resh.PEDIDO_DESTINO = res.PEDIDO_DESTINO
            AND resh.CAMBIO = ml.DT
            AND resh.SITUACAO = 5
         )
