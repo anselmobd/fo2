@@ -7,7 +7,7 @@
         {% if info|get_type == 'tuple' %}
           {{ info.0|safe }}
         {% elif info|get_type == 'set' %}
-          {{ info.0|safe }}
+          {{ info|get_set_item:0|safe }}
         {% else %}
           {{ info }}
         {% endif %}
