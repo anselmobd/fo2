@@ -231,6 +231,9 @@ def query(
          AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
          AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
         WHERE 1=1
+          -- Pedido marcado como cópia de outro que foi faturade e devolvido,
+          -- esperando apenas refaturar. Assim não deve ser considerado em carteira.
+          AND ped.ORIGEM_PEDIDO <> 2
           {filtro_empresa} -- filtro_empresa
           {filtra_pedido} -- filtra_pedido
           {filtra_ref} -- filtra_ref
