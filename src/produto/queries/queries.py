@@ -291,6 +291,7 @@ def nivel_ref_inform(cursor, nivel, ref, upper=True):
         LEFT JOIN PEDI_010 cl
           ON cl.CGC_9 = r.CGC_CLIENTE_9
          and cl.CGC_4 = r.CGC_CLIENTE_4
+         and cl.CGC_2 = r.CGC_CLIENTE_2
     """
     debug_cursor_execute(cursor, sql)
     if upper:

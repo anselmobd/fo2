@@ -141,6 +141,7 @@ def reme_indu_nf(
         JOIN PEDI_010 cind -- cliente - industrializador
           ON cind.CGC_9 = nf.CGC_9
          AND cind.CGC_4 = nf.CGC_4
+         AND cind.CGC_2 = nf.CGC_2
         JOIN FATU_060 inf -- nota fiscal da Tussor - capa
           ON inf.ch_it_nf_cd_empr = nf.codigo_empresa
          and inf.ch_it_nf_num_nfis = nf.num_nota_fiscal
@@ -230,6 +231,7 @@ def reme_indu_nf(
         LEFT JOIN PEDI_010 c -- cliente - do pedido de venda
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+         AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE 1=1
           {op_filter} -- op_filter
           {pedido_filter} -- pedido_filter

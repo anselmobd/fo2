@@ -94,6 +94,7 @@ def item_no_tempo(
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = t.CNPJ_9
          AND c.CGC_4 = t.CNPJ_4
+         AND c.CGC_2 = t.CNPJ_2
         LEFT JOIN PCPC_020 op -- OP
           ON t.CNPJ_9 = 0
          AND op.ORDEM_PRODUCAO = t.NUMERO_DOCUMENTO
@@ -102,6 +103,7 @@ def item_no_tempo(
         LEFT JOIN PEDI_010 cp -- cliente
           ON cp.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND cp.CGC_4 = ped.CLI_PED_CGC_CLI4
+         AND cp.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE t.NIVEL_ESTRUTURA = 1
           {filtro_deposito} -- AND t.CODIGO_DEPOSITO = 101
           {filtro_ref} -- AND t.GRUPO_ESTRUTURA = '02156'

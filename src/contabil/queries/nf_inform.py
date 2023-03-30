@@ -34,6 +34,7 @@ def query(cursor, nf, especiais=False, empresa=1):
         JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = f.CGC_9
          AND c.CGC_4 = f.CGC_4
+         AND c.CGC_2 = f.CGC_2
         LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
           ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
          AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada

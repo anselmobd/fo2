@@ -34,6 +34,7 @@ def infadprod_por_pedido(cursor, pedido, empresa=1):
         LEFT JOIN PEDI_010 c
           ON c.CGC_9 = p.CLI_PED_CGC_CLI9
          AND c.CGC_4 = p.CLI_PED_CGC_CLI4
+         AND c.CGC_2 = p.CLI_PED_CGC_CLI2
         JOIN PEDI_110 i -- item de pedido de venda
           ON i.PEDIDO_VENDA = p.PEDIDO_VENDA
         JOIN BASI_010 rtc -- item (ref+tam+cor)
@@ -44,6 +45,7 @@ def infadprod_por_pedido(cursor, pedido, empresa=1):
         LEFT JOIN ESTQ_400 ip -- item - informações por cliente
           ON ip.CLIENTE9 = CLI_PED_CGC_CLI9
          AND ip.CLIENTE4 = CLI_PED_CGC_CLI4
+         AND ip.CLIENTE2 = CLI_PED_CGC_CLI2
          AND ip.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
          AND ip.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
          AND ip.SUBGRUPO_ESTRUTURA = i.CD_IT_PE_SUBGRUPO

@@ -143,6 +143,7 @@ def reme_indu(
         LEFT JOIN PEDI_010 c -- cliente - do pedido de venda
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+         AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
         JOIN OBRF_082 osi -- OS - item de nota
           ON osi.NUMERO_ORDEM = os.NUMERO_ORDEM
          AND osi.PRODSAI_GRUPO = oo.PROCONF_GRUPO
@@ -154,6 +155,7 @@ def reme_indu(
         LEFT JOIN PEDI_010 cind -- cliente - industrializador
           ON cind.CGC_9 = nf.CGC_9
          AND cind.CGC_4 = nf.CGC_4
+         AND cind.CGC_2 = nf.CGC_2
         LEFT JOIN OBRF_015 nfei -- nota fiscal de entrada - item
           ON osi.NUM_NF_SAI <> 0
          AND nfei.NUM_NOTA_ORIG = osi.NUM_NF_SAI
@@ -165,6 +167,7 @@ def reme_indu(
           ON nfec.DOCUMENTO = nfei.CAPA_ENT_NRDOC
          AND nfec.CGC_CLI_FOR_9 = nfei.CAPA_ENT_FORCLI9
          AND nfec.CGC_CLI_FOR_4 = nfei.CAPA_ENT_FORCLI4
+         AND nfec.CGC_CLI_FOR_2 = nfei.CAPA_ENT_FORCLI2
         --LEFT JOIN BASI_220 t -- tamanhos
         --  ON t.TAMANHO_REF = oo.PROCONF_SUBGRUPO
         {detalhe_join} -- detalhe_join

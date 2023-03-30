@@ -58,6 +58,7 @@ def os_itens(cursor, os):
           ON ce.DOCUMENTO = ie.CAPA_ENT_NRDOC
          AND ce.CGC_CLI_FOR_9 = ie.CAPA_ENT_FORCLI9
          AND ce.CGC_CLI_FOR_4 = ie.CAPA_ENT_FORCLI4
+         AND ce.CGC_CLI_FOR_2 = ie.CAPA_ENT_FORCLI2
         WHERE s.NUMERO_ORDEM = %s
         ORDER BY
           s.PRODSAI_NIVEL99

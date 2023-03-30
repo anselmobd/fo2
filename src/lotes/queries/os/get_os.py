@@ -76,6 +76,7 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
         JOIN SUPR_010 f
           ON f.FORNECEDOR9 = os.CGCTERC_FORNE9
          AND f.FORNECEDOR4 = os.CGCTERC_FORNE4
+         AND f.FORNECEDOR2 = os.CGCTERC_FORNE2
         JOIN OBRF_087 c
           ON c.COD_CANC_ORDEM = os.COD_CANC_ORDEM
         LEFT JOIN pcpc_040 l
