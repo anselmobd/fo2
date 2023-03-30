@@ -56,7 +56,12 @@ def cd_bonus_query(
         )
         , destino AS
         ( SELECT 
-            ml.*
+            ml.USUARIO
+          , ml.REF
+          , ml.OP
+          , ml.OC
+          , ml.DT
+          , ml.QTD
           , resh.GRUPO_DESTINO REF_DEST
           , CASE WHEN
               REGEXP_LIKE(
@@ -66,6 +71,7 @@ def cd_bonus_query(
             THEN 'varejo'
             ELSE 'atacado'
             END DEST
+          , sum(res.QTDE) QTD_RES
           FROM move_lote ml
           JOIN PCPC_044 res
             ON res.ORDEM_PRODUCAO = ml.OP
@@ -77,6 +83,22 @@ def cd_bonus_query(
            AND resh.PEDIDO_DESTINO = res.PEDIDO_DESTINO
            AND resh.CAMBIO = ml.DT
            AND resh.SITUACAO = 5
+          GROUP BY 
+            ml.USUARIO
+          , ml.REF
+          , ml.OP
+          , ml.OC
+          , ml.DT
+          , ml.QTD
+          , resh.GRUPO_DESTINO
+          , CASE WHEN
+              REGEXP_LIKE(
+                resh.GRUPO_DESTINO,
+               '^[0-9]*[0-9A]$'
+              )
+            THEN 'varejo'
+            ELSE 'atacado'
+            END
         )
         SELECT 
           d.USUARIO
@@ -85,6 +107,7 @@ def cd_bonus_query(
         , d.REF_DEST
         , d.DEST
         , sum(d.QTD) QTD
+        , sum(d.QTD_RES) QTD_RES
         FROM destino d
         GROUP BY 
           d.USUARIO
