@@ -52,10 +52,18 @@ class NotaFiscal(O2BaseGetPostView):
                 row['ped_obs'] = '-'
             row['situacao'] = nf_situacao_descr(
                 row['situacao'], row['cod_status'])
-            if row['nf_devolucao'] is None:
-                row['nf_devolucao'] = '-'
-            else:
+            if row['nf_devolucao']:
                 row['situacao'] = f"{row['situacao']}/Devolvida"
+                row['nf_devolucao|TARGET'] = '_blank'
+                row['nf_devolucao|A'] = reverse(
+                    'contabil:nf_recebida__get2',
+                    args=[
+                        self.empresa,
+                        row['nf_devolucao'],
+                    ],
+                )
+            else:
+                row['nf_devolucao'] = '-'
         self.context.update({
             'headers': [
                 "Cliente",
