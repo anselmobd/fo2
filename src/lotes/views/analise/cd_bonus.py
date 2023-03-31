@@ -48,10 +48,10 @@ class CdBonusView(O2BaseGetPostView):
                 'group': group,
                 'sum': ['qtd', 'qtd_res'],
                 'count': [],
-                'descr': {'usuario': 'Total:'},
+                'descr': {'usuario': "Total:"},
                 'global_sum': ['qtd', 'qtd_res'],
-                'global_descr': {'usuario': 'Total geral:'},
-                'row_style': 'font-weight: bold;',
+                'global_descr': {'usuario': f"Total do {dest}:"},
+                'row_style': "font-weight: bold;",
             })
             group_rowspan(dados_dest, group)
         self.context[dest] = {
