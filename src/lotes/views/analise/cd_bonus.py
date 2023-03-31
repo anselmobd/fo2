@@ -32,7 +32,8 @@ class CdBonusView(O2BaseGetPostView):
             'ref': ["Referência"],
             'op': ["OP"],
             'ref_dest': ["Ref. destino"],
-            'qtd_res': ["Quantidade", 'r'],
+            'qtd': ["Quantidade Lote", 'r'],
+            'qtd_res': ["Quantidade Solicitação", 'r'],
         })
 
     def monta_dados_dest(self, dest):
@@ -45,10 +46,10 @@ class CdBonusView(O2BaseGetPostView):
         if dados_dest:
             totalize_grouped_data(dados_dest, {
                 'group': group,
-                'sum': ['qtd_res'],
+                'sum': ['qtd', 'qtd_res'],
                 'count': [],
                 'descr': {'usuario': 'Total:'},
-                'global_sum': ['qtd_res'],
+                'global_sum': ['qtd', 'qtd_res'],
                 'global_descr': {'usuario': 'Total geral:'},
                 'row_style': 'font-weight: bold;',
             })
