@@ -75,13 +75,13 @@ class Transfere():
             self.preco_medio = produto[0]['preco_medio']
         except Exception:
             raise ValueError(
-                f'Não encontrado o preço médio do item {self.str_item}.')
+                f"Não encontrado o preço médio do item {self.str_item}.")
 
     def valid_item_destino(self):
         if self.tip_mov.renomeia:
             if (len(self.nova_ref) + len(self.novo_tam) +
                     len(self.nova_cor)) == 0:
-                raise ValueError('Algum novo código deve ser indicado.')
+                raise ValueError("Algum novo código deve ser indicado.")
 
         if len(self.nova_ref) == 0:
             self.nova_ref = self.ref
@@ -92,11 +92,11 @@ class Transfere():
 
         if self.tip_mov.unidade != '1':
             if self.nova_cor == self.cor:
-                raise ValueError('Em montagem e desmontagem as indicações de cor não podem ser iguais.')
+                raise ValueError("Em montagem e desmontagem as indicações de cor não podem ser iguais.")
 
         if self.tip_mov.unidade != '1':
             if self.nova_ref == self.ref:
-                raise ValueError('Em montagem e desmontagem as referencias não podem ser iguais.')
+                raise ValueError("Em montagem e desmontagem as referencias não podem ser iguais.")
 
         self.novo_item_igual = (
             self.nova_ref == self.ref and
@@ -106,8 +106,8 @@ class Transfere():
 
         if self.tip_mov.renomeia:
             if self.novo_item_igual:
-                raise ValueError('Alguma alteração de código (referência, cor ou '
-                                'tamanho) deve ser indicada.')
+                raise ValueError(
+                    "Alguma alteração de código (referência, cor ou tamanho) deve ser indicada.")
 
     def monta_itens_saida_entrada(self, item_lista, ref, cor, tam):
         cores = cor.split()
@@ -123,14 +123,14 @@ class Transfere():
         self.monta_itens_saida_entrada(self.itens_saida, self.ref, self.cor, self.tam)
         if self.tip_mov.unidade != 'M':
             if len(self.itens_saida) > 1:
-                raise ValueError('Apenas em montagem é possível tem mais de uma cor.')
+                raise ValueError("Apenas em montagem é possível ter mais de uma cor.")
 
         self.itens_entrada = []
         self.monta_itens_saida_entrada(
                 self.itens_entrada, self.nova_ref, self.nova_cor, self.novo_tam)
         if self.tip_mov.unidade != 'D':
             if len(self.itens_entrada) > 1:
-                raise ValueError('Apenas em desmontagem é possível tem mais de uma nova cor.')
+                raise ValueError("Apenas em desmontagem é possível ter mais de uma nova cor.")
 
     def valid_itens_lista(self, item_lista):
         produto_item = None
@@ -146,7 +146,7 @@ class Transfere():
                 self.str_item = objs_prod.str_item
             else:
                 self.itens_extras += self.itens_extras_sep + objs_prod.str_item
-                self.itens_extras_sep = ' '
+                self.itens_extras_sep = " "
 
         return produto_item
 
@@ -180,13 +180,13 @@ class Transfere():
                 self.tip_mov = models.TipoMovStq.objects.get(codigo=self.tipo)
             except models.TipoMovStq.DoesNotExist:
                 raise ValueError(
-                    f'Tipo de movimento de estoque "{self.tipo}" '
-                    'não cadastrado.')
+                    f"Tipo de movimento de estoque '{self.tipo}' "
+                    "não cadastrado.")
 
     def valid_quant(self):
         if self.qtd <= 0:
             raise ValueError(
-                'Quantidade deve ser maior que zero.')
+                "Quantidade deve ser maior que zero.")
 
     def valid_deps(self):
         if not self.tem_trans_saida:
@@ -197,13 +197,13 @@ class Transfere():
 
         if not self.tip_mov.renomeia and \
                 self.deposito_origem == self.deposito_destino:
-            raise ValueError('Depósitos devem ser diferentes.')
+            raise ValueError("Depósitos devem ser diferentes.")
 
     def valid_num_doc(self):
         obj_doc_mov_stq = classes.ObjDocMovStq(
             self.cursor, self.num_doc, self.descricao, self.request.user,
             cria=self.cria_num_doc)
-        if obj_doc_mov_stq.num_doc != '0':
+        if obj_doc_mov_stq.num_doc != "0":
             self.num_doc = obj_doc_mov_stq.num_doc
             self.doc_mov_stq = obj_doc_mov_stq.doc_mov_stq
 
@@ -221,14 +221,14 @@ class Transfere():
                 codigo_transacao=codigo)
         except sys_mod.TipoTransacao.DoesNotExist:
             raise ValueError(
-                f'Não encontrada transação de {descricao} '
-                f'"{codigo}" do tipo de movimento de estoque "{self.tipo}".')
+                f"Não encontrada transação de {descricao} "
+                f"'{codigo}' do tipo de movimento de estoque '{self.tipo}'.")
 
         if tipo_trans.entrada_saida not in ent_sai:
             raise ValueError(
-                f'Transação de {descricao} "{codigo}" '
-                f'do tipo de movimento de estoque "{self.tipo}" é do '
-                'tipo da operação errado.')
+                f"Transação de {descricao} '{codigo}' "
+                f"do tipo de movimento de estoque '{self.tipo}' é do "
+                "tipo da operação errado.")
 
         if tipo_trans.entrada_saida == 'T':
             return 'S'
@@ -244,20 +244,20 @@ class Transfere():
 
         if self.tem_trans_saida:
             self.trans_saida_e_s = self.valid_transacao(
-                self.trans_saida, 'ST', 'saída')
+                self.trans_saida, 'ST', "saída")
 
         if self.tem_trans_entrada:
             self.trans_entrada_e_s = self.valid_transacao(
-                self.trans_entrada, 'E', 'entrada')
+                self.trans_entrada, 'E', "entrada")
 
     def exec(self):
         if not self.can_exec:
             raise ValueError(
-                'Execução impedida por algum erro de inicialização.')
+                "Execução impedida por algum erro de inicialização.")
 
         if self.tem_trans_saida:
             self.insert_lista(
-                'saída',
+                "saída",
                 self.itens_saida,
                 self.deposito_origem,
                 self.trans_saida,
@@ -266,7 +266,7 @@ class Transfere():
 
         if self.tem_trans_entrada:
             self.insert_lista(
-                'entrada',
+                "entrada",
                 self.itens_entrada,
                 self.deposito_destino,
                 self.trans_entrada,
@@ -315,4 +315,4 @@ class Transfere():
                 get_client_ip(self.request)
                 ):
             raise ValueError(
-                f'Erro ao inserir transação de {descr}.')
+                f"Erro ao inserir transação de {descr}.")
