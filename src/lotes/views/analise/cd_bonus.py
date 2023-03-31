@@ -7,7 +7,7 @@ from fo2.connections import db_cursor_so
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.models.row_field import PrepRows
 from utils.table_defs import TableDefsHpS
-from utils.views import group_rowspan, totalize_grouped_data
+from utils.views import group_rowspan, totalize_grouped_data, totalize_data
 from base.models import Colaborador
 
 from lotes.forms.analise import CdBonusViewForm
@@ -62,6 +62,40 @@ class CdBonusView(O2BaseGetPostView):
         }
         self.table_defs.hfs_dict_context(self.context[dest])
 
+    def monta_dados_totais(self):
+        dict_totais = {}
+        for row in self.dados:
+            try:
+                row_totais = dict_totais[row['usuario']]
+            except KeyError:
+                row_totais = dict_totais[row['usuario']] = {
+                    'usuario': row['usuario'],
+                    'qtd': 0,
+                    'qtd_res': 0,
+                }
+            row_totais['qtd'] += row['qtd']
+            row_totais['qtd_res'] += row['qtd_res']
+        pprint(dict_totais)
+        dados_totais = list(dict_totais.values())
+        pprint(dados_totais)
+        if dados_totais:
+            totalize_data(dados_totais, {
+                'sum': ['qtd', 'qtd_res'],
+                'count': [],
+                'descr': {'usuario': 'Total:'},
+                'row_style': 'font-weight: bold;',
+            })
+        self.context['totais'] = {
+            'titulo': 'Totais',
+            'data': dados_totais,
+        }
+        self.table_defs.hfs_dict_context(
+            self.context['totais'],
+            'usuario',
+            'qtd',
+            'qtd_res',
+        )
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
@@ -89,3 +123,4 @@ class CdBonusView(O2BaseGetPostView):
 
         self.monta_dados_dest('atacado')
         self.monta_dados_dest('varejo')
+        self.monta_dados_totais()
