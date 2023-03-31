@@ -82,11 +82,11 @@ class CdBonusView(O2BaseGetPostView):
             totalize_data(dados_totais, {
                 'sum': ['qtd', 'qtd_res'],
                 'count': [],
-                'descr': {'usuario': 'Total:'},
+                'descr': {'usuario': 'Total do dia:'},
                 'row_style': 'font-weight: bold;',
             })
         self.context['totais'] = {
-            'titulo': 'Totais',
+            'titulo': 'Por usuário',
             'data': dados_totais,
         }
         self.table_defs.hfs_dict_context(
