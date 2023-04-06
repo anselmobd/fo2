@@ -42,3 +42,13 @@ class CdBonusViewForm(forms.Form):
         ),
         initial=yesterday_ymd,
     )
+
+    CHOICES = [
+        ('', 'OP'),
+        ('oc', 'OC'),
+    ]
+    detalhe = forms.ChoiceField(
+        choices=CHOICES,
+        required=False,
+        initial='',
+    )

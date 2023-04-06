@@ -31,6 +31,7 @@ class CdBonusView(O2BaseGetPostView):
             'usuario': ["Usuário"],
             'ref': ["Referência"],
             'op': ["OP"],
+            'oc': ["OC"],
             'ref_dest': ["Ref. destino"],
             'qtd': ["Quantidade Lote", 'r'],
             'qtd_res': ["Quantidade Solicitação", 'r'],
@@ -60,7 +61,14 @@ class CdBonusView(O2BaseGetPostView):
             'group': group,
             'vazio': "Sem produção no dia"
         }
-        self.table_defs.hfs_dict_context(self.context[dest])
+        fields = ['usuario', 'ref', 'op']
+        if self.detalhe == 'oc':
+            fields.append('oc')
+        fields += ['ref_dest', 'qtd', 'qtd_res']
+        self.table_defs.hfs_dict_context(
+            self.context[dest],
+            *fields,
+        )
 
     def monta_dados_totais(self):
         dict_totais = {}
@@ -112,6 +120,7 @@ class CdBonusView(O2BaseGetPostView):
             self.cursor,
             data=self.data,
             usuario=usuarios,
+            detalhe=self.detalhe,
         )
 
         PrepRows(
