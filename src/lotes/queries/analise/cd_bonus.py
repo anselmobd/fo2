@@ -74,7 +74,7 @@ def cd_bonus_query(
             THEN 'varejo'
             ELSE 'atacado'
             END DEST
-          , sum(res.QTDE) QTD_RES
+          , sum(resh.QTDE) QTD_RES
           FROM move_lote ml
           JOIN PCPC_044 res
             ON res.ORDEM_PRODUCAO = ml.OP
@@ -84,6 +84,11 @@ def cd_bonus_query(
            AND resh.ORDEM_CONFECCAO = res.ORDEM_CONFECCAO
            AND resh.SOLICITACAO = res.SOLICITACAO
            AND resh.PEDIDO_DESTINO = res.PEDIDO_DESTINO
+           AND resh.OP_DESTINO = res.OP_DESTINO
+           AND resh.ALTER_DESTINO = res.ALTER_DESTINO
+           AND resh.GRUPO_DESTINO = res.GRUPO_DESTINO
+           AND resh.SUB_DESTINO = res.SUB_DESTINO
+           AND resh.COR_DESTINO = res.COR_DESTINO
            AND resh.CAMBIO >= ml.DT
            AND resh.CAMBIO <= ml.DT + 1/24/60/60 * 3
            AND resh.SITUACAO = 5
