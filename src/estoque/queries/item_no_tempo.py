@@ -29,8 +29,7 @@ def item_no_tempo(
 
     filtro_apartirde = ''
     if apartirde is not None:
-        str_apartirde = apartirde.strftime("TIMESTAMP '%Y-%m-%d 00:00:00'")
-        filtro_apartirde = f"AND t.DATA_INSERCAO > {str_apartirde}"
+        filtro_apartirde = f"AND t.DATA_INSERCAO > TIMESTAMP '{apartirde:%Y-%m-%d} 00:00:00'"
 
     sql = f'''
         WITH query AS
