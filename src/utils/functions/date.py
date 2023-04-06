@@ -28,27 +28,32 @@ def dow_info(dt, info, capitalize=False):
     return result
 
 
+def ymd(data):
+    """Return data in format YYYY-MM-DD"""
+    return f"{data:%Y-%m-%d}"
+
+
 def today_ymd():
     """Return today in format YYYY-MM-DD"""
-    return datetime.date.today().strftime('%Y-%m-%d')
+    return ymd(datetime.date.today())
 
 
-def yesterday(my_date):
+def yesterday():
     """Return yesterday"""
     return (
-        my_date
+        datetime.date.today()
         - datetime.timedelta(days=1)
     )
 
 
 def yesterday_ymd():
     """Return yesterday in format YYYY-MM-DD"""
-    return yesterday(datetime.date.today()).strftime('%Y-%m-%d')
+    return ymd(yesterday())
 
 
 def dmy(data):
     """Return data in format DD/MM/YYYY"""
-    return data.strftime('%d/%m/%Y')
+    return f"{data:%d/%m/%Y}"
 
 
 def dmy_or_empty(data):
