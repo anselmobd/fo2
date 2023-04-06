@@ -88,6 +88,7 @@ class CdBonusView(O2BaseGetPostView):
         self.context['totais'] = {
             'titulo': 'Por usuário',
             'data': dados_totais,
+            'vazio': "Sem produção no dia"
         }
         self.table_defs.hfs_dict_context(
             self.context['totais'],
