@@ -33,7 +33,6 @@ class CdBonusView(O2BaseGetPostView):
             'op': ["OP"],
             'oc': ["OC"],
             'ref_dest': ["Ref. destino"],
-            'qtd': ["Quantidade Lote", 'r'],
             'qtd_res': ["Quantidade Solicitação", 'r'],
         })
 
@@ -47,10 +46,10 @@ class CdBonusView(O2BaseGetPostView):
         if dados_dest:
             totalize_grouped_data(dados_dest, {
                 'group': group,
-                'sum': ['qtd', 'qtd_res'],
+                'sum': ['qtd_res'],
                 'count': [],
                 'descr': {'usuario': "Total:"},
-                'global_sum': ['qtd', 'qtd_res'],
+                'global_sum': ['qtd_res'],
                 'global_descr': {'usuario': f"Total do {dest}:"},
                 'row_style': "font-weight: bold;",
             })
@@ -64,7 +63,7 @@ class CdBonusView(O2BaseGetPostView):
         fields = ['usuario', 'ref', 'op']
         if self.detalhe == 'oc':
             fields.append('oc')
-        fields += ['ref_dest', 'qtd', 'qtd_res']
+        fields += ['ref_dest', 'qtd_res']
         self.table_defs.hfs_dict_context(
             self.context[dest],
             *fields,
@@ -78,17 +77,15 @@ class CdBonusView(O2BaseGetPostView):
             except KeyError:
                 row_totais = dict_totais[row['usuario']] = {
                     'usuario': row['usuario'],
-                    'qtd': 0,
                     'qtd_res': 0,
                 }
-            row_totais['qtd'] += row['qtd']
             row_totais['qtd_res'] += row['qtd_res']
         pprint(dict_totais)
         dados_totais = list(dict_totais.values())
         pprint(dados_totais)
         if dados_totais:
             totalize_data(dados_totais, {
-                'sum': ['qtd', 'qtd_res'],
+                'sum': ['qtd_res'],
                 'count': [],
                 'descr': {'usuario': 'Total do dia:'},
                 'row_style': 'font-weight: bold;',
@@ -101,7 +98,6 @@ class CdBonusView(O2BaseGetPostView):
         self.table_defs.hfs_dict_context(
             self.context['totais'],
             'usuario',
-            'qtd',
             'qtd_res',
         )
 
