@@ -17,10 +17,12 @@
       <input type="submit" value="Busca"/>
     </form>
   </div>
-  {% include "layout/form_inputs_report.html" with form=form h=5 only %}
-  {% include "layout/table_generic.html" with dados=atacado only %}
-  <hr>
-  {% include "layout/table_generic.html" with dados=varejo only %}
-  <hr>
-  {% include "layout/table_generic.html" with dados=totais only %}
+  {% if totais %}
+    {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+    {% include "layout/table_generic.html" with dados=atacado only %}
+    <hr>
+    {% include "layout/table_generic.html" with dados=varejo only %}
+    <hr>
+    {% include "layout/table_generic.html" with dados=totais only %}
+  {% endif %}
 {% endblock %}
