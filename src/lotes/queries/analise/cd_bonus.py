@@ -11,6 +11,7 @@ def cd_bonus_query(
     cursor,
     data=None,
     usuario=None,
+    detalhe=None,
 ):
     filtra_data = f"""--
         AND ml.DATA_PRODUCAO >= DATE '{data}'
@@ -22,6 +23,8 @@ def cd_bonus_query(
     filtra_usuario = f"""--
         AND ml.CODIGO_USUARIO IN ({', '.join(map(str, usuario))})
     """
+
+    detalhe_oc = f", d.OC " if detalhe == 'oc' else ''
 
     sql = f"""
         WITH
@@ -105,6 +108,7 @@ def cd_bonus_query(
           d.USUARIO
         , d."REF"
         , d.OP
+        {detalhe_oc} -- detelhe_oc
         , d.REF_DEST
         , d.DEST
         , sum(d.QTD) QTD
@@ -114,6 +118,7 @@ def cd_bonus_query(
           d.USUARIO
         , d."REF"
         , d.OP
+        {detalhe_oc} -- detelhe_oc
         , d.REF_DEST
         , d.DEST
         ORDER BY 
@@ -121,6 +126,7 @@ def cd_bonus_query(
         , d.USUARIO
         , d."REF"
         , d.OP
+        {detalhe_oc} -- detelhe_oc
     """
     debug_cursor_execute(cursor, sql)
     data = dictlist_lower(cursor)
