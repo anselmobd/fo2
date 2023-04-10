@@ -210,10 +210,12 @@ class TableDefs(object):
         }
         return config
 
-    def hfs_dict_context(self, context, *cols, bitmap=None, sufixo=''):
+    def hfs_dict_context(self, context, *cols, bitmap=None, sufixo='', update=None):
         context.update(
             self.hfs_dict(*cols, bitmap=bitmap, sufixo=sufixo)
         )
+        if update:
+            context.update(update)
 
     def hfsd(self, *cols, bitmap=None):
         self.defs(*cols, bitmap=bitmap)
@@ -224,10 +226,12 @@ class TableDefs(object):
         config[f'{sufixo}decimals'] = self.decimals
         return config
 
-    def hfsd_dict_context(self, context, *cols, bitmap=None, sufixo=''):
+    def hfsd_dict_context(self, context, *cols, bitmap=None, sufixo='', update=None):
         context.update(
             self.hfsd_dict(*cols, bitmap=bitmap, sufixo=sufixo)
         )
+        if update:
+            context.update(update)
 
 
 class TableDefsH(TableDefs):
