@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from utils.functions.models.dictlist import queryset_to_dictlist_lower
+from utils.functions.models.dictlist import queryset_to_dictlist
 
 from base.pages_context import get_current_users_requisicao
 from o2.views.base.get import O2BaseGetView
@@ -19,7 +19,7 @@ class Usuarios(PermissionRequiredMixin, O2BaseGetView):
     def mount_context(self):
         queryset = get_current_users_requisicao()
 
-        data = queryset_to_dictlist_lower(
+        data = queryset_to_dictlist(
             queryset.filter(ip_interno=True).order_by('nome'))
         self.context.update({
             'headers': ['Nome', 'Último login', 'Última ação'],
@@ -27,7 +27,7 @@ class Usuarios(PermissionRequiredMixin, O2BaseGetView):
             'data': data,
         })
 
-        r_data = queryset_to_dictlist_lower(
+        r_data = queryset_to_dictlist(
             queryset.filter(ip_interno=False).order_by('nome'))
         self.context.update({
             'r_headers': ['Nome', 'Último login', 'Última ação'],

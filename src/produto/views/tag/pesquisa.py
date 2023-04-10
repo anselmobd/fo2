@@ -1,7 +1,7 @@
 from pprint import pprint
 
 from o2.views.base.get_post import O2BaseGetPostView
-from utils.functions.models.dictlist import queryset_to_dictlist_lower
+from utils.functions.models.dictlist import queryset_to_dictlist
 from utils.functions.models.row_field import PrepRows
 from utils.table_defs import TableDefsHpS
 
@@ -29,7 +29,7 @@ class TagPesquisaView(O2BaseGetPostView):
         produtos = models.Produto.objects.all().order_by('nivel', 'referencia')
 
         filter = (lambda r: r.modelo == modelo) if modelo else None
-        refs = queryset_to_dictlist_lower(produtos, filter)
+        refs = queryset_to_dictlist(produtos, filter)
 
         PrepRows(
             refs,

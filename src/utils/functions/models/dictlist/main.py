@@ -4,6 +4,7 @@ from pprint import pprint
 
 from django.db.models.base import ModelState
 
+
 __all__ = [
     'key_dict',
     'dictlist_zip_columns',
@@ -11,7 +12,7 @@ __all__ = [
     'dictlist',
     'dictlist_lower',
     'dictlist_split',
-    'queryset_to_dictlist_lower',
+    'queryset_to_dictlist',
     'dictlist_to_lower',
     'dictlist_indexed',
     'dict_def_options',
@@ -90,7 +91,15 @@ def dictlist_split(dlist, f_rule):
     return list1, list2
 
 
-def queryset_to_dictlist_lower(qs, filter=None):
+def record2dict(rec, fkey=lambda x:x):
+    return {
+        fkey(k):rec.__dict__[k]
+        for k in rec.__dict__
+        if not isinstance(rec.__dict__[k], ModelState)
+    }
+
+
+def queryset_to_dictlist(qs, filter=None):
 
     def filter_ok(obj):
         tests = [True]
@@ -110,11 +119,7 @@ def queryset_to_dictlist_lower(qs, filter=None):
     result = []
     for obj in qs:
         if apply_filter(obj):
-            result.append({
-                name.lower(): obj.__dict__[name]
-                for name in obj.__dict__
-                if name[0] != '_'
-            })
+            result.append(record2dict(obj, key_lower))
     return result
 
 
@@ -164,11 +169,3 @@ def dict_options(dictionary, *args):
     Call dict_def_options with default value None
     """
     return dict_def_options(dictionary, None, *args)
-
-
-def record2dict(rec):
-    return {
-        k:rec.__dict__[k]
-        for k in rec.__dict__
-        if not isinstance(rec.__dict__[k], ModelState)
-    }
