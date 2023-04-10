@@ -1,0 +1,33 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'produto:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="noprint">
+    <form action="{% url 'produto:tag-pesquisa' %}" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Busca"/>
+    </form>
+  </div>
+  {% if request.POST %}
+    {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+    {% if msg_erro %}
+      <h4>{{ msg_erro }}</h4>
+    {% endif %}
+    {% if dados %}
+      <h4>Produção</h4>
+      <table>
+        {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=dados group=group style=style only %}
+      </table>
+    {% endif %}
+  {% endif %}
+{% endblock %}

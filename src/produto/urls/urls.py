@@ -1,11 +1,14 @@
-from django.urls import re_path
+from django.urls import re_path, path, include
 
-from . import views
+from produto import views
 
 
 app_name = 'produto'
 urlpatterns = [
+
     re_path(r'^$', views.index, name='index'),
+
+    path('tag/', include('produto.urls.tag')),
 
     re_path(r'^ajax/stat_nivel/$', views.stat_nivel, name='stat_nivel'),
 
