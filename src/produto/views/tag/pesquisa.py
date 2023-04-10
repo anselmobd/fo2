@@ -27,13 +27,21 @@ class TagPesquisaView(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        produtos = models.Produto.objects.filter(referencia='00001').order_by('nivel', 'referencia')
-        refs = queryset_to_dictlist_lower(produtos)
+        modelo = int(self.modelo)
+        if modelo:
+            filter = {'modelo': modelo}
+        else:
+            filter = None
+
+        produtos = models.Produto.objects.all().order_by('nivel', 'referencia')
+        refs = queryset_to_dictlist_lower(produtos, filter=filter)
 
         PrepRows(
             refs,
         ).a_blank(
             'referencia', 'produto:ref__get'
+        ).sn(
+            ['ativo', 'cor_no_tag']
         ).process()
 
         self.context['refs'] = TableDefsHpS({
@@ -46,5 +54,6 @@ class TagPesquisaView(O2BaseGetPostView):
         self.context['refs'].update({
             'title': 'Referências',
             'data': refs,
-            'empty': "Nenhuma encontrada"
+            'thclass': 'sticky',
+            'empty': "Nenhuma encontrada",
         })
