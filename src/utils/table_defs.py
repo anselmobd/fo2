@@ -130,6 +130,8 @@ class TableDefs(object):
     def convert(self, definition, keys):
         result = {}
         for col in definition:
+            if not isinstance(definition[col], (list, tuple)):
+                definition[col] = [definition[col]]
             def_col = {}
             for i, key in enumerate(keys):
                 if i < len(definition[col]):
