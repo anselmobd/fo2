@@ -6,6 +6,7 @@ from fo2.connections import db_cursor_so
 
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions import untuple_keys_concat
+from utils.table_defs import TableDefsHpS
 from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms.por_celula import PorCelulaForm
@@ -58,12 +59,18 @@ class PorCelula(O2BaseGetPostView):
         })
         group_rowspan(dados, group)
 
-        self.context.update({
-            'headers': ['Data','OP', 'Referência', 'Lotes', 'Produzido', 'Perda'],
-            'fields': ['data', 'op', 'ref', 'lotes', 'qtd', 'perda'],
-            'group': group,
-            'dados': dados,
-            'style': untuple_keys_concat({
-                (4, 5, 6): 'text-align: right;',
-            }),
-        })
+        TableDefsHpS({
+            'data': "Data",
+            'op': "OP",
+            'cliente': "Cliente",
+            'ref': "Referência",
+            'lotes': ["Lotes", 'r'],
+            'qtd': ["Produzido", 'r'],
+            'perda': ["Perda", 'r'],
+        }).hfs_dict_context(
+            self.context,
+            update={
+                'group': group,
+                'dados': dados,
+            }
+        )
