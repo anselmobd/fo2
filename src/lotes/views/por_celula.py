@@ -60,11 +60,11 @@ class PorCelula(O2BaseGetPostView):
         totalize_grouped_data(dados, {
             'group': group,
             'sum': ['lotes', 'qtd', 'perda'],
-            'descr': {'data': 'Total do dia:'},
+            'descr': {'data': "Total do dia {data}:"},
             'flags': ['NO_TOT_1'],
             'global_sum': ['lotes', 'qtd', 'perda'],
-            'global_descr':  {'data': 'Total geral:'},
-            'row_style': 'font-weight: bold;',
+            'global_descr':  {'data': "Total geral:"},
+            'row_style': "font-weight: bold;",
         })
         group_rowspan(dados, group)
 
