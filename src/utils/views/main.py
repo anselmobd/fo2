@@ -1,5 +1,6 @@
 import hashlib
 import time
+from datetime import date
 from pprint import pprint
 
 
@@ -85,13 +86,14 @@ def totalize_grouped_data(data, config):
         temp_end_row[key] = 0
 
     totrows = {}
+    group_values = {}
     init_group = True
     for row_idx, row in enumerate(data):
 
         if not init_group:
             if list_key != [row[key] for key in config['group']]:
                 for key in config['descr']:
-                    totrow[key] = config['descr'][key]
+                    totrow[key] = config['descr'][key].format(**group_values)
                 for key in sum:
                     totrow[key] = sum[key]
                 for key in config.get('count', []):
@@ -108,6 +110,12 @@ def totalize_grouped_data(data, config):
             list_key = [row[key] for key in config['group']]
             totrow = copy_init_clean(row, empty, config['group'], clean_pipe)
             sum = {key: 0 for key in config['sum']}
+            for key in config['group']:
+                if isinstance(row[key], date):
+                    value = f"{row[key]:%d/%m/%Y}"
+                else:
+                    value = row[key]
+                group_values[key] = value
             init_group = False
 
         for key in sum:
