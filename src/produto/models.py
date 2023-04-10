@@ -3,12 +3,14 @@ import os
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
+
 from base.models import (
     Colaborador,
     # ImagemTag,
     Tamanho,
 )
-from django.utils import timezone
+from utils.functions.strings import only_digits
 
 
 class GtinRange(models.Model):
@@ -83,6 +85,14 @@ class Produto(models.Model):
     def nivel_referencia(self):
         ativo = '' if self.ativo else '--'
         return f'{ativo}{self.nivel}.{self.referencia}'
+
+    @property
+    def modelo(self):
+        try:
+            modelo = int(only_digits(self.referencia))
+        except ValueError:
+            modelo = None
+        return modelo
 
     def __str__(self):
         ativo = '' if self.ativo else '--'
