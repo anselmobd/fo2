@@ -96,11 +96,15 @@ def queryset_to_dictlist_lower(qs, filter=None):
             )
         return all(tests)
 
+    apply_filter = filter_ok
     if not filter:
         filter = {}
+    elif callable(filter):
+        apply_filter = filter
+
     result = []
     for obj in qs:
-        if filter_ok(obj):
+        if apply_filter(obj):
             result.append({
                 name.lower(): obj.__dict__[name]
                 for name in obj.__dict__
