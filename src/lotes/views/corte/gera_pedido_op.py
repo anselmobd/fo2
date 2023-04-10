@@ -73,7 +73,6 @@ class GeraPedidoOpView(O2BaseGetPostView):
         totalize_grouped_data(cli_dados, {
             'group': cli_group,
             'sum': cli_sum_fields,
-            'count': [],
             'descr': {cli_label_tot_field: 'Totais:'},
             'global_sum': cli_sum_fields,
             'global_descr': {cli_label_tot_field: 'Totais gerais:'},

@@ -65,7 +65,6 @@ class Historico(View):
 
         totalize_data(data, {
             'sum': ['qtd_end', 'qtd'],
-            'count': [],
             'descr': {'endereco': 'Totais:'}})
 
         for row in data:

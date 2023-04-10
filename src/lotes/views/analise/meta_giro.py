@@ -36,7 +36,6 @@ class MetaGiro(O2BaseGetView):
             'flags': ['NO_TOT_1'],
             'global_sum': ['giro'],
             'sum': ['giro'],
-            'count': [],
             'descr': {'modelo': 'Total:'},
             'row_style': 'font-weight: bold;',
         })

@@ -41,7 +41,6 @@ class Distribuicao(View):
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['LOTES', 'PECAS'],
-            'count': [],
             'descr': {'COR': 'Totais:'},
         })
         group_rowspan(data, group)

@@ -25,7 +25,6 @@ def op_producao_modelo(request, modelo):
         else:
             totalize_data(data_op, {
                 'sum': ['QTD_AP'],
-                'count': [],
                 'descr': {'OP': 'T:'},
             })
             total_op = data_op[-1]['QTD_AP']

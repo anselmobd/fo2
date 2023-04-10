@@ -31,7 +31,6 @@ class OpCaixa(View):
         totalize_grouped_data(data, {
             'group': ['cor'],
             'sum': ['qtd'],
-            'count': [],
             'descr': {'op': 'Cor'},
             'global_sum': ['qtd'],
             'global_descr': {'op': 'Total'},

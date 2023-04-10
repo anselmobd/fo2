@@ -470,7 +470,6 @@ class Receber(View):
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QTD_PEDIDA', 'QTD_RECEBIDA', 'QTD_A_RECEBER'],
-            'count': [],
             'descr': {'DT_ENTREGA': 'Totais:'},
             'row_style': 'font-weight: bold;',
         })
@@ -554,7 +553,6 @@ class Estoque(View):
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QUANT'],
-            'count': [],
             'descr': {'DESCRICAO': 'Total:'}
         })
         group_rowspan(data, group)
@@ -740,7 +738,6 @@ class MapaNecessidadeDetalhe(View):
             totalize_grouped_data(data, {
                 'group': group,
                 'sum': ['QTD_PRODUTO', 'QTD_INSUMO'],
-                'count': [],
                 'descr': {'OP': 'Totais:'},
                 'flags': ['NO_TOT_1'],
                 'global_sum': ['QTD_INSUMO'],
@@ -842,7 +839,6 @@ class Previsao(View):
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QTD'],
-            'count': [],
             'descr': {'TAM': 'Total:'},
         })
         group_rowspan(data, group)
@@ -971,7 +967,6 @@ class Necessidade1Previsao(View):
         totalize_grouped_data(insumo, {
             'group': group,
             'sum': ['QTD'],
-            'count': [],
             'descr': {'TAM': 'Total:'},
             'flags': ['NO_TOT_1'],
             'row_style': 'font-weight: bold;',
@@ -1092,7 +1087,6 @@ class NecessidadesPrevisoes(View):
         totalize_grouped_data(insumo, {
             'group': group,
             'sum': ['QTD'],
-            'count': [],
             'descr': {'TAM': 'Total:'},
             'flags': ['NO_TOT_1'],
         })

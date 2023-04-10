@@ -83,7 +83,6 @@ class VisaoCd(O2BaseGetView):
         totalize_grouped_data(dados, {
             'group': group,
             'sum': ['qtd_ends', 'qtd_lotes', 'qtd'],
-            'count': [],
             'descr': {'espaco': 'Totais:'},
             'global_sum': ['qtd_ends', 'qtd_lotes', 'qtd'],
             'global_descr': {'espaco': 'Totais gerais:'},

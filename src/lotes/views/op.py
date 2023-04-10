@@ -91,7 +91,6 @@ class ComponentesDeOp(View):
             totalize_grouped_data(data, {
                 'group': group,
                 'sum': ['QTD'],
-                'count': [],
                 'descr': {'ALT': 'Total:'}
             })
             group_rowspan(data, group)

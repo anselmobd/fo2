@@ -155,7 +155,6 @@ class Metas(O2BaseGetView):
 
         totalize_data(metas_list, {
             'sum': ['meta_estoque'],
-            'count': [],
             'descr': {'modelo': 'Total:'},
             'row_style': 'font-weight: bold;',
         })

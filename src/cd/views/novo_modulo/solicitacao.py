@@ -112,10 +112,7 @@ class Solicitacao(O2BaseGetView):
             row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
 
         totalize_data(self.dados_solicitados.object_list, {
-            'sum': [
-                'qtde',
-            ],
-            'count': [],
+            'sum': ['qtde'],
             'descr': {'situacao': 'Total:'},
             'row_style': 'font-weight: bold;',
             'flags': ['NO_TOT_1'],
@@ -207,10 +204,7 @@ class Solicitacao(O2BaseGetView):
                 row['inclusao_endereco'] = '-'
 
         totalize_data(self.dados_enderecados.object_list, {
-            'sum': [
-                'qtde',
-            ],
-            'count': [],
+            'sum': ['qtde'],
             'descr': {'situacao': 'Total:'},
             'row_style': 'font-weight: bold;',
             'flags': ['NO_TOT_1'],
@@ -303,10 +297,7 @@ class Solicitacao(O2BaseGetView):
 
     def context_pedidos(self):
         totalize_data(self.dados_pedidos, {
-            'sum': [
-                'qtde',
-            ],
-            'count': [],
+            'sum': ['qtde'],
             'descr': {'pedido': 'Total:'},
             'row_style': 'font-weight: bold;',
             'flags': ['NO_TOT_1'],

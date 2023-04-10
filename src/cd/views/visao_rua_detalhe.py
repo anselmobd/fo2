@@ -59,7 +59,6 @@ class VisaoRuaDetalhe(View):
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['qlotes', 'qtdsum'],
-            'count': [],
             'descr': {'op': 'Totais:'}
         })
         group_rowspan(data, group)

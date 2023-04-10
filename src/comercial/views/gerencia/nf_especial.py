@@ -33,7 +33,6 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
         totalize_grouped_data(dados, {
             'group': group,
             'sum': ['qtd', 'val_tot'],
-            'count': [],
             'descr': {'data': 'Totais:'},
             'flags': ['NO_TOT_1'],
             'global_sum': ['qtd', 'val_tot'],

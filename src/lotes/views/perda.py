@@ -52,7 +52,6 @@ class OpPerda(View):
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QTD'],
-            'count': [],
             'descr': {'OP': 'Total:'},
             'flags': ['NO_TOT_1'],
             'global_sum': ['QTD'],

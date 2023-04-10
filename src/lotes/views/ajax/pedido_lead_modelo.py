@@ -35,7 +35,6 @@ def pedido_lead_modelo(request, modelo):
         else:
             totalize_data(data_ped, {
                 'sum': ['QTD'],
-                'count': [],
                 'descr': {'REF': 'T:'}})
             total_ped = data_ped[-1]['QTD']
 

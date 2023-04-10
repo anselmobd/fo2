@@ -55,7 +55,6 @@ class VisaoBlocoLotes(O2BaseGetView):
         totalize_grouped_data(lotes, {
             'group': group,
             'sum': ['qtd'],
-            'count': [],
             'descr': {local_field: 'Totais:'},
             'global_sum': ['qtd'],
             'global_descr': {local_field: 'Totais gerais:'},

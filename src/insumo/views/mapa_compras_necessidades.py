@@ -102,8 +102,7 @@ class MapaComprasNecessidades(O2BaseGetPostView):
         if colunas == 'm':
             group = []
             totalize_data(data, {
-                'sum': ['QTD_INSUMO', ],
-                'count': [],
+                'sum': ['QTD_INSUMO'],
                 'descr': {semana_field: 'Totais:'},
                 'row_style': 'font-weight: bold;',
             })
@@ -118,7 +117,6 @@ class MapaComprasNecessidades(O2BaseGetPostView):
             totalize_grouped_data(data, {
                 'group': group,
                 'sum': ['QTD_INSUMO'],
-                'count': [],
                 'descr': {semana_field: 'Total:'},
                 'global_sum': ['QTD_INSUMO'],
                 'global_descr': {semana_field: 'Total geral:'},

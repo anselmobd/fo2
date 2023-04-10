@@ -47,7 +47,6 @@ class ValorMp(View):
         totalize_grouped_data(data, {
             'group': ['nivel'],
             'sum': ['total'],
-            'count': [],
             'descr': {'deposito': 'Total:'}
         })
 

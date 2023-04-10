@@ -247,7 +247,6 @@ class Expedicao(View):
             totalize_grouped_data(data, {
                 'group': group,
                 'sum': ['QTD'],
-                'count': [],
                 'descr': {'REF': 'Total:'},
             })
             group_rowspan(data, group)

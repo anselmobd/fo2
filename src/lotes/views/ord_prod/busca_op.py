@@ -155,7 +155,6 @@ class BuscaOP(View):
         totalize_data(data, {
             # 'sum': ['QTD', 'QTD_AP', 'QTD_F', 'QTD_CD', 'QTD_OUTROS', 'QTD_END', 'QTD_NEND'],
             'sum': ['QTD', 'QTD_AP', 'QTD_F', 'QTD_CD', 'QTD_OUTROS'],
-            'count': [],
             'descr': {'LOTES': 'Totais:'}})
 
         context.update({

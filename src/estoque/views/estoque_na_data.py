@@ -57,7 +57,6 @@ class EstoqueNaData(View):
 
         totalize_data(dados, {
             'sum': ['stq_data', 'trans', 'ajuste', 'stq'],
-            'count': [],
             'descr': {'tam': 'Totais:'},
             'row_style': 'font-weight: bold;',
             })

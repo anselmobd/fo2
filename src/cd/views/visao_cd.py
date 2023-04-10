@@ -92,7 +92,6 @@ class VisaoCd(View):
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['qenderecos', 'qlotes', 'qtdsum'],
-            'count': [],
             'descr': {'rua': 'Totais:'},
             'flags': ['NO_TOT_1'],
             'global_sum': ['qenderecos', 'qlotes', 'qtdsum'],

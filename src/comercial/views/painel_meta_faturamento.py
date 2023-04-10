@@ -69,7 +69,6 @@ class PainelMetaFaturamento(View):
 
             totalize_data(pends, {
                 'sum': ['valor'],
-                'count': [],
                 'descr': {'pendencia': 'Total:'},
             })
             pends[-1]['total'] = True

@@ -196,7 +196,6 @@ class RomaneioCorte(O2BaseGetPostView):
         totalize_grouped_data(dados, {
             'group': group,
             'sum': sum_fields,
-            'count': [],
             'descr': {label_tot_field: 'Totais:'},
             'global_sum': sum_fields,
             'global_descr': {label_tot_field: 'Totais gerais:'},

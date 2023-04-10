@@ -94,7 +94,6 @@ class ProduzirModeloGrade(O2BaseGetView):
 
         totalize_data(data, {
             'sum': self.val_fields,
-            'count': [],
             'descr': {'modelo': 'Totais:'},
             'row_style': 'font-weight: bold;',
             'class_suffix': '__total',

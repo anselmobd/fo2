@@ -91,7 +91,6 @@ class AProduzir(O2BaseGetView):
             'sum': ['meta_giro', 'meta_estoque', 'meta',
                     'total_op', 'total_est', 'total_ped',
                     'op_menos_ped', 'a_produzir', 'excesso'],
-            'count': [],
             'descr': {'modelo': 'Totais:'},
             'row_style': 'font-weight: bold;',
             'class_suffix': '__total',

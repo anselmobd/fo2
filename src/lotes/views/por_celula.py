@@ -50,7 +50,6 @@ class PorCelula(O2BaseGetPostView):
         totalize_grouped_data(dados, {
             'group': group,
             'sum': ['lotes', 'qtd', 'perda'],
-            'count': [],
             'descr': {'data': 'Total do dia:'},
             'flags': ['NO_TOT_1'],
             'global_sum': ['lotes', 'qtd', 'perda'],

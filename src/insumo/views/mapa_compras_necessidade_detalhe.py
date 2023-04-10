@@ -111,7 +111,6 @@ class MapaComprasNecessidadeDetalhe(View):
             totalize_grouped_data(data, {
                 'group': group,
                 'sum': ['QTD_PRODUTO', 'QTD_INSUMO'],
-                'count': [],
                 'descr': {'OP': 'Totais:'},
                 'flags': ['NO_TOT_1'],
                 'global_sum': ['QTD_INSUMO'],

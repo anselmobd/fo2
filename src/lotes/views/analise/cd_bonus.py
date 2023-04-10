@@ -47,7 +47,6 @@ class CdBonusView(O2BaseGetPostView):
             totalize_grouped_data(dados_dest, {
                 'group': group,
                 'sum': ['qtd_res'],
-                'count': [],
                 'descr': {'usuario': "Total:"},
                 'global_sum': ['qtd_res'],
                 'global_descr': {'usuario': f"Total do {dest}:"},
@@ -86,7 +85,6 @@ class CdBonusView(O2BaseGetPostView):
         if dados_totais:
             totalize_data(dados_totais, {
                 'sum': ['qtd_res'],
-                'count': [],
                 'descr': {'usuario': 'Total do dia:'},
                 'row_style': 'font-weight: bold;',
             })

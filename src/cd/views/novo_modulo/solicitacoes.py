@@ -67,7 +67,6 @@ class Solicitacoes(O2BaseGetPostView):
                 'lt',
                 'qt',
             ],
-            'count': [],
             'descr': {'solicitacao': 'Totais:'},
             'row_style': 'font-weight: bold;',
             'flags': ['NO_TOT_1'],

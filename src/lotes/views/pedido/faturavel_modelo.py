@@ -115,7 +115,6 @@ class FaturavelModelo(O2BaseGetPostView):
         totalize_grouped_data(data, {
             'group': group,
             'sum': tot_sum_fields,
-            'count': [],
             'descr': {'PEDIDO': 'Total:'},
             'flags': ['NO_TOT_1'],
             'global_sum': tot_sum_fields,
@@ -175,7 +174,6 @@ class FaturavelModelo(O2BaseGetPostView):
         totalize_grouped_data(data, {
             'group': group,
             'sum': tot_sum_fields,
-            'count': [],
             'descr': {'PEDIDO': 'Total:'},
             'flags': ['NO_TOT_1'],
             'global_sum': tot_sum_fields,

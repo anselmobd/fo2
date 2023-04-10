@@ -84,7 +84,6 @@ class ReferenciaDeposito(View):
         tot_conf = {
             'group': group,
             'sum': ['estoque', 'falta', 'soma'],
-            'count': [],
             'descr': {'ref': 'Totais:'},
         }
         if deposito == 'A00':

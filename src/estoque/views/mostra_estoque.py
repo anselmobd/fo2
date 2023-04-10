@@ -247,7 +247,6 @@ class MostraEstoque(View):
         headers, fields, style = self.table.hfs()
         totalize_data(data, {
             'sum': ['qtd_inv', 'movimento', 'qtd'],
-            'count': [],
             'descr': {'tam': 'Totais:'},
             'row_style': 'font-weight: bold;',
             })
