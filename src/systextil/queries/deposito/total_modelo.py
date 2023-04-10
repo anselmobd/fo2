@@ -5,7 +5,7 @@ from django.core.cache import cache
 
 from utils.cache import timeout
 from utils.functions import my_make_key_cache, fo2logger
-from utils.functions.models.dictlist import rows_to_key_dict
+from utils.functions.models.dictlist import key_dict
 from utils.functions.queries import sql_where, sql_where_none_if
 
 
@@ -87,7 +87,7 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
     '''
 
     cursor.execute(sql)
-    cached_result = rows_to_key_dict(cursor, 'MODELO')
+    cached_result = key_dict(cursor, 'MODELO')
 
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
