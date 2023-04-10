@@ -85,14 +85,27 @@ def dictlist_split(dlist, f_rule):
     return list1, list2
 
 
-def queryset_to_dictlist_lower(qs):
+def queryset_to_dictlist_lower(qs, filter=None):
+
+    def filter_ok(obj):
+        tests = [True]
+        for key in filter:
+            value = getattr(obj, key, None)
+            tests.append(
+                value == filter[key]
+            )
+        return all(tests)
+
+    if not filter:
+        filter = {}
     result = []
     for obj in qs:
-        result.append({
-            name.lower(): obj.__dict__[name]
-            for name in obj.__dict__
-            if name[0] != '_'
-        })
+        if filter_ok(obj):
+            result.append({
+                name.lower(): obj.__dict__[name]
+                for name in obj.__dict__
+                if name[0] != '_'
+            })
     return result
 
 
