@@ -152,8 +152,10 @@ def dict_def_options(dictionary, default, *args):
     Otherwise, return default value.
     """
     for arg in args:
-        if arg in dictionary:
+        try:
             return dictionary[arg]
+        except KeyError:
+            pass
     return default
 
 
