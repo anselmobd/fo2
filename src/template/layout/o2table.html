@@ -1,0 +1,16 @@
+{% if table.title %}
+  <h{% firstof table.title_h 3 %}>{{table.title}}</h{% firstof table.title_h 3 %}>
+{% endif %}
+{% if table.data %}
+  {% if table.data_title %}
+    <h{% firstof table.title_h 3 %}>{{table.data_title}}</h{% firstof table.title_h 3 %}>
+  {% endif %}
+  <table>
+    {% include "layout/thead_generic.html" with data=table.headers style=table.style thclass=table.thclass only %}
+    {% include "layout/tbody_generic.html" with fields=table.fields data=table.data style=table.style decimals=table.decimals safe=table.safe group=table.group only %}
+    </table>
+{% else %}
+  {% if table.empty %}
+    <h{% firstof table.empty_h 4 %}>{{table.empty}}</h{% firstof table.empty_h 4 %}>
+  {% endif %}
+{% endif %}
