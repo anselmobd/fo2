@@ -5,7 +5,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from o2.views.base.get_post import O2BaseGetPostView
-from utils.functions import untuple_keys_concat
+from utils.functions.models.row_field import PrepRows
 from utils.table_defs import TableDefsHpS
 from utils.views import totalize_grouped_data, group_rowspan
 
@@ -45,6 +45,16 @@ class PorCelula(O2BaseGetPostView):
                 'msg_erro': 'Nenhuma produção encontrada',
             })
             return
+
+        PrepRows(
+            dados,
+        ).str(
+            'op'
+        ).a_blank(
+            'op', 'producao:op__get'
+        ).a_blank(
+            'ref', 'produto:ref__get'
+        ).process()
 
         group = ['data']
         totalize_grouped_data(dados, {
