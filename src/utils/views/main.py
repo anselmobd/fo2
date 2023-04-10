@@ -94,7 +94,7 @@ def totalize_grouped_data(data, config):
                     totrow[key] = config['descr'][key]
                 for key in sum:
                     totrow[key] = sum[key]
-                for key in config['count']:
+                for key in config.get('count', []):
                     totrow[key] = group_count
                 total = True
                 if 'flags' in config and 'NO_TOT_1' in config['flags']:
