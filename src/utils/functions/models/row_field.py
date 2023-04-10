@@ -140,6 +140,9 @@ class PrepRows():
         if not empty:
             row[field] = str(row[field])
 
+    def _sn(self, row, field, nao_sim=['Não', 'Sim']):
+        row[field] = nao_sim[bool(row[field])]
+
     def _str(self, row, field, default=None):
         empty = is_empty(row[field])
         if default is None:
@@ -174,6 +177,10 @@ class PrepRows():
 
     def str(self, *args, **kwargs):
         self.custom_command(self._str, *args, **kwargs)
+        return self
+
+    def sn(self, *args, **kwargs):
+        self.custom_command(self._sn, *args, **kwargs)
         return self
 
     def process(self):
