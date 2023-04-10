@@ -17,17 +17,8 @@
       <input type="submit" value="Busca"/>
     </form>
   </div>
-  {% if request.POST %}
+  {% if refs %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
-    {% if msg_erro %}
-      <h4>{{ msg_erro }}</h4>
-    {% endif %}
-    {% if dados %}
-      <h4>Produção</h4>
-      <table>
-        {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
-        {% include "layout/tbody_generic.html" with fields=fields data=dados group=group style=style only %}
-      </table>
-    {% endif %}
+    {% include "layout/o2table.html" with table=refs only %}
   {% endif %}
 {% endblock %}
