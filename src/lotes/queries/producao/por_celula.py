@@ -4,7 +4,10 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def query(cursor, dada_de=None, dada_ate=None, celula=None, estagio=None):
+__all__ = ['por_celula_query']
+
+
+def por_celula_query(cursor, dada_de=None, dada_ate=None, celula=None, estagio=None):
     filtro_dada_de = (
         f"AND ml.DATA_PRODUCAO >= '{dada_de}'"
     ) if dada_de else ''

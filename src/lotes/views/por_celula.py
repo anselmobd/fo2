@@ -9,7 +9,7 @@ from utils.functions import untuple_keys_concat
 from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms.por_celula import PorCelulaForm
-from lotes.queries.producao.por_celula import query as query_por_celula
+from lotes.queries.producao.por_celula import *
 
 
 class PorCelula(O2BaseGetPostView):
@@ -31,7 +31,7 @@ class PorCelula(O2BaseGetPostView):
         
         divisao = self.celula.divisao_producao if self.celula else None
 
-        dados = query_por_celula(
+        dados = por_celula_query(
             self.cursor,
             self.data_de,
             self.data_ate,
