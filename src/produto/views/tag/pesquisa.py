@@ -1,7 +1,5 @@
 from pprint import pprint
 
-from fo2.connections import db_cursor_so
-
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.models.dictlist import queryset_to_dictlist_lower
 from utils.functions.models.row_field import PrepRows
@@ -9,6 +7,7 @@ from utils.table_defs import TableDefsHpS
 
 from produto.forms import ModeloForm
 from produto import models
+
 
 __all__ = ['TagPesquisaView']
 
@@ -25,16 +24,12 @@ class TagPesquisaView(O2BaseGetPostView):
         self.form_class_has_initial = True
 
     def mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-
         modelo = int(self.modelo)
-        if modelo:
-            filter = {'modelo': modelo}
-        else:
-            filter = None
 
         produtos = models.Produto.objects.all().order_by('nivel', 'referencia')
-        refs = queryset_to_dictlist_lower(produtos, filter=filter)
+
+        filter = (lambda r: r.modelo == modelo) if modelo else None
+        refs = queryset_to_dictlist_lower(produtos, filter)
 
         PrepRows(
             refs,
