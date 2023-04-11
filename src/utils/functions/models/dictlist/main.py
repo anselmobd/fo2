@@ -1,4 +1,5 @@
 import pandas as pd
+from collections import defaultdict
 from functools import lru_cache
 from pprint import pprint
 
@@ -77,15 +78,11 @@ def dictlist_lower(cursor):
     return custom_dictlist(cursor, name_case=str.lower)
 
 
-def dictlist_split(dlist, f_rule):
-    list1 = []
-    list2 = []
+def dictlist_split(dlist, rule):
+    parts = defaultdict(list)
     for row in dlist:
-        if f_rule(row):
-            list1.append(row)
-        else:
-            list2.append(row)
-    return list1, list2
+        parts[rule(row)].append(row)
+    return parts[True], parts[False]
 
 
 def record_keys(record):
