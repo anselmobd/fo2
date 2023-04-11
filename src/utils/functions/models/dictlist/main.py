@@ -91,12 +91,27 @@ def dictlist_split(dlist, f_rule):
     return list1, list2
 
 
-def record2dict(rec, fkey=lambda x:x):
-    return {
-        fkey(k):rec.__dict__[k]
+def record_keys(rec):
+    return [
+        k
         for k in rec.__dict__
         if not isinstance(rec.__dict__[k], ModelState)
+    ]
+
+
+def record_keys2dict(rec, keys, fkey=lambda x:x):
+    return {
+        fkey(k): rec.__dict__[k]
+        for k in keys
     }
+
+
+def record2dict(rec, fkey=lambda x:x):
+    return record_keys2dict(
+        rec,
+        record_keys(rec),
+        fkey
+    )
 
 
 def queryset_to_dictlist(qs, filter=None):
@@ -117,9 +132,11 @@ def queryset_to_dictlist(qs, filter=None):
         apply_filter = filter
 
     result = []
-    for obj in qs:
+    for i, obj in enumerate(qs):
+        if i == 0:
+            keys = record_keys(obj)
         if apply_filter(obj):
-            result.append(record2dict(obj, key_lower))
+            result.append(record_keys2dict(obj, keys, key_lower))
     return result
 
 
