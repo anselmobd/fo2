@@ -91,25 +91,25 @@ def dictlist_split(dlist, f_rule):
     return list1, list2
 
 
-def record_keys(rec):
+def record_keys(record):
     return [
-        k
-        for k in rec.__dict__
-        if not isinstance(rec.__dict__[k], ModelState)
+        key
+        for key in record.__dict__
+        if not isinstance(record.__dict__[key], ModelState)
     ]
 
 
-def record_keys2dict(rec, keys, fkey=lambda x:x):
+def record_keys2dict(record, keys, fkey=lambda x:x):
     return {
-        fkey(k): rec.__dict__[k]
-        for k in keys
+        fkey(key): record.__dict__[key]
+        for key in keys
     }
 
 
-def record2dict(rec, fkey=lambda x:x):
+def record2dict(record, fkey=lambda x:x):
     return record_keys2dict(
-        rec,
-        record_keys(rec),
+        record,
+        record_keys(record),
         fkey
     )
 
