@@ -13,8 +13,8 @@ __all__ = [
     'dictlist',
     'dictlist_lower',
     'dictlist_split',
-    'queryset_to_dictlist',
-    'dictlist_to_lower',
+    'queryset2dictlist',
+    'dictlist2lower',
     'dictlist_indexed',
     'dict_def_options',
     'dict_options',
@@ -108,7 +108,7 @@ def record2dict(record, fkey=lambda x: x):
     )
 
 
-def queryset_to_dictlist(qs, filter=None):
+def queryset2dictlist(qs, filter=None):
 
     def filter_ok(obj):
         tests = [True]
@@ -139,7 +139,7 @@ def key_lower(text):
     return text.lower()
 
 
-def dictlist_to_lower(data):
+def dictlist2lower(data):
     data_lower = []
     for row in data:
         row_lower = {}
@@ -149,7 +149,7 @@ def dictlist_to_lower(data):
     return data_lower
 
 
-def df_dictlist_to_lower(data):
+def df_dictlist2lower(data):
     df = pd.DataFrame(data)
     df.columns= df.columns.str.lower()
     return df.to_dict('records')

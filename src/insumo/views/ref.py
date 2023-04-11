@@ -7,7 +7,7 @@ from fo2.connections import db_cursor_so
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.table_defs import TableDefsH, TableDefsHpSD
 from utils.functions.dictlist.get_max_digits import get_max_digits
-from utils.functions.models.dictlist import dictlist_to_lower
+from utils.functions.models.dictlist import dictlist2lower
 
 from produto.queries import prod_tamanhos
 
@@ -81,7 +81,7 @@ class Ref(O2BaseGetPostView):
         self.context['usado'] = self.get_usado(cursor, nivel, ref)
 
     def get_infos(self, cursor, nivel, ref):
-        data = dictlist_to_lower(
+        data = dictlist2lower(
             queries.ref_inform(cursor, nivel, ref))
         result = {
             'data': data,
@@ -111,7 +111,7 @@ class Ref(O2BaseGetPostView):
         return result
 
     def get_cores(self, cursor, nivel, ref):
-        data = dictlist_to_lower(
+        data = dictlist2lower(
             queries.ref_cores(cursor, nivel, ref))
         result = {
             'titulo': "Cores",
@@ -125,7 +125,7 @@ class Ref(O2BaseGetPostView):
         return result
 
     def get_taman(self, cursor, nivel, ref):
-        data = dictlist_to_lower(prod_tamanhos(cursor, nivel, ref))
+        data = dictlist2lower(prod_tamanhos(cursor, nivel, ref))
         result = {
             'titulo': "Tamanhos",
             'data': data,
