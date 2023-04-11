@@ -5,7 +5,7 @@ from django.core.cache import cache
 
 from utils.cache import timeout
 from utils.functions import my_make_key_cache, fo2logger
-from utils.functions.models.dictlist import key_dict
+from utils.functions.models.key_dict import key_dict
 from utils.functions.queries import sql_where, sql_where_none_if
 
 
