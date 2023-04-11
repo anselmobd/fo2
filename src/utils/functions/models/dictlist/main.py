@@ -54,7 +54,10 @@ def key_dict(cursor, keys, simple_key=True, simple_value=True):
 
     return {
         fkey(row, keys): fvalue(row, no_keys)
-        for row in dictlist_zip_columns(cursor, columns)
+        for row in [
+            dict(zip(columns, cursor_row))
+            for cursor_row in cursor
+        ]
     }
 
 
