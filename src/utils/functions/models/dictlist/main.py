@@ -64,11 +64,8 @@ def dictlist_zip_columns(cursor, columns):
     ]
 
 
-def custom_dictlist(cursor, name_case=None):
-    if name_case is None:
-        columns = [i[0] for i in cursor.description]
-    else:
-        columns = [name_case(i[0]) for i in cursor.description]
+def custom_dictlist(cursor, name_case=lambda x: x):
+    columns = [name_case(i[0]) for i in cursor.description]
     return dictlist_zip_columns(cursor, columns)
 
 
@@ -99,14 +96,14 @@ def record_keys(record):
     ]
 
 
-def record_keys2dict(record, keys, fkey=lambda x:x):
+def record_keys2dict(record, keys, fkey=lambda x: x):
     return {
         fkey(key): record.__dict__[key]
         for key in keys
     }
 
 
-def record2dict(record, fkey=lambda x:x):
+def record2dict(record, fkey=lambda x: x):
     return record_keys2dict(
         record,
         record_keys(record),
