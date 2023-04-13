@@ -19,7 +19,7 @@
     {% if sem_numero %}
       <h4>Solicitação: {{solicitacao}}</h4>
     {% else %}
-      <h4>Solicitação: {% include "layout/link.html" with link=link_solicitacao text=solicitacao only %}</h4>
+      <h4>Solicitação: {% include "layout/alink.html" with link=link_solicitacao text=solicitacao only %}</h4>
     {% endif %}
     {% if pedido %}
       <h4>Pedido destino: {{pedido}}</h4>
