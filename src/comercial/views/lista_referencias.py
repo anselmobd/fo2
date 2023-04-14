@@ -1,5 +1,6 @@
 import datetime
 import operator
+import os
 import tempfile
 from dbfread import DBF
 from smb.SMBConnection import SMBConnection
@@ -27,19 +28,23 @@ class ListaReferencias(View):
         cursor = db_cursor_so(self.request)
         dt_old = datetime.date(2000, 1, 1)
 
-        # There will be some mechanism to capture userID, password, client_machine_name, server_name and server_ip
+        # There will be some mechanism to capture userID, password,
+        # client_machine_name, server_name and server_ip
         # client_machine_name can be an arbitary ASCII string
-        # server_name should match the remote machine name, or else the connection will be rejected
+        # server_name should match the remote machine name, or else
+        # the connection will be rejected
         conn = SMBConnection('', '', 'localhost', 'arquivos.t', use_ntlm_v2 = True)
         assert conn.connect('arquivos.t', 139)
 
-        file_obj = tempfile.NamedTemporaryFile()  # 'wb', delete=False)
+        file_obj = tempfile.NamedTemporaryFile(delete=False)  # 'wb', delete=False)
         file_attributes, filesize = conn.retrieveFile('teg', '/Tussor/bd/DIS_BAR.DBF', file_obj)
         # Retrieved file contents are inside file_obj
         # Do what you need with the file_obj and then close it
         # Note that the file obj is positioned at the end-of-file,
         # so you might need to perform a file_obj.seek() if you need
         # to read from the beginning
+
+        file_obj.close()
 
         refs_old = set()
         with DBF(file_obj.name) as bars:
