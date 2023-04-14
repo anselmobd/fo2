@@ -52,7 +52,7 @@ class ListaReferencias(View):
                 if bar['B_DESLIG'] is None:
                     refs_old.add(bar['B_PROD'])
 
-        file_obj.close()
+        os.unlink(file_obj.name)
 
         modelos_op = {}
         refs_op = referencias_com_op(cursor)
