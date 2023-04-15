@@ -3,6 +3,8 @@ from pprint import pprint
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
+from lotes.functions.varias import modelo_de_ref
+
 
 def referencias_vendidas(cursor):
     sql = f'''
@@ -29,4 +31,7 @@ def referencias_vendidas(cursor):
           inf.GRUPO_ESTRUTURA
     '''
     debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
+    data = dictlist_lower(cursor)
+    for row in data:
+        row['modelo'] = modelo_de_ref(row['ref'])
+    return data
