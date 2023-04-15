@@ -7,16 +7,41 @@ from lotes.functions.varias import modelo_de_ref
 
 
 def referencias_com_op(cursor):
-    sql = f'''
-        SELECT
-          op.REFERENCIA_PECA REF
-        , max(op.DATA_PROGRAMACAO) DT_DIGITACAO 
-        FROM PCPC_020 op
-        WHERE op.COD_CANCELAMENTO = 0
-        GROUP BY
-          op.REFERENCIA_PECA
+    ano_table_op = {
+        2023: 'PCPC_020',
+        2020: 'PCPC_020_ANO_2020',
+        2019: 'PCPC_020_ANO_2019',
+        2018: 'PCPC_020_ANO_2018',
+        2017: 'PCPC_020_ANO_2017',
+    }
+
+    def table_op(ano):
+        return f'''
+            SELECT
+              op.REFERENCIA_PECA REF
+            , max(op.DATA_PROGRAMACAO) DT_DIGITACAO
+            , {ano} ANO
+            FROM {ano_table_op[ano]} op
+            WHERE op.COD_CANCELAMENTO = 0
+            GROUP BY
+              op.REFERENCIA_PECA
+        '''
+
+    sql = '''
+        --
+        UNION 
+        --
+    '''.join([
+       table_op(2023),
+       table_op(2020),
+       table_op(2019),
+       table_op(2018),
+       table_op(2017),
+    ])
+    sql += '''
+        --
         ORDER BY 
-          op.REFERENCIA_PECA
+          1
     '''
     debug_cursor_execute(cursor, sql)
     data = dictlist_lower(cursor)
