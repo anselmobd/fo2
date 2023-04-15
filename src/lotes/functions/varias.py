@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pprint import pprint
 
 from utils.functions.strings import only_digits
@@ -12,6 +13,7 @@ def lote_de_periodo_oc(periodo, oc):
     return f"{periodo}{oc:05}"
 
 
+@lru_cache(maxsize=128)
 def modelo_de_ref(ref):
     try:
         return int(only_digits(ref))
