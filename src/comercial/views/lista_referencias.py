@@ -2,6 +2,7 @@ import datetime
 import operator
 import os
 import tempfile
+from collections import defaultdict
 from dbfread import DBF
 from smb.SMBConnection import SMBConnection
 from pprint import pprint
@@ -15,6 +16,9 @@ from systextil.queries.op.referencia import referencias_com_op
 from systextil.queries.faturamento.referencia import referencias_vendidas
 
 from utils.functions.strings import only_digits
+from utils.classes.classes import Max
+
+from lotes.functions.varias import modelo_de_ref
 
 
 class ListaReferencias(View):
@@ -22,7 +26,7 @@ class ListaReferencias(View):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.template_name = 'comercial/lista_referencias.html'
-        self.context = {'titulo': 'Lista referências'}
+        self.context = {'titulo': 'Lista referências de modelo'}
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
@@ -54,60 +58,47 @@ class ListaReferencias(View):
 
         os.unlink(file_obj.name)
 
-        modelos_op = {}
-        refs_op = referencias_com_op(cursor)
-        for row in refs_op:
-            digits = only_digits(row['ref'])
-            if digits:
-                digits = int(digits)
-                if digits in modelos_op:
-                    modelos_op[digits] = max(
-                        modelos_op[digits],
-                        row['dt_digitacao'],
-                    )
-                else:
-                    modelos_op[digits] = row['dt_digitacao']
-
-        modelos_vendidos = {}
-        refs_vendidos = referencias_vendidas(cursor)
-        for row in refs_vendidos:
-            digits = only_digits(row['ref'])
-            if digits:
-                digits = int(digits)
-                if digits in modelos_vendidos:
-                    modelos_vendidos[digits] = max(
-                        modelos_vendidos[digits],
-                        row['data_emissao'],
-                    )
-                else:
-                    modelos_vendidos[digits] = row['data_emissao']
-
-        modelos = {}
+        modelo_refs = defaultdict(list)
         for ref in refs_old:
-            modelo = int(only_digits(ref))
-            if modelo in modelos:
-                modelos[modelo].append(ref)
-            else:
-                modelos[modelo] = [ref]
+            modelo_refs[modelo_de_ref(ref)].append(ref)
 
-        dados_op = []
-        for modelo in modelos:
-            dados_op.append({
+        modelo_max_dt_op = defaultdict(Max)
+        ref_max_dt_op = referencias_com_op(cursor)
+        for row in ref_max_dt_op:
+            modelo_max_dt_op[row['modelo']].value = row['dt_digitacao']
+        modelo_dt_op = {m: modelo_max_dt_op[m].value for m in modelo_max_dt_op}
+
+        modelo_max_dt_venda = defaultdict(Max)
+        ref_max_dt_venda = referencias_vendidas(cursor)
+        for row in ref_max_dt_venda:
+            modelo_max_dt_venda[row['modelo']].value = row['data_emissao']
+        modelo_dt_venda = {m: modelo_max_dt_venda[m].value for m in modelo_max_dt_venda}
+
+        dados = []
+        for modelo in modelo_refs:
+            dados.append({
+                'modelo_int': modelo,
                 'modelo': f"{modelo}",
-                'ref': ", ".join(sorted(modelos[modelo])),
-                'op': modelos_op[modelo].date() if modelo in modelos_op else dt_old,
-                'nf': modelos_vendidos[modelo].date() if modelo in modelos_vendidos else 'Sem NF',
+                'ref': ", ".join(sorted(modelo_refs[modelo])),
+                'op': modelo_dt_op[modelo].date() if modelo in modelo_dt_op else dt_old,
+                'nf': modelo_dt_venda[modelo].date() if modelo in modelo_dt_venda else dt_old,
             })
         
+        dados.sort(key=operator.itemgetter('modelo_int'))
+
+        dados_op = dados.copy()
         dados_op.sort(key=operator.itemgetter('op'))
+
+        dados_nf = dados.copy()
+        dados_nf.sort(key=operator.itemgetter('nf'))
 
         for row in dados_op:
             if row['op'] == dt_old:
                 row['op'] = 'Sem OP'
-        
-        dados = dados_op.copy()
-        dados.sort(key=operator.itemgetter('modelo'))
-
+                if row['nf'] == dt_old:
+                    row['|STYLE'] = "color: red;"
+            if row['nf'] == dt_old:
+                row['nf'] = 'Sem NF'
 
         self.context.update({
             'headers': [
@@ -117,9 +108,10 @@ class ListaReferencias(View):
                 'Data da última venda do modelo',
             ],
             'fields': ['ref', 'modelo', 'op', 'nf'],
-            'style': {2: 'text-align: right;'},
+            'style': {2: 'text-align: center;'},
             'data': dados,
             'data_op': dados_op,
+            'data_nf': dados_nf,
         })
 
     def get(self, request, *args, **kwargs):

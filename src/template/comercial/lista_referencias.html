@@ -14,6 +14,7 @@
     <ul class="nav nav-tabs" id="myTab">
       <li class="active"><a data-toggle="tab" href="#modelo">Ordenado por modelo</a></li>
       <li><a data-toggle="tab" href="#op">Ordenado por data de última OP</a></li>
+      <li><a data-toggle="tab" href="#nf">Ordenado por data de última venda</a></li>
     </ul>
     <div class="tab-content">
       <div id="modelo" class="tab-pane fade in active">
@@ -26,6 +27,12 @@
         <table>
           {% include "layout/thead_generic.html" with data=headers style=style only %}
           {% include "layout/tbody_generic.html" with fields=fields style=style data=data_op only %}
+        </table>
+      </div>
+      <div id="nf" class="tab-pane fade">
+        <table>
+          {% include "layout/thead_generic.html" with data=headers style=style only %}
+          {% include "layout/tbody_generic.html" with fields=fields style=style data=data_nf only %}
         </table>
       </div>
     </div>
