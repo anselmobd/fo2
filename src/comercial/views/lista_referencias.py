@@ -13,6 +13,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from systextil.queries.op.referencia import referencias_com_op
+from systextil.queries.op.lotes import lotes_de_referencia
 from systextil.queries.faturamento.referencia import referencias_vendidas
 
 from utils.functions.strings import only_digits
@@ -74,6 +75,11 @@ class ListaReferencias(View):
             modelo_max_dt_venda[row['modelo']].value = row['data_emissao']
         modelo_dt_venda = {m: modelo_max_dt_venda[m].value for m in modelo_max_dt_venda}
 
+        modelo_lotes = defaultdict(int)
+        ref_lotes = lotes_de_referencia(cursor)
+        for row in ref_lotes:
+            modelo_lotes[row['modelo']] += row['lotes']
+
         dados = []
         for modelo in modelo_refs:
             dados.append({
@@ -82,6 +88,7 @@ class ListaReferencias(View):
                 'ref': ", ".join(sorted(modelo_refs[modelo])),
                 'op': modelo_dt_op[modelo].date() if modelo in modelo_dt_op else dt_old,
                 'nf': modelo_dt_venda[modelo].date() if modelo in modelo_dt_venda else dt_old,
+                'lotes': modelo_lotes[modelo] if modelo in modelo_lotes else 0,
             })
         
         dados.sort(key=operator.itemgetter('modelo_int'))
@@ -93,10 +100,13 @@ class ListaReferencias(View):
         dados_nf.sort(key=operator.itemgetter('nf'))
 
         for row in dados_op:
+            if row['nf'] == dt_old and row['lotes'] == 0:
+                if row['op'] == dt_old:
+                    row['|STYLE'] = "color: red;"
+                else:
+                    row['|STYLE'] = "color: darkorange;"
             if row['op'] == dt_old:
                 row['op'] = 'Sem OP'
-                if row['nf'] == dt_old:
-                    row['|STYLE'] = "color: red;"
             if row['nf'] == dt_old:
                 row['nf'] = 'Sem NF'
 
@@ -106,8 +116,9 @@ class ListaReferencias(View):
                 'Modelo',
                 'Data da última OP do modelo',
                 'Data da última venda do modelo',
+                'Lotes do modelo no CD',
             ],
-            'fields': ['ref', 'modelo', 'op', 'nf'],
+            'fields': ['ref', 'modelo', 'op', 'nf', 'lotes'],
             'style': {2: 'text-align: center;'},
             'data': dados,
             'data_op': dados_op,
