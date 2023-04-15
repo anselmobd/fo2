@@ -3,7 +3,7 @@ import os
 import struct
 import time
 from pathlib import Path
-from pprint import pprint
+from pprint import pprint, pformat
 from subprocess import Popen, PIPE, STDOUT
 
 from django.conf import settings
@@ -298,3 +298,30 @@ class LowerCaseValidator(object):
 
     def get_help_text(self):
         return "Sua senha não pode ter maiúsculas."
+
+
+class MaxMin():
+    def __init__(self, func=None) -> None:
+        self._value = None
+        self._func = func
+    
+    @property
+    def value(self):
+        return self._value
+    
+    @value.setter
+    def value(self, value):
+        self._value = self._func(self._value, value) if self._value else value
+
+    def __repr__(self) -> str:
+        return pformat(self._value)
+
+
+class Max(MaxMin):
+    def __init__(self) -> None:
+        super().__init__(func=max)
+
+
+class Min(MaxMin):
+    def __init__(self) -> None:
+        super().__init__(func=min)
