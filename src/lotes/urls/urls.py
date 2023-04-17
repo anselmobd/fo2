@@ -13,7 +13,7 @@ from lotes.views.ops import seq_erro
 from lotes.views.analise import produzir_grade_empenho
 from lotes.views.ajax import produzir_modelo_grade as ajax_produzir_modelo_grade
 from lotes.views.pedido.rastreabilidade import RastreabilidadeView
-
+from lotes.views.pedido import cancela_pedido
 
 app_name = 'producao'
 urlpatterns = [
@@ -139,6 +139,12 @@ urlpatterns = [
         r'^reativa_pedido/(?P<pedido>\d+)/$',
         views.pedido.reativa_pedido.ReativaPedido.as_view(),
         name='reativa_pedido__get'
+    ),
+
+    re_path(
+        r'^cancela_pedido/(?P<pedido>\d+)/$',
+        cancela_pedido.CancelaPedido.as_view(),
+        name='cancela_pedido__get'
     ),
 
     re_path(r'^pedido/historico$', views.pedido.Historico.as_view(), name='pedido_historico'),
