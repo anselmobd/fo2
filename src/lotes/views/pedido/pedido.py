@@ -9,7 +9,10 @@ from fo2.connections import db_cursor_so
 
 from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
 from base.forms.forms2 import Forms2
-from geral.functions import get_empresa
+from geral.functions import (
+    get_empresa,
+    has_permission,
+)
 from utils.functions import coalesce
 
 from cd.queries.novo_modulo.agrupador import get_agrupador
@@ -83,6 +86,8 @@ class Pedido(View):
             'data': data,
         })
 
+        tem_perm = has_permission(self.request, 'lotes.can_reactivate_pedido')
+
         self.context.update({
             'headers2': (
                 'Status do pedido', 'Cancelamento',
@@ -93,7 +98,8 @@ class Pedido(View):
                 'SITUACAO_VENDA', 'OBSERVACAO',
             ),
             'data2': data,
-            'reativa_pedido': pedido if data[0]['COD_CANCELAMENTO'] != 0 else None,
+            'reativa_pedido': pedido if tem_perm and data[0]['COD_CANCELAMENTO'] != 0 else None,
+            'cancela_pedido': pedido if tem_perm and data[0]['COD_CANCELAMENTO'] == 0 else None,
         })
 
         # Depósitos

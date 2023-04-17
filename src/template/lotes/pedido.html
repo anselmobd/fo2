@@ -34,7 +34,11 @@
   </table>
   {% if reativa_pedido %}
     {% url 'producao:reativa_pedido__get' reativa_pedido as reativa_pedido_link %}
-    {% include "layout/link.html" with link=reativa_pedido_link text='Reativa a pedido' only %}
+    {% include "layout/link.html" with link=reativa_pedido_link text='Reativa o pedido' only %}
+  {% endif %}
+  {% if cancela_pedido %}
+    {% url 'producao:cancela_pedido__get' cancela_pedido as cancela_pedido_link %}
+    {% include "layout/link.html" with link=cancela_pedido_link text='Cancela o pedido' only %}
   {% endif %}
 {% endif %}
 {% if d_data and s_data %}
