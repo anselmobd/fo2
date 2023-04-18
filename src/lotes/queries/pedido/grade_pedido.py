@@ -58,10 +58,11 @@ def query(
             'f' - faturavel (não faturado)
             'n' - não faturavel (faturado - obs.: não verifica se foi devolvido)
         solicitado - default 't' todos os pedidos
-            existe solicitação do com pedido destino igual ao pedido em 
+            existe solicitação com pedido destino igual ao pedido em
             questão e esta solicitação está com situação diferente de zero
             's' - solicitado
             'n' - não solicitado
+            'n<3' - não solicitado ou solicitado com situação menor que 3
         agrupado_em_solicitacao - default 't' todos os pedidos
             pedido agrupado em empenho para varejo
             's' - agrupado
@@ -150,16 +151,38 @@ def query(
 
     if not solicitado or solicitado == 't':
         filtro_solicitado = ''
-    else:
+    elif solicitado in ('s', 'n'):
         exists = 'NOT' if solicitado == 'n' else ''
         filtro_solicitado = f"""--
             AND {exists} EXISTS
                 ( SELECT
                     1
-                  FROM pcpc_044 sl -- solicitação / lote 
+                  FROM pcpc_044 sl -- solicitação / lote
                   WHERE sl.PEDIDO_DESTINO = i.PEDIDO_VENDA
                     AND sl.SITUACAO <> 0
                 )
+        """
+    elif solicitado == 'n<3':
+        filtro_solicitado = f"""--
+            AND (
+              ( NOT EXISTS
+                ( SELECT
+                    1
+                  FROM pcpc_044 sl -- solicitação / lote
+                  WHERE sl.PEDIDO_DESTINO = i.PEDIDO_VENDA
+                    AND sl.SITUACAO <> 0
+                )
+              )
+              OR
+              ( EXISTS
+                ( SELECT
+                    1
+                  FROM pcpc_044 sl -- solicitação / lote
+                  WHERE sl.PEDIDO_DESTINO = i.PEDIDO_VENDA
+                    AND sl.SITUACAO < 3
+                )
+              )
+            )
         """
 
     if not agrupado_em_solicitacao or agrupado_em_solicitacao == 't':
