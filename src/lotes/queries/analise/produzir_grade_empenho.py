@@ -220,7 +220,10 @@ class MountProduzirGradeEmpenho():
                                     ga_row_quants[ga_row_comb_tam] *
                                     ga_row_comb[ga_row_comb_cor0]
                                 )
-                gped = self.og.soma_grades(gped, gpac)
+                if gped:
+                    gped = self.og.soma_grades(gped, gpac)
+                else:
+                    gped = gpac
                 total_ped += total_add
 
         return gped, total_ped
