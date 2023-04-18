@@ -148,6 +148,7 @@ class MountProduzirGradeEmpenho():
             self.cursor,
             fields='all',
             modelo=self.modelo,
+            situacao_empenho='es34',
             selecao_lotes='qq',
             paletizado='t',
         )
