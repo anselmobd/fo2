@@ -14,7 +14,7 @@ def lotes_de_referencia(cursor):
         FROM PCPC_040 l
         WHERE l.SITUACAO_ORDEM <> 9
           AND l.CODIGO_ESTAGIO = 63
-          AND l.QTDE_PECAS_PROG <> 0
+          AND l.QTDE_A_PRODUZIR_PACOTE <> 0
         GROUP BY
           l.PROCONF_GRUPO
         ORDER BY
