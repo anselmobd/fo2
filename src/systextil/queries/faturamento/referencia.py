@@ -19,10 +19,26 @@ def referencias_vendidas(cursor):
           ON fe.NOTA_DEV = nf.NUM_NOTA_FISCAL
          AND fe.SITUACAO_ENTRADA = 1 -- ativa
         JOIN FATU_060 inf -- nota fiscal da Tussor - capa
-          ON inf.CH_IT_NF_NUM_NFIS = nf.NUM_NOTA_FISCAL
+          ON inf.ch_it_nf_cd_empr = nf.codigo_empresa
+         and inf.ch_it_nf_num_nfis = nf.num_nota_fiscal
+         and inf.ch_it_nf_ser_nfis = nf.serie_nota_fisc
+         AND inf.NR_CAIXA = 0
+        JOIN estq_005 t
+          ON t.CODIGO_TRANSACAO = inf.TRANSACAO
         WHERE 1=1
-          AND nop.COD_NATUREZA in ('5.90', '6.90')
-          AND nop.DIVISAO_NATUR = 1
+          -- ou o faturamento tem uma transação de venda
+          -- ou é o caso especial de remessa de residuo
+          AND ( t.TIPO_TRANSACAO = 'V'
+              OR nf.NATOP_NF_NAT_OPER = 900
+              )
+          -- filtro de faturamento baseado na view Faturados_X_Devolvidos
+          -- filtrando faturamento_Sim_Nao = "Sim" e por data
+          -- não cancelada
+          AND nf.COD_CANC_NFISC = 0
+          -- utilizou natureza configurada como faturamento
+          AND nop.faturamento = 1
+          --AND nop.COD_NATUREZA in ('5.90', '6.90')
+          --AND nop.DIVISAO_NATUR = 1
           AND fe.DOCUMENTO IS NULL
           AND inf.NIVEL_ESTRUTURA = 1
         GROUP BY 
