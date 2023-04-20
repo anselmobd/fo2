@@ -3,7 +3,10 @@ from pprint import pprint
 from django import forms
 
 from base.forms.custom import O2BaseForm
+from o2.forms.widget_attrs import FormWidgetAttrs
 from utils.functions.gtin import gtin_check_digit
+
+from produto.functions import fill_ref
 
 
 class O2FieldNivelForm(forms.Form):
@@ -35,6 +38,29 @@ class O2FieldRefForm(forms.Form):
 
     def clean_ref(self):
         return O2BaseForm.cleanner_pad(self, 'ref', 5)
+
+
+class O2FieldReferenciaForm(forms.Form):
+
+    ref = forms.CharField(
+        label='Referência',
+        required=False,
+        min_length=1,
+        max_length=5,
+        widget=forms.TextInput(
+            attrs={
+                'size': 5,
+                **FormWidgetAttrs().string_upper,
+                **FormWidgetAttrs().placeholder_0,
+            }
+        )
+    )
+
+    def clean_ref(self):
+        data = self.data.copy()
+        data['ref'] = fill_ref(self.cleaned_data['ref'])
+        self.data = data
+        return data['ref']
 
 
 class O2FieldReceitaForm(forms.Form):
