@@ -25,7 +25,7 @@ def fill_ref(ref):
         for idx, part in enumerate(parts):
             if part.isdigit():
                 digits_idx = idx
-                digits_idx += 1
+                digits_count += 1
             else:
                 digits_len -= len(part)
         if digits_count != 1:
