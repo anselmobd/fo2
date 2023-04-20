@@ -98,6 +98,45 @@ def split_numbers(text):
     return groups
 
 
+def dirt_split_digits_alphas(text):
+    parts = []
+    draft = {
+        'd': "",
+        'a': "",
+    }
+    last_type = None
+    for char in f"{text}#":
+        char_type = 'd' if char.isdigit() else 'a' if char.isalpha() else None
+        if char_type != last_type:
+            if last_type:
+                parts.append(draft[last_type])
+                draft[last_type] = ""
+            last_type = char_type
+        if char_type:
+            draft[char_type] += char
+    return parts
+
+
+def clean_split_digits_alphas(text):
+    parts = []
+    text = only_alnum(text)
+    if text:
+        draft = {
+            'd': "",
+            'a': "",
+        }
+        last_type = 'd' if text[0].isdigit() else 'a'
+        for char in text:
+            char_type = 'd' if char.isdigit() else 'a'
+            if char_type != last_type:
+                parts.append(draft[last_type])
+                draft[last_type] = ""
+                last_type = char_type
+            draft[char_type] += char
+        parts.append(draft[last_type])
+    return parts
+
+
 def lm(string):
     """Left Margin
     Desidenta string de acordo com a identação da primeira linha.
