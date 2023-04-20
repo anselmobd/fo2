@@ -1,7 +1,13 @@
 from django import forms
 
 from base.forms.custom import O2BaseForm
-from base.forms.fields import O2FieldCorForm, O2FieldRefForm, O2FieldModeloForm, O2FieldClienteForm, O2FieldTamanhoForm
+from base.forms.fields import (
+    O2FieldClienteForm,
+    O2FieldCorForm,
+    O2FieldModeloForm,
+    O2FieldReferenciaForm,
+    O2FieldTamanhoForm,
+)
 from utils.functions import mes_atual, ano_atual
 
 from systextil.models import Colecao
@@ -15,7 +21,7 @@ class ClienteForm(forms.Form):
 
 class VendasForm(
         O2BaseForm,
-        O2FieldRefForm,
+        O2FieldReferenciaForm,
         O2FieldModeloForm):
 
     colecao = forms.ModelChoiceField(
@@ -80,7 +86,7 @@ class VendasForm(
 
 class VendasPorForm(
         O2BaseForm,
-        O2FieldRefForm):
+        O2FieldReferenciaForm):
 
     # cliente = forms.CharField(
     #     required=False,
@@ -97,7 +103,7 @@ class VendasPorForm(
 
 class DevolucaoParaMetaForm(
         O2BaseForm,
-        O2FieldRefForm):
+        O2FieldReferenciaForm):
     ano = forms.IntegerField(
         required=False, initial=ano_atual,
         widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
@@ -124,7 +130,7 @@ class DevolucaoParaMetaForm(
 
 class FaturamentoParaMetaForm(
         O2BaseForm,
-        O2FieldRefForm,
+        O2FieldReferenciaForm,
         O2FieldTamanhoForm,
         O2FieldCorForm,
         O2FieldClienteForm):
