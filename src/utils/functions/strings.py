@@ -1,3 +1,4 @@
+import re
 import textwrap
 from pprint import pprint
 
@@ -75,6 +76,22 @@ def split_non_empty(text, sep):
         t.strip()
         for t in text.split(sep)
         if t.strip()
+    ]
+
+
+def re_split_non_empty(text, sep):
+    return [
+        part.strip()
+        for part in re.split(
+            "|".join(
+                map(
+                    lambda c: f"\{c}",
+                    sep,
+                )
+            ),
+            text,
+        )
+        if part.strip()
     ]
 
 
