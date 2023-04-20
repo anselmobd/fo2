@@ -96,6 +96,8 @@ def get_solicitacoes(
         , sum(CASE WHEN sl.SITUACAO = 4 THEN sl.QTDE ELSE 0 END) q4
         , sum(CASE WHEN sl.SITUACAO = 5 THEN 1 ELSE 0 END) l5
         , sum(CASE WHEN sl.SITUACAO = 5 THEN sl.QTDE ELSE 0 END) q5
+        , sum(CASE WHEN sl.SITUACAO = 9 THEN 1 ELSE 0 END) l9
+        , sum(CASE WHEN sl.SITUACAO = 9 THEN sl.QTDE ELSE 0 END) q9
         , sum(CASE WHEN l.CODIGO_ESTAGIO IS NULL THEN 1 ELSE 0 END) lf
         , sum(CASE WHEN l.CODIGO_ESTAGIO IS NULL THEN sl.QTDE ELSE 0 END) qf
         , sum(CASE WHEN l.CODIGO_ESTAGIO IS NOT NULL THEN 1 ELSE 0 END) lp

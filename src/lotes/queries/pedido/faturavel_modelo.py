@@ -129,7 +129,7 @@ def query(
                      ELSE sl.GRUPO_DESTINO
                      END = pref.REF
                    )
-                AND sl.SITUACAO <> 0
+                AND sl.SITUACAO not in (0, 9)
             )
           , 0 
           ) EMP_SIT_MIN
@@ -151,7 +151,7 @@ def query(
                      ELSE sl.GRUPO_DESTINO
                      END = pref.REF
                    )
-                AND sl.SITUACAO <> 0
+                AND sl.SITUACAO not in (0, 9)
             )
           , 0 
           ) EMP_SIT_MAX

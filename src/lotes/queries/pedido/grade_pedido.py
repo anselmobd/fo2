@@ -159,7 +159,7 @@ def query(
                     1
                   FROM pcpc_044 sl -- solicitação / lote
                   WHERE sl.PEDIDO_DESTINO = i.PEDIDO_VENDA
-                    AND sl.SITUACAO <> 0
+                    AND sl.SITUACAO not in (0, 9)
                 )
         """
     elif solicitado == 'n<3':
@@ -170,7 +170,7 @@ def query(
                     1
                   FROM pcpc_044 sl -- solicitação / lote
                   WHERE sl.PEDIDO_DESTINO = i.PEDIDO_VENDA
-                    AND sl.SITUACAO <> 0
+                    AND sl.SITUACAO not in (0, 9)
                 )
               )
               OR
