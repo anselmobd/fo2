@@ -5,6 +5,7 @@ from django import forms
 from base.forms.custom import O2BaseForm
 from o2.forms.widget_attrs import FormWidgetAttrs
 from utils.functions.gtin import gtin_check_digit
+from utils.functions.strings import re_split_non_empty
 
 from produto.functions import fill_ref
 
@@ -80,24 +81,38 @@ class O2FieldItemForm(forms.Form):
         self.nivel = nivel
 
     item = forms.CharField(
-        label='Item',
-        required=False, max_length=19,
-        widget=forms.TextInput(attrs={'size': 19}))
+        required=False,
+        max_length=18,
+        widget=forms.TextInput(
+            attrs={
+                'size': 18,
+                **FormWidgetAttrs().string_upper,
+                **FormWidgetAttrs().placeholder_item,
+            }
+        )
+    )  # 1.12345.123.123456
 
     def clean_item(self):
         item = self.cleaned_data['item'].upper()
         data = self.data.copy()
-        if '.' in item:
-            parts = item.split('.')
-        else:
+        parts = re_split_non_empty(item, '. ')
+        if len(parts) == 1:  ## 112345123123456
             if len(item) < 15:
                 item = f"{self.nivel}{item}"
             parts = [
-                item[0].zfill(1),
-                item[1:6].zfill(5),
-                item[6:9].zfill(3),
-                item[9:].zfill(6),
+                item[0],
+                item[1:6],
+                item[6:-6],
+                item[-6:],
             ]
+        else:
+            if len(parts) == 3:
+                parts.insert(0, self.nivel)
+            try:
+                parts[1] = fill_ref(parts[1])
+            except:
+                pass
+            parts[3] = parts[3].zfill(6)
         item = '.'.join(parts)
         data['item'] = item
         self.data = data
