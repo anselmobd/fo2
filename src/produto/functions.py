@@ -20,15 +20,16 @@ def fill_ref(ref):
         if len(parts) not in (1, 2, 3):
             raise ValueError('Must have 1 to 3 all digits or all alphas parts')
         digits_len = 5
-        digits_idx = -1
+        digits_idx = 0
+        digits_count = 0
         for idx, part in enumerate(parts):
             if part.isdigit():
-                if digits_idx == -1:
-                    digits_idx = idx
-                else:
-                    raise ValueError('Must have 1 part all digits')
+                digits_idx = idx
+                digits_idx += 1
             else:
                 digits_len -= len(part)
+        if digits_count != 1:
+            raise ValueError('Must have 1 part all digits')
         parts[digits_idx] = parts[digits_idx].zfill(digits_len)
         ref = ''.join(parts)
     return ref
