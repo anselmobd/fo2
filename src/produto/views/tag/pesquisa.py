@@ -1,9 +1,13 @@
 from pprint import pprint
 
+from django.contrib.postgres.aggregates import StringAgg
+
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions.models.dictlist import queryset2dictlist
 from utils.functions.models.row_field import PrepRows
 from utils.table_defs import TableDefsHpS
+
+from lotes.functions.varias import modelo_de_ref
 
 from produto.forms import ModeloForm
 from produto import models
@@ -26,10 +30,47 @@ class TagPesquisaView(O2BaseGetPostView):
     def mount_context(self):
         modelo = int(self.modelo)
 
-        produtos = models.Produto.objects.all().order_by('nivel', 'referencia')
+        referencias = models.Produto.objects.filter(referencia__contains=str(modelo)).values(
+            'referencia',
+        ).order_by('referencia')
 
-        filter = (lambda r: r.modelo == modelo) if modelo else None
-        refs = queryset2dictlist(produtos, filter)
+        ref_list = []
+        for referencia in referencias:
+            if modelo_de_ref(referencia['referencia']) == modelo:
+                ref_list.append(referencia['referencia'])
+
+        produtos = models.Produto.objects.filter(
+            referencia__in=ref_list,
+        ).values(
+            'nivel',
+            'referencia',
+            'descricao',
+            'produtotamanho__tamanho__nome',
+            'ativo',
+            'cor_no_tag',
+        ).annotate(
+            cores=StringAgg('produtocor__cor', delimiter=', ', distinct=True),
+        ).order_by('nivel', 'referencia', 'produtotamanho__tamanho__ordem')
+
+        prods = {}
+        for produto in produtos:
+            if modelo_de_ref(produto['referencia']) == modelo:
+                try:
+                    prods[produto['referencia']]['tam_list'].append(
+                        produto['produtotamanho__tamanho__nome']
+                    )
+                except KeyError:
+                    produto['tam_list'] = [
+                        produto['produtotamanho__tamanho__nome']
+                    ]
+                    prods[produto['referencia']] = produto
+
+        refs = prods.values()
+        for ref in refs:
+            ref['tamanhos'] = ', '.join(ref['tam_list'])
+
+        # filter = (lambda r: r.modelo == modelo) if modelo else None
+        # refs = queryset2dictlist(produtos, filter)
 
         PrepRows(
             refs,
@@ -43,6 +84,8 @@ class TagPesquisaView(O2BaseGetPostView):
             'nivel': 'Nível',
             'referencia': "Ref.",
             'descricao': "Descrição",
+            'tamanhos': "Tamanhos",
+            'cores': "Cores",
             'ativo': 'Ativo',
             'cor_no_tag': 'Cor no tag?',
         }).hfs_dict()
