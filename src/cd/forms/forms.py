@@ -909,6 +909,7 @@ class SolicitacoesForm(forms.Form):
         ('3', "3-Programado"),
         ('4', "4-Solicitado"),
         ('5', "5-Baixado"),
+        ('9', "9-Cancelado"),
     ]
     com_lotes_situacao_de = forms.ChoiceField(
         label='Com lotes em situação: De',
