@@ -11,6 +11,8 @@ from fo2.connections import db_cursor_so
 
 from utils.classes import TermalPrint
 
+from produto.models import ProdutoItem
+
 import lotes.models as models
 from lotes.forms.impressao import ImprimeTagForm
 
@@ -24,7 +26,9 @@ class ImprimeTag(LoginRequiredMixin, View):
         self.template_name = 'lotes/impressao/imprime_tag.html'
         self.title_name = 'Imprime TAG'
 
-    def mount_context_and_print(self, cursor, item, quant):
+    def mount_context_and_print(self, item, quant):
+        cursor = db_cursor_so(self.request)
+
         context = {
             'item': item,
             'quant': quant,
@@ -55,7 +59,28 @@ class ImprimeTag(LoginRequiredMixin, View):
                 do_print = False
 
         if do_print:
-            data = [{'item': item,
+            _, ref, tam, cor = item.split('.')
+            try:
+                item_object = ProdutoItem.objects.get(
+                    produto__referencia=ref,
+                    tamanho__tamanho__nome=tam,
+                    cor__cor=cor,
+                )
+            except ProdutoItem.DoesNotExist:
+                context.update({
+                    'msg_erro': 'Item não cadastrado',
+                })
+                do_print = False
+
+        if do_print:
+            if not item_object.gtin_tag and not item_object.gtin:
+                context.update({
+                    'msg_erro': 'Item sem GTIN',
+                })
+                do_print = False
+
+        if do_print:
+            data = [{'item': item_object,
                      'quant': quant}, ]
             teg = TermalPrint(
                 usuario_impresso.impressora_termica.nome,
@@ -156,7 +181,6 @@ class ImprimeTag(LoginRequiredMixin, View):
             item = form.cleaned_data['item']
             quant = form.cleaned_data['quant']
 
-            cursor = db_cursor_so(request)
-            context.update(self.mount_context_and_print(cursor, item, quant))
+            context.update(self.mount_context_and_print(item, quant))
         context['form'] = form
         return render(request, self.template_name, context)

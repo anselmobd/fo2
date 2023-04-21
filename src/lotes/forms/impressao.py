@@ -2,7 +2,9 @@ from pprint import pprint
 
 from django import forms
 
-from produto.models import ProdutoItem
+from base.forms.fields import (
+    O2FieldItemForm,
+)
 
 
 class ImprimeCaixaLotesForm(forms.Form):
@@ -144,9 +146,7 @@ class ImprimeOb1Form(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number'}))
 
 
-class ImprimeTagForm(forms.Form):
-    item = forms.ModelChoiceField(
-        queryset=ProdutoItem.objects.all())
+class ImprimeTagForm(O2FieldItemForm):
     quant = forms.IntegerField(
         label='Quantidade',
         widget=forms.TextInput(attrs={'type': 'number'}))
