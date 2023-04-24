@@ -143,3 +143,30 @@ def dict_options(dictionary, *args):
     Call dict_def_options with default value None
     """
     return dict_def_options(dictionary, None, *args)
+
+
+def dictlist_agg(data, key, agg_key=None, sep=', '):
+    if not agg_key:
+        agg_key = f"agg_{key}"
+    rows = {}
+    for row in data:
+        data_key = tuple([
+            row[k] for k in row if k != key
+        ])
+
+        try:
+            rows[data_key]
+        except KeyError:
+            rows[data_key] = row
+        row_base = rows[data_key]
+
+        try:
+            row_base[agg_key].append(row[key])
+        except KeyError:
+            row_base[agg_key] = [row[key]]
+
+    result = rows.values()
+    for row in result:
+        row[agg_key] = sep.join(row[agg_key])
+
+    return result
