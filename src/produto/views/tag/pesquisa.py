@@ -3,7 +3,7 @@ from pprint import pprint
 from django.contrib.postgres.aggregates import StringAgg
 
 from o2.views.base.get_post import O2BaseGetPostView
-from utils.functions.models.dictlist import queryset2dictlist
+from utils.functions.models.dictlist import queryset2dictlist, dictlist_agg
 from utils.functions.models.row_field import PrepRows
 from utils.table_defs import TableDefsHpS
 
@@ -52,29 +52,11 @@ class TagPesquisaView(O2BaseGetPostView):
             cores=StringAgg('produtocor__cor', delimiter=', ', distinct=True),
         ).order_by('nivel', 'referencia', 'produtotamanho__tamanho__ordem')
 
-        prods = {}
-        for produto in produtos:
-            if modelo_de_ref(produto['referencia']) == modelo:
-                try:
-                    prods_ref = prods[produto['referencia']]
-                except KeyError:
-                    prods[produto['referencia']] = produto
-                    prods_ref = produto
-                try:
-                    prods_ref['tam_list'].append(
-                        produto['produtotamanho__tamanho__nome']
-                    )
-                except KeyError:
-                    prods_ref['tam_list'] = [
-                        produto['produtotamanho__tamanho__nome']
-                    ]
-
-        refs = prods.values()
-        for ref in refs:
-            ref['tamanhos'] = ', '.join(ref['tam_list'])
-
-        # filter = (lambda r: r.modelo == modelo) if modelo else None
-        # refs = queryset2dictlist(produtos, filter)
+        refs = dictlist_agg(
+            produtos,
+            'produtotamanho__tamanho__nome',
+            agg_key='tamanhos'
+        )
 
         PrepRows(
             refs,
