@@ -56,14 +56,18 @@ class TagPesquisaView(O2BaseGetPostView):
         for produto in produtos:
             if modelo_de_ref(produto['referencia']) == modelo:
                 try:
-                    prods[produto['referencia']]['tam_list'].append(
+                    prods_ref = prods[produto['referencia']]
+                except KeyError:
+                    prods[produto['referencia']] = produto
+                    prods_ref = produto
+                try:
+                    prods_ref['tam_list'].append(
                         produto['produtotamanho__tamanho__nome']
                     )
                 except KeyError:
-                    produto['tam_list'] = [
+                    prods_ref['tam_list'] = [
                         produto['produtotamanho__tamanho__nome']
                     ]
-                    prods[produto['referencia']] = produto
 
         refs = prods.values()
         for ref in refs:
