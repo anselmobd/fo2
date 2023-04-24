@@ -145,7 +145,7 @@ def dict_options(dictionary, *args):
     return dict_def_options(dictionary, None, *args)
 
 
-def dictlist_agg(data, key, agg_key=None, sep=', '):
+def dictlist_agg(data, key, agg_key=None, sep=', ', distinct=False):
     if not agg_key:
         agg_key = f"agg_{key}"
     rows = {}
@@ -167,6 +167,8 @@ def dictlist_agg(data, key, agg_key=None, sep=', '):
 
     result = rows.values()
     for row in result:
+        if distinct:
+            row[agg_key] = list(dict.fromkeys(row[agg_key]))
         row[agg_key] = sep.join(row[agg_key])
 
     return result
