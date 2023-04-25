@@ -6,6 +6,11 @@ from django.db.models import Exists, OuterRef
 from fo2.connections import db_cursor_so
 
 from o2.views.base.get import O2BaseGetView
+from utils.classes import Perf
+from utils.functions.queries.main import (
+    debug_cursor_execute_prt_off,
+    debug_cursor_execute_prt_on,
+)
 
 import comercial.models as models
 import comercial.queries as queries
@@ -67,7 +72,9 @@ class VendasPorModelo(O2BaseGetView):
             row["meta"] = " "
             row["data"] = " "
             row['ref_incluir'] = " "
+        self.p.prt('insere_metas antes do for')
         for row in self.get_metas():
+            self.p.prt(f"insere_metas row['modelo'] {row['modelo']}")
             data_row = next(
                 (dr for dr in self.av.data if dr['modelo'] == row['modelo']),
                 False)
@@ -119,18 +126,28 @@ class VendasPorModelo(O2BaseGetView):
         )
 
     def mount_context(self):
+        debug_cursor_execute_prt_off()
+        self.p = Perf(id='VendasPorModelo', on=False)
+
         self.cursor = db_cursor_so(self.request)
 
         self.meta_periodos = get_meta_periodos()
+        self.p.prt('get_meta_periodos')
         
         self.get_av()
+        self.p.prt('get_av')
 
         self.insere_metas()
+        self.p.prt('insere_metas')
 
         self.calc_ponderada()
+        self.p.prt('calc_ponderada')
 
         self.add_link_modelo()
+        self.p.prt('add_link_modelo')
+
         data = self.av_data_sorted()
+        self.p.prt('av_data_sorted')
 
         safe_refs_header = (
             'Refs.<span style="font-size: 50%;vertical-align: super;" '
