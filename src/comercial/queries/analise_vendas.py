@@ -6,13 +6,15 @@ from utils.functions import dec_months
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.strings import join_non_empty
 
+from systextil.queries.produto.modelo import sql_sele_modelostr_ref
+
 import produto.queries
 
 
 class AnaliseVendas():
 
     sql_base = (
-    """ WITH item_vendido AS
+    f""" WITH item_vendido AS
         ( SELECT
             nf.NUM_NOTA_FISCAL NF
           , nf.DATA_EMISSAO DT
@@ -20,9 +22,7 @@ class AnaliseVendas():
           , r.CGC_CLIENTE_9 CNPJ9
           , item.NIVEL_ESTRUTURA NIVEL
           , item.GRUPO_ESTRUTURA REF
-          , TRIM(LEADING '0' FROM (
-              REGEXP_REPLACE(item.GRUPO_ESTRUTURA, '[^0-9]', '')
-            )) MODELO
+          , {sql_sele_modelostr_ref('item.GRUPO_ESTRUTURA')}
           , item.SUBGRU_ESTRUTURA TAM
           , tam.ORDEM_TAMANHO ORD_TAM
           , item.ITEM_ESTRUTURA COR
