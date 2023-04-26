@@ -62,7 +62,7 @@ class ReferenciaDeposito(View):
 
         dados = []
         for row in data:
-            if lista == 'n':
+            if filtra_qtd == 'n':
                 if row['estoque'] != 0 or row['falta'] != 0:
                     dados.append(row)
                 else:
