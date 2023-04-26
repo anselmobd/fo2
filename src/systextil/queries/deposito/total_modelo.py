@@ -3,35 +3,11 @@ from pprint import pprint
 
 from django.core.cache import cache
 
+from systextil.queries.produto.modelo import sql_modelostr_ref, sql_where_modelo_ref
 from utils.cache import timeout
 from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models.key_dict import key_dict
 from utils.functions.queries import sql_where, sql_where_none_if
-
-
-def sql_calc_modelo_de_ref(field=""):
-    if field:
-        return f"""--
-            TRIM(
-                LEADING '0' FROM (
-                REGEXP_REPLACE(
-                    {field},
-                    '^[a-zA-Z]?([0-9]+)[a-zA-Z]*$',
-                    '\\1'
-                )
-                )
-            )
-        """
-    return ""
-
-
-def sql_where_modelo_de_ref(field, modelo, operation="=", conector="AND"):
-    return sql_where(
-        sql_calc_modelo_de_ref(field),
-        str(modelo),
-        operation=operation,
-        conector=conector,
-    )
 
 
 def sql_filtra_modelo(field, modelo, conector='AND'):
@@ -64,7 +40,7 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
     filtro_deposito = sql_where_none_if(
         'e.DEPOSITO', deposito, '', operation="IN")
 
-    calc_modelo = sql_calc_modelo_de_ref('e.CDITEM_GRUPO')
+    calc_modelo = sql_modelostr_ref('e.CDITEM_GRUPO')
 
     filtro_modelo = sql_filtra_modelo(
         f'{calc_modelo}',
@@ -96,7 +72,7 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
 
 def total_modelo_deposito(cursor, modelo, deposito):
 
-    filtro_modelo = sql_where_modelo_de_ref(
+    filtro_modelo = sql_where_modelo_ref(
         'e.CDITEM_GRUPO',
         modelo,
     )
