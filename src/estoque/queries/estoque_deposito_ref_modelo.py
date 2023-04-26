@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from systextil.queries.produto.modelo import sql_sele_modeloint_ref
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
@@ -73,17 +74,7 @@ def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
         , COALESCE(e.QTDE_ESTOQUE_ATU, 0) QTD
         FROM (
           SELECT
-            TO_NUMBER(
-              TRIM(
-                LEADING '0' FROM (
-                  REGEXP_REPLACE(
-                    rtc.GRUPO_ESTRUTURA,
-                    '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
-                    '\\1'
-                  )
-                )
-              )
-            ) MODELO
+            {sql_sele_modeloint_ref('rtc.GRUPO_ESTRUTURA')}
           , rtc.GRUPO_ESTRUTURA REF
           , rtc.SUBGRU_ESTRUTURA TAM
           , rtc.ITEM_ESTRUTURA COR

@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from systextil.queries.produto.modelo import sql_modelostr_ref, sql_sele_modelostr_ref
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
@@ -109,21 +110,17 @@ def pedido_faturavel_sortimento(
             FROM it_qtd ped
         """
     elif retorno == 'm':
-        sql += """--
+        sql += f"""--
             , it_qtd AS -- itens de qtd final
             (
               SELECT
-                TRIM(LEADING '0' FROM (
-                  REGEXP_REPLACE(pq.REF, '[^0-9]', '')
-                )) MODELO
+                {sql_sele_modelostr_ref('pq.REF')}
               , sum(pq.QTD) QTD
               FROM it_ped_qtd pq -- itens de ped com qtd e qtd fat e dev
               LEFT JOIN BASI_220 t -- tamanhos
                 ON t.TAMANHO_REF = pq.TAM
               GROUP BY
-                TRIM(LEADING '0' FROM (
-                  REGEXP_REPLACE(pq.REF, '[^0-9]', '')
-                ))
+                {sql_modelostr_ref('pq.REF')}
               ORDER BY
                 1
             )

@@ -2,6 +2,7 @@ from django.core.cache import cache
 
 from utils.functions.models.dictlist import dictlist
 
+from systextil.queries.produto.modelo import sql_modeloint_ref
 from utils.functions import fo2logger, my_make_key_cache
 from utils.functions.queries import debug_cursor_execute
 
@@ -396,14 +397,14 @@ def busca_op(
         , o.REFERENCIA_PECA REF
         , COALESCE(
           CASE WHEN o.REFERENCIA_PECA < 'C0000' THEN
-            CAST( CAST( regexp_replace(o.REFERENCIA_PECA, '[^0-9]', '')
-                        AS INTEGER ) AS VARCHAR2(5) )
+            CAST(
+              {sql_modeloint_ref('o.REFERENCIA_PECA')}
+              AS VARCHAR2(5) )
           ELSE
             ( SELECT
                 CAST( MAX(
                   CASE WHEN ec.GRUPO_ITEM IS NULL THEN 0
-                  ELSE CAST( regexp_replace(ec.GRUPO_ITEM, '[^0-9]', '')
-                             AS INTEGER )
+                  ELSE {sql_modeloint_ref('ec.GRUPO_ITEM')}
                   END
                 ) AS VARCHAR2(5) )
                 FROM BASI_050 ec

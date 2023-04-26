@@ -1,29 +1,18 @@
+from pprint import pprint
+
+from systextil.queries.produto.modelo import sql_modeloint_ref, sql_sele_modeloint_ref
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
 def busca_modelo(cursor, descricao=None):
-    if descricao is None:
-        descricao = ''
+    filtro_descricao = f'''
+        AND r.DESCR_REFERENCIA LIKE '%{descricao}%'
+    ''' if descricao else ''
 
-    filtro_descricao = ''
-    if descricao != '':
-        filtro_descricao = '''
-            AND r.DESCR_REFERENCIA LIKE '%{}%'
-        '''.format(descricao)
-
-    sql = """
+    sql = f"""
         SELECT DISTINCT
-          TO_NUMBER(
-            TRIM(
-              LEADING '0' FROM (
-                REGEXP_REPLACE(
-                  r.REFERENCIA, '[^0-9]', ''
-                )
-              )
-            )
-          ) MODELO
-        --, r.REFERENCIA REF
+          {sql_sele_modeloint_ref('r.REFERENCIA')}
         , MAX(r.DESCR_REFERENCIA) DESCR
         FROM BASI_030 r -- ref
         WHERE r.NIVEL_ESTRUTURA = 1
@@ -31,20 +20,9 @@ def busca_modelo(cursor, descricao=None):
           AND r.REFERENCIA < 'C0000'
           {filtro_descricao} -- filtro_descricao
         GROUP BY
-          TO_NUMBER(
-            TRIM(
-              LEADING '0' FROM (
-                REGEXP_REPLACE(
-                  r.REFERENCIA, '[^0-9]', ''
-                )
-              )
-            )
-          )
-        --, r.REFERENCIA
+          {sql_modeloint_ref('r.REFERENCIA')}
         ORDER BY
           1
-    """.format(
-        filtro_descricao=filtro_descricao,
-    )
+    """
     debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)

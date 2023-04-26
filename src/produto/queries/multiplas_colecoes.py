@@ -1,23 +1,22 @@
 from pprint import pprint
 
+from systextil.queries.produto.modelo import sql_sele_modelostr_ref, sql_modelostr_ref
 from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
 def multiplas_colecoes(cursor):
-    sql = """
+    sql = f"""
         WITH problema AS
         ( SELECT
-            TRIM(LEADING '0' FROM (
-              REGEXP_REPLACE(r.REFERENCIA, '[^0-9]', ''))) MODELO
+            {sql_sele_modelostr_ref('r.REFERENCIA')}
           , count( DISTINCT r.COLECAO ) colecoes
           FROM BASI_030 r -- item (ref+tam+cor)
           WHERE r.NIVEL_ESTRUTURA = 1
             AND r.REFERENCIA < 'C0000'
             AND r.DESCR_REFERENCIA NOT LIKE '-%'
           GROUP BY
-            TRIM(LEADING '0' FROM (
-              REGEXP_REPLACE(r.REFERENCIA, '[^0-9]', '')))
+            {sql_modelostr_ref('r.REFERENCIA')}
           HAVING
             count( DISTINCT r.COLECAO ) > 1
         )
@@ -33,9 +32,7 @@ def multiplas_colecoes(cursor):
           ON r.NIVEL_ESTRUTURA = 1
          AND r.REFERENCIA < 'C0000'
          AND r.DESCR_REFERENCIA NOT LIKE '-%'
-         AND TRIM(LEADING '0' FROM (
-               REGEXP_REPLACE(r.REFERENCIA, '[^0-9]', '')))
-             = p.modelo
+         AND {sql_modelostr_ref('r.REFERENCIA')} = p.modelo
         JOIN BASI_140 col
           ON col.COLECAO = r.COLECAO
         ORDER BY

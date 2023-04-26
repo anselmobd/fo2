@@ -5,6 +5,7 @@ from pprint import pprint
 from django.db import connections
 from django.core.cache import cache
 
+from systextil.queries.produto.modelo import sql_sele_modelostr_ref
 from utils.functions.models.dictlist import dictlist, dictlist_lower
 from utils.functions import dec_months, my_make_key_cache, fo2logger
 
@@ -40,19 +41,7 @@ def get_modelo_dims(cursor, modelo=None, get=None):
           SELECT
             i.NIVEL_ESTRUTURA NIVEL
           , i.GRUPO_ESTRUTURA REF
-          , TRIM(
-              LEADING '0' FROM (
-                REGEXP_REPLACE(
-                  REGEXP_REPLACE(
-                    i.GRUPO_ESTRUTURA
-                  , '^(.+[^a-zA-Z])[a-zA-Z]*$'
-                  , '\\1'
-                  )
-                , '^[a-zA-Z]([^a-zA-Z].+)*$'
-                , '\\1'
-                )
-              )
-            ) MODELO
+          , {sql_sele_modelostr_ref('i.GRUPO_ESTRUTURA')}
           , i.SUBGRU_ESTRUTURA TAM
           , i.ITEM_ESTRUTURA COR
           FROM BASI_010 i -- (ref+tam+cor)
@@ -210,10 +199,7 @@ def get_vendas(
         , nop.DIVISAO_NATUR DIV_NAT
         , inf.NIVEL_ESTRUTURA NIVEL
         , inf.GRUPO_ESTRUTURA REF
-        , TRIM(LEADING '0' FROM
-               (REGEXP_REPLACE(inf.GRUPO_ESTRUTURA,
-                               '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-                               ))) MODELO
+        , {sql_sele_modelostr_ref('inf.GRUPO_ESTRUTURA')}
         , inf.SUBGRU_ESTRUTURA TAM
         , inf.ITEM_ESTRUTURA COR
         , inf.QTDE_ITEM_FATUR QTD
@@ -452,26 +438,14 @@ def get_vendas_new(
         select_por = ", v.MODELO"
         # no filtro por modelo não busca modelos com qtd zerada, por EMISSAO
         # apenas repete o valor, para, ao agrupar, não fazer diferença
-        select_item = (
-        """--
-            , TRIM(LEADING '0' FROM
-               (REGEXP_REPLACE(v.GRUPO_ESTRUTURA,
-                               '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-                               ))) MODELO
-        """)
+        select_item = f", {sql_sele_modelostr_ref('v.GRUPO_ESTRUTURA')}"
         select_global = select_por
         join_on = "ON pr.MODELO = v.MODELO"
         group_por = ", v.MODELO"
         add_order('v.MODELO')
     elif por == 'modelo+incl':
         select_por = f", '{modelo}' MODELO"
-        select_item = (
-        """--
-            , TRIM(LEADING '0' FROM
-               (REGEXP_REPLACE(v.GRUPO_ESTRUTURA,
-                               '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-                               ))) MODELO
-        """)
+        select_item = f", {sql_sele_modelostr_ref('v.GRUPO_ESTRUTURA')}"
         select_global = select_por
         join_on = "ON pr.MODELO = v.MODELO"
     elif por == 'ref':
@@ -507,10 +481,7 @@ def get_vendas_new(
         , nop.DIVISAO_NATUR DIV_NAT
         , inf.NIVEL_ESTRUTURA NIVEL
         , inf.GRUPO_ESTRUTURA REF
-        , TRIM(LEADING '0' FROM
-               (REGEXP_REPLACE(inf.GRUPO_ESTRUTURA,
-                               '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-                               ))) MODELO
+        , {sql_sele_modelostr_ref('inf.GRUPO_ESTRUTURA')}
         , inf.SUBGRU_ESTRUTURA TAM
         , inf.ITEM_ESTRUTURA COR
         , CASE

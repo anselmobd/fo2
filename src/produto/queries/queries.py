@@ -3,6 +3,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 
+from systextil.queries.produto.modelo import sql_modelostr_ref, sql_modeloint_ref
 from utils.cache import timeout
 from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models.dictlist import dictlist, dictlist_lower
@@ -246,15 +247,13 @@ def nivel_ref_inform(cursor, nivel, ref, upper=True):
         , r.RESPONSAVEL STATUS
         , COALESCE(
           CASE WHEN r.REFERENCIA < 'C0000' THEN
-            CAST( CAST( regexp_replace(r.REFERENCIA, '[^0-9]', '')
-                        AS INTEGER ) AS VARCHAR2(5) )
+            CAST(
+              {sql_modeloint_ref('r.REFERENCIA')}
+              AS VARCHAR2(5) )
           ELSE
             ( SELECT
                 CAST( MAX(
-                  CASE WHEN ec.GRUPO_ITEM IS NULL THEN 0
-                  ELSE CAST( regexp_replace(ec.GRUPO_ITEM, '[^0-9]', '')
-                             AS INTEGER )
-                  END
+                  {sql_modeloint_ref('ec.GRUPO_ITEM')}
                 ) AS VARCHAR2(5) )
                 FROM BASI_050 ec
                 JOIN BASI_030 rr
@@ -557,11 +556,7 @@ def modelo_inform(cursor, modelo, tipo=None):
         SELECT
           r.REFERENCIA REF
         FROM basi_030 r
-        -- WHERE regexp_replace(r.REFERENCIA, '[^0-9]', '')
-        --       IN ('[]', '0[]', '00[]')
-        WHERE TRIM(LEADING '0' FROM (
-                REGEXP_REPLACE(r.REFERENCIA, '[^0-9]', '')
-              )) = '{modelo}'
+        WHERE {sql_modelostr_ref('r.REFERENCIA')} = '{modelo}'
           AND r.REFERENCIA < 'C0000'
           AND r.NIVEL_ESTRUTURA = 1
         UNION
@@ -570,11 +565,7 @@ def modelo_inform(cursor, modelo, tipo=None):
         FROM BASI_050 ec
         WHERE ec.NIVEL_ITEM = 1
           AND ec.NIVEL_COMP = 1
-          -- AND regexp_replace(ec.GRUPO_ITEM, '[^0-9]', '')
-          --     IN ('[]', '0[]', '00[]')
-          AND TRIM(LEADING '0' FROM (
-                REGEXP_REPLACE(ec.GRUPO_ITEM, '[^0-9]', '')
-              )) = '{modelo}'
+          AND {sql_modelostr_ref('ec.GRUPO_ITEM')} = '{modelo}'
           AND ec.GRUPO_ITEM < 'C0000'
         ) re
         JOIN basi_030 r
