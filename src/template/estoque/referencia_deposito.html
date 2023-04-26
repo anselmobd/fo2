@@ -76,6 +76,9 @@
     </td>
   </tr>
 </table>
+{% if filtra_qtd == 'n' %}
+  <h4>Apenas depósito/referência com quantidades não zeradas.</h4>
+{% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
 {% endif %}

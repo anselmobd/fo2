@@ -25,11 +25,11 @@ class ReferenciaDeposito(View):
             'str_depositos': self.str_depositos(),
         }
 
-    def mount_context(self, request, cursor, deposito, modelo, lista):
+    def mount_context(self, request, cursor, deposito, modelo, filtra_qtd):
         context = {
             'deposito': deposito,
             'modelo': modelo,
-            'lista': lista,
+            'filtra_qtd': filtra_qtd,
         }
         try:
             imodelo = int(modelo)
@@ -127,8 +127,8 @@ class ReferenciaDeposito(View):
         if form.is_valid():
             deposito = form.cleaned_data['deposito']
             modelo = form.cleaned_data['modelo']
-            lista = form.cleaned_data['lista']
+            filtra_qtd = form.cleaned_data['filtra_qtd']
             self.context.update(self.mount_context(
-                request, cursor, deposito, modelo, lista))
+                request, cursor, deposito, modelo, filtra_qtd))
         self.context['form'] = form
         return render(request, self.template_name, self.context)

@@ -162,7 +162,7 @@ class ReferenciasEstoqueForm(
         ('t', "Todos"),
         ('n', "Não zerados"),
     ]
-    lista = forms.ChoiceField(
+    filtra_qtd = forms.ChoiceField(
         choices=CHOICES,
         required=False,
         initial='t',
