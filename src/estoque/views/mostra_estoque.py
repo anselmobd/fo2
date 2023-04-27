@@ -16,6 +16,7 @@ from produto.queries.get_modelos import list_modelos_query
 
 
 from estoque import forms, queries
+from estoque.queries.referencia_deposito import *
 from estoque.functions import transfo2_num_doc, transfo2_num_doc_dt
 
 
@@ -68,7 +69,7 @@ class MostraEstoque(View):
             ref_modelo = re.search(r"\d+", ref)[0].lstrip('0')
 
             get_prox = False
-            lista = queries.referencia_deposito(cursor, ref_modelo, deposito=deposito)
+            lista = referencia_deposito_query(cursor, ref_modelo, deposito=deposito)
             for row in lista:
                 item = row['ref']
                 if get_prox:

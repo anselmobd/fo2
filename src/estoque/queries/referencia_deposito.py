@@ -1,30 +1,24 @@
+from pprint import pprint
+
+from systextil.queries.produto.modelo import sql_modeloint_ref
+from utils.functions.queries import debug_cursor_execute
 from utils.functions.models.dictlist import dictlist_lower
 
 
-def referencia_deposito(cursor, modelo, todos=True, deposito='A00'):
-    filtro_todos = ''
-    if not todos:  # apenas aqueles que tem alguma quantidade
-        filtro_todos = ''' --
-            AND (sel.ESTOQUE <> 0 OR sel.FALTA <> 0)
-        '''
+__all__ = ['referencia_deposito_query']
 
-    filtro_modelo = ''
-    if modelo != '' and modelo is not None:
-        filtro_modelo = f"""--
-            AND
-              TRIM(
-                LEADING '0' FROM (
-                  REGEXP_REPLACE(
-                    rtc.GRUPO_ESTRUTURA,
-                    '^[abAB]?([0-9]+)[a-zA-Z]*$',
-                    '\\1'
-                  )
-                )
-              ) = '{modelo}'
-        """
+
+def referencia_deposito_query(cursor, modelo, todos=True, deposito='A00'):
+    filtro_todos = """--
+        AND (sel.ESTOQUE <> 0 OR sel.FALTA <> 0)
+    """ if not todos else ''
+
+    filtro_modelo = f"""--
+        AND {sql_modeloint_ref('rtc.GRUPO_ESTRUTURA')} = '{modelo}'
+    """ if modelo else ''
 
     filtro_deposito = ''
-    if deposito is not None and deposito != '':
+    if deposito:
         if deposito == 'A00':
             filtro_deposito = "AND d.CODIGO_DEPOSITO IN (101, 102, 103, 122, 231)"
         else:
@@ -97,6 +91,5 @@ def referencia_deposito(cursor, modelo, todos=True, deposito='A00'):
         WHERE 1=1
           {filtro_todos} -- filtro_todos
     """
-
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)

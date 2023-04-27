@@ -12,7 +12,8 @@ from utils.views import group_rowspan, totalize_grouped_data
 
 from produto.queries.get_modelos import list_modelos_query
 
-from estoque import forms, queries
+from estoque import forms
+from estoque.queries.referencia_deposito import *
 
 
 class ReferenciaDeposito(View):
@@ -45,7 +46,7 @@ class ReferenciaDeposito(View):
             'posterior': get_defa(modelos, modelo_idx+1),
         })
 
-        dados = queries.referencia_deposito(
+        dados = referencia_deposito_query(
             cursor, modelo, todos=(filtra_qtd == 't'), deposito=deposito)
 
         if not dados:
