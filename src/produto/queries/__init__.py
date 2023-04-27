@@ -1,4 +1,3 @@
-from .busca_modelo import *
 from .busca_produto import *
 from .colecoes_de_modelo import *
 from .combinacoes_cores import *

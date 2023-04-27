@@ -7,7 +7,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 import produto.forms as forms
-import produto.queries as queries
+from produto.queries.busca_modelo import busca_modelo_query
 
 
 class BuscaModelo(View):
@@ -21,7 +21,7 @@ class BuscaModelo(View):
     def mount_context(self, cursor, descricao):
         context = {'descricao': descricao}
 
-        data = queries.busca_modelo(cursor, descricao)
+        data = busca_modelo_query(cursor, descricao)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum modelo selecionado',

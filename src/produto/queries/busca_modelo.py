@@ -5,7 +5,7 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def busca_modelo(cursor, descricao=None):
+def busca_modelo_query(cursor, descricao=None):
     filtro_descricao = f'''
         AND r.DESCR_REFERENCIA LIKE '%{descricao}%'
     ''' if descricao else ''
