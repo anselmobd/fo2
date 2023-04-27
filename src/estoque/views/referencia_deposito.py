@@ -37,22 +37,11 @@ class ReferenciaDeposito(View):
             imodelo = None
         if imodelo is not None:
             lista = get_modelos_query(cursor)
-            modelos = [
-                row['modelo']
-                for row in lista  
-            ]
+            modelos = [row['modelo'] for row in lista]
             imodelo_idx = modelos.index(imodelo)
-            try:
-                anterior = modelos[imodelo_idx - 1]
-            except IndexError:
-                anterior = None
-            try:
-                posterior = modelos[imodelo_idx + 1]
-            except IndexError:
-                posterior = None
             context.update({
-                'anterior': anterior,
-                'posterior': posterior,
+                'anterior': next(iter(modelos[imodelo_idx-1:imodelo_idx]), None),
+                'posterior': next(iter(modelos[imodelo_idx+1:imodelo_idx+2]), None),
             })
 
         data = queries.referencia_deposito(cursor, modelo, deposito=deposito)
