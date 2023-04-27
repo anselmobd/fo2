@@ -1,11 +1,13 @@
 from pprint import pprint
 
 from systextil.queries.produto.modelo import sql_sele_modeloint_ref
-from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def get_modelos_query(cursor):
+__all__ = ['list_modelos_query']
+
+
+def list_modelos_query(cursor):
     sql = f"""
         SELECT DISTINCT
           {sql_sele_modeloint_ref('r.REFERENCIA')}
@@ -17,4 +19,4 @@ def get_modelos_query(cursor):
           1
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
+    return [row[0] for row in cursor]
