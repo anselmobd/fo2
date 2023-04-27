@@ -45,14 +45,14 @@ class ReferenciaDeposito(View):
             'posterior': get_defa(modelos, modelo_idx+1),
         })
 
-        data = queries.referencia_deposito(cursor, modelo, deposito=deposito)
+        dados = queries.referencia_deposito(
+            cursor, modelo, todos=(filtra_qtd == 't'), deposito=deposito)
 
-        dados = []
-        for row in data:
-            if filtra_qtd == 'n' and not row['estoque'] and not row['falta']:
-                continue
-            dados.append(row)
+        if not dados:
+            context.update({'erro': 'Nada selecionado'})
+            return context
 
+        for row in dados:
             row['dep|TARGET'] = '_blank'
             row['dep|LINK'] = reverse(
                 'estoque:mostra_estoque__get', args=[
@@ -61,10 +61,6 @@ class ReferenciaDeposito(View):
             row['ref|LINK'] = reverse(
                 'estoque:mostra_estoque__get', args=[
                     row['dep'], row['ref']])
-
-        if not dados:
-            context.update({'erro': 'Nada selecionado'})
-            return context
 
         group = ['dep']
         tot_conf = {
