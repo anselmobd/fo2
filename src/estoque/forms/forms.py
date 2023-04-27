@@ -165,7 +165,7 @@ class ReferenciasEstoqueForm(
     filtra_qtd = forms.ChoiceField(
         choices=CHOICES,
         required=False,
-        initial='t',
+        initial='n',
     )
 
     def __init__(self, *args, cursor=None, **kwargs):
