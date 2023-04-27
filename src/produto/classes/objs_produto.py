@@ -1,6 +1,6 @@
 from pprint import pprint
 
-import systextil.queries as sys_que
+from systextil.queries.produto.item import item_qry
 
 from base.queries.models import get_create_colaborador_by_user
 
@@ -47,7 +47,7 @@ class ObjsProduto():
             self.set_gtin_log()
 
     def valid_entries(self):
-        s_produtos = sys_que.item(
+        s_produtos = item_qry(
             self.cursor, self.nivel, self.ref, self.tam, self.cor)
         if len(s_produtos) == 0:
             raise ValueError(f'Item {self.str_item} não encontrado.')

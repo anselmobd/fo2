@@ -3,7 +3,7 @@ from pprint import pprint
 from utils.functions.models.dictlist import dictlist_lower
 
 
-def item(cursor, nivel, ref, tam, cor):
+def item_qry(cursor, nivel, ref, tam, cor):
     sql = f"""
         SELECT DISTINCT
           r.NIVEL_ESTRUTURA NIVEL
