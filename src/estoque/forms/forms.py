@@ -155,6 +155,17 @@ class ReferenciasEstoqueForm(
         O2BaseForm,
         Fields2().Modelo):
 
+    CHOICES = [
+        ('P', "PA/PG/PB"),
+        ('M', "MD..."),
+    ]
+    tipo_prod = forms.ChoiceField(
+        label='Tipo de produto',
+        choices=CHOICES,
+        required=True,
+        initial='P',
+    )
+
     deposito = forms.ChoiceField(
         label='Depósito', initial='-')
 
@@ -180,7 +191,7 @@ class ReferenciasEstoqueForm(
         setattr(self.fields['deposito'], 'choices', CHOICES)
 
     class Meta:
-        order_fields = ['deposito', 'modelo']
+        order_fields = ['tipo_prod', 'deposito', 'modelo', 'filtra_qtd']
         autofocus_field = 'modelo'
 
 
