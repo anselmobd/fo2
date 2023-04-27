@@ -10,7 +10,7 @@ def referencia_deposito(cursor, modelo, todos=True, deposito='A00'):
 
     filtro_modelo = ''
     if modelo != '' and modelo is not None:
-        filtro_modelo = '''--
+        filtro_modelo = f"""--
             AND
               TRIM(
                 LEADING '0' FROM (
@@ -21,19 +21,16 @@ def referencia_deposito(cursor, modelo, todos=True, deposito='A00'):
                   )
                 )
               ) = '{modelo}'
-        '''.format(
-            modelo=modelo,
-        )
+        """
 
     filtro_deposito = ''
     if deposito is not None and deposito != '':
         if deposito == 'A00':
             filtro_deposito = "AND d.CODIGO_DEPOSITO IN (101, 102, 103, 122, 231)"
         else:
-            filtro_deposito = "AND d.CODIGO_DEPOSITO = '{deposito}'".format(
-                deposito=deposito)
+            filtro_deposito = f"AND d.CODIGO_DEPOSITO = '{deposito}'"
 
-    sql = '''
+    sql = f"""
         SELECT
           sel.*
         FROM (
@@ -99,10 +96,7 @@ def referencia_deposito(cursor, modelo, todos=True, deposito='A00'):
         ) sel
         WHERE 1=1
           {filtro_todos} -- filtro_todos
-    '''.format(
-        filtro_deposito=filtro_deposito,
-        filtro_modelo=filtro_modelo,
-        filtro_todos=filtro_todos,
-    )
+    """
+
     cursor.execute(sql)
     return dictlist_lower(cursor)
