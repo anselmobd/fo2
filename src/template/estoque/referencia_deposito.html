@@ -12,12 +12,20 @@
 {% block content %}
 <h3>Busca referencias/depósitos com alguma movimentação</h3>
 <h4>Depósitos: {{str_depositos}}</h4>
-<h4>Tipo de produto: PA/PG/PB</h4>
 <form id="form" action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
+{% if tipo_prod %}
+  <h4>Tipo de produto:
+    {% if tipo_prod == 'P' %}
+      PA/PG/PB
+    {% elif tipo_prod == 'M' %}
+      MD...
+    {% endif %}
+  </h4>
+{% endif %}
 {% if deposito %}
   <h4>Depósito:
     {% if deposito == 'A00' %}

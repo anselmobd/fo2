@@ -27,11 +27,13 @@ class ReferenciaDeposito(View):
             'str_depositos': self.str_depositos(),
         }
 
-    def mount_context(self, request, cursor, deposito, modelo, filtra_qtd):
+    def mount_context(
+            self, request, cursor, deposito, modelo, filtra_qtd, tipo_prod):
         context = {
             'deposito': deposito,
             'modelo': str(modelo) if modelo else '',
             'filtra_qtd': filtra_qtd,
+            'tipo_prod': tipo_prod,
         }
 
         modelos = list_modelos_query(cursor)
@@ -47,7 +49,7 @@ class ReferenciaDeposito(View):
         })
 
         dados = referencia_deposito_query(
-            cursor, modelo, todos=(filtra_qtd == 't'), deposito=deposito)
+            cursor, modelo, todos=(filtra_qtd == 't'), deposito=deposito, tipo_ref=tipo_prod)
 
         if not dados:
             context.update({'erro': 'Nada selecionado'})
@@ -111,7 +113,8 @@ class ReferenciaDeposito(View):
             deposito = form.cleaned_data['deposito']
             modelo = form.cleaned_data['modelo']
             filtra_qtd = form.cleaned_data['filtra_qtd']
+            tipo_prod = form.cleaned_data['tipo_prod']
             self.context.update(self.mount_context(
-                request, cursor, deposito, modelo, filtra_qtd))
+                request, cursor, deposito, modelo, filtra_qtd, tipo_prod))
         self.context['form'] = form
         return render(request, self.template_name, self.context)
