@@ -1,6 +1,6 @@
 from pprint import pprint
 
-__all__=['cria_mens_nf']
+__all__=['split_size_by_char']
 
 
 def split_size_by_char(text, size_wanted, separator=' ', limit=None):
