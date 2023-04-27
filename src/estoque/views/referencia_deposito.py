@@ -56,9 +56,6 @@ class ReferenciaDeposito(View):
             })
 
         data = queries.referencia_deposito(cursor, modelo, deposito=deposito)
-        if len(data) == 0:
-            context.update({'erro': 'Nada selecionado'})
-            return context
 
         dados = []
         for row in data:
@@ -79,6 +76,10 @@ class ReferenciaDeposito(View):
             row['ref|LINK'] = reverse(
                 'estoque:mostra_estoque__get', args=[
                     row['dep'], row['ref']])
+
+        if not dados:
+            context.update({'erro': 'Nada selecionado'})
+            return context
 
         group = ['dep']
         tot_conf = {
