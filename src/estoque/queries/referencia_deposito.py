@@ -8,7 +8,12 @@ from utils.functions.models.dictlist import dictlist_lower
 __all__ = ['referencia_deposito_query']
 
 
-def referencia_deposito_query(cursor, modelo, todos=True, deposito='A00'):
+def referencia_deposito_query(cursor, modelo, todos=True, deposito='A00', tipo_ref='P'):
+    filtro_tipo_ref = {
+        'P': "AND rtc.GRUPO_ESTRUTURA < 'C0000'",
+        'M': "AND rtc.GRUPO_ESTRUTURA >= 'C0000'",
+    }[tipo_ref]        
+
     filtro_todos = """--
         AND (sel.ESTOQUE <> 0 OR sel.FALTA <> 0)
     """ if not todos else ''
@@ -53,7 +58,7 @@ def referencia_deposito_query(cursor, modelo, todos=True, deposito='A00'):
             FROM BASI_010 rtc, BASI_205 d
             WHERE 1=1
               AND rtc.NIVEL_ESTRUTURA = 1
-              AND rtc.GRUPO_ESTRUTURA < 'C0000'
+              {filtro_tipo_ref} -- filtro_tipo_ref
               {filtro_deposito} -- filtro_deposito
               {filtro_modelo} -- filtro_modelo
           ) i
