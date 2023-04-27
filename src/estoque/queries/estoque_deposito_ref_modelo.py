@@ -1,67 +1,34 @@
 from pprint import pprint
 
-from systextil.queries.produto.modelo import sql_sele_modeloint_ref
+from systextil.queries.produto.modelo import (
+    sql_modeloint_ref,
+    sql_modelostr_ref,
+    sql_sele_modeloint_ref,
+)
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
-    filtro_ref = ''
-    if ref is not None and ref != '-':
-        filtro_ref = '''--
-            AND rtc.GRUPO_ESTRUTURA = '{ref}'
-        '''.format(
-            ref=ref,
-        )
+__all__ = ['estoque_deposito_ref_modelo']
 
-    filtro_modelo = ''
-    if modelo is not None and modelo != '-':
+
+def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
+    filtro_ref = f"AND rtc.GRUPO_ESTRUTURA = '{ref}'" if ref else ''
+
+    pprint(modelo)
+    if modelo and modelo != "-":
         if '-' in modelo:
             modelos = modelo.split('-')
-            filtro_modelo = '''--
-                AND
-                  TO_NUMBER(
-                    TRIM(
-                      LEADING '0' FROM (
-                        REGEXP_REPLACE(
-                          rtc.GRUPO_ESTRUTURA,
-                          '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
-                          '\\1'
-                        )
-                      )
-                    )
-                  ) >= TO_NUMBER('{modelo_ini}')
-                AND
-                  TO_NUMBER(
-                    TRIM(
-                      LEADING '0' FROM (
-                        REGEXP_REPLACE(
-                          rtc.GRUPO_ESTRUTURA,
-                          '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
-                          '\\1'
-                        )
-                      )
-                    )
-                  ) <= TO_NUMBER('{modelo_fim}')
-            '''.format(
-                modelo_ini=modelos[0],
-                modelo_fim=modelos[1],
-            )
+            filtro_modelo = f"""--
+                AND {sql_modeloint_ref('rtc.GRUPO_ESTRUTURA')} >= TO_NUMBER('{modelos[0]}')
+                AND {sql_modeloint_ref('rtc.GRUPO_ESTRUTURA')} <= TO_NUMBER('{modelos[1]}')
+            """
         else:
-            filtro_modelo = '''--
-                AND
-                  TRIM(
-                    LEADING '0' FROM (
-                      REGEXP_REPLACE(
-                        rtc.GRUPO_ESTRUTURA,
-                        '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
-                        '\\1'
-                      )
-                    )
-                  ) = '{modelo}'
-            '''.format(
-                modelo=modelo,
-            )
+            filtro_modelo = f"""--
+                AND {sql_modelostr_ref('rtc.GRUPO_ESTRUTURA')} = '{modelo}'
+            """
+    else:
+        filtro_modelo = ''
 
     sql = f'''
         SELECT
