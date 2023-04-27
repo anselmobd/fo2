@@ -49,13 +49,9 @@ class ReferenciaDeposito(View):
 
         dados = []
         for row in data:
-            if filtra_qtd == 'n':
-                if row['estoque'] != 0 or row['falta'] != 0:
-                    dados.append(row)
-                else:
-                    continue
-            else:
-                dados.append(row)
+            if filtra_qtd == 'n' and not row['estoque'] and not row['falta']:
+                continue
+            dados.append(row)
 
             row['dep|TARGET'] = '_blank'
             row['dep|LINK'] = reverse(
