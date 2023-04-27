@@ -29,7 +29,7 @@ class ReferenciaDeposito(View):
     def mount_context(self, request, cursor, deposito, modelo, filtra_qtd):
         context = {
             'deposito': deposito,
-            'modelo': modelo,
+            'modelo': str(modelo),
             'filtra_qtd': filtra_qtd,
         }
 
