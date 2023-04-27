@@ -6,6 +6,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from o2.functions.iterable import get_defa
 import utils.functions.strings
 from utils.views import group_rowspan, totalize_grouped_data
 
@@ -39,8 +40,8 @@ class ReferenciaDeposito(View):
             modelos = list_modelos_query(cursor)
             imodelo_idx = modelos.index(imodelo)
             context.update({
-                'anterior': next(iter(modelos[imodelo_idx-1:imodelo_idx]), None),
-                'posterior': next(iter(modelos[imodelo_idx+1:imodelo_idx+2]), None),
+                'anterior': get_defa(modelos, imodelo_idx-1),
+                'posterior': get_defa(modelos, imodelo_idx+1),
             })
 
         data = queries.referencia_deposito(cursor, modelo, deposito=deposito)
