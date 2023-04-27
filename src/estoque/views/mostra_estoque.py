@@ -12,7 +12,8 @@ from geral.functions import has_permission, request_user
 from utils.table_defs import TableDefs
 from utils.views import request_hash_trail, totalize_data
 
-import produto.queries
+from produto.queries.get_modelos import get_modelos_query
+
 
 from estoque import forms, queries
 from estoque.functions import transfo2_num_doc, transfo2_num_doc_dt
@@ -85,7 +86,7 @@ class MostraEstoque(View):
                 except Exception:
                     imodelo = None
                 if imodelo is not None:
-                    lista = produto.queries.busca_modelo(cursor)
+                    lista = get_modelos_query(cursor)
                     modelos = [
                         row['modelo']
                         for row in lista  

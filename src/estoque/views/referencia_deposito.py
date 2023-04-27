@@ -9,7 +9,7 @@ from fo2.connections import db_cursor_so
 import utils.functions.strings
 from utils.views import group_rowspan, totalize_grouped_data
 
-import produto.queries
+from produto.queries.get_modelos import get_modelos_query
 
 from estoque import forms, queries
 
@@ -36,7 +36,7 @@ class ReferenciaDeposito(View):
         except Exception:
             imodelo = None
         if imodelo is not None:
-            lista = produto.queries.busca_modelo(cursor)
+            lista = get_modelos_query(cursor)
             modelos = [
                 row['modelo']
                 for row in lista  
