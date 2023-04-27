@@ -13,7 +13,12 @@ __all__ = ['estoque_deposito_ref_modelo']
 
 
 def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
+    if ref == '-':
+        ref = None
+
     filtro_ref = f"AND rtc.GRUPO_ESTRUTURA = '{ref}'" if ref else ''
+
+    filtro_prod = "AND rtc.GRUPO_ESTRUTURA < 'C0000'" if not ref else ''
 
     pprint(modelo)
     if modelo and modelo != "-":
@@ -46,15 +51,31 @@ def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
           , rtc.SUBGRU_ESTRUTURA TAM
           , rtc.ITEM_ESTRUTURA COR
           , d.CODIGO_DEPOSITO DEP
-          FROM BASI_010 rtc, BASI_205 d
+          FROM BASI_010 rtc
+          JOIN BASI_205 d
+            ON 1=1
+          JOIN BASI_020 rt
+            ON rt.BASI030_NIVEL030 = rtc.NIVEL_ESTRUTURA
+           AND rt.BASI030_REFERENC = rtc.GRUPO_ESTRUTURA 
+           AND rt.TAMANHO_REF = rtc.SUBGRU_ESTRUTURA 
+           AND rt.DESCR_TAM_REFER NOT LIKE '-%'
+          JOIN BASI_030 r
+            ON r.NIVEL_ESTRUTURA = rtc.NIVEL_ESTRUTURA
+           AND r.REFERENCIA = rtc.GRUPO_ESTRUTURA 
+           AND r.DESCR_REFERENCIA NOT LIKE '-%'
           WHERE 1=1
             AND rtc.NIVEL_ESTRUTURA = 1
+            AND rtc.ITEM_ATIVO = 0
+            AND rtc.DATA_DESATIVACAO IS NULL
+            AND rtc.DESCRICAO_15 NOT LIKE '-%'
             AND d.CODIGO_DEPOSITO = '{deposito}'
-            AND rtc.GRUPO_ESTRUTURA < 'C0000'
-            AND REGEXP_LIKE (
-                  rtc.GRUPO_ESTRUTURA
-                , '^0?[abAB]?([0-9]+)[a-zA-Z]*$'
-                )
+            -- AND rtc.GRUPO_ESTRUTURA < 'C0000'
+            {filtro_prod} -- filtro_prod
+            -- filtra códigos mal construídos
+            -- AND REGEXP_LIKE (
+            --       rtc.GRUPO_ESTRUTURA
+            --     , '^0?[abAB]?([0-9]+)[a-zA-Z]*$'
+            --     )
             {filtro_ref} -- filtro_ref
             {filtro_modelo} -- filtro_modelo
         ) i
