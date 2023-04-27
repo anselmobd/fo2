@@ -32,17 +32,18 @@ class ReferenciaDeposito(View):
             'modelo': modelo,
             'filtra_qtd': filtra_qtd,
         }
+
+        modelos = list_modelos_query(cursor)
         try:
-            imodelo = int(modelo)
-        except Exception:
-            imodelo = None
-        if imodelo is not None:
-            modelos = list_modelos_query(cursor)
-            imodelo_idx = modelos.index(imodelo)
-            context.update({
-                'anterior': get_defa(modelos, imodelo_idx-1),
-                'posterior': get_defa(modelos, imodelo_idx+1),
-            })
+            modelo_idx = modelos.index(modelo)
+        except ValueError:
+            context.update({'erro': 'Modelo exexistente'})
+            return context
+
+        context.update({
+            'anterior': get_defa(modelos, modelo_idx-1),
+            'posterior': get_defa(modelos, modelo_idx+1),
+        })
 
         data = queries.referencia_deposito(cursor, modelo, deposito=deposito)
 
@@ -56,11 +57,10 @@ class ReferenciaDeposito(View):
             else:
                 dados.append(row)
 
-            if imodelo:
-                row['dep|TARGET'] = '_blank'
-                row['dep|LINK'] = reverse(
-                    'estoque:mostra_estoque__get', args=[
-                        row['dep'], '-', imodelo])
+            row['dep|TARGET'] = '_blank'
+            row['dep|LINK'] = reverse(
+                'estoque:mostra_estoque__get', args=[
+                    row['dep'], '-', modelo])
             row['ref|TARGET'] = '_blank'
             row['ref|LINK'] = reverse(
                 'estoque:mostra_estoque__get', args=[
