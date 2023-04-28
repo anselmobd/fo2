@@ -37,16 +37,17 @@ class ReferenciaDeposito(View):
         }
 
         modelos = list_modelos_query(cursor)
-        try:
-            modelo_idx = modelos.index(modelo)
-        except ValueError:
-            context.update({'erro': 'Modelo exexistente'})
-            return context
+        if modelo:
+            try:
+                modelo_idx = modelos.index(modelo)
+            except ValueError:
+                context.update({'erro': 'Modelo inexistente'})
+                return context
 
-        context.update({
-            'anterior': get_defa(modelos, modelo_idx-1),
-            'posterior': get_defa(modelos, modelo_idx+1),
-        })
+            context.update({
+                'anterior': get_defa(modelos, modelo_idx-1),
+                'posterior': get_defa(modelos, modelo_idx+1),
+            })
 
         dados = referencia_deposito_query(
             cursor, modelo, todos=(filtra_qtd == 't'), deposito=deposito, tipo_ref=tipo_prod)
