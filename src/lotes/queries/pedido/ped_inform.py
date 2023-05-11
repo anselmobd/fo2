@@ -114,6 +114,7 @@ def ped_inform(
         , c.CGC_2 CLIENTE_2
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PEDIDO_CLIENTE
         , ped.STATUS_PEDIDO STATUS_PEDIDO_CODIGO
+        , ped.DATA_CANC_VENDA
         , ped.COD_CANCELAMENTO
         , canc.DESC_CANC_PEDIDO
         , ped.SITUACAO_VENDA SITUACAO_VENDA_CODIGO
@@ -167,5 +168,9 @@ def ped_inform(
             row[f_case('CANCELAMENTO_DESCR')] = f"{cod_cancelamento}-{desc_canc_pedido}"
         else:
             row[f_case('CANCELAMENTO_DESCR')] = "-"
+        if row[f_case('DATA_CANC_VENDA')]:
+            row[f_case('DATA_CANC_VENDA')] = row[f_case('DATA_CANC_VENDA')].date()
+        else:
+            row[f_case('DATA_CANC_VENDA')] = '-'
 
     return data

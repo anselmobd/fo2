@@ -90,11 +90,11 @@ class Pedido(View):
 
         self.context.update({
             'headers2': (
-                'Status do pedido', 'Cancelamento',
+                'Status do pedido', 'Cancelamento', 'Data cancelamento',
                 'Situação da venda', 'Observação',
             ),
             'fields2': (
-                'STATUS_PEDIDO', 'CANCELAMENTO_DESCR',
+                'STATUS_PEDIDO', 'CANCELAMENTO_DESCR', 'DATA_CANC_VENDA',
                 'SITUACAO_VENDA', 'OBSERVACAO',
             ),
             'data2': data,
