@@ -7,11 +7,12 @@ from utils.functions.queries import debug_cursor_execute
 __all_ = ['get_dados_nf']
 
 
-def get_dados_nf(cursor, nf):
+def get_dados_nf(cursor, nf, empresa):
     sql = f"""
         SELECT
           f.NUM_NOTA_FISCAL nf_num
         , f.SERIE_NOTA_FISC nf_ser
+        , f.CODIGO_EMPRESA
         , f.QTDE_EMBALAGENS vols
         , f.PESO_BRUTO peso_tot
         , f.PEDIDO_VENDA ped
@@ -55,7 +56,8 @@ def get_dados_nf(cursor, nf):
           ON e.CODIGO_EMPRESA = f.CODIGO_EMPRESA
         LEFT JOIN BASI_160 cid -- cidades
           ON cid.COD_CIDADE = c.COD_CIDADE
-        WHERE f.CODIGO_EMPRESA = 1 -- empresa tussor
+        WHERE 1=1
+          AND f.CODIGO_EMPRESA = {empresa} -- empresa 1 Tussor ou 4 Gavi
           AND f.NUM_NOTA_FISCAL = {nf}
           AND f.NUMERO_CAIXA_ECF = 0 -- não é nota especial
           AND f.SITUACAO_NFISC IN (1, 4) -- ativa
@@ -65,6 +67,7 @@ def get_dados_nf(cursor, nf):
     debug_cursor_execute(cursor, sql)
     data = dictlist_lower(cursor)
     for row in data:
+        row['empresa'] = "Tussor" if row['codigo_empresa'] == 1 else "Gavi"
         row['nf'] = f"{row['nf_num']}-{row['nf_ser']}"
         row['peso_vol'] = row['peso_tot'] / row['vols']
         row['cli_cnpj_num'] = format_cnpj(row, sep=False, contain='cli')

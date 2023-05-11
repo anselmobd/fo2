@@ -52,7 +52,7 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
-        dados_nf = get_dados_nf(cursor, self.nf)
+        dados_nf = get_dados_nf(cursor, self.nf, self.empresa)
         if len(dados_nf) == 0:
             self.context.update({
                 'msg_erro': "NF não encontrada",
@@ -118,7 +118,6 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
                 vol = i + 1
                 if vol < vol_inicial_val or vol > vol_final_val:
                     continue
-                row['empresa'] = "Tussor" if self.empresa == 1 else "Gavi"
                 row['svol'] = f"{vol:04d}"
                 row['svols'] = f"{row['vols']:04d}"
                 peso = row['peso_tot']/row['vols']
