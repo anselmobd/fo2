@@ -4,11 +4,19 @@ from django import forms
 
 from o2.forms.widget_attrs import FormWidgetAttrs
 
+from systextil.models.base import Empresa
+
+
 __all__ = ['NfForm']
 
 
 class NfForm(forms.Form):
     a = FormWidgetAttrs()
+
+    empresa = forms.ChoiceField(
+        required=True,
+        initial=None,
+    )
 
     nf = forms.CharField(
         label='Número da NF',
@@ -42,3 +50,17 @@ class NfForm(forms.Form):
             }
         )
     )
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.get('request', None)
+        super(NfForm, self).__init__(*args, **kwargs)
+
+        CHOICES = []
+        empresas = Empresa.objects.filter(
+            codigo_empresa__in=(1,4)).order_by('codigo_empresa')
+        for empresa in empresas:
+            CHOICES.append((
+                empresa.codigo_empresa,
+                f"{empresa.codigo_empresa}-{empresa.nome_fantasia}",
+            ))
+        self.fields['empresa'].choices = CHOICES

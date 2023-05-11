@@ -85,7 +85,7 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
 
         if 'print' not in self.request.POST:
             return
-
+        
         slug_impresso = 'etiqueta-de-volumes-de-nf'
         try:
             impresso = lotes.models.Impresso.objects.get(
@@ -118,6 +118,7 @@ class EtiquetaNf(LoginRequiredMixin, O2BaseGetPostView):
                 vol = i + 1
                 if vol < vol_inicial_val or vol > vol_final_val:
                     continue
+                row['empresa'] = "Tussor" if self.empresa == 1 else "Gavi"
                 row['svol'] = f"{vol:04d}"
                 row['svols'] = f"{row['vols']:04d}"
                 peso = row['peso_tot']/row['vols']
