@@ -77,9 +77,9 @@ def grade_expedicao(
 
     filtro_cancelamento = ''
     if cancelamento == 'N':
-        filtro_cancelamento = "AND ped.STATUS_PEDIDO <> 5 -- não cancelado"
+        filtro_cancelamento = "AND ped.COD_CANCELAMENTO = 0 -- não cancelado"
     elif cancelamento == 'C':
-        filtro_cancelamento = "AND ped.STATUS_PEDIDO = 5 -- cancelado"
+        filtro_cancelamento = "AND ped.COD_CANCELAMENTO <> 0 -- cancelado"
 
     filtro_colecao = ''
     if colecao is not None:
