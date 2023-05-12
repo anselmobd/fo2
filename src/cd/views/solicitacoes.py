@@ -386,7 +386,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                                 cursor, ipedido)
                             if len(ped_inf) == 0:
                                 continue
-                            if ped_inf[0]['STATUS_PEDIDO'][0] != '5':  # 5-Cancelado
+                            if ped_inf[0]['COD_CANCELAMENTO'] == 0:  # não cancelado
                                 slp = lotes.models.SolicitaLotePedido(
                                     solicitacao=solicitacao, pedido=ipedido)
                                 slp.save()
