@@ -58,9 +58,16 @@ def ped_expedicao(
 
     filtro_faturamento = ''
     if faturamento == 'N':
-        filtro_faturamento = "AND f.NUM_NOTA_FISCAL IS NULL"
+        filtro_faturamento = """--
+          AND f.NUM_NOTA_FISCAL IS NULL
+          AND fg.NUM_NOTA_FISCAL IS NULL
+        """
     elif faturamento == 'F':
-        filtro_faturamento = "AND f.NUM_NOTA_FISCAL IS NOT NULL"
+        filtro_faturamento = """--
+          AND ( f.NUM_NOTA_FISCAL IS NOT NULL
+                OR fg.NUM_NOTA_FISCAL IS NOT NULL
+              )
+        """
 
     filtro_cancelamento = ''
     if cancelamento == 'N':
@@ -146,6 +153,12 @@ def ped_expedicao(
         FROM PEDI_100 ped -- pedido de venda
         LEFT JOIN FATU_050 f -- fatura
           ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+         -- AND f.NUMERO_CAIXA_ECF = 0  -- NF especial
+        LEFT JOIN PEDI_100 pedg -- fatura
+          ON pedg.PEDIDO_ORIGEM = ped.PEDIDO_VENDA
+         AND pedg.COD_CANCELAMENTO = 0
+        LEFT JOIN FATU_050 fg -- fatura
+          ON fg.PEDIDO_VENDA = pedg.PEDIDO_VENDA
          -- AND f.NUMERO_CAIXA_ECF = 0  -- NF especial
         JOIN PEDI_110 i -- item de pedido de venda
           ON i.PEDIDO_VENDA = ped.PEDIDO_VENDA
