@@ -162,6 +162,7 @@ def ped_expedicao(
         FROM PEDI_100 ped -- pedido de venda
         LEFT JOIN FATU_050 f -- fatura
           ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+         -- AND f.NUMERO_CAIXA_ECF = 0
          AND f.SITUACAO_NFISC = 1 -- ativa
          AND CAST( COALESCE( '0' || f.COD_STATUS, '0' ) AS INT ) = 100 -- ativa
         LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução de fatura
