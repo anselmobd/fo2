@@ -55,9 +55,25 @@ def grade_expedicao(
 
     filtro_faturamento = ''
     if faturamento == 'N':
-        filtro_faturamento = "AND f.NUM_NOTA_FISCAL IS NULL"
+        filtro_faturamento = """--
+          AND ( f.NUM_NOTA_FISCAL IS NULL -- não tem NF
+              OR fe.SITUACAO_ENTRADA IS NOT NULL -- existente devolução da NF
+              )
+          AND ( fg.NUM_NOTA_FISCAL IS NULL -- não tem NF Gavi
+              OR feg.SITUACAO_ENTRADA IS NOT NULL -- existente devolução da NF da Gavi
+              )
+        """
     elif faturamento == 'F':
-        filtro_faturamento = "AND f.NUM_NOTA_FISCAL IS NOT NULL"
+        filtro_faturamento = """--
+          AND ( ( f.NUM_NOTA_FISCAL IS NOT NULL -- tem NF
+                AND fe.SITUACAO_ENTRADA IS NULL -- não existente devolução da NF
+                )
+                OR
+                ( fg.NUM_NOTA_FISCAL IS NOT NULL -- tem NF Gavi
+                AND feg.SITUACAO_ENTRADA IS NULL -- não existente devolução da NF da Gavi
+                )
+              )
+        """
 
     filtro_cancelamento = ''
     if cancelamento == 'N':
@@ -79,6 +95,22 @@ def grade_expedicao(
         LEFT JOIN FATU_050 f -- fatura
           ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND f.NUMERO_CAIXA_ECF = 0
+         AND f.SITUACAO_NFISC = 1 -- ativa
+         AND CAST( COALESCE( '0' || f.COD_STATUS, '0' ) AS INT ) = 100 -- ativa
+        LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução de fatura
+          ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+         AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada 
+        LEFT JOIN PEDI_100 pedg -- pedido Gavi
+          ON pedg.PEDIDO_ORIGEM = ped.PEDIDO_VENDA
+         AND pedg.CODIGO_EMPRESA = 4 -- Gavi
+         AND pedg.COD_CANCELAMENTO = 0
+        LEFT JOIN FATU_050 fg -- fatura Gavi
+          ON fg.PEDIDO_VENDA = pedg.PEDIDO_VENDA
+         AND fg.SITUACAO_NFISC = 1 -- ativa
+         AND CAST( COALESCE( '0' || fg.COD_STATUS, '0' ) AS INT ) = 100 -- ativa
+        LEFT JOIN OBRF_010 feg -- nota fiscal de entrada/devolução de fatura Gavi
+          ON feg.NOTA_DEV = fg.NUM_NOTA_FISCAL
+         AND feg.SITUACAO_ENTRADA <> 2 -- não cancelada 
         JOIN PEDI_110 i -- item de pedido de venda
           ON i.PEDIDO_VENDA = ped.PEDIDO_VENDA
         JOIN BASI_030 r -- ref
