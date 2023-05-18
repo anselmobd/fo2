@@ -31,6 +31,7 @@ from cd.views.novo_modulo import (
     grade_estoque_totais,
     historico_lote,
     nao_enderecados,
+    palete_solicitacao,
     solicitacao,
     solicitacoes,
     visao_bloco,
@@ -217,6 +218,9 @@ urlpatterns = [
 
     re_path(r'^novo/estoque/$',
         estoque.NovoEstoque.as_view(), name='novo_estoque'),
+
+    re_path(r'^novo/palete_solicitacao/$',
+        palete_solicitacao.PaleteSolicitacaoView.as_view(), name='palete_solicitacao'),
 
     re_path(r'^novo/estoque_ficticio/$',
         estoque_ficticio.NovoEstoqueFicticio.as_view(), name='novo_estoque_ficticio'),
