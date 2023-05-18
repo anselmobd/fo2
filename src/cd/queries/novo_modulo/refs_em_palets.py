@@ -1,3 +1,4 @@
+from itertools import cycle
 from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
@@ -569,10 +570,8 @@ def query(
 
     fields_statements_list = []
     for field in fields:
-        if ' ' in field:
-            fields_cod, field_alias = field.split()
-        else:
-            fields_cod = field_alias = field
+        field_part = cycle(field.split())
+        fields_cod, field_alias = next(field_part), next(field_part)
 
         fields_statements_list.append(
             f"{field_statement[fields_cod]} {field_alias}"
