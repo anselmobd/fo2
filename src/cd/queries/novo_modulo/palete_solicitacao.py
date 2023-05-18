@@ -32,7 +32,8 @@ def palete_solicitacao_query(cursor, solicitacao=None):
             {filtra_solicitacao} -- filtra_solicitacao
         )
         SELECT 
-          pa.*
+          pa.palete
+        , pa.endereco
         , ( SELECT 
                 COUNT(DISTINCT COALESCE(TO_CHAR(sl.SOLICITACAO), '#'))
             FROM ENDR_014 lp
@@ -99,6 +100,7 @@ def palete_solicitacao_query(cursor, solicitacao=None):
         ORDER BY 
            3 DESC 
         ,  5 DESC
+        ,  2
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
