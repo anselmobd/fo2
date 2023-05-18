@@ -7,18 +7,29 @@ from utils.functions.queries import debug_cursor_execute
 __all__ = ['palete_solicitacao_query']
 
 
-def palete_solicitacao_query(cursor):
+def palete_solicitacao_query(cursor, solicitacao=None):
+    filtra_solicitacao = f"""--
+        AND sl.SOLICITACAO = {solicitacao}
+        AND sl.GRUPO_DESTINO <> '0'
+        AND sl.SITUACAO IN (1, 2, 3, 4)
+        AND sl.QTDE <> 0
+    """ if solicitacao else ''
+
     sql = f"""
         WITH
           paletes AS 
         ( SELECT DISTINCT
             lp.COD_CONTAINER palete
-          , ec.COD_ENDERECO endereco
+          , COALESCE(ec.COD_ENDERECO, '-') endereco
           FROM ENDR_014 lp
           LEFT JOIN ENDR_015 ec -- endereço/container 
             ON ec.COD_CONTAINER = lp.COD_CONTAINER
+          LEFT JOIN pcpc_044 sl -- solicitação / lote
+            ON sl.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+           AND sl.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
           WHERE lp.COD_CONTAINER IS NOT NULL
             AND lp.COD_CONTAINER <> '0'
+            {filtra_solicitacao} -- filtra_solicitacao
         )
         SELECT 
           pa.*
