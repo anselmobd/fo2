@@ -43,4 +43,3 @@ class PaleteSolicitacaoView(O2BaseGetPostView):
             'thclass': 'sticky',
             'empty': "Nenhum encontrado",
         })
-        pprint(self.context)
