@@ -1,7 +1,7 @@
 {% extends 'lotes/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="{% url 'produto:index' %}">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
   <style>
@@ -11,14 +11,14 @@
 
 {% block content %}
   <div class="noprint">
-    <form action="{% url 'produto:tag-pesquisa' %}" method="post">
+    <form action="{% url 'cd:palete_solicitacao' %}" method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <input type="submit" value="Busca"/>
     </form>
   </div>
-  {% if refs %}
+  {% if form_method == 'POST' %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
-    {% include "layout/o2table.html" with table=refs only %}
+    {% include "layout/o2table.html" with table=paletes only %}
   {% endif %}
 {% endblock %}
