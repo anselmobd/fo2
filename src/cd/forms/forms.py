@@ -1090,3 +1090,17 @@ class NaoEnderecadosForm(forms.Form):
             }
         )
     )
+
+
+class PaleteSolicitacaoForm(forms.Form):
+    solicitacao = forms.CharField(
+        label='Solicitação',
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 6,
+                'type': 'number',
+                'autofocus': 'autofocus',
+            },
+        ),
+    )

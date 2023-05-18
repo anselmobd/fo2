@@ -1,18 +1,11 @@
 from pprint import pprint
 
-from django.contrib.postgres.aggregates import StringAgg
-
 from fo2.connections import db_cursor_so
 
 from o2.views.base.get_post import O2BaseGetPostView
-from utils.functions.models.dictlist import queryset2dictlist, dictlist_agg
-from utils.functions.models.row_field import PrepRows
 from utils.table_defs import TableDefsHpS
 
-from lotes.functions.varias import modelo_de_ref
-
-from produto.forms import ModeloForm
-from produto import models
+from cd.forms import PaleteSolicitacaoForm
 
 from cd.queries.novo_modulo.palete_solicitacao import palete_solicitacao_query
 
@@ -24,7 +17,7 @@ class PaleteSolicitacaoView(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(PaleteSolicitacaoView, self).__init__(*args, **kwargs)
-        self.Form_class = ModeloForm
+        self.Form_class = PaleteSolicitacaoForm
         self.template_name = 'cd/novo_modulo/palete_solicitacao.html'
         self.title_name = 'Palete/Solicitacao'
         self.cleaned_data2self = True
@@ -34,9 +27,8 @@ class PaleteSolicitacaoView(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        modelo = int(self.modelo)
-
-        paletes = palete_solicitacao_query(self.cursor)
+        paletes = palete_solicitacao_query(
+            self.cursor, solicitacao=self.solicitacao)
 
         self.context['paletes'] = TableDefsHpS({
             'palete': "Palete",
