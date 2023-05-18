@@ -483,7 +483,7 @@ def query(
             COALESCE(
                 ( SELECT
                     LISTAGG(DISTINCT COALESCE(TO_CHAR(sl.SOLICITACAO), '#'), ', ')
-                    WITHIN GROUP (ORDER BY sl.SOLICITACAO) colicitacoes
+                    WITHIN GROUP (ORDER BY sl.SOLICITACAO)
                 FROM pcpc_044 sl -- solicitação / lote 
                 WHERE 1=1
                     AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
