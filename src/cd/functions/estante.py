@@ -99,6 +99,23 @@ def gera_lateral_enderecos():
         for i in range(1, 13)
     ]
 
+def gera_externos_xy_enderecos():
+    estantes = {
+        'X': {
+            'len': 18,
+        },
+        'Y': {
+            'len': 18,
+        },
+    }
+    enderecos = []
+    for estante in estantes:
+        for coluna in range(1, estantes[estante]['len']+1):
+            for andar in range(1, 6):
+                endereco = f"2{estante}{andar:02}{coluna:02}"
+                enderecos.append(endereco)
+    return enderecos
+
 
 def gera_externos_s_enderecos():
     return [

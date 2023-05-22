@@ -14,6 +14,7 @@ class EnderecoForm(forms.Form):
         ('EL', 'Externos - Logyn (padrão)'),
         ('EN', 'Externos - não padrão'),
         ('ET', 'Externos - Todos'),
+        ('LO', 'Armazém - Logly (padrão)'),
         ('A', 'Interna - Estante A'),
         ('B', 'Interna - Estante B'),
         ('C', 'Interna - Estante C'),
