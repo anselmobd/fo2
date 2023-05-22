@@ -33,7 +33,7 @@ class EnderecoForm(forms.Form):
 
 class EnderecoImprimeForm(forms.Form):
     inicial = forms.CharField(
-        max_length=9, min_length=3,
+        label='Endereço', max_length=9, min_length=3,
         widget=forms.TextInput(attrs={
             'style': 'text-transform:uppercase;',
             'autofocus': 'autofocus',
