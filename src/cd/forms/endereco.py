@@ -39,9 +39,9 @@ class EnderecoImprimeForm(forms.Form):
             'autofocus': 'autofocus',
         })
     )
-    final = forms.CharField(
-        max_length=9, min_length=3,
-        widget=forms.TextInput(attrs={
-            'style': 'text-transform:uppercase;',
-        })
-    )
+    # final = forms.CharField(
+    #     max_length=9, min_length=3,
+    #     widget=forms.TextInput(attrs={
+    #         'style': 'text-transform:uppercase;',
+    #     })
+    # )

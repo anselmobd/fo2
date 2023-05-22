@@ -91,8 +91,8 @@ class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin,
         cursor = db_cursor_so(self.request)
 
         self.inicial = self.inicial.upper()
-        self.final = self.final.upper()
-        # self.final = self.inicial.upper()
+        # self.final = self.final.upper()
+        self.final = self.inicial.upper()
 
         self.data = query_endereco(cursor, 'TO')
 
