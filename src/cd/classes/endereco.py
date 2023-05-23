@@ -63,15 +63,10 @@ class EnderecoCd():
                 self.order_ap = int(parts['apartamento'])
                 self.espaco = 'Quarto andar'
                 self.espaco_cod = 1
-            elif parts['espaco'] == '2' and parts['bloco'] == 'S':
+            elif parts['espaco'] == '2' and parts['bloco'] in ['S', 'X', 'Y']:
                 self.prioridade = 4
                 self.order_ap = 0
                 self.espaco = 'Externo'
-                self.espaco_cod = 2
-            elif parts['espaco'] == '2' and parts['bloco'] in ['X', 'Y']:
-                self.prioridade = 5
-                self.order_ap = 0
-                self.espaco = 'Armazém'
                 self.espaco_cod = 2
             else:
                 self.valido = False
