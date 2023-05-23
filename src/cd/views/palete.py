@@ -8,6 +8,7 @@ from o2.views.base.get_post import O2BaseGetPostView
 from fo2.connections import db_cursor_so
 
 from geral.functions import has_permission
+from utils.functions.strings import str2int
 
 from cd.forms import PaletesForm
 from cd.queries.palete import get_paletes
@@ -26,7 +27,14 @@ class Palete(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
         page = self.request.GET.get('page', 1)
 
-        palete_list = self.filtro.split()
+        palete_list = []
+        for item in self.filtro.split():
+            if "-" in item:
+                ini, fim, *_ = map(str2int, item.split("-"))
+                for val in range(ini, fim+1):
+                    palete_list.append(f"{val}")
+            else:
+                palete_list.append(item)
 
         data = get_paletes(cursor, palete_list=palete_list)
 
