@@ -13,6 +13,7 @@ from utils.functions.strings import re_split_non_empty
 
 from cd.classes.palete import Plt
 from cd.forms import PaletesForm
+from cd.queries.endereco import local_de_lote
 from cd.queries.palete import get_paletes
 
 
@@ -30,13 +31,20 @@ class Palete(O2BaseGetPostView):
         page = self.request.GET.get('page', 1)
 
         palete_list = []
-        for item in re_split_non_empty(self.filtro, " ,;."):
+        def add_palete(val):
+            if int(val) > 9999:
+                local = local_de_lote(cursor, val)
+                if local:
+                    val = local[0]['palete']
+            palete_list.append(Plt().mount(val))
+
+        for item in re_split_non_empty(self.filtro, " ,;.\n"):
             if "-" in item:
                 ini, fim, *_ = map(str2int, item.split("-"))
                 for val in range(ini, fim+1):
-                    palete_list.append(Plt().mount(val))
+                    add_palete(val)
             else:
-                palete_list.append(Plt().mount(item))
+                add_palete(item)
 
         data = get_paletes(cursor, palete_list=palete_list)
 
