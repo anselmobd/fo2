@@ -61,7 +61,7 @@ class Palete(O2BaseGetPostView):
             if not row['ultima_inclusao']:
                 row['ultima_inclusao'] = '-'
             palete = row['cod_container']
-            link_ids.append(f"run_{palete}")
+            link_ids.append(palete)
             row['print'] = f"""
                 <a title="Imprime etiqueta" href="#" id="run_{palete}" onclick="PaletePrint('{palete}');return false;"><span
                   class="glyphicon glyphicon-print" aria-hidden="true"></span></a><span
