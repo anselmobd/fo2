@@ -68,17 +68,15 @@ def sql_quoted(value, quotes="'"):
 def sql_test_in(field, values, licacao_condicional='AND'):
     if not values:
         return ''
-    size = 3  # um a menos que 1000 apenas por margem de segurança
+    size = 999  # um a menos que 1000 apenas por margem de segurança
     lists = []
-    for chunk in range((len(values) // size) + 1):
+    for chunk in range(((len(values)-1) // size) + 1):
         lists.append(
             ", ".join([
                 f"{sql_quoted(item)}"
                 for item in values[chunk*size:chunk*size+size]
             ])
         )
-    print('lists')
-    pprint(lists)
     test = f"\nOR ".join([
         f"{field} IN ({list1})"
         for list1 in lists
