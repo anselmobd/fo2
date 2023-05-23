@@ -1104,3 +1104,10 @@ class PaleteSolicitacaoForm(forms.Form):
             },
         ),
     )
+
+
+class PaletesForm(forms.Form):
+    filtro = forms.CharField(
+        required=False,
+        widget= forms.Textarea,
+    )

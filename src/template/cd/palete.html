@@ -11,6 +11,12 @@
 {% endblock %}
 
 {% block content %}
+  <form action="{% url 'cd:palete' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
+  </form>
+  <br/>
   {% if data %}
     {% include "layout/paginator_get.html" with data=data url_name='cd:palete' only %}
     <table>
