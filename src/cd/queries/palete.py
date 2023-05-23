@@ -5,6 +5,7 @@ from systextil.queries.base import SMountQuery
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
+from utils.functions.sql import sql_test_in
 
 from cd.classes.palete import Plt
 
@@ -90,7 +91,9 @@ def mark_palete_printed(cursor, palete):
         return repr(e)
 
 
-def get_paletes(cursor):
+def get_paletes(cursor, palete_list=None):
+    palete_filter = sql_test_in("p.COD_CONTAINER", palete_list)
+
     sql = f"""
         SELECT
           p.COD_CONTAINER
@@ -110,8 +113,8 @@ def get_paletes(cursor):
           ON lp.COD_CONTAINER = p.COD_CONTAINER
         LEFT JOIN ENDR_015 ec -- endereço/container 
           ON ec.COD_CONTAINER = p.COD_CONTAINER
-        --WHERE 1=1
-        --  AND p.COD_CONTAINER = 'PLT0999I'
+        WHERE 1=1
+          {palete_filter} -- palete_filter
         GROUP BY 
           p.COD_CONTAINER
         , p.COD_TIPO
