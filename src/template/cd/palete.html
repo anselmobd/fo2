@@ -18,6 +18,9 @@
   </form>
   <br/>
   {% if data %}
+    <div style="float:right;">
+      <a title="Imprime todas" href="#" onclick="javascript:return ForcaImprimeTodas();"><span class="glyphicon glyphicon-print" style="font-size: 2em; color: darkred" aria-hidden="true"></span></a>
+    </div>
     {% include "layout/paginator_get.html" with data=data url_name='cd:palete' only %}
     <table>
       {% include "layout/thead_generic.html" with data=headers safe=safe thclass='sticky' only %}
@@ -32,8 +35,18 @@
 {% block javascript %}
   {% block javascript.pos %}
     <script>
+      var intervalo = 1000;
+      var link_ids = [
+        {% for link_id in link_ids %}
+          '{{link_id}}',
+        {% endfor %}
+        -1
+      ];
+      console.log(link_ids)
 
       function PaletePrint(slug) {
+        console.log('PaletePrint', slug)
+        return false;
         var run_el = document.getElementById('run_'+slug);
         var running_el = document.getElementById('running_'+slug);
         var runok_el = document.getElementById('runok_'+slug);
@@ -92,6 +105,37 @@
         });
 
         return false;
+      }
+
+      function confirma_gravar() {
+        opcao = prompt("Digite S para imprimir todas");
+        if ( opcao == "" ) {
+          return false;
+        }
+        var pos = "sS".indexOf( opcao );
+        if ( pos > -1 ) {
+          return true;
+        }
+        return false;
+      }
+
+      function ForcaImprimeTodas() {
+        if (confirma_gravar()) {
+          console.log('todas');
+          if (link_ids[0] != -1) {
+            ForcaImprimeUma(0);
+          }
+        }
+        return false;
+      }
+
+      function ForcaImprimeUma(idx) {
+        console.log('idx: '+idx);
+        console.log('id: '+link_ids[idx])
+        PaletePrint(link_ids[idx]);
+        if (link_ids[idx+1] != -1) {
+          setTimeout(() => { ForcaImprimeUma(idx+1); }, intervalo);
+        }
       }
 
     </script>

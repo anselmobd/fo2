@@ -50,6 +50,7 @@ class Palete(O2BaseGetPostView):
 
         data = paginator_basic(data, 100, page)
 
+        link_ids = []
         for row in data:
             row['cod_container|LINK'] = reverse(
                 'cd:conteudo_local',
@@ -60,6 +61,7 @@ class Palete(O2BaseGetPostView):
             if not row['ultima_inclusao']:
                 row['ultima_inclusao'] = '-'
             palete = row['cod_container']
+            link_ids.append(f"run_{palete}")
             row['print'] = f"""
                 <a title="Imprime etiqueta" href="#" id="run_{palete}" onclick="PaletePrint('{palete}');return false;"><span
                   class="glyphicon glyphicon-print" aria-hidden="true"></span></a><span
@@ -91,4 +93,5 @@ class Palete(O2BaseGetPostView):
             'fields': fields,
             'data': data,
             'safe': ['print'],
+            'link_ids': link_ids,
         })
