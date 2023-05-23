@@ -18,9 +18,11 @@
   </form>
   <br/>
   {% if data %}
-    <div style="float:right;">
-      <a title="Imprime todas" href="#" onclick="javascript:return ForcaImprimeTodas();"><span class="glyphicon glyphicon-print" style="font-size: 2em; color: darkred" aria-hidden="true"></span></a>
-    </div>
+    {% if can_print %}
+      <div style="float:right;">
+        <a title="Imprime todas" href="#" onclick="javascript:return ForcaImprimeTodas();"><span class="glyphicon glyphicon-print" style="font-size: 2em; color: darkred" aria-hidden="true"></span></a>
+      </div>
+    {% endif %}
     {% include "layout/paginator_get.html" with data=data url_name='cd:palete' only %}
     <table>
       {% include "layout/thead_generic.html" with data=headers safe=safe thclass='sticky' only %}
@@ -46,7 +48,7 @@
 
       function PaletePrint(slug) {
         console.log('PaletePrint', slug)
-        return false;
+        //return false;
         var run_el = document.getElementById('run_'+slug);
         var running_el = document.getElementById('running_'+slug);
         var runok_el = document.getElementById('runok_'+slug);

@@ -82,12 +82,15 @@ class Palete(O2BaseGetPostView):
             'lotes',
             'ultima_inclusao',
         ]
+
         if (
             self.request.user.is_authenticated
             and has_permission(self.request, 'cd.imprime_etq_palete')
         ):
             headers.append('Imprime')
             fields.append('print')
+            self.context['can_print'] = True
+
         self.context.update({
             'headers': headers,
             'fields': fields,
