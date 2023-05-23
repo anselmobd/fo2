@@ -9,7 +9,9 @@ from fo2.connections import db_cursor_so
 
 from geral.functions import has_permission
 from utils.functions.strings import str2int
+from utils.functions.strings import re_split_non_empty
 
+from cd.classes.palete import Plt
 from cd.forms import PaletesForm
 from cd.queries.palete import get_paletes
 
@@ -28,13 +30,13 @@ class Palete(O2BaseGetPostView):
         page = self.request.GET.get('page', 1)
 
         palete_list = []
-        for item in self.filtro.split():
+        for item in re_split_non_empty(self.filtro, " ,;."):
             if "-" in item:
                 ini, fim, *_ = map(str2int, item.split("-"))
                 for val in range(ini, fim+1):
-                    palete_list.append(f"{val}")
+                    palete_list.append(Plt().mount(val))
             else:
-                palete_list.append(item)
+                palete_list.append(Plt().mount(item))
 
         data = get_paletes(cursor, palete_list=palete_list)
 
