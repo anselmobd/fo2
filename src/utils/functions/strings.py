@@ -61,6 +61,10 @@ def only_alnum(text):
     return ''.join(filter(str.isalnum, text))
 
 
+def str2int(text):
+    return int(f"0{only_digits(text)}")
+
+
 def noneif(value, test):
     """Return None if equal, else return value"""
     if value != test:
