@@ -87,6 +87,7 @@ class EnderecaGrupo(O2BaseGetPostView):
         end_atuais = self.get_end_atuais(palete_list)
 
         data = []
+        diferentes = 0
         for num in range(max(len(end_list), len(palete_list))):
             data.append({
                 'num': num + 1,
@@ -94,6 +95,13 @@ class EnderecaGrupo(O2BaseGetPostView):
                 'endereco': end_list[num] if num < len(end_list) else "?",
                 'atual': end_atuais.get(palete_list[num], "?") if num < len(palete_list) else "?"
             })
+            diferentes += 0 if data[-1]['endereco'] == data[-1]['atual'] else 1
+
+        if diferentes == 0:
+            self.context.update({
+                'msgerr': "Todos os endereços corretos",
+            })
+
         headers = [
             '#',
             'Palete',
