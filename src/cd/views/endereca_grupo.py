@@ -69,22 +69,31 @@ class EnderecaGrupo(O2BaseGetPostView):
                 'msgerr': "Número de paletes diferente do número de endereços"
             })
 
+        paletes = get_palete(cursor, palete_list)
+        enderecos = {
+            p['cod_container']: p['endereco']
+            for p in paletes
+        }
+
         data = []
         for num in range(max(len(end_list), len(palete_list))):
             data.append({
                 'num': num + 1,
                 'palete': palete_list[num] if num < len(palete_list) else "?",
                 'endereco': end_list[num] if num < len(end_list) else "?",
+                'atual': enderecos.get(palete_list[num], "?") if num < len(palete_list) else "?"
             })
         headers = [
             '#',
             'Palete',
             'Endereço',
+            'Atual',
         ]
         fields = [
             'num',
             'palete',
             'endereco',
+            'atual',
         ]
 
         self.context.update({
@@ -92,4 +101,3 @@ class EnderecaGrupo(O2BaseGetPostView):
             'fields': fields,
             'data': data,
         })
-        pprint(self.context)
