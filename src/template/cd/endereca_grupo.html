@@ -1,0 +1,145 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+    {% include "layout/paginator_stylesheet.css" %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'cd:endereca_grupo' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
+  </form>
+  <br/>
+  {% if data %}
+    {% if can_print %}
+      <div style="float:right;">
+        <a title="Imprime todas" href="#" onclick="javascript:return ForcaImprimeTodas();"><span class="glyphicon glyphicon-print" style="font-size: 2em; color: darkred" aria-hidden="true"></span></a>
+      </div>
+    {% endif %}
+    {% include "layout/paginator_get.html" with data=data url_name='cd:palete' only %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers safe=safe thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe only %}
+    </table>
+    {% include "layout/paginator_get.html" with data=data url_name='cd:palete' only %}
+  {% else %}
+    <h4>Nenhum palete encontrado</h4>
+  {% endif %}
+{% endblock content %}
+
+{% block javascript %}
+  {% block javascript.pos %}
+    <script>
+      var intervalo = 1000;
+      var link_ids = [
+        {% for link_id in link_ids %}
+          '{{link_id}}',
+        {% endfor %}
+        -1
+      ];
+      console.log(link_ids)
+
+      function PaletePrint(slug) {
+        console.log('PaletePrint', slug);
+        //return false;
+        var run_el = document.getElementById('run_'+slug);
+        var running_el = document.getElementById('running_'+slug);
+        var runok_el = document.getElementById('runok_'+slug);
+        var runerr_el = document.getElementById('runerr_'+slug);
+
+        run_el.style.display = "none";
+        running_el.style.display = "inline";
+        runok_el.style.display = "none";
+        runerr_el.style.display = "none";
+
+        var link = '{% url 'cd:palete_print' 'code' %}';
+        link = link.replace('code', slug);
+        console.log(link);
+
+        $.ajax({
+          type: 'GET',
+          url: link,
+          data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+          success : function(data) {
+            erro = '';
+            if (data) {
+              if (data['result'] == 'OK') {
+                console.log(data['state']);
+                runok_el.style.display = "inline";
+              } else {
+                console.log(data['state']);
+                console.log(data['msg_erro']);
+                runerr_el.style.display = "inline";
+                runerr_el.title = "";
+                var title_sep = "";
+                if (data['state']) {
+                  runerr_el.title = data['state'];
+                  title_sep = " - ";
+                }
+                if (data['msg_erro']) {
+                  runerr_el.title += title_sep + data['msg_erro'];
+                }
+              }
+            } else {
+              // alert('Sem retorno');
+              console.log('Sem retorno');
+              runerr_el.style.display = "inline";
+              runerr_el.title = 'Sem retorno';
+            }
+            run_el.style.display = "inline";
+            running_el.style.display = "none";
+          },
+          error : function(data) {
+            // alert('Erro na requisição');
+            console.log('Erro na requisição');
+            runerr_el.style.display = "inline";
+            runerr_el.title = 'Erro na requisição';
+            run_el.style.display = "inline";
+            running_el.style.display = "none";
+          }
+        });
+
+        return false;
+      }
+
+      function confirma_gravar() {
+        opcao = prompt("Digite S para imprimir todas");
+        if ( opcao == "" ) {
+          return false;
+        }
+        var pos = "sS".indexOf( opcao );
+        if ( pos > -1 ) {
+          return true;
+        }
+        return false;
+      }
+
+      function ForcaImprimeTodas() {
+        if (confirma_gravar()) {
+          console.log('todas');
+          if (link_ids[0] != -1) {
+            ForcaImprimeUma(0);
+          }
+        }
+        return false;
+      }
+
+      function ForcaImprimeUma(idx) {
+        console.log('idx: '+idx);
+        console.log('id: '+link_ids[idx])
+        PaletePrint(link_ids[idx]);
+        if (link_ids[idx+1] != -1) {
+          setTimeout(() => { ForcaImprimeUma(idx+1); }, intervalo);
+        }
+      }
+
+    </script>
+  {% endblock javascript.pos %}
+{% endblock javascript %}

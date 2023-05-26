@@ -10,6 +10,7 @@ from cd.views import (
     confronta_qtd_lote,
     confronta_qtd_solicit,
     conteudo_local,
+    endereca_grupo,
     endereco,
     endereco_imprime,
     endereco_conteudo_importa,
@@ -209,6 +210,9 @@ urlpatterns = [
 
     re_path(r'^palete/$',
         palete.Palete.as_view(), name='palete'),
+
+    re_path(r'^endereca_grupo/$',
+        endereca_grupo.EnderecaGrupo.as_view(), name='endereca_grupo'),
 
     re_path(r'^novo/solicitacao/(?P<solicitacao>[^/]+)$',
         solicitacao.Solicitacao.as_view(), name='novo_solicitacao'),

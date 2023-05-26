@@ -1117,3 +1117,16 @@ class PaletesForm(forms.Form):
             }
         )
     )
+
+
+class EnderecaGrupoForm(forms.Form):
+    filtro = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'rows': 4,
+                'cols': 79,
+                'style': 'vertical-align:top;',
+            }
+        )
+    )
