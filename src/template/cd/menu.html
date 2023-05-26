@@ -26,7 +26,8 @@
     <li><a href="{% url 'cd:palete' %}">Paletes</a></li>
     <ul>
       {% if perms.cd.can_admin_pallet %}
-        <li><a href="{% url 'cd:add1palete' %}">Adiciona Palete</a></li>
+        <li><a href="{% url 'cd:endereca_grupo' %}">Endereça grupo</a></li>
+        <li><a href="{% url 'cd:add1palete' %}">Adiciona palete</a></li>
         <li><a href="{% url 'cd:admin_palete' %}">Administração inicial</a></li>
       {% endif %}
     </ul>
