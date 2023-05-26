@@ -349,11 +349,7 @@ def palete_guarda_hist(cursor, palete, usuario):
         return False
 
 def get_palete(cursor, palete):
-    palete_filter = (
-        sql_test_in("p.COD_CONTAINER", palete, ligacao_condicional='WHERE')
-        if palete
-        else ''
-    )
+    palete_filter = sql_test_in("p.COD_CONTAINER", palete, ligacao_condicional='WHERE')
     sql = f"""
         SELECT
           p.COD_CONTAINER
