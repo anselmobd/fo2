@@ -1129,7 +1129,7 @@ class EnderecaGrupoForm(forms.Form):
         help_text='(ou lotes)',
         widget=forms.Textarea(
             attrs={
-                'rows': 25,
+                'rows': 20,
                 'cols': 20,
                 'style': 'vertical-align:top;',
             }
