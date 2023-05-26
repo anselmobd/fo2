@@ -4,6 +4,7 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
+from utils.functions.sql import sql_test_in
 
 from cd.classes.endereco import EnderecoCd
 from cd.functions.endereco import calc_rota
@@ -348,6 +349,11 @@ def palete_guarda_hist(cursor, palete, usuario):
         return False
 
 def get_palete(cursor, palete):
+    palete_filter = (
+        sql_test_in("p.COD_CONTAINER", palete, ligacao_condicional='WHERE')
+        if palete
+        else ''
+    )
     sql = f"""
         SELECT
           p.COD_CONTAINER
@@ -359,7 +365,7 @@ def get_palete(cursor, palete):
         , p.SITUACAO
         , p.TUSSOR_IMPRESSA
         FROM ENDR_012 p -- container palete
-        WHERE p.COD_CONTAINER = '{palete}'
+        {palete_filter} -- palete_filter
     """
     debug_cursor_execute(cursor, sql)
     return dictlist_lower(cursor)
