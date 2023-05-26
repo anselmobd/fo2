@@ -14,8 +14,14 @@
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="monta" value="Monta endereçamento"/>
+    {% if request.POST and not msgerr %}
+      <input type="submit" name="endereca" value="Endereça"/>
+    {% endif %}
   </form>
   <br/>
+  {% if msgerr %}
+    <h4>{{msgerr}}</h4>
+  {% endif %}
   {% if request.POST %}
     {% if data %}
       <table>
