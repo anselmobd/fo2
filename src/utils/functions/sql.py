@@ -68,6 +68,8 @@ def sql_quoted(value, quotes="'"):
 def sql_test_in(field, values, ligacao_condicional='AND'):
     if not values:
         return ''
+    if not isinstance(values, (tuple, list)):
+        values = [values]
     if len(values) == 1:
         return f"{ligacao_condicional} {field} = {sql_quoted(values[0])}"
     size = 999  # um a menos que 1000 apenas por margem de segurança
