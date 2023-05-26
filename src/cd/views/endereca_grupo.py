@@ -9,6 +9,7 @@ from fo2.connections import db_cursor_so
 from geral.functions import has_permission
 from utils.functions.strings import str2int
 from utils.functions.strings import re_split_non_empty
+from utils.functions.strings import is_only_digits
 
 from cd.classes.palete import Plt
 from cd.forms import EnderecaGrupoForm
@@ -29,29 +30,33 @@ class EnderecaGrupo(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
 
         palete_list = []
-        def add_palete(val):
-            if int(val) > 9999:
-                local = local_de_lote(cursor, val)
-                if local:
-                    val = local[0]['palete']
-            palete_list.append(Plt().mount(val))
 
-        for item in re_split_non_empty(self.filtro, " ,;.\n"):
-            if "-" in item:
-                ini, fim, *_ = map(str2int, item.split("-"))
-                for val in range(ini, fim+1):
-                    add_palete(val)
-            else:
-                add_palete(item)
+        for line in map(str.strip, self.paletes.split("\n")):
+            palete = None
+            if is_only_digits(line):
+                if int(line) > 9999:
+                    local = local_de_lote(cursor, line)
+                    if local:
+                        palete = local[0]['palete']
+                    else:
+                        palete = f"!!! {line}"
+            if not palete:
+                palete = Plt().mount(line)
+            palete_list.append(palete)
 
         data = [
-            {'palete': palete}
-            for palete in palete_list
+            {
+                'num': num + 1,
+                'palete': palete,
+            }
+            for num, palete in enumerate(palete_list)
         ]
         headers = [
+            '#',
             'Palete',
         ]
         fields = [
+            'num',
             'palete',
         ]
 
