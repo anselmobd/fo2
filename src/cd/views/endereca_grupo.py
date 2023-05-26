@@ -12,8 +12,9 @@ from utils.functions.strings import (
 from cd.classes.palete import Plt
 from cd.forms import EnderecaGrupoForm
 from cd.queries.endereco import (
-    local_de_lote,
     get_palete,
+    local_de_lote,
+    palete_set_endereco,
 )
 
 
@@ -26,8 +27,15 @@ class EnderecaGrupo(O2BaseGetPostView):
         self.Form_class = EnderecaGrupoForm
         self.cleaned_data2self = True
 
+    def get_end_atuais(self, palete_list):
+        paletes = get_palete(self.cursor, palete_list)
+        return {
+            p['cod_container']: p['endereco']
+            for p in paletes
+        }
+
     def mount_context(self):
-        cursor = db_cursor_so(self.request)
+        self.cursor = db_cursor_so(self.request)
 
         fixo, *variavel = self.endereco.split("|")
         try:
@@ -52,7 +60,7 @@ class EnderecaGrupo(O2BaseGetPostView):
             palete = None
             if is_only_digits(line):
                 if int(line) > 9999:
-                    local = local_de_lote(cursor, line)
+                    local = local_de_lote(self.cursor, line)
                     if local:
                         palete = local[0]['palete']
                     else:
@@ -69,11 +77,14 @@ class EnderecaGrupo(O2BaseGetPostView):
                 'msgerr': "Número de paletes diferente do número de endereços"
             })
 
-        paletes = get_palete(cursor, palete_list)
-        enderecos = {
-            p['cod_container']: p['endereco']
-            for p in paletes
-        }
+        end_atuais = self.get_end_atuais(palete_list)
+
+        if 'endereca' in self.request.POST:
+            for num, palete in enumerate(palete_list):
+                if end_list[num] != end_atuais[palete]:
+                    palete_set_endereco(self.cursor, palete, end_list[num])
+
+        end_atuais = self.get_end_atuais(palete_list)
 
         data = []
         for num in range(max(len(end_list), len(palete_list))):
@@ -81,7 +92,7 @@ class EnderecaGrupo(O2BaseGetPostView):
                 'num': num + 1,
                 'palete': palete_list[num] if num < len(palete_list) else "?",
                 'endereco': end_list[num] if num < len(end_list) else "?",
-                'atual': enderecos.get(palete_list[num], "?") if num < len(palete_list) else "?"
+                'atual': end_atuais.get(palete_list[num], "?") if num < len(palete_list) else "?"
             })
         headers = [
             '#',
@@ -101,3 +112,4 @@ class EnderecaGrupo(O2BaseGetPostView):
             'fields': fields,
             'data': data,
         })
+
