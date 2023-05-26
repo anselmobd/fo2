@@ -2,6 +2,7 @@ from pprint import pprint
 
 from o2.functions.check_digit import mod1110_modchar_o
 from utils.classes.numbers import BaseConversion
+from utils.functions.strings import only_digits
 
 
 class Plt():
@@ -70,7 +71,7 @@ class Plt():
         Obs.: Se for passado um prefix que não consta no
         _PLT_PREFIX_NUM_LEN, também deve ser informado um num_len
         """
-        strnum = str(num)
+        strnum = only_digits(str(num))
         if not num_len:
             num_len = self._PLT_PREFIX_NUM_LEN[prefix]
         len_strnum = len(strnum)
