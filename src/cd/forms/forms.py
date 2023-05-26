@@ -1122,6 +1122,7 @@ class PaletesForm(forms.Form):
 class EnderecaGrupoForm(forms.Form):
     endereco = forms.CharField(
         label='Mascara de endereço',
+        help_text='(exemplo: 2Y0|401-418)',
         widget=forms.TextInput(),
     )
     paletes = forms.CharField(
