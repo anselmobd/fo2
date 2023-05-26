@@ -367,6 +367,32 @@ def get_palete(cursor, palete):
     return dictlist_lower(cursor)
 
 
+def palete_set_endereco(cursor, palete, endereco):
+    sql = f"""
+        UPDATE SYSTEXTIL.ENDR_012 -- cadastro container 
+        SET
+          ENDERECO = '{endereco}'
+        WHERE COD_CONTAINER = '{palete}'
+          AND ENDERECO <> '{endereco}'
+    """
+    try:
+        debug_cursor_execute(cursor, sql)
+    except Exception as e:
+        return repr(e)
+
+    sql = f"""
+        UPDATE SYSTEXTIL.ENDR_015 -- endereço container
+        SET
+          COD_ENDERECO = '{endereco}'
+        WHERE COD_CONTAINER = '{palete}'
+          AND COD_ENDERECO <> '{endereco}'
+    """
+    try:
+        debug_cursor_execute(cursor, sql)
+    except Exception as e:
+        return repr(e)
+
+
 def get_endereco(cursor, endereco):
     sql = f"""
         SELECT
