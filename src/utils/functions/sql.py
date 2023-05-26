@@ -65,7 +65,7 @@ def sql_quoted(value, quotes="'"):
     return f"{next(quote)}{value}{next(quote)}"
 
 
-def sql_test_in(field, values, licacao_condicional='AND'):
+def sql_test_in(field, values, ligacao_condicional='AND'):
     if not values:
         return ''
     size = 999  # um a menos que 1000 apenas por margem de segurança
@@ -81,4 +81,4 @@ def sql_test_in(field, values, licacao_condicional='AND'):
         f"{field} IN ({list1})"
         for list1 in lists
     ])
-    return f"{licacao_condicional} ({test})"
+    return f"{ligacao_condicional} ({test})"
