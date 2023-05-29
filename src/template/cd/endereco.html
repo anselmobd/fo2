@@ -20,8 +20,8 @@
     {% include "layout/paginator.html" with data=data only %}
     <table>
       <h4>{{quant}} endereços encontrados</h4>
-      {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+      {% include "layout/thead_generic.html" with data=headers safe=safe thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe only %}
     </table>
     {% include "layout/paginator.html" with data=data only %}
   {% else %}
@@ -32,7 +32,73 @@
 {% endblock content %}
 
 {% block javascript %}
-  <script type="text/javascript">
+{% block javascript.pos %}
+  <script>
     {% include "layout/paginator_javascript.js" with form='myForm' field='page' only %}
+
+    var sel_type = 'i'; // 'i'nicio, 'f'im ou 'd'esliga
+
+    function acende_apaga(id, on_off) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.style.display = on_off ? "inline" : "none";
+      }
+    }
+
+    function acende(id) {
+      acende_apaga(id, true);
+    }
+
+    function apaga(id) {
+      acende_apaga(id, false);
+    }
+
+    function set_title(id, title) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.title = title;
+      }
+    }
+
+    function set_titles() {
+      if (sel_type == 'i') {
+        title="Seleciona início"
+      } else if (sel_type == 'f') {
+        title="Seleciona fim"
+      } else if (sel_type == 'd') {
+        title="Desseleciona"
+      }
+      for (i=0; i < 50; i++){
+        set_title('sel_'+i, title);
+      }
+    }
+  
+    function Seleciona(idx) {
+      console.log('Seleciona', idx);
+      if (sel_type == 'i') {
+        for (i=idx; i < 50; i++){
+          apaga('sel_no_'+i);
+          acende('sel_yes_'+i);
+        }
+        sel_type = 'f';
+      } else if (sel_type == 'f') {
+        idx++;
+        for (i=idx; i < 50; i++){
+          acende('sel_no_'+i);
+          apaga('sel_yes_'+i);
+        }
+        sel_type = 'd';
+      } else if (sel_type == 'd') {
+        for (i=0; i < 50; i++){
+          acende('sel_no_'+i);
+          apaga('sel_yes_'+i);
+        }
+        sel_type = 'i';
+      }
+      set_titles();
+      return false;
+    }
+
   </script>
-{% endblock %}
+{% endblock javascript.pos %}
+{% endblock javascript %}

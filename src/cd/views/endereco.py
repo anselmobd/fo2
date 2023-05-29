@@ -83,6 +83,16 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
         headers += ["Endereço", "Rota", "Palete"]
         fields += ['end', 'rota', 'palete']
 
+        if has_permission(self.request, 'cd.can_admin_pallet'):
+            for idx, row in enumerate(data.object_list):
+                row['select'] = f"""
+                    <a title="Seleciona início" href="#" id="sel_{idx}" onclick="return Seleciona('{idx}')"><span
+                    class="glyphicon glyphicon-unchecked" aria-hidden="true" id="sel_no_{idx}"></span><span
+                      class="glyphicon glyphicon-check" id="sel_yes_{idx}" style="display:none" aria-hidden="true"></a>
+                """
+            headers += ["Seleciona"]
+            fields += ['select']
+
         # if has_permission(self.request, 'cd.can_admin_pallet'):
         #     headers += ["Endereço antigo"]
         #     fields += ['end_antigo']
@@ -90,5 +100,6 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
         self.context.update({
             'headers': headers,
             'fields': fields,
+            'safe': ['select'],
             'data': data,
         })
