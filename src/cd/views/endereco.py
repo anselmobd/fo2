@@ -85,7 +85,9 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
 
         if has_permission(self.request, 'cd.can_admin_pallet'):
             can_print = True
+            end_list = []
             for idx, row in enumerate(data.object_list):
+                end_list.append(row['end'])
                 row['select'] = f"""
                     <a title="Seleciona início" href="#" id="sel_{idx}" onclick="javascript:return Seleciona('{idx}');"><span
                     class="glyphicon glyphicon-unchecked" aria-hidden="true" id="sel_no_{idx}"></span><span
@@ -104,4 +106,5 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
             'safe': ['select'],
             'data': data,
             'can_print': can_print,
+            'end_list': end_list,
         })

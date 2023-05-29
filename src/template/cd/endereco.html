@@ -52,6 +52,14 @@
     var sel_type = 'i'; // 'i'nicio, 'f'im ou 'd'esliga
     var idx_inicio = -1;
 
+    var end_list = [
+      {% for end in end_list %}
+        '{{end}}',
+      {% endfor %}
+      -1
+    ];
+    console.log(end_list)
+
     function acende_apaga(id, on_off) {
       var el = document.getElementById(id);
       if (el) {
@@ -121,6 +129,11 @@
       return false;
     }
 
+    function get_copias() {
+      var el = document.getElementById("copias");
+      return parseInt(el.innerHTML);
+    }
+
     function mais_menos(id, diff, minimo, maximo) {
       var el = document.getElementById(id);
       if (el) {
@@ -156,9 +169,10 @@
     function do_imprime(idx) {
       console.log("imprime "+idx);
 
-      // var link = '{% url 'cd:palete_print' 'code' %}';
-      // link = link.replace('code', slug);
-      // console.log(link);
+      var link = '{% url 'cd:endereco_print' 999 888 %}';
+      link = link.replace('999', get_copias());
+      link = link.replace('888', end_list[idx]);
+      console.log(link);
 
     }
 
