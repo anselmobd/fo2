@@ -13,19 +13,12 @@ from cd.forms.endereco import EnderecoImprimeForm
 from cd.queries.endereco import query_endereco
 
 
-class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin, 
-
-    def __init__(self, *args, **kwargs):
-        super(EnderecoImprime, self).__init__(*args, **kwargs)
-        self.Form_class = EnderecoImprimeForm
-        self.form_class_has_initial = True
-        self.cleaned_data2self = True
-        # self.permission_required = 'cd.can_admin_pallet'
-        self.template_name = 'cd/endereco_imprime.html'
-        self.title_name = 'Imprime Endereços'
-        self.cleaned_data2self = True
-
-        self.impresso = 'etiqueta-de-endereco'
+class PrintLabel():
+    
+    def __init__(self, impresso, user):
+        self.impresso = impresso
+        self.user = user
+        self.context = {}
 
     def verifica_impresso(self):
         try:
@@ -41,16 +34,15 @@ class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin,
             })
             return False
 
-
     def verifica_usuario_impresso(self):
-        if self.request.user.is_anonymous:
+        if self.user.is_anonymous:
             self.context.update({
                 'mensagem': f"Usuário não identificado",
             })
             return False
         try:
             self.usuario_impresso = lotes.models.UsuarioImpresso.objects.get(
-                usuario=self.request.user, impresso=self.obj_impresso)
+                usuario=self.user, impresso=self.obj_impresso)
             self.context.update({
                 'modelo': self.usuario_impresso.modelo.codigo,
             })
@@ -61,7 +53,7 @@ class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin,
             })
             return False
 
-    def print(self):
+    def print(self, data, field, inicial, final=None, copias=1):
         if not (
             self.verifica_impresso()
             and self.verifica_usuario_impresso()
@@ -74,25 +66,42 @@ class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin,
         )
         teg.template(self.usuario_impresso.modelo.gabarito, '\r\n')
         teg.printer_start()
+        if final is None:
+            final = inicial
         try:
             imprime = False
-            for row in self.data:
-                if row['end'] == self.inicial:
+            for row in data:
+                if row[field] == inicial:
                     imprime = True
                 if imprime:
-                    teg.context(row)
-                    teg.printer_send()
-                    if row['end'] == self.final:
+                    for _ in range(copias):
+                        teg.context(row)
+                        teg.printer_send()
+                    if row[field] == final:
                         break
         finally:
             teg.printer_end()
+
+
+class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin, 
+
+    def __init__(self, *args, **kwargs):
+        super(EnderecoImprime, self).__init__(*args, **kwargs)
+        self.Form_class = EnderecoImprimeForm
+        self.form_class_has_initial = True
+        self.cleaned_data2self = True
+        # self.permission_required = 'cd.can_admin_pallet'
+        self.template_name = 'cd/endereco_imprime.html'
+        self.title_name = 'Imprime Endereços'
+        self.cleaned_data2self = True
+
+        self.impresso = 'etiqueta-de-endereco'
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
         self.inicial = self.inicial.upper()
         # self.final = self.final.upper()
-        self.final = self.inicial.upper()
 
         self.data = query_endereco(cursor, 'TO')
 
@@ -109,19 +118,22 @@ class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin,
             })
             return
 
-        if not next(
-            (
-                row for row in self.data
-                if row["end"] == self.final
-            ),
-            False
-        ):
-            self.context.update({
-                'mensagem': 'Endereço final não existe',
-            })
-            return
+        # if not next(
+        #     (
+        #         row for row in self.data
+        #         if row["end"] == self.final
+        #     ),
+        #     False
+        # ):
+        #     self.context.update({
+        #         'mensagem': 'Endereço final não existe',
+        #     })
+        #     return
 
-        if self.print():
+        print_label = PrintLabel(self.impresso, self.request.user)
+        if print_label.print(self.data, 'end', self.inicial):
             self.context.update({
                 'mensagem': 'OK!',
             })
+        else:
+            self.context.update(print_label.context)
