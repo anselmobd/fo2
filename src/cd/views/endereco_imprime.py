@@ -130,7 +130,7 @@ class EnderecoPrint1(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.request = request
-        self.copias = kwargs['copias']
+        self.copias = int(kwargs['copias'])
         self.endereco = kwargs['endereco'].upper()
         self.context = {
             'copias': self.copias,
