@@ -174,6 +174,28 @@
       link = link.replace('888', end_list[idx]);
       console.log(link);
 
+      $.ajax({
+          type: 'GET',
+          url: link,
+          data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+          success : function(data) {
+            erro = '';
+            if (data) {
+              if (data['result'] == 'OK') {
+                console.log(data['state']);
+              } else {
+                console.log(data['state']);
+                console.log(data['msg_erro']);
+              }
+            } else {
+              console.log('Sem retorno');
+            }
+          },
+          error : function(data) {
+            console.log('Erro na requisição');
+          }
+        });
+
     }
 
     function ImprimeSelecao() {
