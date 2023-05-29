@@ -84,9 +84,10 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
         fields += ['end', 'rota', 'palete']
 
         if has_permission(self.request, 'cd.can_admin_pallet'):
+            can_print = True
             for idx, row in enumerate(data.object_list):
                 row['select'] = f"""
-                    <a title="Seleciona início" href="#" id="sel_{idx}" onclick="return Seleciona('{idx}')"><span
+                    <a title="Seleciona início" href="#" id="sel_{idx}" onclick="javascript:return Seleciona('{idx}');"><span
                     class="glyphicon glyphicon-unchecked" aria-hidden="true" id="sel_no_{idx}"></span><span
                       class="glyphicon glyphicon-check" id="sel_yes_{idx}" style="display:none" aria-hidden="true"></a>
                 """
@@ -102,4 +103,5 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
             'fields': fields,
             'safe': ['select'],
             'data': data,
+            'can_print': can_print,
         })

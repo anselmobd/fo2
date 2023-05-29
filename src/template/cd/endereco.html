@@ -17,6 +17,11 @@
     <input type="submit" name="filtra" value="Filtra" onclick="o2SetPage1AndSubmit()"/>
   </form>
   {% if data %}
+    {% if can_print %}
+      <div style="float:right;display:none" id="imprime">
+        <a title="Imprime seleção" href="#" onclick="javascript:return ImprimeSelecao();"><span class="glyphicon glyphicon-print" style="font-size: 2em" aria-hidden="true"></span></a>
+      </div>
+    {% endif %}
     {% include "layout/paginator.html" with data=data only %}
     <table>
       <h4>{{quant}} endereços encontrados</h4>
@@ -37,6 +42,7 @@
     {% include "layout/paginator_javascript.js" with form='myForm' field='page' only %}
 
     var sel_type = 'i'; // 'i'nicio, 'f'im ou 'd'esliga
+    var idx_inicio = -1;
 
     function acende_apaga(id, on_off) {
       var el = document.getElementById(id);
@@ -62,11 +68,14 @@
 
     function set_titles() {
       if (sel_type == 'i') {
-        title="Seleciona início"
+        title="Seleciona início";
+        apaga("imprime");
       } else if (sel_type == 'f') {
-        title="Seleciona fim"
+        title="Seleciona fim";
+        apaga("imprime");
       } else if (sel_type == 'd') {
-        title="Desseleciona"
+        title="Desseleciona";
+        acende("imprime");
       }
       for (i=0; i < 50; i++){
         set_title('sel_'+i, title);
@@ -76,24 +85,29 @@
     function Seleciona(idx) {
       console.log('Seleciona', idx);
       if (sel_type == 'i') {
+        sel_type = 'f';
+        idx_inicio = idx;
         for (i=idx; i < 50; i++){
           apaga('sel_no_'+i);
           acende('sel_yes_'+i);
         }
-        sel_type = 'f';
       } else if (sel_type == 'f') {
+        if (idx < idx_inicio) {
+          sel_type = 'i';
+        } else {
+          sel_type = 'd';
+        }
         idx++;
         for (i=idx; i < 50; i++){
           acende('sel_no_'+i);
           apaga('sel_yes_'+i);
         }
-        sel_type = 'd';
       } else if (sel_type == 'd') {
+        sel_type = 'i';
         for (i=0; i < 50; i++){
           acende('sel_no_'+i);
           apaga('sel_yes_'+i);
         }
-        sel_type = 'i';
       }
       set_titles();
       return false;
