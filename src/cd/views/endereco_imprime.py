@@ -116,7 +116,7 @@ class EnderecoPrint1(PermissionRequiredMixin, View):
             return
 
         print_label = PrintLabel(self.impresso, self.request.user)
-        if print_label.print(self.data, 'end', self.endereco):
+        if print_label.print(self.data, 'end', self.endereco, copias=self.copias):
             self.context.update({
                 'result': 'OK',
                 'state': 'OK!',
