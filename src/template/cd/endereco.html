@@ -58,7 +58,7 @@
       {% endfor %}
       -1
     ];
-    console.log(end_list)
+    // console.log(end_list)
 
     function acende_apaga(id, on_off) {
       var el = document.getElementById(id);
@@ -198,11 +198,16 @@
 
     }
 
-    function ImprimeSelecao() {
+    function sleep(ms) {
+      return new Promise(resolveFunc => setTimeout(resolveFunc, ms));
+    }
+
+    async function ImprimeSelecao() {
       if (confirma("imprimir")) {
         for (i=0; i < 50; i++){
           if (aceso('sel_yes_'+i)) {
             do_imprime(i);
+            await sleep(300);
           }
         }
       }
