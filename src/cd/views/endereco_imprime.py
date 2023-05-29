@@ -1,6 +1,8 @@
 from pprint import pprint
 
-# from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import JsonResponse
+from django.views import View
 
 from fo2.connections import db_cursor_so
 
@@ -79,9 +81,63 @@ class PrintLabel():
                         teg.printer_send()
                     if row[field] == final:
                         break
+        except Exception:
+            self.context.update({
+                'mensagem': f"Erro durante impressão",
+            })
+            return False
         finally:
             teg.printer_end()
 
+        return True
+
+
+class EnderecoPrint1(PermissionRequiredMixin, View):
+
+    def __init__(self) -> None:
+        self.permission_required = 'cd.imprime_etq_palete'
+        self.impresso = 'etiqueta-de-endereco'
+
+    def mount_context(self):
+        cursor = db_cursor_so(self.request)
+        self.data = query_endereco(cursor, 'TO')
+
+        if not next(
+            (
+                row for row in self.data
+                if row["end"] == self.endereco
+            ),
+            False
+        ):
+            self.context.update({
+                'result': 'ERRO',
+                'state': 'Endereço não existe',
+            })
+            return
+
+        print_label = PrintLabel(self.impresso, self.request.user)
+        if print_label.print(self.data, 'end', self.endereco):
+            self.context.update({
+                'result': 'OK',
+                'state': 'OK!',
+            })
+        else:
+            self.context.update({
+                'result': 'ERRO',
+                'state': print_label.context['mensagem'],
+            })
+            self.context.update(print_label.context)
+
+    def get(self, request, *args, **kwargs):
+        self.request = request
+        self.copias = kwargs['copias']
+        self.endereco = kwargs['endereco'].upper()
+        self.context = {
+            'copias': self.copias,
+            'endereco': self.endereco,
+        }
+        self.mount_context()
+        return JsonResponse(self.context, safe=False)
 
 class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin, 
 
