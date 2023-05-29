@@ -19,7 +19,15 @@
   {% if data %}
     {% if can_print %}
       <div style="float:right;display:none" id="imprime">
-        <a title="Imprime seleção" href="#" onclick="javascript:return ImprimeSelecao();"><span class="glyphicon glyphicon-print" style="font-size: 2em" aria-hidden="true"></span></a>
+        <a title="Imprime seleção" href="#" onclick="javascript:return ImprimeSelecao();"
+          ><span class="glyphicon glyphicon-print" style="font-size: 2em" aria-hidden="true"></span
+        ></a>&nbsp;<a title="Menos cópias" href="#" onclick="javascript:return Menos();"
+          ><span class="glyphicon glyphicon-minus" aria-hidden="true"></span
+        ></a
+        ><span style="font-size: 2em" id="copias">1</span
+        ><a title="Mais cópias" href="#" onclick="javascript:return Mais();"
+          ><span class="glyphicon glyphicon-plus" aria-hidden="true"></span
+        ></a>
       </div>
     {% endif %}
     {% include "layout/paginator.html" with data=data only %}
@@ -110,6 +118,58 @@
         }
       }
       set_titles();
+      return false;
+    }
+
+    function mais_menos(id, diff, minimo, maximo) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.innerHTML = Math.min(maximo, Math.max(minimo, parseInt(el.innerHTML) + diff));
+      }
+    }
+
+    function Mais() {
+      mais_menos("copias", 1, 1, 9)
+    }
+
+    function Menos() {
+      mais_menos("copias", -1, 1, 9)
+    }
+
+    function confirma(acao) {
+      opcao = prompt("Digite S para "+acao);
+      if ( opcao == "" ) {
+        return false;
+      }
+      var pos = "sS".indexOf( opcao );
+      if ( pos > -1 ) {
+        return true;
+      }
+      return false;
+    }
+
+    function aceso(id) {
+      var el = document.getElementById(id);
+      return (!(el === null)) && (el.style.display == "inline");
+    }
+
+    function do_imprime(idx) {
+      console.log("imprime "+idx);
+
+      // var link = '{% url 'cd:palete_print' 'code' %}';
+      // link = link.replace('code', slug);
+      // console.log(link);
+
+    }
+
+    function ImprimeSelecao() {
+      if (confirma("imprimir")) {
+        for (i=0; i < 50; i++){
+          if (aceso('sel_yes_'+i)) {
+            do_imprime(i);
+          }
+        }
+      }
       return false;
     }
 
