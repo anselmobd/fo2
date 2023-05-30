@@ -164,7 +164,7 @@ def query(
             e LOCALMENTE por modelo
         modelo de referência
     endereco: filtra no BD por endereço do lote no CD
-        endereço do lote
+        endereço do lote inteiro ou parcial
     tipo_prod: filtra no DB por tipo de produto de acordo com características
                da referência
         pagb: PA/PG/PB
@@ -250,9 +250,14 @@ def query(
 
     filtra_endereco = ''
     if endereco:
-        filtra_endereco = f"""--
-            AND ec.COD_ENDERECO = '{endereco}'
-        """
+        if len(endereco) == 6:
+            filtra_endereco = f"""--
+                AND ec.COD_ENDERECO = '{endereco}'
+            """
+        else:
+            filtra_endereco = f"""--
+                AND ec.COD_ENDERECO LIKE '{endereco}%'
+            """
         joins.add('1ec')
 
     dict_tipo_prod = {
