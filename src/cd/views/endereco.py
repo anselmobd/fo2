@@ -83,9 +83,10 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
         headers += ["Endereço", "Rota", "Palete"]
         fields += ['end', 'rota', 'palete']
 
+        can_print = False
+        end_list = []
         if has_permission(self.request, 'cd.can_admin_pallet'):
             can_print = True
-            end_list = []
             for idx, row in enumerate(data.object_list):
                 end_list.append(row['end'])
                 row['select'] = f"""
