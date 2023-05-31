@@ -27,7 +27,7 @@ def query_endereco(cursor, tipo='TO'):
     elif tipo == 'LO':
         where_tipo = [
             "e.COD_ENDERECO LIKE '2%'",
-             f"REGEXP_LIKE(e.COD_ENDERECO, '^2[XY][0123456789]{{4}}$')",
+             f"REGEXP_LIKE(e.COD_ENDERECO, '^2[XYZ][0123456789]{{4}}$')",
         ]
     elif tipo == 'IN':
         where_tipo = [
