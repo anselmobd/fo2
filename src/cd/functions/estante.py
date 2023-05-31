@@ -99,13 +99,20 @@ def gera_lateral_enderecos():
         for i in range(1, 13)
     ]
 
-def gera_externos_xy_enderecos():
+def gera_externos_xyz_enderecos():
     estantes = {
         'X': {
             'len': 18,
         },
         'Y': {
             'len': 18,
+        },
+        'Z': {
+            'len': 18,
+            'exclude': {
+                tuple(range(1, 19)): (1, 2),
+                tuple(range(7, 19)): (3,),
+            }
         },
     }
     enderecos = []

@@ -14,7 +14,7 @@ from cd.functions.estante import (
     gera_quarto_andar_enderecos,
     gera_lateral_enderecos,
     gera_externos_s_enderecos,
-    gera_externos_xy_enderecos,
+    gera_externos_xyz_enderecos,
 )
 from cd.queries.endereco import (
     add_endereco,
@@ -49,7 +49,7 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
             elif self.tipo == 'EL':
                 enderecos = gera_externos_s_enderecos()
             elif self.tipo == 'LO':
-                enderecos = gera_externos_xy_enderecos()
+                enderecos = gera_externos_xyz_enderecos()
             if enderecos:
                 count_add = 0
                 for endereco in enderecos:
