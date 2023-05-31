@@ -55,7 +55,7 @@ def calc_rota(endereco):
     parts = endereco_split(endereco)
     if parts['bloco'] in ['X', 'Y', 'Z']:
         icoluna = int(parts['coluna'])
-        irota = icoluna//2
+        irota = (icoluna+1)//2
         rua = ruas[parts['bloco']]
         rota = f"{parts['espaco']}{rua}{irota:02}"
     elif parts['bloco'] in ruas:
