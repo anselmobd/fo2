@@ -110,17 +110,45 @@ def gera_externos_xyz_enderecos():
         'Z': {
             'len': 18,
             'exclude': {
-                tuple(range(1, 19)): (1, 2),
-                tuple(range(7, 19)): (3,),
+                tuple(range(1, 7)): (1, 2, 5),
+                tuple(range(7, 19)): (1, 2, 3, 5),
             }
         },
     }
     enderecos = []
-    for estante in estantes:
+    enderecos_excludes = []
+    for estante in ['X', 'Y', 'Z']:
         for coluna in range(1, estantes[estante]['len']+1):
             for andar in range(1, 6):
+                try:
+                    exclude = estantes[estante]['exclude']
+                except KeyError:
+                    exclude = {}
+                try:
+                    excludes = list(exclude.keys())
+                except IndexError:
+                    excludes = []
+
+                for colunas_diferentes_candidate in excludes:
+                    if coluna in colunas_diferentes_candidate:
+                        colunas_diferentes = colunas_diferentes_candidate
+                        break
+                else:
+                    colunas_diferentes = []
+
+                if coluna in colunas_diferentes:
+                    try:
+                        andares_excludes = list(exclude[colunas_diferentes])
+                    except IndexError:
+                        andares_excludes = []
+                    andar_exclude = andar in andares_excludes
+                else:
+                    andar_exclude = False
                 endereco = f"2{estante}{andar:02}{coluna:02}"
-                enderecos.append(endereco)
+                if andar_exclude:
+                    enderecos_excludes.append(endereco)
+                else:
+                    enderecos.append(endereco)
     return enderecos
 
 
