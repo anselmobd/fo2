@@ -60,7 +60,7 @@ class LoggedInUser(SingletonBaseMeta):
 
     @property
     def have_user(self):
-        return user is not None
+        return self.user is not None
 
 
 class AcessoInterno_InternoNotDefined_Exception(Exception):
