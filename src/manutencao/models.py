@@ -106,6 +106,13 @@ class Maquina(models.Model):
         TipoMaquina,
         verbose_name='Tipo de máquina',
         on_delete=models.PROTECT)
+    subtipo_maquina = models.ForeignKey(
+        SubtipoMaquina,
+        verbose_name='Subtipo de máquina',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+    )
     nome = models.CharField(
         db_index=True,
         max_length=50)
