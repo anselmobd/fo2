@@ -27,6 +27,35 @@ class TipoMaquina(models.Model):
         super(TipoMaquina, self).save(*args, **kwargs)
 
 
+class SubtipoMaquina(models.Model):
+    tipo_maquina = models.ForeignKey(
+        TipoMaquina,
+        verbose_name='Tipo de máquina',
+        on_delete=models.PROTECT,
+    )
+    nome = models.CharField(
+        db_index=True,
+        max_length=20,
+    )
+    slug = models.SlugField()
+    descricao = models.CharField(
+        'Descrição',
+        max_length=250,
+    )
+
+    def __str__(self):
+        return f"{self.tipo_maquina.slug}.{self.slug}"
+
+    class Meta:
+        db_table = 'fo2_man_subtipo_maquina'
+        verbose_name = 'Subtipo de máquina'
+        verbose_name_plural = 'Subtipos de máquinas'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(SubtipoMaquina, self).save(*args, **kwargs)
+
+
 class UnidadeTempo(models.Model):
     codigo = models.CharField(
         'Código',

@@ -2,14 +2,23 @@ from django.contrib import admin
 
 from fo2.admin import intr_adm_site
 
-from .models import \
-    TipoMaquina, UnidadeTempo, Frequencia, Maquina, UsuarioTipoMaquina, \
+from .models import (
+    TipoMaquina, 
+    SubtipoMaquina,
+    UnidadeTempo, Frequencia, Maquina, UsuarioTipoMaquina,
     Atividade, AtividadeMetrica, Rotina, RotinaPasso
+)
 
 
 class TipoMaquinaAdmin(admin.ModelAdmin):
     list_display = ['slug', 'descricao']
     fields = ['nome', 'slug', 'descricao']
+    readonly_fields = ['slug']
+
+
+class SubtipoMaquinaAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'descricao']
+    fields = ['tipo_maquina', 'nome', 'slug', 'descricao']
     readonly_fields = ['slug']
 
 
