@@ -8,6 +8,7 @@ from .models import \
 
 
 class TipoMaquinaAdmin(admin.ModelAdmin):
+    list_display = ['slug', 'descricao']
     fields = ['nome', 'slug', 'descricao']
     readonly_fields = ['slug']
 
