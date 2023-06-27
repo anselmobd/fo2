@@ -7,12 +7,12 @@ class TipoMaquina(models.Model):
     nome = models.CharField(
         db_index=True,
         max_length=20,
-        )
+    )
     slug = models.SlugField()
     descricao = models.CharField(
         'Descrição',
         max_length=250,
-        )
+    )
 
     def __str__(self):
         return self.slug
@@ -61,10 +61,10 @@ class UnidadeTempo(models.Model):
         'Código',
         db_index=True,
         max_length=1,
-        )
+    )
     nome = models.CharField(
         max_length=50,
-        )
+    )
 
     def __str__(self):
         return '{}-{}'.format(self.codigo, self.nome)
@@ -82,16 +82,19 @@ class UnidadeTempo(models.Model):
 class Frequencia(models.Model):
     nome = models.CharField(
         max_length=50,
-        )
+    )
     unidade_tempo = models.ForeignKey(
         UnidadeTempo,
         verbose_name='Unidade de tempo',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+    )
     qtd_tempo = models.IntegerField(
         'Quantidade de tempo',
-        default=1)
+        default=1,
+    )
     ordem = models.IntegerField(
-        default=0)
+        default=0,
+    )
 
     def __str__(self):
         return self.nome
@@ -105,7 +108,8 @@ class Maquina(models.Model):
     tipo_maquina = models.ForeignKey(
         TipoMaquina,
         verbose_name='Tipo de máquina',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+    )
     subtipo_maquina = models.ForeignKey(
         SubtipoMaquina,
         verbose_name='Subtipo de máquina',
@@ -115,13 +119,16 @@ class Maquina(models.Model):
     )
     nome = models.CharField(
         db_index=True,
-        max_length=50)
+    max_length=50,
+    )
     slug = models.SlugField()
     descricao = models.CharField(
         "Descrição",
-        max_length=250)
+        max_length=250,
+    )
     data_inicio = models.DateField(
-        "Data de início da rotina")
+        "Data de início da rotina",
+    )
 
     def __str__(self):
         return self.nome
@@ -137,11 +144,15 @@ class Maquina(models.Model):
 
 class UsuarioTipoMaquina(models.Model):
     usuario = models.ForeignKey(
-        User, on_delete=models.PROTECT,
-        verbose_name='usuário')
+        User,
+        on_delete=models.PROTECT,
+        verbose_name='usuário',
+    )
     tipo_maquina = models.ForeignKey(
-        TipoMaquina, on_delete=models.PROTECT,
-        verbose_name='Tipo de máquina')
+        TipoMaquina,
+        on_delete=models.PROTECT,
+        verbose_name='Tipo de máquina',
+    )
 
     class Meta:
         db_table = "fo2_man_user_tipo_maq"
@@ -154,11 +165,11 @@ class Atividade(models.Model):
     resumo = models.CharField(
         db_index=True,
         max_length=100,
-        )
+    )
     descricao = models.CharField(
         'Descrição',
         max_length=400,
-        )
+    )
 
     def __str__(self):
         return '{}-{}'.format(self.id, self.resumo)
@@ -171,13 +182,15 @@ class Atividade(models.Model):
 class AtividadeMetrica(models.Model):
     atividade = models.ForeignKey(
         Atividade,
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+    )
     ordem = models.IntegerField(
-        default=0)
+        default=0,
+    )
     descricao = models.CharField(
         'Descrição',
         max_length=50,
-        )
+    )
 
     def __str__(self):
         return '{}: {} - {}'.format(
@@ -193,15 +206,17 @@ class Rotina(models.Model):
     tipo_maquina = models.ForeignKey(
         TipoMaquina,
         verbose_name='Tipo de máquina',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+    )
     frequencia = models.ForeignKey(
         Frequencia,
         default=1,
         verbose_name='Período',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+    )
     nome = models.CharField(
         max_length=50,
-        )
+    )
 
     def __str__(self):
         return '{} - {} - {}'.format(
@@ -216,12 +231,15 @@ class Rotina(models.Model):
 class RotinaPasso(models.Model):
     rotina = models.ForeignKey(
         Rotina,
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+    )
     ordem = models.IntegerField(
-        default=0)
+        default=0,
+    )
     atividade = models.ForeignKey(
         Atividade,
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+    )
 
     def __str__(self):
         return '{} : {:02} : {}'.format(
@@ -236,19 +254,25 @@ class RotinaPasso(models.Model):
 class OS(models.Model):
     numero = models.IntegerField(
         default=0,
-        verbose_name='número')
+        verbose_name='número',
+    )
     maquina = models.ForeignKey(
         Maquina,
         on_delete=models.PROTECT,
-        verbose_name='máquina')
+        verbose_name='máquina',
+    )
     rotina = models.ForeignKey(
         Rotina,
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+    )
     data_agendada = models.DateField(
-        "Data agendada")
+        "Data agendada",
+    )
     usuario = models.ForeignKey(
-        User, on_delete=models.PROTECT,
-        verbose_name='usuário')
+        User,
+        on_delete=models.PROTECT,
+        verbose_name='usuário',
+    )
 
     def __str__(self):
         return '{} : {:02} : {}'.format(
