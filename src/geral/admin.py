@@ -1,10 +1,7 @@
 from django.contrib import admin
 
 from fo2.admin import intr_adm_site
-from .models import RecordTracking, Dispositivos, RoloBipado, Painel, \
-    PainelModulo, UsuarioPainelModulo, InformacaoModulo, \
-    Pop, PopGrupoAssunto, PopAssunto, \
-    UsuarioPopAssunto, TipoParametro, Parametro, Config
+from .models import *
 from .forms import PainelModelForm, InformacaoModuloModelForm
 
 
@@ -143,3 +140,9 @@ class ConfigAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(Config, ConfigAdmin)
+
+
+# @admin.register(TipoMaquina)
+# class TipoMaquinaAdmin(admin.ModelAdmin):
+#     list_display = ['__str__']
+#     search_fields = ['__str__']

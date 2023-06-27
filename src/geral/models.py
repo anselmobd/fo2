@@ -22,6 +22,7 @@ __all__ = [
     'TipoParametro',
     'Parametro',
     'Config',
+    'TipoMaquina',
 ]
 
 
@@ -347,3 +348,19 @@ class Config(models.Model):
         db_table = "fo2_config"
         verbose_name = "Configuração"
         verbose_name_plural = "Configurações"
+
+
+class TipoMaquina(models.Model):
+    descricao = models.CharField(
+        max_length=255,
+        unique=True,
+        verbose_name='descrição',
+    )
+
+    def __str__(self):
+        return self.descricao
+
+    class Meta:
+        db_table = "fo2_maquina_tipo"
+        verbose_name = "Tipo de máquina"
+        verbose_name_plural = "Tipos de máquinas"
