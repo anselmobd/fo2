@@ -108,6 +108,8 @@ class Maquina(models.Model):
     tipo_maquina = models.ForeignKey(
         TipoMaquina,
         verbose_name='Tipo de máquina',
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
     )
     subtipo_maquina = models.ForeignKey(
