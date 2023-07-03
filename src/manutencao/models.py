@@ -1,7 +1,10 @@
-from django.db import models
-from django.utils.text import slugify
-from django.contrib.auth.models import User
+from pprint import pprint
 
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.db import models
+from django.db.models import Q
+from django.utils.text import slugify
 
 class TipoMaquina(models.Model):
     nome = models.CharField(
@@ -138,9 +141,23 @@ class Maquina(models.Model):
     class Meta:
         db_table = 'fo2_man_maquina'
         verbose_name = 'Máquina'
-
+        constraints = [
+            models.CheckConstraint(
+                check=Q(tipo_maquina__isnull=False) | Q(subtipo_maquina__isnull=False),
+                name='not_both_null'
+            ),
+            models.CheckConstraint(
+                check=Q(tipo_maquina__isnull=True) | Q(subtipo_maquina__isnull=True),
+                name='not_both_not_null'
+            )
+        ]
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
+        # pprint([self.tipo_maquina, self.subtipo_maquina])
+        # pprint(map(lambda x: x is None, [self.tipo_maquina, self.subtipo_maquina]))
+        # pprint(list(map(lambda x: x is None, [self.tipo_maquina, self.subtipo_maquina])))
+        # if sum(map(lambda x: x is None, [self.tipo_maquina, self.subtipo_maquina])) != 1:
+        #     raise ValidationError('Tipo ou Subtipo deve ser definido')
         super(Maquina, self).save(*args, **kwargs)
 
 

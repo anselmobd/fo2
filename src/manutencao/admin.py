@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 from fo2.admin import intr_adm_site
 
@@ -38,6 +40,11 @@ class MaquinaAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
     ordering = ['nome']
 
+    def save_model(self, request, obj, form, change):
+        try:
+            obj.save()
+        except IntegrityError as e:
+            raise ValidationError(e)
 
 class UsuarioTipoMaquinaAdmin(admin.ModelAdmin):
     list_display = ['usuario', 'tipo_maquina']
