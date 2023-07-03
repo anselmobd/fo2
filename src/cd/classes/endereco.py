@@ -65,7 +65,7 @@ class EnderecoCd():
                 self.espaco_cod = 1
             elif parts['espaco'] == '2' and parts['bloco'] in ['S', 'X', 'Y', 'Z']:
                 self.prioridade = 4
-                self.order_ap = 0
+                self.order_ap = int(parts['apartamento'])
                 self.espaco = 'Externo'
                 self.espaco_cod = 2
             else:
