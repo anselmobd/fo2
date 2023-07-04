@@ -43,7 +43,7 @@ class Pedido(View):
                 'extends_html': 'lotes/index_agator.html',
             })
         else:
-            self.empresa = (1, 3)
+            self.empresa = (1, 3, 4)
             self.context.update({
                 'extends_html': 'lotes/index.html'
             })
