@@ -12,7 +12,7 @@ import lotes.models
 
 from cd.functions.estante import (
     gera_estantes_enderecos,
-    gera_quarto_andar_enderecos,
+    gera_agator_enderecos,
     gera_lateral_enderecos,
     gera_externos_s_enderecos,
 )

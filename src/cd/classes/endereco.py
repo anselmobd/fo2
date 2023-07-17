@@ -61,7 +61,7 @@ class EnderecoCd():
             elif parts['espaco'] == '1' and parts['bloco'] == 'Q':
                 self.prioridade = 3
                 self.order_ap = int(parts['apartamento'])
-                self.espaco = 'Quarto andar'
+                self.espaco = 'Agator'
                 self.espaco_cod = 1
             elif parts['espaco'] == '2' and parts['bloco'] in ['S', 'X', 'Y', 'Z']:
                 self.prioridade = 4

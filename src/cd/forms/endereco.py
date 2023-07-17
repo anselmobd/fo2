@@ -7,7 +7,7 @@ class EnderecoForm(forms.Form):
     CHOICES = [
         ('TO', 'Todos'),
         ('IE', 'Internos - Estantes (padrão)'),
-        ('IQ', 'Internos - Quarto andar (padrão)'),
+        ('IQ', 'Internos - Agator (padrão)'),
         ('IL', 'Internos - Lateral (padrão)'),
         ('IN', 'Internos - não padrão'),
         ('IT', 'Internos - Todos'),

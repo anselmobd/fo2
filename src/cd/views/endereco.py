@@ -11,7 +11,7 @@ from geral.functions import has_permission
 from cd.forms.endereco import EnderecoForm
 from cd.functions.estante import (
     gera_estantes_enderecos,
-    gera_quarto_andar_enderecos,
+    gera_agator_enderecos,
     gera_lateral_enderecos,
     gera_externos_s_enderecos,
     gera_externos_xyz_enderecos,
@@ -43,7 +43,7 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
             if self.tipo == 'IE':
                 enderecos = gera_estantes_enderecos()
             elif self.tipo == 'IQ':
-                enderecos = gera_quarto_andar_enderecos()
+                enderecos = gera_agator_enderecos()
             elif self.tipo == 'IL':
                 enderecos = gera_lateral_enderecos()
             elif self.tipo == 'EL':

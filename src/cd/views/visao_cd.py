@@ -63,7 +63,7 @@ class VisaoCd(View):
                 row['area'] = 'Estantes'
             elif row['rua'].startswith('QA'):
                 row['order'] = 2
-                row['area'] = 'Quarto andar'
+                row['area'] = 'Agator'
             elif row['rua'].startswith('LB'):
                 row['order'] = 3
                 row['area'] = 'Lateral'
