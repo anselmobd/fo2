@@ -157,7 +157,7 @@ class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin,
         cursor = db_cursor_so(self.request)
 
         self.inicial = self.inicial.upper()
-        # self.final = self.final.upper()
+        self.final = self.final.upper() if self.final else self.inicial
 
         self.data = query_endereco(cursor, 'TO')
 
@@ -170,24 +170,36 @@ class EnderecoImprime(O2BaseGetPostView):  # PermissionRequiredMixin,
         ):
             self.context.update({
                 'mensagem': 'Endereço inicial não existe',
-                # 'mensagem': 'Endereço não existe',
             })
             return
 
-        # if not next(
-        #     (
-        #         row for row in self.data
-        #         if row["end"] == self.final
-        #     ),
-        #     False
-        # ):
-        #     self.context.update({
-        #         'mensagem': 'Endereço final não existe',
-        #     })
-        #     return
+        if not next(
+            (
+                row for row in self.data
+                if row["end"] == self.final
+            ),
+            False
+        ):
+            self.context.update({
+                'mensagem': 'Endereço final não existe',
+            })
+            return
+
+        if not next(
+            (
+                row for row in self.data
+                if row["end"] >= self.inicial
+                    and row["end"] <= self.final
+            ),
+            False
+        ):
+            self.context.update({
+                'mensagem': 'Seleção de endereços inicial e final não funcionais',
+            })
+            return
 
         print_label = PrintLabel(self.impresso, self.request.user)
-        if print_label.print(self.data, 'end', self.inicial):
+        if print_label.print(self.data, 'end', self.inicial, self.final):
             self.context.update({
                 'mensagem': 'OK!',
             })

@@ -33,15 +33,21 @@ class EnderecoForm(forms.Form):
 
 class EnderecoImprimeForm(forms.Form):
     inicial = forms.CharField(
-        label='Endereço', max_length=9, min_length=3,
+        label='Endereço inicial',
+        max_length=9,
+        min_length=3,
         widget=forms.TextInput(attrs={
             'style': 'text-transform:uppercase;',
             'autofocus': 'autofocus',
         })
     )
-    # final = forms.CharField(
-    #     max_length=9, min_length=3,
-    #     widget=forms.TextInput(attrs={
-    #         'style': 'text-transform:uppercase;',
-    #     })
-    # )
+    final = forms.CharField(
+        label='Endereço final',
+        help_text='(se não informado, é considerado igual ao inicial)',
+        max_length=9,
+        min_length=3,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'style': 'text-transform:uppercase;',
+        })
+    )
