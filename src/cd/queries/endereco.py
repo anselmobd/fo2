@@ -81,8 +81,25 @@ def query_endereco(cursor, tipo='TO'):
    
     debug_cursor_execute(cursor, sql)
     data = dictlist_lower(cursor)
-    
-    data = data_details_from_end(data, 'end')
+
+    d_data = {}
+    for row in data:
+        row['palete'] = {row['palete']}
+        if row['end'] in d_data:
+            d_data[row['end']]['palete'] = (
+                d_data[row['end']]['palete'].union(row['palete']))
+        else:
+            d_data[row['end']] = row
+
+    for _, row in d_data.items():
+        row['palete'] = ', '.join(
+            map(
+                lambda x: str(x) if x else '-',
+                sorted(list(row['palete']))
+            )
+        )
+
+    data = data_details_from_end(list(d_data.values()), 'end')
 
     return data
 
