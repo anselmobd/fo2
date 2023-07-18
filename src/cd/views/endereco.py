@@ -51,16 +51,15 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
             elif self.tipo == 'LO':
                 enderecos = gera_externos_xyz_enderecos()
             if enderecos:
-                count_add = 0
+                adicionou = False
                 for endereco in enderecos:
                     if not next(
                         (d for d in data if d['end'] == endereco),
                         False
                     ):
                         add_endereco(cursor, endereco)
-                        count_add += 1
-
-                if count_add:
+                        adicionou = True
+                if adicionou:
                     data = query_endereco(cursor, self.tipo)
 
         self.context.update({
