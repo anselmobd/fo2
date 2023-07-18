@@ -2,7 +2,7 @@ from pprint import pprint
 
 from utils.classes import TermalPrint
 
-import lotes.models
+from lotes.models import Impresso, UsuarioImpresso
 
 
 class PrintLabel():
@@ -14,13 +14,14 @@ class PrintLabel():
 
     def verifica_impresso(self):
         try:
-            self.obj_impresso = lotes.models.Impresso.objects.get(
-                slug=self.impresso)
+            self.obj_impresso = Impresso.objects.get(
+                slug=self.impresso
+            )
             self.context.update({
                 'cod_impresso': self.obj_impresso.nome,
             })
             return True
-        except lotes.models.Impresso.DoesNotExist:
+        except Impresso.DoesNotExist:
             self.context.update({
                 'mensagem': f"Impresso '{self.impresso}' não cadastrado",
             })
@@ -33,13 +34,13 @@ class PrintLabel():
             })
             return False
         try:
-            self.usuario_impresso = lotes.models.UsuarioImpresso.objects.get(
+            self.usuario_impresso = UsuarioImpresso.objects.get(
                 usuario=self.user, impresso=self.obj_impresso)
             self.context.update({
                 'modelo': self.usuario_impresso.modelo.codigo,
             })
             return True
-        except lotes.models.UsuarioImpresso.DoesNotExist:
+        except UsuarioImpresso.DoesNotExist:
             self.context.update({
                 'mensagem': f"Impresso '{self.impresso}' não cadastrado para o usuário",
             })
