@@ -199,6 +199,9 @@ class NotaFiscal(models.Model):
 
     objects = NotaFiscalManager()
 
+    def __str__(self, *args, **kwargs):
+        return f"NF ({dict(self.EMPRESA)[self.empresa]}) {self.numero}"
+
     def save(self, *args, **kwargs):
         if self.id:
             if self.saida:
