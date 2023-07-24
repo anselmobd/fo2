@@ -195,7 +195,7 @@ class NotaFiscal(models.Model):
     entrega = models.DateField(null=True, blank=True, verbose_name="agendamento")
     confirmada = models.BooleanField(default=False, verbose_name="entregue")
     observacao = models.TextField(null=True, blank=True, verbose_name="observação")
-    comprovante = models.BooleanField(default=False, verbose_name="Com comprovante")
+    comprovante = models.BooleanField(default=False, verbose_name="comprovante")
 
     objects = NotaFiscalManager()
 
