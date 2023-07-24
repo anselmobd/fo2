@@ -59,7 +59,7 @@ class NotafiscalRel(View):
             data = paginator_basic(data, form['por_pagina'], form['page'])
 
             for row in data:
-                row['numero|LINK'] = reverse(
+                row['numero|A'] = reverse(
                     'logistica:notafiscal_numero', args=[row['numero']])
                 row['numero|TARGET'] = '_BLANK'
                 if row['quantidade']:
