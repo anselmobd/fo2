@@ -71,7 +71,8 @@ class Command(BaseCommand):
                   ped.PEDIDO_VENDA
                 )
                 SELECT
-                  f.NUM_NOTA_FISCAL NF
+                  f.CODIGO_EMPRESA EMPRESA
+                , f.NUM_NOTA_FISCAL NF
                 , f.BASE_ICMS VALOR
                 , f.QTDE_EMBALAGENS VOLUMES
                 , f.DATA_AUTORIZACAO_NFE FATURAMENTO
@@ -195,6 +196,9 @@ class Command(BaseCommand):
                     nf_fo2 = models.NotaFiscal(numero=row_st['NF'])
 
                 if edit:
+                    self.print_diff_alt('empresa', nf_fo2.empresa, row_st['EMPRESA'])
+                    nf_fo2.empresa = row_st['EMPRESA']
+
                     self.print_diff_alt('data', nf_fo2.faturamento, faturamento)
                     nf_fo2.faturamento = faturamento
 
