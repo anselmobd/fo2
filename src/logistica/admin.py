@@ -46,7 +46,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     #                'entrega', 'confirmada',
     #                'faturamento', 'transp_nome', 'cod_status', 'uf']
     search_fields = ["numero", "transp_nome", "dest_nome"]
-    ordering = ["-numero"]
+    ordering = ['-empresa', '-numero']
     fields = (
         ("numero", "tipo", "ativa", "nf_devolucao", "posicao"),
         ("dest_cnpj", "dest_nome", "uf", "transp_nome"),
