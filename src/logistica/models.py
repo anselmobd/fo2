@@ -94,9 +94,9 @@ class NotaFiscalManager(models.Manager):
             filters['confirmada'] = entregue == 'S'
 
         if ordem == 'N':
-            order = '-numero'
+            order = ('-data_base', '-empresa', '-numero')
         elif ordem == 'P':
-            order = 'pedido'
+            order = ('pedido',)
 
         if listadas.upper() == 'V':
             filters.update({
@@ -120,7 +120,7 @@ class NotaFiscalManager(models.Manager):
                 select = select.filter(condition)
 
         if order:
-            select = select.order_by(order)
+            select = select.order_by(*order)
 
         return select
 
