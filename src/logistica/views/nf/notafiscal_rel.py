@@ -89,6 +89,8 @@ class NotafiscalRel(View):
             entrega_cor = 'color: blue !important;'
             observacao_cor = 'color: red !important;'
             columns = {
+                'data_base':
+                    'Data base',
                 'empresa':
                     ('Empresa', style_center),
                 'numero':
