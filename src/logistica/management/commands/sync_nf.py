@@ -75,7 +75,7 @@ class Command(BaseCommand):
                 , f.NUM_NOTA_FISCAL NF
                 , f.BASE_ICMS VALOR
                 , f.QTDE_EMBALAGENS VOLUMES
-                , f.DATA_BASE_FATUR DATA_BASE
+                , f.DATA_EMISSAO DATA_BASE
                 , f.DATA_AUTORIZACAO_NFE FATURAMENTO
                 , CAST( COALESCE( '0' || f.COD_STATUS, '0' ) AS INT )
                   COD_STATUS
