@@ -21,6 +21,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
         "saida",
         "entrega",
         "confirmada",
+        "comprovante",
         "natu_venda",
         "ativa",
         "nf_devolucao",
@@ -36,14 +37,15 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     list_display_links = (
         "numero",
     )
-    list_editable = ["saida", "entrega", "confirmada"]
+    list_editable = ["saida", "entrega", "confirmada", "comprovante"]
     # list_filter = ['ativa', 'natu_venda', 'saida',
     #                'entrega', 'confirmada',
     #                'faturamento', 'transp_nome', 'cod_status', 'uf']
     search_fields = ["numero", "transp_nome", "dest_nome"]
     ordering = ['-data_base', '-empresa', '-numero']
     fields = (
-        ("numero", "tipo", "ativa", "nf_devolucao", "posicao"),
+        ("data_base", "empresa", "numero"),
+        ("tipo", "ativa", "nf_devolucao", "posicao"),
         ("dest_cnpj", "dest_nome", "uf", "transp_nome"),
         ("pedido", "ped_cliente"),
         ("natu_venda", "natu_descr"),
@@ -52,11 +54,14 @@ class NotaFiscalAdmin(admin.ModelAdmin):
         "saida",
         "entrega",
         "confirmada",
+        "comprovante",
         "observacao",
         "id",
     )
     readonly_fields = [
         "id",
+        "data_base",
+        "empresa",
         "numero",
         "faturamento",
         "posicao",
