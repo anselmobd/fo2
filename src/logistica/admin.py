@@ -10,16 +10,10 @@ from logistica.forms import EntradaNfForm
 
 
 class NotaFiscalAdmin(admin.ModelAdmin):
-    _EMPRESA = {
-        1: 'Tussor',
-        2: 'Agator',
-        3: 'Corte',
-        4: 'Gavi',
-    }
     list_per_page = 50
     list_display = [
         "data_base",
-        "empresa_nome",
+        "empresa",
         "numero",
         "tipo",
         "faturamento",
@@ -96,11 +90,6 @@ class NotaFiscalAdmin(admin.ModelAdmin):
         return obj.volumes
 
     list_volumes.short_description = 'Vol.'
-
-    def empresa_nome(self, obj):
-        return self._EMPRESA[obj.empresa]
-
-    empresa_nome.short_description = 'Empresa'
 
     class Media:
             css = {
