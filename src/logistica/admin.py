@@ -18,6 +18,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     }
     list_per_page = 50
     list_display = [
+        "data_base",
         "empresa_nome",
         "numero",
         "tipo",
@@ -46,7 +47,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     #                'entrega', 'confirmada',
     #                'faturamento', 'transp_nome', 'cod_status', 'uf']
     search_fields = ["numero", "transp_nome", "dest_nome"]
-    ordering = ['-empresa', '-numero']
+    ordering = ['-data_base', '-empresa', '-numero']
     fields = (
         ("numero", "tipo", "ativa", "nf_devolucao", "posicao"),
         ("dest_cnpj", "dest_nome", "uf", "transp_nome"),
