@@ -211,6 +211,7 @@ class NotaFiscal(models.Model):
         verbose_name = "Nota Fiscal"
         verbose_name_plural = "Notas Fiscais"
         permissions = (("can_beep_shipment", "Can beep shipment"),)
+        unique_together = (("empresa", "numero"),)
 
 
 class RotinaLogistica(models.Model):
