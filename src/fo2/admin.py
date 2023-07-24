@@ -7,8 +7,8 @@ from django.contrib.admin import AdminSite
 class IntrAdmSite(AdminSite):
     def __init__(self, name: str) -> None:
         super().__init__(name)
-        self.site_header = 'Apoio ao ERP (Tussor) - Cadastros'
-        self.site_title = 'Fo2 - Apoio ao ERP (Tussor) - Cadastros'
+        self.site_header = 'Apoio ao ERP - Cadastros'
+        self.site_title = 'Fo2 - Apoio ao ERP - Cadastros'
         self.index_title = 'Cadastros'
         self.enable_nav_sidebar = False
 
