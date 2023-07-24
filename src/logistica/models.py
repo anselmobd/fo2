@@ -158,7 +158,7 @@ class NotaFiscal(models.Model):
     )
     nf_devolucao = models.IntegerField(null=True, blank=True, verbose_name="Devolução")
     trail = models.CharField(
-        db_index=True, max_length=32, null=True, blank=True, default=""
+        db_index=True, max_length=33, null=True, blank=True, default=""
     )
     posicao = models.ForeignKey(
         PosicaoCarga, default=1, verbose_name="Posição", on_delete=models.PROTECT
