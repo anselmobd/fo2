@@ -191,7 +191,7 @@ class Command(BaseCommand):
                             numero=row_st['NF'],
                         )
                         self.my_println(
-                            "sync_nf - update ({EMPRESA}).{NF}".format(**row_st))
+                            "sync_nf - update ({EMPRESA}){NF}".format(**row_st))
 
                 else:
                     self.my_println(
