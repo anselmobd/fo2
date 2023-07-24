@@ -139,9 +139,9 @@ class Command(BaseCommand):
             debug_cursor_execute(cursor, sql)
             nfs_st = dictlist(cursor)
 
-            nfs_fo2_list = list(models.NotaFiscal.objects.values_list(
-                'numero', 'trail'))
-            nfs_fo2 = {nf[0]: nf[1] for nf in nfs_fo2_list}
+            nfs_fo2_list = models.NotaFiscal.objects.values_list(
+                'empresa', 'numero', 'trail')
+            nfs_fo2 = {(nf[0], nf[1]): nf[2] for nf in nfs_fo2_list}
 
             count_task = 0
             for row_st in nfs_st:
@@ -182,24 +182,27 @@ class Command(BaseCommand):
                 new_trail = f"{row_st['EMPRESA']}{trail}"
 
                 edit = True
-                if row_st['NF'] in nfs_fo2.keys():
-                    if nfs_fo2[row_st['NF']] in (trail, new_trail):
+                empr_numero = (row_st['EMPRESA'], row_st['NF'])
+                if empr_numero in nfs_fo2.keys():
+                    if nfs_fo2[empr_numero] in (trail, new_trail):
                         edit = False
                     else:
                         nf_fo2 = models.NotaFiscal.objects.get(
-                            numero=row_st['NF'])
+                            empresa=row_st['EMPRESA'],
+                            numero=row_st['NF'],
+                        )
                         self.my_println(
-                            'sync_nf - update {}'.format(row_st['NF']))
+                            "sync_nf - update ({EMPRESA}).{NF}".format(**row_st))
 
                 else:
                     self.my_println(
-                        'sync_nf - insert {}'.format(row_st['NF']))
-                    nf_fo2 = models.NotaFiscal(numero=row_st['NF'])
+                        "sync_nf - insert ({EMPRESA}){NF}".format(**row_st))
+                    nf_fo2 = models.NotaFiscal(
+                        empresa=row_st['EMPRESA'],
+                        numero=row_st['NF'],
+                    )
 
                 if edit:
-                    self.print_diff_alt('empresa', nf_fo2.empresa, row_st['EMPRESA'])
-                    nf_fo2.empresa = row_st['EMPRESA']
-
                     self.print_diff_alt('data', nf_fo2.faturamento, faturamento)
                     nf_fo2.faturamento = faturamento
 
