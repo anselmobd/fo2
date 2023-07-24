@@ -68,7 +68,7 @@ class NotafiscalRelForm(forms.Form):
     entregue = forms.ChoiceField(
         choices=CHOICES, initial='T')
 
-    CHOICES = [('N', 'Número da nota fiscal (decrescente)'),
+    CHOICES = [('N', 'Data base, empresa e NF (decrescente)'),
                ('P', 'Número do pedido (crescente)'),
                ('A', 'Atraso (maior primeiro)')]
     ordem = forms.ChoiceField(
