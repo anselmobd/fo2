@@ -75,6 +75,7 @@ class Command(BaseCommand):
                 , f.NUM_NOTA_FISCAL NF
                 , f.BASE_ICMS VALOR
                 , f.QTDE_EMBALAGENS VOLUMES
+                , f.DATA_BASE_FATUR DATA_BASE
                 , f.DATA_AUTORIZACAO_NFE FATURAMENTO
                 , CAST( COALESCE( '0' || f.COD_STATUS, '0' ) AS INT )
                   COD_STATUS
@@ -158,6 +159,7 @@ class Command(BaseCommand):
 
                 hash_cache = ';'.join(map(format, (
                     row_st['NF'],
+                    row_st['DATA_BASE'],
                     row_st['FATURAMENTO'],
                     row_st['VALOR'],
                     row_st['VOLUMES'],
@@ -202,7 +204,9 @@ class Command(BaseCommand):
                     )
 
                 if edit:
-                    self.print_diff_alt('data', nf_fo2.faturamento, row_st['FATURAMENTO'])
+                    self.print_diff('data_base', nf_fo2.data_base, row_st['DATA_BASE'])
+                    nf_fo2.data_base = row_st['DATA_BASE']
+
                     nf_fo2.faturamento = row_st['FATURAMENTO']
 
                     self.print_diff('valor', nf_fo2.valor, row_st['VALOR'])
