@@ -76,7 +76,7 @@ class NotafiscalRel(View):
             )
             ldict_if_else(data,
                 [
-                    [['confirmada', 'natu_venda'], 'Sim', 'Não'],
+                    [['confirmada', 'natu_venda', 'comprovante'], 'Sim', 'Não'],
                     [['ativa'], 'Ativa', 'Cancelada'],
                 ]
             )
@@ -113,6 +113,8 @@ class NotafiscalRel(View):
                     ('Agendada', style_center + entrega_cor),
                 'confirmada':
                     ('Entregue', style_center),
+                'comprovante':
+                    ('Comprovante', style_center),
                 'uf':
                     'UF',
                 'dest_cnpj':
