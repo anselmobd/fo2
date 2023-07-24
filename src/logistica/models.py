@@ -127,7 +127,17 @@ class NotaFiscalManager(models.Manager):
 
 class NotaFiscal(models.Model):
     # campos importados
-    empresa = models.SmallIntegerField(db_index=True, default=1)
+    EMPRESA = (
+        (1, 'Tussor'),
+        (2, 'Agator'),
+        (3, 'Corte'),
+        (4, 'Gavi'),
+    )
+    empresa = models.SmallIntegerField(
+        db_index=True,
+        choices=EMPRESA,
+        default=1,
+    )
     numero = models.IntegerField(db_index=True, verbose_name="número")
     ativa = models.BooleanField(db_index=True, default=True)
     data_base = models.DateField(
