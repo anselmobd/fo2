@@ -152,7 +152,7 @@ class Command(BaseCommand):
                     row_st['CNPJ9'],
                     row_st['CNPJ4'],
                     row_st['CNPJ2'])
-                natu_venda = (row_st['NAT'] in (1, 2)) \
+                natu_venda = (row_st['NAT'] in (1, 2, 956, 957)) \
                     or (row_st['DIV_NAT'] == '8'
                         and (row_st['COD_NAT'] == '6.11'
                              or row_st['COD_NAT'] == '5.11'
