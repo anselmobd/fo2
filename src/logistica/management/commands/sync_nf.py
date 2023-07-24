@@ -145,7 +145,6 @@ class Command(BaseCommand):
 
             count_task = 0
             for row_st in nfs_st:
-                faturamento = row_st['FATURAMENTO']
                 dest_cnpj = '{:08d}/{:04d}-{:02d}'.format(
                     row_st['CNPJ9'],
                     row_st['CNPJ4'],
@@ -159,7 +158,7 @@ class Command(BaseCommand):
 
                 hash_cache = ';'.join(map(format, (
                     row_st['NF'],
-                    faturamento,
+                    row_st['FATURAMENTO'],
                     row_st['VALOR'],
                     row_st['VOLUMES'],
                     row_st['QTD'],
@@ -203,8 +202,8 @@ class Command(BaseCommand):
                     )
 
                 if edit:
-                    self.print_diff_alt('data', nf_fo2.faturamento, faturamento)
-                    nf_fo2.faturamento = faturamento
+                    self.print_diff_alt('data', nf_fo2.faturamento, row_st['FATURAMENTO'])
+                    nf_fo2.faturamento = row_st['FATURAMENTO']
 
                     self.print_diff('valor', nf_fo2.valor, row_st['VALOR'])
                     nf_fo2.valor = row_st['VALOR']
