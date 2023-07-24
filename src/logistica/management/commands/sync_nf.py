@@ -24,14 +24,14 @@ class Command(BaseCommand):
         self.stdout.write(text, ending=ending)
         self.stdout.flush()
 
-    def print_diff(self, title, antigo, novo):
+    def print_new(self, title, antigo, novo):
         if antigo != novo:
             self.my_println(
                 '{} = {}'.format(title, novo))
 
-    def print_diff_alt(self, title, antigo, novo):
+    def print_diff(self, title, antigo, novo):
         if antigo != novo:
-            self.my_println(f'{title} = {antigo} -> {novo}')
+            self.my_println(f'{title}: {antigo} -> {novo}')
 
     def handle(self, *args, **options):
         self.my_println('---')
@@ -207,6 +207,7 @@ class Command(BaseCommand):
                     self.print_diff('data_base', nf_fo2.data_base, row_st['DATA_BASE'])
                     nf_fo2.data_base = row_st['DATA_BASE']
 
+                    self.print_diff('data', nf_fo2.faturamento, row_st['FATURAMENTO'])
                     nf_fo2.faturamento = row_st['FATURAMENTO']
 
                     self.print_diff('valor', nf_fo2.valor, row_st['VALOR'])
@@ -216,8 +217,8 @@ class Command(BaseCommand):
                         'volumes', nf_fo2.volumes, row_st['VOLUMES'])
                     nf_fo2.volumes = row_st['VOLUMES']
 
-                    self.print_diff_alt(
-                        'qtd', nf_fo2.volumes, row_st['QTD'])
+                    self.print_diff(
+                        'qtd', nf_fo2.quantidade, row_st['QTD'])
                     nf_fo2.quantidade = row_st['QTD']
 
                     self.print_diff('cnpj', nf_fo2.dest_cnpj, dest_cnpj)
@@ -279,7 +280,7 @@ class Command(BaseCommand):
                         'tipo', nf_fo2.tipo, row_st['TIPO'])
                     nf_fo2.tipo = row_st['TIPO']
 
-                    self.print_diff('trail', nf_fo2.trail, trail)
+                    self.print_new('trail', nf_fo2.trail, trail)
                     nf_fo2.trail = trail
 
                     nf_fo2.save()
