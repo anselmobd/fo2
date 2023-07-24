@@ -135,7 +135,9 @@ class Command(BaseCommand):
                  AND t.FORNECEDOR2 = f.TRANSPOR_FORNE2
                 -- WHERE f.NUMERO_CAIXA_ECF = 0
                 ORDER BY
-                  f.NUM_NOTA_FISCAL DESC
+                  f.DATA_BASE_FATUR DESC
+                , f.CODIGO_EMPRESA EMPRESA
+                , f.NUM_NOTA_FISCAL DESC
             '''
             debug_cursor_execute(cursor, sql)
             nfs_st = dictlist(cursor)
