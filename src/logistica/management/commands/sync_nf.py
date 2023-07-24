@@ -52,7 +52,7 @@ class Command(BaseCommand):
                     ON fi.ch_it_nf_cd_empr = f.codigo_empresa
                    AND fi.ch_it_nf_num_nfis = f.num_nota_fiscal
                    AND fi.ch_it_nf_ser_nfis = f.serie_nota_fisc
-                  WHERE f.CODIGO_EMPRESA IN (1, 2)
+                  WHERE f.CODIGO_EMPRESA IN (1, 2, 4)
                   GROUP BY 
                     f.codigo_empresa
                   , f.num_nota_fiscal
@@ -66,7 +66,7 @@ class Command(BaseCommand):
                 FROM PEDI_100 ped -- pedido de venda
                 JOIN PEDI_110 iped -- item de pedido de venda
                   ON iped.PEDIDO_VENDA = ped.PEDIDO_VENDA
-                WHERE ped.CODIGO_EMPRESA IN (1, 2)
+                WHERE ped.CODIGO_EMPRESA IN (1, 2, 4)
                 GROUP BY 
                   ped.PEDIDO_VENDA
                 )
