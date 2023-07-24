@@ -65,6 +65,7 @@ class NotafiscalRel(View):
                 if row['quantidade']:
                     row['quantidade'] = int(round(row['quantidade']))
                 row['tipo'] = dict(NotaFiscal.TIPO_NOTA)[row['tipo']]
+                row['empresa'] = dict(NotaFiscal.EMPRESA)[row['empresa']]
 
             ldict_coalesce(data,
                 [
@@ -88,6 +89,8 @@ class NotafiscalRel(View):
             entrega_cor = 'color: blue !important;'
             observacao_cor = 'color: red !important;'
             columns = {
+                'empresa':
+                    ('Empresa', style_center),
                 'numero':
                     ('NF', numero_cor),
                 'faturamento':
