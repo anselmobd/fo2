@@ -105,7 +105,7 @@ class Command(BaseCommand):
                 , p.COD_PED_CLIENTE PED_CLIENTE
                 , pd.CODIGO_DEPOSITO DEPOSITO
                 , CASE WHEN pd.CODIGO_DEPOSITO = 101 THEN 'a'
-                  WHEN pd.CODIGO_DEPOSITO = 102 THEN 'v'
+                  WHEN pd.CODIGO_DEPOSITO in (102, 501) THEN 'v'
                   ELSE 'o' END TIPO
                 , fe.DOCUMENTO NF_DEVOLUCAO
                 , fi.QTD
