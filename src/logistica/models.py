@@ -1,5 +1,5 @@
 import pytz
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from pprint import pprint
 
 from django.contrib.auth.models import User
@@ -130,6 +130,8 @@ class NotaFiscal(models.Model):
     empresa = models.SmallIntegerField(db_index=True, default=1)
     numero = models.IntegerField(db_index=True, verbose_name="número")
     ativa = models.BooleanField(db_index=True, default=True)
+    data_base = models.DateField(
+        db_index=True, default=date(2001, 1, 2), verbose_name="Data base")
     faturamento = models.DateTimeField(db_index=True, null=True, blank=True)
     cod_status = models.IntegerField(null=True, blank=True, verbose_name="status")
     msg_status = models.CharField(
