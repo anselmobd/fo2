@@ -180,12 +180,12 @@ class Command(BaseCommand):
                 )))
                 hash_object = hashlib.md5(hash_cache.encode())
                 trail = hash_object.hexdigest()
-                new_trail = f"{row_st['EMPRESA']}{trail}"
+                trail = f"{row_st['EMPRESA']}{trail}"
 
                 edit = True
                 empr_numero = (row_st['EMPRESA'], row_st['NF'])
                 if empr_numero in nfs_fo2.keys():
-                    if nfs_fo2[empr_numero] in (trail, new_trail):
+                    if nfs_fo2[empr_numero] == trail:
                         edit = False
                     else:
                         nf_fo2 = models.NotaFiscal.objects.get(
@@ -279,8 +279,8 @@ class Command(BaseCommand):
                         'tipo', nf_fo2.tipo, row_st['TIPO'])
                     nf_fo2.tipo = row_st['TIPO']
 
-                    self.print_diff('trail', nf_fo2.trail, new_trail)
-                    nf_fo2.trail = new_trail
+                    self.print_diff('trail', nf_fo2.trail, trail)
+                    nf_fo2.trail = trail
 
                     nf_fo2.save()
                     count_task += 1
