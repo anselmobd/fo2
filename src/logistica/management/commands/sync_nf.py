@@ -136,7 +136,7 @@ class Command(BaseCommand):
                 -- WHERE f.NUMERO_CAIXA_ECF = 0
                 ORDER BY
                   f.DATA_BASE_FATUR DESC
-                , f.CODIGO_EMPRESA EMPRESA
+                , f.CODIGO_EMPRESA DESC
                 , f.NUM_NOTA_FISCAL DESC
             '''
             debug_cursor_execute(cursor, sql)
