@@ -17,6 +17,7 @@ __deposito = {
     101: "101-Atacado",
     102: "102-Varejo",
     231: "231-Interno",
+    0: "0-Indefinido",
 }
 
 
