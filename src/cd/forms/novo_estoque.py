@@ -53,6 +53,17 @@ class NovoEstoqueForm(forms.Form):
         )
     )
 
+    solicitacoes = forms.CharField(
+        label='Solicitações',
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 40,
+                'type': 'text',
+            }
+        )
+    )
+
     colecao = forms.ChoiceField(
         label='Coleção da referência',
         required=False, initial=None)
