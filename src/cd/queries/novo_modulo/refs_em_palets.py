@@ -3,6 +3,7 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
+from utils.functions.strings import split_numbers
 
 from lotes.functions.varias import (
     lote_de_periodo_oc,
@@ -14,6 +15,10 @@ from lotes.functions.varias import modelo_de_ref
 from cd.queries.novo_modulo.gerais import *
 
 __all__ = ['query']
+
+
+def numbers_set(str):
+    return set(split_numbers(str))
 
 
 fields_tuple = {
@@ -684,10 +689,8 @@ def query(
     if solicitacoes and 'solicitacoes' in fields:
         dados = [
             row for row in dados
-            if number_set(row['solicitacoes']) == number_set(solicitacoes)
+            if numbers_set(solicitacoes).intersection(
+                numbers_set(row['solicitacoes']))
         ]
 
     return dados
-
-def number_set():
-    return ''
