@@ -128,6 +128,7 @@ def query(
     corte_de=None,
     corte_ate=None,
     qtd_solicitada='t',
+    solicitacoes='',
 ):
     """
     cursor: cursor de acesso ao BD
@@ -157,6 +158,7 @@ def query(
     op: filtra no BD por op
         OP de lote
     lote: filtra no BD por lote
+    solicitacoes: filtra LOCALMENTE por uma ou mais solicitações citadas em uma string
     per: filtra no BD por período
         período de lote
     oc: filtra no BD por OC
@@ -674,10 +676,18 @@ def query(
             row['lote'] = lote_de_periodo_oc(row['per'], row['oc'])
 
     if modelo:
-        return [
-            row
-            for row in dados        
+        dados = [
+            row for row in dados       
             if row['modelo'] == modelo
         ]
-    else:
-        return dados
+
+    if solicitacoes and 'solicitacoes' in fields:
+        dados = [
+            row for row in dados        
+            if number_set(row['solicitacoes']) == number_set(solicitacoes)
+        ]
+
+    return dados
+
+def number_set():
+    return ''
