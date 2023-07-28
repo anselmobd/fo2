@@ -164,6 +164,17 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
+        ('t', "* Não filtra"),
+        ('ts', "Totalmente solicitado"),
+        ('ps', "Parcialmente solicitado"),
+    ]
+    qtd_solicitada = forms.ChoiceField(
+        label='Quantidade solicitada',
+        choices=CHOICES,
+        initial='t',
+    )
+
+    CHOICES = [
         ('s', "* Exige palete"),
         ('63', "Exige palete apenas no 63"),
         ('n', "Exige não ter palete"),
