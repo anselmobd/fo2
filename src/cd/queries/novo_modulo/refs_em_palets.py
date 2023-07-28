@@ -127,6 +127,7 @@ def query(
     selecao_lotes='63',
     corte_de=None,
     corte_ate=None,
+    qtd_solicitada='t',
 ):
     """
     cursor: cursor de acesso ao BD
@@ -186,6 +187,10 @@ def query(
         enf: Empenhado não finalizado
         snf: Solicitado não finalizado
         esf: Empenhado/solicitado finalizado
+    qtd_solicitada:
+        t: * Não filtra
+        ts: Totalmente solicitado
+        ps: Parcialmente solicitado
     selecao_ops: filtra no BD OPs
         63: Com estágio 63 (CD)
         n63: Sem estágio 63 (CD)
@@ -436,6 +441,16 @@ def query(
     if not isinstance(fields, (tuple, list)):
         fields = fields_tuple[fields]
 
+    filtra_qtd_solicitada = ''
+    if {'qtd', 'qtd_sol'}.issubset(fields):
+        dict_qtd_solicitada = {
+            't': '',
+            'ts': "AND d.qtd_sol >= d.qtd",
+            'ps': "AND d.qtd_sol < d.qtd",
+        }
+        filtra_qtd_solicitada = (
+            dict_qtd_solicitada[qtd_solicitada] if qtd_solicitada else '')
+
     field_statement = {
         'ref': "l.PROCONF_GRUPO",
         'ordem_tam': "COALESCE(tam.ORDEM_TAMANHO, 0)",
@@ -616,6 +631,7 @@ def query(
     )
 
     sql = f"""
+        WITH dados AS (
         SELECT DISTINCT
           {fields_statements} -- fields_statements
         FROM PCPC_040 l
@@ -642,6 +658,12 @@ def query(
           {filtra_endereco} -- filtra_endereco
           {filtra_tipo_prod} -- filtra_tipo_prod
           {filtra_paletizado} -- filtra_paletizado
+        )
+        SELECT
+          d.*
+        FROM dados d
+        WHERE 1=1
+          {filtra_qtd_solicitada} -- filtra_qtd_solicitada
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
