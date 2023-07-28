@@ -141,9 +141,9 @@ def query(
                sem número de solicitação)
         'sol': dados suficientes para grade de solicitações (empenhos
                com número de solicitação)
-        'all': dados suficientes para grades de inventário, empenhos 
+        'all': dados suficientes para grades de inventário, empenhos
                e solicitações (empenhos com e sem número de solicitação)
-        'detalhe': igual a 'all' mais informações sobre estágio, números 
+        'detalhe': igual a 'all' mais informações sobre estágio, números
                    de solicitações e endereçamento
         'detalhe+fin': igual a 'detalhe' mais informações sobre
                        finalizados
@@ -284,7 +284,7 @@ def query(
             AND EXISTS (
               SELECT
                 1
-              FROM pcpc_040 l2 -- lote 
+              FROM pcpc_040 l2 -- lote
               WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND l2.CODIGO_ESTAGIO = 63
             )
@@ -294,7 +294,7 @@ def query(
             AND NOT EXISTS (
               SELECT
                 1
-              FROM pcpc_040 l2 -- lote 
+              FROM pcpc_040 l2 -- lote
               WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND l2.CODIGO_ESTAGIO = 63
             )
@@ -315,7 +315,7 @@ def query(
             AND l.SEQUENCIA_ESTAGIO < (
               SELECT
                 MIN(l2.SEQUENCIA_ESTAGIO)
-              FROM pcpc_040 l2 -- lote 
+              FROM pcpc_040 l2 -- lote
               WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND l2.CODIGO_ESTAGIO = 63
             )
@@ -346,9 +346,9 @@ def query(
             AND NOT EXISTS (
               SELECT
                 1
-              FROM pcpc_040 l2 -- lote 
+              FROM pcpc_040 l2 -- lote
               WHERE l2.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                AND l2.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                AND l2.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
                 AND l2.QTDE_DISPONIVEL_BAIXA > 0
             )
         """
@@ -359,7 +359,7 @@ def query(
             AND EXISTS (
               SELECT
                 1
-              FROM pcpc_044 sl -- solicitação / lote 
+              FROM pcpc_044 sl -- solicitação / lote
               WHERE sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
                 AND sl.GRUPO_DESTINO <> '0'
@@ -371,7 +371,7 @@ def query(
             AND EXISTS (
               SELECT
                 1
-              FROM pcpc_044 sl -- solicitação / lote 
+              FROM pcpc_044 sl -- solicitação / lote
               WHERE sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
                 AND sl.GRUPO_DESTINO <> '0'
@@ -383,7 +383,7 @@ def query(
             AND EXISTS (
               SELECT
                 1
-              FROM pcpc_044 sl -- solicitação / lote 
+              FROM pcpc_044 sl -- solicitação / lote
               WHERE sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
                 AND sl.GRUPO_DESTINO <> '0'
@@ -395,7 +395,7 @@ def query(
             AND EXISTS (
               SELECT
                 1
-              FROM pcpc_044 sl -- solicitação / lote 
+              FROM pcpc_044 sl -- solicitação / lote
               WHERE sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
                 AND sl.GRUPO_DESTINO <> '0'
@@ -408,7 +408,7 @@ def query(
             AND EXISTS (
               SELECT
                 1
-              FROM pcpc_044 sl -- solicitação / lote 
+              FROM pcpc_044 sl -- solicitação / lote
               WHERE sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                 AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
                 AND sl.GRUPO_DESTINO <> '0'
@@ -429,7 +429,7 @@ def query(
               ( lp.COD_CONTAINER IS NOT NULL
                 AND lp.COD_CONTAINER <> '0'
               )
-              OR l.CODIGO_ESTAGIO <> 63 
+              OR l.CODIGO_ESTAGIO <> 63
             )
         """
     elif paletizado == 'n':
@@ -485,7 +485,7 @@ def query(
         'est_sol': """
             ( SELECT
                 MOD(
-                  ( SELECT 
+                  ( SELECT
                       MAX(
                         CASE WHEN l2.CODIGO_ESTAGIO = 63 THEN 163
                         ELSE l2.CODIGO_ESTAGIO
@@ -507,11 +507,11 @@ def query(
                 ( SELECT
                     LISTAGG(DISTINCT COALESCE(TO_CHAR(sl.SOLICITACAO), '#'), ', ')
                     WITHIN GROUP (ORDER BY sl.SOLICITACAO)
-                FROM pcpc_044 sl -- solicitação / lote 
+                FROM pcpc_044 sl -- solicitação / lote
                 WHERE 1=1
                     AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
-                    -- AND sl.ORDEM_CONFECCAO <> 0 
+                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                    -- AND sl.ORDEM_CONFECCAO <> 0
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO IN (1, 2, 3, 4)
                     AND sl.QTDE <> 0
@@ -524,11 +524,11 @@ def query(
                 ( SELECT
                     LISTAGG(DISTINCT COALESCE(TO_CHAR(sl.SOLICITACAO), '#'), ', ')
                     WITHIN GROUP (ORDER BY sl.SOLICITACAO) colicitacoes
-                FROM pcpc_044 sl -- solicitação / lote 
+                FROM pcpc_044 sl -- solicitação / lote
                 WHERE 1=1
                     AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
-                    -- AND sl.ORDEM_CONFECCAO <> 0 
+                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                    -- AND sl.ORDEM_CONFECCAO <> 0
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO = 5
                 ),
@@ -539,11 +539,11 @@ def query(
             COALESCE(
                 ( SELECT
                     SUM(sl.QTDE) qtd_emp
-                  FROM pcpc_044 sl -- solicitação / lote 
+                  FROM pcpc_044 sl -- solicitação / lote
                   WHERE 1=1
                     AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
-                    -- AND sl.ORDEM_CONFECCAO <> 0 
+                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                    -- AND sl.ORDEM_CONFECCAO <> 0
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO IN (1, 2, 3, 4)
                     AND sl.SOLICITACAO IS NULL
@@ -555,11 +555,11 @@ def query(
             COALESCE(
                 ( SELECT
                     SUM(sl.QTDE) qtd_sol
-                  FROM pcpc_044 sl -- solicitação / lote 
+                  FROM pcpc_044 sl -- solicitação / lote
                   WHERE 1=1
                     AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
-                    -- AND sl.ORDEM_CONFECCAO <> 0 
+                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                    -- AND sl.ORDEM_CONFECCAO <> 0
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO IN (1, 2, 3, 4)
                     AND sl.SOLICITACAO IS NOT NULL
@@ -571,11 +571,11 @@ def query(
             COALESCE(
                 ( SELECT
                     SUM(sl.QTDE) qtd_fin
-                  FROM pcpc_044 sl -- solicitação / lote 
+                  FROM pcpc_044 sl -- solicitação / lote
                   WHERE 1=1
                     AND sl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
-                    -- AND sl.ORDEM_CONFECCAO <> 0 
+                    AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                    -- AND sl.ORDEM_CONFECCAO <> 0
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO = 5
                 ),
@@ -608,14 +608,14 @@ def query(
         '1r': """--
             JOIN BASI_030 r -- referencia
               ON r.NIVEL_ESTRUTURA = 1
-             AND r.REFERENCIA = l.PROCONF_GRUPO 
+             AND r.REFERENCIA = l.PROCONF_GRUPO
         """,
         '1tam': """--
             LEFT JOIN BASI_220 tam -- cadastro de tamanhos
-              ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO 
+              ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
         """,
         '1ec': """--
-            LEFT JOIN ENDR_015 ec -- endereço/container 
+            LEFT JOIN ENDR_015 ec -- endereço/container
               ON ec.COD_CONTAINER = lp.COD_CONTAINER
         """,
         '2e': """--
@@ -677,13 +677,13 @@ def query(
 
     if modelo:
         dados = [
-            row for row in dados       
+            row for row in dados
             if row['modelo'] == modelo
         ]
 
     if solicitacoes and 'solicitacoes' in fields:
         dados = [
-            row for row in dados        
+            row for row in dados
             if number_set(row['solicitacoes']) == number_set(solicitacoes)
         ]
 
