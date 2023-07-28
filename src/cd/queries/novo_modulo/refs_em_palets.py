@@ -198,6 +198,7 @@ def query(
         t: * Não filtra
         ts: Totalmente solicitado
         ps: Parcialmente solicitado
+        ns: Nenhuma quantidade solicitada
     selecao_ops: filtra no BD OPs
         63: Com estágio 63 (CD)
         n63: Sem estágio 63 (CD)
@@ -453,7 +454,8 @@ def query(
         dict_qtd_solicitada = {
             't': '',
             'ts': "AND d.qtd_sol >= d.qtd",
-            'ps': "AND d.qtd_sol < d.qtd",
+            'ps': "AND d.qtd_sol > 0 AND d.qtd_sol < d.qtd",
+            'ns': "AND d.qtd_sol = 0",
         }
         filtra_qtd_solicitada = (
             dict_qtd_solicitada[qtd_solicitada] if qtd_solicitada else '')
