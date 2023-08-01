@@ -138,7 +138,7 @@ def lotes_uma_sol(new_lotes_sols, sols):
             ]
             if sols_iguais:
                 sol = sols_iguais[0]
-                value['fim'] = value['ini']
+                value['fim'] = 0
                 value['sols'].update({
                     sol: sols[sol],
                 })
