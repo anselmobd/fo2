@@ -102,6 +102,10 @@ def distribui_solicitacoes(lotes, solicitacoes):
     return lotes_sols
 
 
+def quant_total(dict_quant):
+    return sum(dict_quant.values())
+
+
 def separa_lotes(lotes, solicitacoes):
     qtd_sol = sum(solicitacoes.values())
     qtd_lotes = sum(lotes.values())
@@ -132,17 +136,28 @@ lotes_sols_procs = processa(lotes_solicitados)
 pprint(lotes_sols_procs)
 print(conta_zerados(lotes_sols_procs), 'lotes zerados')
 
+print()
 print('Separando lotes e solicitações')
-lotes = get_lotes(lotes_solicitados)
-pprint(lotes)
+
 solicitacoes = get_solicitacoes(lotes_solicitados)
 pprint(solicitacoes)
+total_sols = quant_total(solicitacoes)
+print('Total solicitado', total_sols)
 
+lotes = get_lotes(lotes_solicitados)
+pprint(lotes)
+total_lotes = quant_total(lotes)
+print('Total dos lotes', total_lotes)
+qtd_nao_solicitada = total_lotes - total_sols
+print('Quant. não solicitada', qtd_nao_solicitada)
+
+print()
 print('Separando lotes a usar e não usar')
 usar_lotes, nao_usar_lotes = separa_lotes(lotes, solicitacoes)
 pprint(usar_lotes)
 pprint(nao_usar_lotes)
 
+print()
 print('Proposta')
 new_lotes_solicitados = distribui_solicitacoes(usar_lotes, solicitacoes)
 new_lotes_solicitados.update({lote: ini_lote(qtd, {}) for lote, qtd in nao_usar_lotes.items()})
