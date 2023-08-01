@@ -54,11 +54,9 @@ def lot_sol_dict(lotes_solicitados):
 
 def processa(lotes_solicitados):
     lotes_sols = deepcopy(lotes_solicitados)
-    for lote in lotes_sols:
-        info = lotes_sols[lote]
-        qtd_sol = sum(info[1].values())
-        info[0] -= qtd_sol
-        del info[1]
+    for info in lotes_sols.values():
+        qtd_sol = sum(info['sols'].values())
+        info['fim'] = info['ini'] - qtd_sol
     return lotes_sols
 
 
@@ -118,21 +116,21 @@ def separa_lotes(lotes, solicitacoes):
     return usar, nao_usar
 
 
-pprint(lot_sol_dict(lotes_solicitados))
+lotes_solicitados = lot_sol_dict(lotes_solicitados)
 
-pprint(lotes_solicitados)
+# pprint(lotes_solicitados)
 pprint(processa(lotes_solicitados))
 
-lotes = get_lotes(lotes_solicitados)
-pprint(lotes)
-solicitacoes = get_solicitacoes(lotes_solicitados)
-pprint(solicitacoes)
+# lotes = get_lotes(lotes_solicitados)
+# pprint(lotes)
+# solicitacoes = get_solicitacoes(lotes_solicitados)
+# pprint(solicitacoes)
 
-usar_lotes, nao_usar_lotes = separa_lotes(lotes, solicitacoes)
-pprint(usar_lotes)
+# usar_lotes, nao_usar_lotes = separa_lotes(lotes, solicitacoes)
+# pprint(usar_lotes)
 
-new_lotes_solicitados = distribui_solicitacoes(usar_lotes, solicitacoes)
-new_lotes_solicitados.update({lote: [qtd, {}] for lote, qtd in nao_usar_lotes.items()})
+# new_lotes_solicitados = distribui_solicitacoes(usar_lotes, solicitacoes)
+# new_lotes_solicitados.update({lote: [qtd, {}] for lote, qtd in nao_usar_lotes.items()})
 
-pprint(new_lotes_solicitados)
-pprint(processa(new_lotes_solicitados))
+# pprint(new_lotes_solicitados)
+# pprint(processa(new_lotes_solicitados))
