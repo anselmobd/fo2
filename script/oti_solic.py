@@ -1,7 +1,7 @@
 from copy import deepcopy
 from pprint import pprint
 
-solicitacoes = {
+lotes_solicitados = {
     223401575: [
         56,
         {
@@ -40,64 +40,64 @@ solicitacoes = {
     ],
 }
 
-def processa(solics):
-    sols = deepcopy(solics)
-    for lote in sols:
-        info = sols[lote]
+def processa(lotes_sols):
+    ls_sols = deepcopy(lotes_sols)
+    for lote in ls_sols:
+        info = ls_sols[lote]
         qtd_sol = sum(info[1].values())
         info[0] -= qtd_sol
         del info[1]
+    return ls_sols
+
+
+def get_lotes(lotes_sols):
+    ls_sols = deepcopy(lotes_sols)
+    for lote in ls_sols:
+        del ls_sols[lote][1]
+        ls_sols[lote] = ls_sols[lote][0]
+    return ls_sols
+
+
+def get_solicitacoes(lotes_sols):
+    sols = {}
+    for lote in lotes_sols:
+        lote_sols = lotes_sols[lote][1]
+        for sol in lote_sols:
+            if sol not in sols:
+                sols[sol] = 0
+            sols[sol] += lote_sols[sol]
     return sols
 
 
-def get_lotes(solics):
-    sols = deepcopy(solics)
-    for lote in sols:
-        del sols[lote][1]
-        sols[lote] = sols[lote][0]
-    return sols
-
-
-def get_pedidos(solics):
-    pedidos = {}
-    for lote in solics:
-        lote_peds = solics[lote][1]
-        for ped in lote_peds:
-            if ped not in pedidos:
-                pedidos[ped] = 0
-            pedidos[ped] += lote_peds[ped]
-    return pedidos
-
-
-def distribui_pedidos(lotes, pedidos):
+def distribui_solicitacoes(lotes, solicitacoes):
     solic = {}
     lotes_items = sorted(lotes.items(), key=lambda x: x[1])
-    pedidos_iter = iter(
-        sorted(pedidos.items(), key=lambda x: x[1], reverse=True))
-    qtd_pedido = 0
+    sols_iter = iter(
+        sorted(solicitacoes.items(), key=lambda x: x[1], reverse=True))
+    qtd_sol = 0
     for lote, qtd_lote in lotes_items:
         solic[lote] = [qtd_lote, {}]
         while qtd_lote > 0:
-            if qtd_pedido == 0:
+            if qtd_sol == 0:
                 try:
-                    pedido, qtd_pedido = next(pedidos_iter)
+                    sol, qtd_sol = next(sols_iter)
                 except StopIteration:
                     break
-            qtd_deduzir = min(qtd_lote, qtd_pedido)
-            solic[lote][1][pedido] = qtd_deduzir
+            qtd_deduzir = min(qtd_lote, qtd_sol)
+            solic[lote][1][sol] = qtd_deduzir
             qtd_lote -= qtd_deduzir
-            qtd_pedido -= qtd_deduzir
+            qtd_sol -= qtd_deduzir
     return solic
 
 
-pprint(solicitacoes)
-pprint(processa(solicitacoes))
+pprint(lotes_solicitados)
+pprint(processa(lotes_solicitados))
 
-lotes = get_lotes(solicitacoes)
+lotes = get_lotes(lotes_solicitados)
 pprint(lotes)
-pedidos = get_pedidos(solicitacoes)
-pprint(pedidos)
+solicitacoes = get_solicitacoes(lotes_solicitados)
+pprint(solicitacoes)
 
-new_solic = distribui_pedidos(lotes, pedidos)
-pprint(new_solic)
-pprint(processa(new_solic))
+new_lotes_solicitados = distribui_solicitacoes(lotes, solicitacoes)
+pprint(new_lotes_solicitados)
+pprint(processa(new_lotes_solicitados))
