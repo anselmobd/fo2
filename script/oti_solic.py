@@ -61,11 +61,10 @@ def processa(lotes_solicitados):
 
 
 def get_lotes(lotes_solicitados):
-    lotes_sols = deepcopy(lotes_solicitados)
-    for lote in lotes_sols:
-        del lotes_sols[lote][1]
-        lotes_sols[lote] = lotes_sols[lote][0]
-    return lotes_sols
+    lotes = {}
+    for lote, value in lotes_solicitados.items():
+        lotes[lote] = value['ini']
+    return lotes
 
 
 def get_solicitacoes(lotes_sols):
@@ -121,8 +120,8 @@ lotes_solicitados = lot_sol_dict(lotes_solicitados)
 # pprint(lotes_solicitados)
 pprint(processa(lotes_solicitados))
 
-# lotes = get_lotes(lotes_solicitados)
-# pprint(lotes)
+lotes = get_lotes(lotes_solicitados)
+pprint(lotes)
 # solicitacoes = get_solicitacoes(lotes_solicitados)
 # pprint(solicitacoes)
 
