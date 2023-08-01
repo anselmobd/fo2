@@ -118,10 +118,19 @@ def separa_lotes(lotes, solicitacoes):
     return usar, nao_usar
 
 
+def conta_zerados(lotes_sols_procs):
+    return sum(
+        value['fim'] == 0
+        for value in lotes_sols_procs.values()
+    )
+
+
 lotes_solicitados = lot_sol_dict(lotes_solicitados)
 
 print('Original')
-pprint(processa(lotes_solicitados))
+lotes_sols_procs = processa(lotes_solicitados)
+pprint(lotes_sols_procs)
+print(conta_zerados(lotes_sols_procs), 'lotes zerados')
 
 print('Separando lotes e solicitações')
 lotes = get_lotes(lotes_solicitados)
@@ -137,4 +146,6 @@ pprint(nao_usar_lotes)
 print('Proposta')
 new_lotes_solicitados = distribui_solicitacoes(usar_lotes, solicitacoes)
 new_lotes_solicitados.update({lote: ini_lote(qtd, {}) for lote, qtd in nao_usar_lotes.items()})
-pprint(processa(new_lotes_solicitados))
+lotes_sols_procs = processa(new_lotes_solicitados)
+pprint(lotes_sols_procs)
+print(conta_zerados(lotes_sols_procs), 'lotes zerados')
