@@ -129,6 +129,22 @@ def lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_sol):
             qtd_nao_sol -= new_lotes_sols[lote]['ini']
 
 
+def lotes_uma_sol(new_lotes_sols, sols):
+    for value in new_lotes_sols.values():
+        if value['fim'] is None:
+            sols_iguais = [
+                sol for sol, qtd in sols.items()
+                if qtd == value['ini']
+            ]
+            if sols_iguais:
+                sol = sols_iguais[0]
+                value['fim'] = value['ini']
+                value['sols'].update({
+                    sol: sols[sol],
+                })
+                del(sols[sol])
+
+
 def conta_zerados(lotes_sols_procs):
     return sum(
         value['fim'] == 0
@@ -184,6 +200,11 @@ pprint(new_lotes_sols)
 print("Definindo quantidade final de lotes a não utilizar")
 lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_solicitada)
 pprint(new_lotes_sols)
+
+print("Lotes atendidos com uma solicitação")
+lotes_uma_sol(new_lotes_sols, solicitacoes)
+pprint(new_lotes_sols)
+pprint(solicitacoes)
 
 print()
 print("Separando lotes a usar e não usar")
