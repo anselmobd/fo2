@@ -40,22 +40,22 @@ lotes_solicitados = {
     ],
 }
 
-def processa(lotes_sols):
-    ls_sols = deepcopy(lotes_sols)
-    for lote in ls_sols:
-        info = ls_sols[lote]
+def processa(lotes_solicitados):
+    lotes_sols = deepcopy(lotes_solicitados)
+    for lote in lotes_sols:
+        info = lotes_sols[lote]
         qtd_sol = sum(info[1].values())
         info[0] -= qtd_sol
         del info[1]
-    return ls_sols
+    return lotes_sols
 
 
-def get_lotes(lotes_sols):
-    ls_sols = deepcopy(lotes_sols)
-    for lote in ls_sols:
-        del ls_sols[lote][1]
-        ls_sols[lote] = ls_sols[lote][0]
-    return ls_sols
+def get_lotes(lotes_solicitados):
+    lotes_sols = deepcopy(lotes_solicitados)
+    for lote in lotes_sols:
+        del lotes_sols[lote][1]
+        lotes_sols[lote] = lotes_sols[lote][0]
+    return lotes_sols
 
 
 def get_solicitacoes(lotes_sols):
@@ -70,13 +70,13 @@ def get_solicitacoes(lotes_sols):
 
 
 def distribui_solicitacoes(lotes, solicitacoes):
-    solic = {}
+    lotes_sols = {}
     lotes_items = sorted(lotes.items(), key=lambda x: x[1])
     sols_iter = iter(
         sorted(solicitacoes.items(), key=lambda x: x[1], reverse=True))
     qtd_sol = 0
     for lote, qtd_lote in lotes_items:
-        solic[lote] = [qtd_lote, {}]
+        lotes_sols[lote] = [qtd_lote, {}]
         while qtd_lote > 0:
             if qtd_sol == 0:
                 try:
@@ -84,10 +84,10 @@ def distribui_solicitacoes(lotes, solicitacoes):
                 except StopIteration:
                     break
             qtd_deduzir = min(qtd_lote, qtd_sol)
-            solic[lote][1][sol] = qtd_deduzir
+            lotes_sols[lote][1][sol] = qtd_deduzir
             qtd_lote -= qtd_deduzir
             qtd_sol -= qtd_deduzir
-    return solic
+    return lotes_sols
 
 
 pprint(lotes_solicitados)
