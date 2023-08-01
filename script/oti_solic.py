@@ -159,7 +159,7 @@ def inicia_distribuicao(lotes):
     return lotes_sols
 
 
-def lotes_ordenados_por_tamanho(lotes):
+def keys_order_by_value(lotes):
     lotes_items = sorted(lotes.items(), key=lambda x: x[1], reverse=True)
     return list(map(lambda x: x[0], lotes_items))
 
@@ -190,7 +190,7 @@ print()
 print("Inicia nova distribuição")
 
 print("Lotes ordenados para uso")
-lotes_ord = lotes_ordenados_por_tamanho(lotes)
+lotes_ord = keys_order_by_value(lotes)
 pprint(lotes_ord)
 
 print("Distribuição vazia")
@@ -205,6 +205,10 @@ print("Lotes atendidos com uma solicitação")
 lotes_uma_sol(new_lotes_sols, solicitacoes)
 pprint(new_lotes_sols)
 pprint(solicitacoes)
+
+print("Solicitações ordenadas para uso")
+sols_ord = keys_order_by_value(solicitacoes)
+pprint(sols_ord)
 
 print()
 print("Separando lotes a usar e não usar")
