@@ -41,14 +41,18 @@ lotes_solicitados = {
 }
 
 
+def ini_lote(qtd, sols):
+    return {
+        'ini': qtd,
+        'fim': None,
+        'sols': sols,
+    }
+
+
 def lot_sol_dict(lotes_solicitados):
     lotes_sols = {}
     for lote, value in lotes_solicitados.items():
-        lotes_sols[lote] = {
-            'ini': value[0],
-            'fim': None,
-            'sols': value[1],
-        }
+        lotes_sols[lote] = ini_lote(*value)
     return lotes_sols
 
 
