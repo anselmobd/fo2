@@ -71,7 +71,7 @@ def get_solicitacoes(lotes_sols):
 
 def distribui_solicitacoes(lotes, solicitacoes):
     lotes_sols = {}
-    lotes_items = sorted(lotes.items(), key=lambda x: x[1])
+    lotes_items = sorted(lotes.items(), key=lambda x: x[1], reverse=True)
     sols_iter = iter(
         sorted(solicitacoes.items(), key=lambda x: x[1], reverse=True))
     qtd_sol = 0
