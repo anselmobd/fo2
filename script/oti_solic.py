@@ -90,6 +90,22 @@ def distribui_solicitacoes(lotes, solicitacoes):
     return lotes_sols
 
 
+def separa_lotes(lotes, solicitacoes):
+    qtd_sol = sum(solicitacoes.values())
+    qtd_lotes = sum(lotes.values())
+    qtd_fica = qtd_lotes - qtd_sol
+    lotes_items = sorted(lotes.items(), key=lambda x: x[1], reverse=True)
+    usar = {}
+    nao_usar = {}
+    for lote, qtd_lote in lotes_items:
+        if qtd_fica >= qtd_lote:
+            qtd_fica -= qtd_lote
+            nao_usar[lote] = qtd_lote
+        else:
+            usar[lote] = qtd_lote
+    return usar, nao_usar
+
+
 pprint(lotes_solicitados)
 pprint(processa(lotes_solicitados))
 
@@ -98,6 +114,11 @@ pprint(lotes)
 solicitacoes = get_solicitacoes(lotes_solicitados)
 pprint(solicitacoes)
 
-new_lotes_solicitados = distribui_solicitacoes(lotes, solicitacoes)
+usar_lotes, nao_usar_lotes = separa_lotes(lotes, solicitacoes)
+pprint(usar_lotes)
+
+new_lotes_solicitados = distribui_solicitacoes(usar_lotes, solicitacoes)
+new_lotes_solicitados.update({lote: [qtd, {}] for lote, qtd in nao_usar_lotes.items()})
+
 pprint(new_lotes_solicitados)
 pprint(processa(new_lotes_solicitados))
