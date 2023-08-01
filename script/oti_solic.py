@@ -5,7 +5,7 @@ lotes_solicitados = {
     223401575: [
         56,
         {
-            2861: 26,
+            2861: 35,  # 26,
         }
     ],
     223401576: [
@@ -20,7 +20,7 @@ lotes_solicitados = {
         {
             2960: 3,
             2979: 3,
-            2981: 20,  # 21,
+            2981: 21,  # 21,
         }
     ],
     223204735: [
@@ -33,7 +33,7 @@ lotes_solicitados = {
     223204737: [
         52,
         {
-            2836: 28,
+            2836: 19,  # 28,
             2856: 13,
             2937: 3,
         }
@@ -145,6 +145,26 @@ def lotes_uma_sol(new_lotes_sols, sols):
                 del(sols[sol])
 
 
+def lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, sols):
+    sols_iter = iter(sols_ord)
+    sol = next(sols_iter)
+    for lote in lotes_ord:
+        value = new_lotes_sols[lote]
+        if value['fim'] is None:
+            value['fim'] = value['ini']
+            while value['fim'] > 0:
+                if sols[sol] == 0:
+                    del(sols[sol])
+                    try:
+                        sol = next(sols_iter)
+                    except StopIteration:
+                        break
+                qtd_deduzir = min(value['fim'], sols[sol])
+                value['sols'][sol] = qtd_deduzir
+                value['fim'] -= qtd_deduzir
+                sols[sol] -= qtd_deduzir
+
+
 def conta_zerados(lotes_sols_procs):
     return sum(
         value['fim'] == 0
@@ -209,6 +229,11 @@ pprint(solicitacoes)
 print("Solicitações ordenadas para uso")
 sols_ord = keys_order_by_value(solicitacoes)
 pprint(sols_ord)
+
+print("Demais lotes do maior para o menor")
+lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, solicitacoes)
+pprint(new_lotes_sols)
+pprint(solicitacoes)
 
 print()
 print("Separando lotes a usar e não usar")
