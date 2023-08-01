@@ -129,6 +129,18 @@ def conta_zerados(lotes_sols_procs):
     )
 
 
+def inicia_distribuicao(lotes):
+    lotes_sols = {}
+    for lote, value in lotes.items():
+        lotes_sols[lote] = ini_lote(value, {})
+    return lotes_sols
+
+
+def lotes_ordenados_por_tamanho(lotes):
+    lotes_items = sorted(lotes.items(), key=lambda x: x[1], reverse=True)
+    return list(map(lambda x: x[0], lotes_items))
+
+
 lotes_solicitados = lot_sol_dict(lotes_solicitados)
 
 print('Original')
@@ -150,6 +162,16 @@ total_lotes = quant_total(lotes)
 print('Total dos lotes', total_lotes)
 qtd_nao_solicitada = total_lotes - total_sols
 print('Quant. não solicitada', qtd_nao_solicitada)
+
+print()
+print("Inicia nova distribuição")
+print("Lotes ordenados para uso")
+lotes_ord = lotes_ordenados_por_tamanho(lotes)
+pprint(lotes_ord)
+print("Distribuição vazia")
+new_lotes_sols =  inicia_distribuicao(lotes)
+pprint(new_lotes_sols)
+
 
 print()
 print('Separando lotes a usar e não usar')
