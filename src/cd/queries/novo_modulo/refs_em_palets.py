@@ -18,7 +18,15 @@ __all__ = ['query']
 
 
 def numbers_set(str):
-    return set(split_numbers(str))
+    return set(split_numbers(str, negative=True))
+
+
+def numbers_sets(str):
+    nums = split_numbers(str, negative=True)
+    return (
+        set(num for num in nums if num[0] != "-"),
+        set(num[1:] for num in nums if num[0] == "-"),
+    )
 
 
 fields_tuple = {
@@ -163,7 +171,11 @@ def query(
     op: filtra no BD por op
         OP de lote
     lote: filtra no BD por lote
-    solicitacoes: filtra LOCALMENTE por uma ou mais solicitações citadas em uma string
+    solicitacoes: filtra LOCALMENTE
+        string com lista de números de solicitações
+        pode ter "-" antes do número
+        filtra lotes que tem solicitações sem "-"
+        e que não tem solicitações com "-"
     per: filtra no BD por período
         período de lote
     oc: filtra no BD por OC
@@ -689,10 +701,13 @@ def query(
         ]
 
     if solicitacoes and 'solicitacoes' in fields:
+        sols_in, sols_out = numbers_sets(solicitacoes)
         dados = [
             row for row in dados
-            if numbers_set(solicitacoes).intersection(
-                numbers_set(row['solicitacoes']))
+            if (
+                (numbers_set(row['solicitacoes']).intersection(sols_in) or not sols_in)
+                and not numbers_set(row['solicitacoes']).intersection(sols_out)
+            )
         ]
 
     return dados
