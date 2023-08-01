@@ -143,25 +143,25 @@ def lotes_ordenados_por_tamanho(lotes):
 
 lotes_solicitados = lot_sol_dict(lotes_solicitados)
 
-print('Original')
+print("Original")
 lotes_sols_procs = processa(lotes_solicitados)
 pprint(lotes_sols_procs)
-print(conta_zerados(lotes_sols_procs), 'lotes zerados')
+print(conta_zerados(lotes_sols_procs), "lotes zerados")
 
 print()
-print('Separando lotes e solicitações')
+print("Separando lotes e solicitações")
 
 solicitacoes = get_solicitacoes(lotes_solicitados)
 pprint(solicitacoes)
 total_sols = quant_total(solicitacoes)
-print('Total solicitado', total_sols)
+print("Total solicitado", total_sols)
 
 lotes = get_lotes(lotes_solicitados)
 pprint(lotes)
 total_lotes = quant_total(lotes)
-print('Total dos lotes', total_lotes)
+print("Total dos lotes", total_lotes)
 qtd_nao_solicitada = total_lotes - total_sols
-print('Quant. não solicitada', qtd_nao_solicitada)
+print("Quant. não solicitada", qtd_nao_solicitada)
 
 print()
 print("Inicia nova distribuição")
@@ -174,15 +174,15 @@ pprint(new_lotes_sols)
 
 
 print()
-print('Separando lotes a usar e não usar')
+print("Separando lotes a usar e não usar")
 usar_lotes, nao_usar_lotes = separa_lotes(lotes, solicitacoes)
 pprint(usar_lotes)
 pprint(nao_usar_lotes)
 
 print()
-print('Proposta')
+print("Proposta")
 new_lotes_solicitados = distribui_solicitacoes(usar_lotes, solicitacoes)
 new_lotes_solicitados.update({lote: ini_lote(qtd, {}) for lote, qtd in nao_usar_lotes.items()})
 lotes_sols_procs = processa(new_lotes_solicitados)
 pprint(lotes_sols_procs)
-print(conta_zerados(lotes_sols_procs), 'lotes zerados')
+print(conta_zerados(lotes_sols_procs), "lotes zerados")
