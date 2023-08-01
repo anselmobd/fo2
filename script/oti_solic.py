@@ -122,6 +122,13 @@ def separa_lotes(lotes, solicitacoes):
     return usar, nao_usar
 
 
+def lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_sol):
+    for lote in lotes_ord:
+        if qtd_nao_sol >= new_lotes_sols[lote]['ini']:
+            new_lotes_sols[lote]['fim'] = new_lotes_sols[lote]['ini']
+            qtd_nao_sol -= new_lotes_sols[lote]['ini']
+
+
 def conta_zerados(lotes_sols_procs):
     return sum(
         value['fim'] == 0
@@ -165,13 +172,18 @@ print("Quant. não solicitada", qtd_nao_solicitada)
 
 print()
 print("Inicia nova distribuição")
+
 print("Lotes ordenados para uso")
 lotes_ord = lotes_ordenados_por_tamanho(lotes)
 pprint(lotes_ord)
+
 print("Distribuição vazia")
 new_lotes_sols =  inicia_distribuicao(lotes)
 pprint(new_lotes_sols)
 
+print("Definindo quantidade final de lotes a não utilizar")
+lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_solicitada)
+pprint(new_lotes_sols)
 
 print()
 print("Separando lotes a usar e não usar")
