@@ -67,14 +67,13 @@ def get_lotes(lotes_solicitados):
     return lotes
 
 
-def get_solicitacoes(lotes_sols):
+def get_solicitacoes(lotes_solicitados):
     sols = {}
-    for lote in lotes_sols:
-        lote_sols = lotes_sols[lote][1]
-        for sol in lote_sols:
+    for value in lotes_solicitados.values():
+        for sol, qtd in value['sols'].items():
             if sol not in sols:
                 sols[sol] = 0
-            sols[sol] += lote_sols[sol]
+            sols[sol] += qtd
     return sols
 
 
@@ -122,8 +121,8 @@ pprint(processa(lotes_solicitados))
 
 lotes = get_lotes(lotes_solicitados)
 pprint(lotes)
-# solicitacoes = get_solicitacoes(lotes_solicitados)
-# pprint(solicitacoes)
+solicitacoes = get_solicitacoes(lotes_solicitados)
+pprint(solicitacoes)
 
 # usar_lotes, nao_usar_lotes = separa_lotes(lotes, solicitacoes)
 # pprint(usar_lotes)
