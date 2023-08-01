@@ -81,45 +81,8 @@ def get_solicitacoes(lotes_solicitados):
     return sols
 
 
-def distribui_solicitacoes(lotes, solicitacoes):
-    lotes_sols = {}
-    lotes_items = sorted(lotes.items(), key=lambda x: x[1], reverse=True)
-    sols_iter = iter(
-        sorted(solicitacoes.items(), key=lambda x: x[1], reverse=True))
-    qtd_sol = 0
-    for lote, qtd_lote in lotes_items:
-        lotes_sols[lote] = ini_lote(qtd_lote, {})
-        while qtd_lote > 0:
-            if qtd_sol == 0:
-                try:
-                    sol, qtd_sol = next(sols_iter)
-                except StopIteration:
-                    break
-            qtd_deduzir = min(qtd_lote, qtd_sol)
-            lotes_sols[lote]['sols'][sol] = qtd_deduzir
-            qtd_lote -= qtd_deduzir
-            qtd_sol -= qtd_deduzir
-    return lotes_sols
-
-
 def quant_total(dict_quant):
     return sum(dict_quant.values())
-
-
-def separa_lotes(lotes, solicitacoes):
-    qtd_sol = sum(solicitacoes.values())
-    qtd_lotes = sum(lotes.values())
-    qtd_fica = qtd_lotes - qtd_sol
-    lotes_items = sorted(lotes.items(), key=lambda x: x[1], reverse=True)
-    usar = {}
-    nao_usar = {}
-    for lote, qtd_lote in lotes_items:
-        if qtd_fica >= qtd_lote:
-            qtd_fica -= qtd_lote
-            nao_usar[lote] = qtd_lote
-        else:
-            usar[lote] = qtd_lote
-    return usar, nao_usar
 
 
 def lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_sol):
@@ -209,42 +172,34 @@ print("Quant. não solicitada", qtd_nao_solicitada)
 print()
 print("Inicia nova distribuição")
 
+print()
 print("Lotes ordenados para uso")
 lotes_ord = keys_order_by_value(lotes)
 pprint(lotes_ord)
 
+print()
 print("Distribuição vazia")
 new_lotes_sols =  inicia_distribuicao(lotes)
 pprint(new_lotes_sols)
 
+print()
 print("Definindo quantidade final de lotes a não utilizar")
 lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_solicitada)
 pprint(new_lotes_sols)
 
+print()
 print("Lotes atendidos com uma solicitação")
 lotes_uma_sol(new_lotes_sols, solicitacoes)
 pprint(new_lotes_sols)
 pprint(solicitacoes)
 
+print()
 print("Solicitações ordenadas para uso")
 sols_ord = keys_order_by_value(solicitacoes)
 pprint(sols_ord)
 
+print()
 print("Demais lotes do maior para o menor")
 lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, solicitacoes)
 pprint(new_lotes_sols)
-pprint(solicitacoes)
-
-print()
-print("Separando lotes a usar e não usar")
-usar_lotes, nao_usar_lotes = separa_lotes(lotes, solicitacoes)
-pprint(usar_lotes)
-pprint(nao_usar_lotes)
-
-print()
-print("Proposta")
-new_lotes_solicitados = distribui_solicitacoes(usar_lotes, solicitacoes)
-new_lotes_solicitados.update({lote: ini_lote(qtd, {}) for lote, qtd in nao_usar_lotes.items()})
-lotes_sols_procs = processa(new_lotes_solicitados)
-pprint(lotes_sols_procs)
-print(conta_zerados(lotes_sols_procs), "lotes zerados")
+print(conta_zerados(new_lotes_sols), "lotes zerados")
