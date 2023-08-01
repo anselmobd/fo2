@@ -54,9 +54,9 @@ def lot_sol_dict(lotes_solicitados):
 
 def processa(lotes_solicitados):
     lotes_sols = deepcopy(lotes_solicitados)
-    for info in lotes_sols.values():
-        qtd_sol = sum(info['sols'].values())
-        info['fim'] = info['ini'] - qtd_sol
+    for value in lotes_sols.values():
+        qtd_sol = sum(value['sols'].values())
+        value['fim'] = value['ini'] - qtd_sol
     return lotes_sols
 
 
