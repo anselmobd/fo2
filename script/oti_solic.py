@@ -88,7 +88,7 @@ def distribui_solicitacoes(lotes, solicitacoes):
         sorted(solicitacoes.items(), key=lambda x: x[1], reverse=True))
     qtd_sol = 0
     for lote, qtd_lote in lotes_items:
-        lotes_sols[lote] = [qtd_lote, {}]
+        lotes_sols[lote] = ini_lote(qtd_lote, {})
         while qtd_lote > 0:
             if qtd_sol == 0:
                 try:
@@ -96,7 +96,7 @@ def distribui_solicitacoes(lotes, solicitacoes):
                 except StopIteration:
                     break
             qtd_deduzir = min(qtd_lote, qtd_sol)
-            lotes_sols[lote][1][sol] = qtd_deduzir
+            lotes_sols[lote]['sols'][sol] = qtd_deduzir
             qtd_lote -= qtd_deduzir
             qtd_sol -= qtd_deduzir
     return lotes_sols
@@ -120,19 +120,21 @@ def separa_lotes(lotes, solicitacoes):
 
 lotes_solicitados = lot_sol_dict(lotes_solicitados)
 
-# pprint(lotes_solicitados)
+print('Original')
 pprint(processa(lotes_solicitados))
 
+print('Separando lotes e solicitações')
 lotes = get_lotes(lotes_solicitados)
 pprint(lotes)
 solicitacoes = get_solicitacoes(lotes_solicitados)
 pprint(solicitacoes)
 
-# usar_lotes, nao_usar_lotes = separa_lotes(lotes, solicitacoes)
-# pprint(usar_lotes)
+print('Separando lotes a usar e não usar')
+usar_lotes, nao_usar_lotes = separa_lotes(lotes, solicitacoes)
+pprint(usar_lotes)
+pprint(nao_usar_lotes)
 
-# new_lotes_solicitados = distribui_solicitacoes(usar_lotes, solicitacoes)
-# new_lotes_solicitados.update({lote: [qtd, {}] for lote, qtd in nao_usar_lotes.items()})
-
-# pprint(new_lotes_solicitados)
-# pprint(processa(new_lotes_solicitados))
+print('Proposta')
+new_lotes_solicitados = distribui_solicitacoes(usar_lotes, solicitacoes)
+new_lotes_solicitados.update({lote: ini_lote(qtd, {}) for lote, qtd in nao_usar_lotes.items()})
+pprint(processa(new_lotes_solicitados))
