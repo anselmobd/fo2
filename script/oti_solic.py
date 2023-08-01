@@ -40,6 +40,17 @@ lotes_solicitados = {
     ],
 }
 
+
+def lot_sol_dict(lotes_solicitados):
+    lotes_sols = {}
+    for lote, value in lotes_solicitados.items():
+        lotes_sols[lote] = {
+            'qtd': value[0],
+            'sols': value[1],
+        }
+    return lotes_sols
+
+
 def processa(lotes_solicitados):
     lotes_sols = deepcopy(lotes_solicitados)
     for lote in lotes_sols:
@@ -105,6 +116,8 @@ def separa_lotes(lotes, solicitacoes):
             usar[lote] = qtd_lote
     return usar, nao_usar
 
+
+pprint(lot_sol_dict(lotes_solicitados))
 
 pprint(lotes_solicitados)
 pprint(processa(lotes_solicitados))
