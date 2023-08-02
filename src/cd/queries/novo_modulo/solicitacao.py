@@ -12,7 +12,7 @@ def existe_solicitacao(
     sql = f"""
         SELECT DISTINCT
           sl.SOLICITACAO
-        FROM pcpc_044 sl -- solicitação / lote 
+        FROM pcpc_044 sl -- solicitação / lote
         WHERE sl.SOLICITACAO = {solicitacao}
     """
     debug_cursor_execute(cursor, sql)
@@ -56,9 +56,16 @@ def get_solicitacao(
         AND sl.ORDEM_PRODUCAO = '{op}'
     """ if op else ''
 
-    filtra_lote = f"""--
-        AND (l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO = {lote}
-    """ if lote else ''
+    filtra_lote = ''
+    if lote:
+        if not isinstance(lote, (tuple, list)):
+            lote = [lote]
+        cada_lote = [
+            f"((l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO = {l})\n"
+            for l in lote
+        ]
+        filtra_lote = " OR ".join(cada_lote)
+        filtra_lote = f" AND ( {filtra_lote} )"
 
     filtra_situacao = f"""--
         AND sl.SITUACAO = '{situacao}'
@@ -96,7 +103,7 @@ def get_solicitacao(
         , sl.ALTER_DESTINO --
         , sl.SUB_DESTINO --
         , sl.COR_DESTINO --
-        , sl.INCLUSAO          
+        , sl.INCLUSAO
         , lest.CODIGO_ESTAGIO
         , l.PERIODO_PRODUCAO PERIODO
         , l.PROCONF_NIVEL99 NIVEL
@@ -117,7 +124,7 @@ def get_solicitacao(
         , COALESCE(ec.COD_ENDERECO, '-') endereco
         , ec.DATA_INCLUSAO inclusao_endereco
         , COALESCE(e.ROTA, '-') rota
-        FROM pcpc_044 sl -- solicitação / lote 
+        FROM pcpc_044 sl -- solicitação / lote
         -- Na tabela de solicitações aparece a OP de expedição também como
         -- reservada, com situação 4. Para tentar evitar isso, não listo
         -- lotes que pertençam a OP que não tem estágio 63
@@ -144,9 +151,9 @@ def get_solicitacao(
          AND l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
          AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
         LEFT JOIN ENDR_014 lp -- lote/palete - oc/container
-          ON lp.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO 
-         AND lp.ORDEM_CONFECCAO = (l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO 
-        LEFT JOIN ENDR_015 ec -- endereço/container 
+          ON lp.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
+         AND lp.ORDEM_CONFECCAO = (l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO
+        LEFT JOIN ENDR_015 ec -- endereço/container
           ON ec.COD_CONTAINER = lp.COD_CONTAINER
         LEFT JOIN ENDR_013 e -- endereço
           ON e.COD_ENDERECO = ec.COD_ENDERECO
