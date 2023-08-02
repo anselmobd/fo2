@@ -27,6 +27,7 @@ def get_solicitacao(
     ref_reservada=None,
     op=None,
     lote=None,
+    situacao=None,
     order='sit_oc'
 ):
     """
@@ -58,6 +59,10 @@ def get_solicitacao(
     filtra_lote = f"""--
         AND (l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO = {lote}
     """ if lote else ''
+
+    filtra_situacao = f"""--
+        AND sl.SITUACAO = '{situacao}'
+    """ if situacao else ''
 
     if order == 'sit_oc':
         order_by = f"""--
@@ -152,6 +157,7 @@ def get_solicitacao(
           {filtra_ref_reservada} -- filtra_ref_reservada
           {filtra_op} -- filtra_op
           {filtra_lote} -- filtra_lote
+          {filtra_situacao} -- filtra_situacao
         ORDER BY
           {order_by} -- order_by
     """
