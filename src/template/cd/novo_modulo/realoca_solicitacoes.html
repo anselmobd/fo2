@@ -24,9 +24,14 @@
       {% include "layout/thead_generic.html" with data=solis.headers safe=solis.safe style=solis.style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=solis.fields data=solis.data safe=solis.safe style=solis.style only %}
     </table>
+    <h4>{{solis_tot.len}} solicitações</h4>
+    <table>
+      {% include "layout/thead_generic.html" with data=solis_tot.headers safe=solis_tot.safe style=solis_tot.style thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=solis_tot.fields data=solis_tot.data safe=solis_tot.safe style=solis_tot.style only %}
+    </table>
   {% else %}
     {% if request.POST %}
-      <h4>Nenhuma informação encontrada</h4>
+      <h4>Nenhum lote com solicitações parciais a serem realocadas</h4>
     {% endif %}
   {% endif %}
   {% if lotes.data %}
@@ -37,7 +42,7 @@
     </table>
   {% else %}
     {% if request.POST %}
-      <h4>Nenhuma informação encontrada</h4>
+      <h4>Nenhum lote encontrado para atender as solicitações em questão</h4>
     {% endif %}
   {% endif %}
 {% endblock content %}

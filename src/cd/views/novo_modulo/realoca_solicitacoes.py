@@ -9,6 +9,7 @@ from utils.views import totalize_data
 
 import cd.forms
 from cd.queries.novo_modulo import refs_em_palets
+from cd.queries.novo_modulo.solicitacao import get_solicitacao
 
 
 class RealocaSolicitacoes(O2BaseGetPostView):
@@ -31,9 +32,11 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 'qtd_prog qtd_lote': ['Tam.Lote', 'r'],
                 'qtd_dbaixa': ['Qtd.Est.', 'r'],
                 'estagio': ['Estágio', 'c'],
+                'solicitacao': ['Solicitação', 'c'],
                 'solicitacoes': ['Solicitações', 'c'],
                 'sol_fin': ['Solicit.Fin.', 'c'],
                 'sol': ['Solicitação'],
+                'qtde': ['Qtd.', 'r'],
                 'qtd_emp': ['Qtd.Empen.', 'r'],
                 'qtd_sol': ['Qtd.Solic.', 'r'],
                 'tot_emp': ['Tot.Empen.', 'r'],
@@ -97,7 +100,6 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
     def mount_lotes_disponiveis(self):
         self.lotes = self.get_lotes()
-
         if len(self.lotes) > 0:
             self.mount_lotes()
 
@@ -156,9 +158,37 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
     def mount_solis_analisadas(self):
         self.solis = self.get_solis()
-
+        self.lista_lotes = [
+            row['lote']
+            for row in self.solis
+        ]
         if len(self.solis) > 0:
             self.mount_solis()
+
+    def get_solis_tot(self, lotes):
+        dados = get_solicitacao(
+            self.cursor,
+            solicitacao='!',
+            lote=lotes,
+            situacao=4,
+        )
+        return dados
+
+    def mount_solis_tot(self):
+        len_solis_tot = len(self.solis_tot)
+        fields = [
+            'lote', 'solicitacao', 'qtde'
+        ]
+        self.context['solis_tot'] = self.table_defs.hfs_dict(*fields)
+        self.context['solis_tot'].update({
+            'data': self.solis_tot,
+            'len': len_solis_tot,
+        })
+
+    def mount_solis_totalizadas(self):
+        self.solis_tot = self.get_solis_tot(self.lista_lotes)
+        if len(self.solis_tot) > 0:
+            self.mount_solis_tot()
 
     def filter_inputs(self):
         self.cor = None if self.cor == '' else self.cor
@@ -170,4 +200,5 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
         self.filter_inputs()
         self.mount_solis_analisadas()
+        self.mount_solis_totalizadas()
         self.mount_lotes_disponiveis()
