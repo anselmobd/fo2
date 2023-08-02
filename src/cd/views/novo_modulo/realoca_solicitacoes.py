@@ -93,7 +93,6 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             'palete', 'endereco', 'rota',
             'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
             'qtd_prog', 'qtd_dbaixa', 'estagio',
-            'solicitacoes', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp',
         ]
         self.context.update(self.table_defs.hfs_dict(*fields))
         self.context.update({
