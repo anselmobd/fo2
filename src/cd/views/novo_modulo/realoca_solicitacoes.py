@@ -112,14 +112,18 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             qtd_solicitada='ps',
             solicitacoes=self.solicitacoes,
         )
+        for row in dados:
+            row['qtd_dbaixa'] = row['qtd']
+            row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
+            row['qtd_disp'] = row['qtd_dbaixa'] - row['tot_emp']
         return dados
 
     def mount_solis(self):
 
         len_solis = len(self.solis)
-        self.solis.sort(key=operator.itemgetter('lote'))
+        self.solis.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
 
-        sum_fields = ['qtd_sol']
+        sum_fields = ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp']
         totalize_data(
             self.solis,
             {
@@ -131,11 +135,21 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 'flags': ['NO_TOT_1'],
             }
         )
+        for row in self.solis:
+            if row['qtd_disp'] < 0:
+                row['qtd_disp|STYLE'] = 'color: red;'
         fields = [
-            'lote', 'solicitacoes', 'qtd_sol',
+            'palete', 'endereco', 'rota',
+            'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
+            'qtd_prog', 'qtd_dbaixa', 'estagio',
+            'solicitacoes', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp',
         ]
         self.context['solis'] = self.table_defs.hfs_dict(*fields)
         self.context['solis'].update({
+            'safe': [
+                'op',
+                'modelo',
+            ],
             'data': self.solis,
             'len': len_solis,
         })
