@@ -8,7 +8,7 @@ from django.db.models import F, Sum
 from fo2.connections import db_cursor_so
 from lotes.models.inventario import Inventario
 
-
+from o2.forms.widget_attrs import FormWidgetAttrs
 from utils.functions.digits import fo2_digit_valid
 from utils.functions.strings import only_digits
 
@@ -1135,3 +1135,64 @@ class EnderecaGrupoForm(forms.Form):
             }
         )
     )
+
+
+class RealocaSolicitacoesForm(forms.Form):
+    a = FormWidgetAttrs()
+
+    modelo = forms.CharField(
+        required=False,
+        min_length=1,
+        max_length=5,
+        widget=forms.TextInput(
+            attrs={
+                'size': 5,
+                'type': 'number',
+            }
+        )
+    )
+
+    cor = forms.CharField(
+        required=False,
+        min_length=1,
+        max_length=6,
+        widget=forms.TextInput(
+            attrs={
+                'size': 6,
+                **a.string_upper,
+                **a.placeholder_0,
+            }
+        )
+    )
+
+    tam = forms.CharField(
+        label='Tamanho',
+        required=False,
+        min_length=1,
+        max_length=3,
+        widget=forms.TextInput(
+            attrs={
+                'size': 3,
+                **a.string_upper,
+            }
+        )
+    )
+
+    def clean_cor(self):
+        cleaned = self.cleaned_data['cor']
+        if len(cleaned) == 0:
+            cleaned = ''
+        else:
+            cleaned = cleaned.upper().zfill(6)
+
+        data = self.data.copy()
+        data['cor'] = cleaned
+        self.data = data
+        return cleaned
+
+    def clean_tam(self):
+        cleaned = self.cleaned_data['tam'].upper()
+        data = self.data.copy()
+        data['tam'] = cleaned
+        self.data = data
+        return cleaned

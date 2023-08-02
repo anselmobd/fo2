@@ -9,6 +9,7 @@
   <li>Empenhos/Solicitações</li>
   <ul>
     <li><a href="{% url 'cd:novo_solicitacoes' %}">Empenhos/Solicitações</a></li>
+    <li><a href="{% url 'cd:realoca_solicitacoes' %}">Realoca solicitações</a></li>
     <li><a href="{% url 'cd:confronta_qtd_solicit' %}">Confronta quant. empenhadas</a></li>
     {% if perms.cd.pode_finalizar_empenho_op_finalizada %}
       <li><a href="{% url 'cd:finaliza_emp_op' %}">Finaliza empenho de OP fin.</a></li>

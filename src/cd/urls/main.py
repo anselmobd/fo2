@@ -35,6 +35,7 @@ from cd.views.novo_modulo import (
     palete_solicitacao,
     solicitacao,
     solicitacoes,
+    realoca_solicitacoes,
     visao_bloco,
     visao_bloco_detalhe,
     visao_bloco_lotes,
@@ -222,6 +223,9 @@ urlpatterns = [
 
     re_path(r'^novo/solicitacoes/$',
         solicitacoes.Solicitacoes.as_view(), name='novo_solicitacoes'),
+
+    re_path(r'^novo/realoca_solicitacoes/$',
+        realoca_solicitacoes.RealocaSolicitacoes.as_view(), name='realoca_solicitacoes'),
 
     re_path(r'^novo/estoque/$',
         estoque.NovoEstoque.as_view(), name='novo_estoque'),
