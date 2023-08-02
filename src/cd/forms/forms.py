@@ -1142,8 +1142,8 @@ class RealocaSolicitacoesForm(forms.Form):
 
     endereco = forms.CharField(
         label='Endereço',
-        min_length=1,
         required=False,
+        min_length=1,
         widget=forms.TextInput(
             attrs={
                 'size': 20,
@@ -1165,7 +1165,7 @@ class RealocaSolicitacoesForm(forms.Form):
     )
 
     modelo = forms.CharField(
-        required=False,
+        required=True,
         min_length=1,
         max_length=5,
         widget=forms.TextInput(
@@ -1177,7 +1177,7 @@ class RealocaSolicitacoesForm(forms.Form):
     )
 
     cor = forms.CharField(
-        required=False,
+        required=True,
         min_length=1,
         max_length=6,
         widget=forms.TextInput(
@@ -1191,7 +1191,7 @@ class RealocaSolicitacoesForm(forms.Form):
 
     tam = forms.CharField(
         label='Tamanho',
-        required=False,
+        required=True,
         min_length=1,
         max_length=3,
         widget=forms.TextInput(
