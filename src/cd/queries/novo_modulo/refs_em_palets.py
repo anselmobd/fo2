@@ -184,7 +184,7 @@ def query(
             e LOCALMENTE por modelo
         modelo de referência
     endereco: filtra no BD por endereço do lote no CD
-        endereço do lote inteiro ou parcial
+        endereço do lote inteiro ou parcial (início) ou faixa (de-até)
     tipo_prod: filtra no DB por tipo de produto de acordo com características
                da referência
         pagb: PA/PG/PB
@@ -278,6 +278,12 @@ def query(
         if len(endereco) == 6:
             filtra_endereco = f"""--
                 AND ec.COD_ENDERECO = '{endereco}'
+            """
+        elif '-' in endereco:
+            end_de, end_ate = tuple(endereco.split('-'))
+            filtra_endereco = f"""--
+                AND ec.COD_ENDERECO >= '{end_de}'
+                AND ec.COD_ENDERECO <= '{end_ate}'
             """
         else:
             filtra_endereco = f"""--
