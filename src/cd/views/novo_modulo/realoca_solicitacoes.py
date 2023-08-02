@@ -101,6 +101,51 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         if len(self.lotes) > 0:
             self.mount_lotes()
 
+    def get_solis(self):
+        dados = refs_em_palets.query(
+            self.cursor,
+            fields='detalhe',
+            cor=self.cor,
+            tam=self.tam,
+            modelo=self.modelo,
+            tipo_prod='pagb',
+            qtd_solicitada='ps',
+            solicitacoes=self.solicitacoes,
+        )
+        return dados
+
+    def mount_solis(self):
+
+        len_solis = len(self.solis)
+        self.solis.sort(key=operator.itemgetter('lote'))
+
+        sum_fields = ['qtd_sol']
+        totalize_data(
+            self.solis,
+            {
+                'sum': sum_fields,
+                'descr': {'lote': 'Total geral:'},
+                'row_style':
+                    "font-weight: bold;"
+                    "background-image: linear-gradient(#DDD, white);",
+                'flags': ['NO_TOT_1'],
+            }
+        )
+        fields = [
+            'lote', 'solicitacoes', 'qtd_sol',
+        ]
+        self.context['solis'] = self.table_defs.hfs_dict(*fields)
+        self.context['solis'].update({
+            'data': self.solis,
+            'len': len_solis,
+        })
+
+    def mount_solis_analisadas(self):
+        self.solis = self.get_solis()
+
+        if len(self.solis) > 0:
+            self.mount_solis()
+
     def filter_inputs(self):
         self.cor = None if self.cor == '' else self.cor
         self.tam = None if self.tam == '' else self.tam
@@ -110,4 +155,5 @@ class RealocaSolicitacoes(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
         self.filter_inputs()
+        self.mount_solis_analisadas()
         self.mount_lotes_disponiveis()
