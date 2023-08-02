@@ -56,6 +56,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             modelo=self.modelo,
             endereco=self.endereco,
             tipo_prod='pagb',
+            qtd_solicitada='nts',
             solicitacoes=self.solicitacoes,
         )
         for row in dados:
