@@ -18,11 +18,11 @@
   </form>
   <br/>
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
-  {% if solis.data %}
-    <h4>{{solis.len}} lotes com solicitações parciais a serem realocadas</h4>
+  {% if lotes_solis.data %}
+    <h4>{{lotes_solis.len}} lotes com solicitações parciais a serem realocadas</h4>
     <table>
-      {% include "layout/thead_generic.html" with data=solis.headers safe=solis.safe style=solis.style thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=solis.fields data=solis.data safe=solis.safe style=solis.style only %}
+      {% include "layout/thead_generic.html" with data=lotes_solis.headers safe=lotes_solis.safe style=lotes_solis.style thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=lotes_solis.fields data=lotes_solis.data safe=lotes_solis.safe style=lotes_solis.style only %}
     </table>
     <h4>{{solis_tot.len}} solicitações</h4>
     <table>
@@ -35,7 +35,7 @@
     {% endif %}
   {% endif %}
   {% if lotes.data %}
-    <h4>{{lotes.len_lotes}} lotes encontrados para atender as solicitações em questão</h4>
+    <h4>{{lotes.len}} lotes encontrados para atender as solicitações em questão</h4>
     <table>
       {% include "layout/thead_generic.html" with data=lotes.headers safe=lotes.safe style=lotes.style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=lotes.fields data=lotes.data safe=lotes.safe style=lotes.style only %}
