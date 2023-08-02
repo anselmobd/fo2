@@ -35,10 +35,12 @@ def get_solicitacao(
             'sit_oc' = situação, estágio, OP e OC
             'rota_end' = rota, endereço, OP e OC
     """
-    if solicitacao and solicitacao != '-':
+    if not solicitacao or solicitacao == '-':
+        filtra_solicitacao = "AND sl.SOLICITACAO IS NULL"
+    elif solicitacao != '!':
         filtra_solicitacao = f"AND sl.SOLICITACAO = {solicitacao}"
     else:
-        filtra_solicitacao = "AND sl.SOLICITACAO IS NULL"
+        filtra_solicitacao = ''
 
     filtra_pedido_destino = f"""--
         AND sl.PEDIDO_DESTINO = {pedido_destino}
