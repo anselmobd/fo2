@@ -141,7 +141,7 @@ def query(
     corte_de=None,
     corte_ate=None,
     qtd_solicitada='t',
-    solicitacoes='',
+    solicitacoes=None,
 ):
     """
     cursor: cursor de acesso ao BD
