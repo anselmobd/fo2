@@ -49,16 +49,11 @@ def ini_lote(qtd, sols):
     }
 
 
-def lot_sol_dict(lotes_solicitados):
+def lot_sol_mount(lotes_solicitados):
     lotes_sols = {}
     for lote, value in lotes_solicitados.items():
         lotes_sols[lote] = ini_lote(*value)
-    return lotes_sols
-
-
-def processa(lotes_solicitados):
-    lotes_sols = deepcopy(lotes_solicitados)
-    for value in lotes_sols.values():
+        value = lotes_sols[lote]
         qtd_sol = sum(value['sols'].values())
         value['fim'] = value['ini'] - qtd_sol
     return lotes_sols
@@ -147,12 +142,10 @@ def keys_order_by_value(lotes):
     return list(map(lambda x: x[0], lotes_items))
 
 
-lotes_solicitados = lot_sol_dict(lotes_solicitados)
-
 print("Original")
-lotes_sols_procs = processa(lotes_solicitados)
-pprint(lotes_sols_procs)
-print(conta_zerados(lotes_sols_procs), "lotes zerados")
+lotes_solicitados = lot_sol_mount(lotes_solicitados)
+pprint(lotes_solicitados)
+print(conta_zerados(lotes_solicitados), "lotes zerados")
 
 print()
 print("Separando lotes e solicitações")
