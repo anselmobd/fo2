@@ -60,13 +60,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             solicitacoes=self.solicitacoes,
         )
         for row in dados:
-            if row['estagio'] != row['est_sol']:
-                row['solicitacoes'] = '-'
-                row['qtd_emp'] = 0
-                row['qtd_sol'] = 0
             row['qtd_dbaixa'] = row['qtd']
-            row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
-            row['qtd_disp'] = row['qtd_dbaixa'] - row['tot_emp']
         return dados
 
     def mount_lotes(self):
@@ -74,7 +68,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         len_lotes = len(self.lotes)
         self.lotes.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
 
-        sum_fields = ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp']
+        sum_fields = ['qtd_dbaixa']
         totalize_data(
             self.lotes,
             {
@@ -86,16 +80,13 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 'flags': ['NO_TOT_1'],
             }
         )
-        for row in self.lotes:
-            if row['qtd_disp'] < 0:
-                row['qtd_disp|STYLE'] = 'color: red;'
         fields = [
             'palete', 'endereco', 'rota',
             'modelo', 'ref', 'tam', 'cor', 'op', 'lote',
             'qtd_prog', 'qtd_dbaixa', 'estagio',
         ]
-        self.context.update(self.table_defs.hfs_dict(*fields))
-        self.context.update({
+        self.context['lotes'] = self.table_defs.hfs_dict(*fields)
+        self.context['lotes'].update({
             'safe': [
                 'op',
                 'modelo',
@@ -104,7 +95,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             'len_lotes': len_lotes,
         })
 
-    def mount_estoque(self):
+    def mount_lotes_disponiveis(self):
         self.lotes = self.get_lotes()
 
         if len(self.lotes) > 0:
@@ -119,4 +110,4 @@ class RealocaSolicitacoes(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
         self.filter_inputs()
-        self.mount_estoque()
+        self.mount_lotes_disponiveis()
