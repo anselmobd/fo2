@@ -1140,6 +1140,30 @@ class EnderecaGrupoForm(forms.Form):
 class RealocaSolicitacoesForm(forms.Form):
     a = FormWidgetAttrs()
 
+    endereco = forms.CharField(
+        label='Endereço',
+        min_length=1,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 20,
+                **a.string_upper,
+                **a.autofocus,
+            }
+        )
+    )
+
+    solicitacoes = forms.CharField(
+        label='Solicitações',
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 40,
+                'type': 'text',
+            }
+        )
+    )
+
     modelo = forms.CharField(
         required=False,
         min_length=1,
@@ -1194,5 +1218,12 @@ class RealocaSolicitacoesForm(forms.Form):
         cleaned = self.cleaned_data['tam'].upper()
         data = self.data.copy()
         data['tam'] = cleaned
+        self.data = data
+        return cleaned
+
+    def clean_endereco(self):
+        cleaned = self.cleaned_data.get('endereco', '').strip().upper()
+        data = self.data.copy()
+        data['endereco'] = cleaned
         self.data = data
         return cleaned
