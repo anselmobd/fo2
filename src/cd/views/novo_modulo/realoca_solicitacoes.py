@@ -71,6 +71,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
     def mount_lotes(self):
 
+        len_lotes = len(self.lotes)
         self.lotes.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
 
         sum_fields = ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp']
@@ -101,6 +102,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 'modelo',
             ],
             'data': self.lotes,
+            'len_lotes': len_lotes,
         })
 
     def mount_estoque(self):
