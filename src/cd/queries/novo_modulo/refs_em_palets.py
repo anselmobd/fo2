@@ -208,6 +208,7 @@ def query(
         esf: Empenhado/solicitado finalizado
     qtd_solicitada:
         t: * Não filtra
+        s: Solicitado
         ts: Totalmente solicitado
         nts: Não totalmente solicitado
         ps: Parcialmente solicitado
@@ -472,6 +473,7 @@ def query(
     if {'qtd', 'qtd_sol'}.issubset(fields):
         dict_qtd_solicitada = {
             't': '',
+            's': "AND d.qtd_sol > 0",
             'ts': "AND d.qtd_sol >= d.qtd",
             'nts': "AND d.qtd_sol < d.qtd",
             'ps': "AND d.qtd_sol > 0 AND d.qtd_sol < d.qtd",
