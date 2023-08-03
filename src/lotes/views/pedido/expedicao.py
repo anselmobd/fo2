@@ -122,7 +122,8 @@ class Expedicao(View):
 
         table_defs = TableDefsHBpSD(
             {
-                'PEDIDO_VENDA': ['Pedido Tussor'],
+                'PEDIDO_VENDA': ['Pedido'],
+                'DEPOSITO': [],
                 'AGRUPADOR': ['', 'o'],
                 'SOLICITACAO': ['Solicitação'],
                 'GTIN_OK': ['GTIN OK', 'p'],
@@ -231,8 +232,9 @@ class Expedicao(View):
                     "\N{scroll}", referencias)
                 row['CLIENTE_INFO'] = f"{cliente_html}{obs_html}{referencias_html}"
 
-        if self.detalhe not in ['p', 'o']:
-            group = ['PEDIDO_VENDA', 'SOLICITACAO', 'PEDIDO_CLIENTE',
+        if self.detalhe in ['r', 'c']:
+            group = ['PEDIDO_VENDA', 'DEPOSITO',
+                     'SOLICITACAO', 'PEDIDO_CLIENTE',
                      'DT_EMISSAO', 'DT_EMBARQUE',
                      'CLIENTE']
             totalize_grouped_data(self.dados_pedidos, {
