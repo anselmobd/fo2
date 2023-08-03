@@ -170,6 +170,12 @@ class TableDefs(object):
             return (bitmap & col_bitmap)
         return True
 
+    def bitmap_str_match(self, col, bitmap):
+        col_bitmap = self.definition[col].get('flags_bitmap', 0)
+        if isinstance(col_bitmap, str) and col_bitmap:
+            return bitmap in col_bitmap
+        return True
+
     def defs(self, *cols, bitmap=None):
         if not cols:
             if self.cols_list:
@@ -182,6 +188,12 @@ class TableDefs(object):
                 col
                 for col in cols
                 if self.bitmap_match(col, bitmap)
+            ]
+        elif isinstance(bitmap, str):
+            cols = [
+                col
+                for col in cols
+                if self.bitmap_str_match(col, bitmap)
             ]
 
         self.headers = []
