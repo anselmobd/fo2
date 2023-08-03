@@ -66,13 +66,11 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         )
         for row in dados:
             row['qtd_dbaixa'] = row['qtd']
+        dados.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
         return dados
 
     def mount_lotes(self):
-
         len_lotes = len(self.lotes)
-        self.lotes.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
-
         sum_fields = ['qtd_dbaixa']
         totalize_data(
             self.lotes,
@@ -120,13 +118,11 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             row['qtd_dbaixa'] = row['qtd']
             row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
             row['qtd_disp'] = row['qtd_dbaixa'] - row['tot_emp']
+        dados.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
         return dados
 
     def mount_lotes_solis(self):
-
         len_lotes_solis = len(self.lotes_solis)
-        self.lotes_solis.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
-
         sum_fields = ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp']
         totalize_data(
             self.lotes_solis,
@@ -178,29 +174,30 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
     def get_solis(self):
         self.solis_de_lotes = self.get_solis_de_lotes()
-        dados = {}
+        dados_dict = {}
         for row in self.solis_de_lotes:
             sol = row['solicitacao']
             ped = row['pedido_destino']
             key = (sol, ped)
-            if key not in dados:
-                dados[key] = 0
-            dados[key] += row['qtde']
-        return [
+            if key not in dados_dict:
+                dados_dict[key] = 0
+            dados_dict[key] += row['qtde']
+        dados = [
             {
                 'solicitacao': coalesce(key[0], 0),
                 'pedido_destino': coalesce(key[1], 0),
                 'qtde': qtde,
             }
-            for key, qtde in dados.items()
+            for key, qtde in dados_dict.items()
         ]
+        dados.sort(key=operator.itemgetter('solicitacao', 'pedido_destino'))
+        for row in dados:
+            if row['solicitacao'] == 0:
+                row['solicitacao'] = '#'
+        return dados
 
     def mount_solis(self):
         len_solis = len(self.solis)
-        self.solis.sort(key=operator.itemgetter('solicitacao', 'pedido_destino'))
-        for row in self.solis:
-            if row['solicitacao'] == 0:
-                row['solicitacao'] = '#'
         sum_fields = ['qtde']
         totalize_data(
             self.solis,
