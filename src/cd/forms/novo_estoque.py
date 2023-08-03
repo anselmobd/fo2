@@ -175,6 +175,7 @@ class NovoEstoqueForm(forms.Form):
 
     CHOICES = [
         ('t', "* Não filtra"),
+        ('s', "Solicitado"),
         ('ts', "Totalmente solicitado"),
         ('nts', "Não totalmente solicitado"),
         ('ps', "Parcialmente solicitado"),
