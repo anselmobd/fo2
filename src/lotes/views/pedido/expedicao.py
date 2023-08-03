@@ -88,6 +88,13 @@ class Expedicao(View):
             'qtd_total': qtd_total,
         })
 
+    def cliente_info_ul(self, icone, info):
+        return f"""
+            <ul style=\"list-style-type: '{icone}'; margin-bottom: 0px;\">
+                <li>{info}</li>
+            </ul>
+        """
+
     def mount_pedidos(self):
         data = queries.pedido.ped_expedicao(
             self.cursor,
@@ -265,29 +272,13 @@ class Expedicao(View):
                 else:
                     referencias = '-'
 
-                obs_html = ''
-                if row['OBSERVACAO']:
-                    obs_html = """
-                        <ul style="list-style-type: '\N{memo}'; margin-bottom: 0px;">
-                          <li>{}</li>
-                        </ul>
-                    """.format(
-                        row['OBSERVACAO'],
-                    )
-
-                row['CLIENTE_INFO'] = """
-                    <ul style="list-style-type: '\N{department store}'; margin-bottom: 0px;">
-                        <li>{}</li>
-                    </ul>
-                    {}
-                    <ul style="list-style-type: '\N{scroll}'; margin-bottom: 0px;">
-                        <li>{}</li>
-                    </ul>
-                """.format(
-                    row['CLIENTE'],
-                    obs_html,
-                    referencias,
-                )
+                cliente_html = self.cliente_info_ul(
+                    "\N{department store}", row['CLIENTE'])
+                obs_html = self.cliente_info_ul(
+                    "\N{memo}", row['OBSERVACAO']) if if row['OBSERVACAO'] else ''
+                referencias_html = self.cliente_info_ul(
+                    "\N{scroll}", referencias)
+                row['CLIENTE_INFO'] = f"{cliente_html}{obs_html}{referencias_html}"
 
         if self.detalhe not in ['p', 'o']:
             group = ['PEDIDO_VENDA', 'SOLICITACAO', 'PEDIDO_CLIENTE',
