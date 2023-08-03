@@ -87,28 +87,7 @@ class Expedicao(View):
             'qtd_total': qtd_total,
         })
 
-    def mount_context(self):
-        self.context.update({
-            'embarque_de': self.embarque_de,
-            'embarque_ate': self.embarque_ate,
-            'emissao_de': self.emissao_de,
-            'emissao_ate': self.emissao_ate,
-            'pedido_tussor': self.pedido_tussor,
-            'pedido_cliente': self.pedido_cliente,
-            'cliente': self.cliente,
-            'detalhe': self.detalhe,
-            'deposito': self.deposito,
-            'cancelamento': self.cancelamento,
-            'faturamento': self.faturamento,
-            'colecao': self.colecao,
-        })
-
-        self.colecao_codigo = None if self.colecao is None else self.colecao.colecao
-
-        if self.detalhe == 'g':
-            self.mount_grade()
-            return
-
+    def mount_pedidos(self):
         data = queries.pedido.ped_expedicao(
             self.cursor,
             embarque_de=self.embarque_de,
@@ -317,6 +296,28 @@ class Expedicao(View):
                 'group': group,
             })
 
+    def mount_context(self):
+        self.context.update({
+            'embarque_de': self.embarque_de,
+            'embarque_ate': self.embarque_ate,
+            'emissao_de': self.emissao_de,
+            'emissao_ate': self.emissao_ate,
+            'pedido_tussor': self.pedido_tussor,
+            'pedido_cliente': self.pedido_cliente,
+            'cliente': self.cliente,
+            'detalhe': self.detalhe,
+            'deposito': self.deposito,
+            'cancelamento': self.cancelamento,
+            'faturamento': self.faturamento,
+            'colecao': self.colecao,
+        })
+
+        self.colecao_codigo = None if self.colecao is None else self.colecao.colecao
+
+        if self.detalhe == 'g':
+            self.mount_grade()
+        else:
+            self.mount_pedidos()
 
     def get(self, request, *args, **kwargs):
         self.context = {'titulo': self.title_name}
