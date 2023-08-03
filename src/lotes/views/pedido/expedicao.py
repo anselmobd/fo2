@@ -6,7 +6,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.table_defs import TableDefsHpSD
+from utils.table_defs import TableDefsHBpSD
 from utils.views import totalize_grouped_data, group_rowspan
 
 from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
@@ -117,76 +117,35 @@ class Expedicao(View):
             })
             return
 
-        table_defs = TableDefsHpSD(
+        table_defs = TableDefsHBpSD(
             {
                 'PEDIDO_VENDA': ['Pedido Tussor'],
-                'AGRUPADOR': [],
+                'AGRUPADOR': ['', 8], # o
                 'SOLICITACAO': ['Solicitação'],
-                'GTIN_OK': ['GTIN OK'],
+                'GTIN_OK': ['GTIN OK', 4], # p
                 'PEDIDO_CLIENTE': ['Pedido cliente'],
                 'DT_EMISSAO': ['Data emissão'],
                 'DT_EMBARQUE': ['Data embarque'],
-                'CLIENTE': ['Cliente'],
+                'CLIENTE': ['Cliente', 7], # rcp
                 'CLIENTE_INFO': [
                     '\N{department store}Cliente / '
                     '\N{memo}Observação / '
                     '\N{scroll}Referências'
-                ],
-                'OP': ['OP'],
-                'REF': ['Referência'],
-                'COR': ['Cor'],
-                'TAM': ['Tamanho'],
-                'QTD': ['Quant.', 'r'],
-                'VALOR': ['Valor', 'r', 2],
+                , 8], # o
+                'OP': ['OP', 8], # o
+                'REF': ['Referência', 3], # rc
+                'COR': ['Cor', 2], # c
+                'TAM': ['Tamanho', 2], # c
+                'QTD': ['Quant.', 0, 'r'],
+                'VALOR': ['Valor', 4, 'r', 2], # p
             },
         )
-
-        field_lists = {
-            'r': [
-                'PEDIDO_VENDA',
-                'SOLICITACAO',
-                'PEDIDO_CLIENTE',
-                'DT_EMISSAO',
-                'DT_EMBARQUE',
-                'CLIENTE',
-                'REF',
-                'QTD',
-            ],
-            'c': [
-                'PEDIDO_VENDA',
-                'SOLICITACAO',
-                'PEDIDO_CLIENTE',
-                'DT_EMISSAO',
-                'DT_EMBARQUE',
-                'CLIENTE',
-                'REF',
-                'COR',
-                'TAM',
-                'QTD',
-            ],
-            'p': [
-                'PEDIDO_VENDA',
-                'SOLICITACAO',
-                'GTIN_OK',
-                'PEDIDO_CLIENTE',
-                'DT_EMISSAO',
-                'DT_EMBARQUE',
-                'CLIENTE',
-                'QTD',
-                'VALOR',
-            ],
-            'o': [
-                'PEDIDO_VENDA',
-                'AGRUPADOR',
-                'SOLICITACAO',
-                'PEDIDO_CLIENTE',
-                'DT_EMISSAO',
-                'DT_EMBARQUE',
-                'CLIENTE_INFO',
-                'OP',
-                'QTD',
-            ],
-        }
+        flags_bitmap = (
+            (1 * (self.detalhe == 'r')) +
+            (2 * (self.detalhe == 'c')) +
+            (4 * (self.detalhe == 'p')) +
+            (8 * (self.detalhe == 'o'))
+        )
 
         pedidos = list(set([
             row['PEDIDO_VENDA']
@@ -295,7 +254,7 @@ class Expedicao(View):
             })
 
         table_defs.hfsd_dict_context(
-            self.context, *field_lists[self.detalhe])
+            self.context, bitmap=flags_bitmap)
         self.context.update({
             'safe': [
                 'SOLICITACAO',
