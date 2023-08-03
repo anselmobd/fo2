@@ -275,7 +275,7 @@ class Expedicao(View):
                 cliente_html = self.cliente_info_ul(
                     "\N{department store}", row['CLIENTE'])
                 obs_html = self.cliente_info_ul(
-                    "\N{memo}", row['OBSERVACAO']) if if row['OBSERVACAO'] else ''
+                    "\N{memo}", row['OBSERVACAO']) if row['OBSERVACAO'] else ''
                 referencias_html = self.cliente_info_ul(
                     "\N{scroll}", referencias)
                 row['CLIENTE_INFO'] = f"{cliente_html}{obs_html}{referencias_html}"
