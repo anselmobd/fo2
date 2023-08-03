@@ -120,31 +120,25 @@ class Expedicao(View):
         table_defs = TableDefsHBpSD(
             {
                 'PEDIDO_VENDA': ['Pedido Tussor'],
-                'AGRUPADOR': ['', 8], # o
+                'AGRUPADOR': ['', 'o'],
                 'SOLICITACAO': ['Solicitação'],
-                'GTIN_OK': ['GTIN OK', 4], # p
+                'GTIN_OK': ['GTIN OK', 'p'],
                 'PEDIDO_CLIENTE': ['Pedido cliente'],
                 'DT_EMISSAO': ['Data emissão'],
                 'DT_EMBARQUE': ['Data embarque'],
-                'CLIENTE': ['Cliente', 7], # rcp
+                'CLIENTE': ['Cliente', 'rcp'],
                 'CLIENTE_INFO': [
                     '\N{department store}Cliente / '
                     '\N{memo}Observação / '
                     '\N{scroll}Referências'
-                , 8], # o
-                'OP': ['OP', 8], # o
-                'REF': ['Referência', 3], # rc
-                'COR': ['Cor', 2], # c
-                'TAM': ['Tamanho', 2], # c
+                , 'o'],
+                'OP': ['OP', 'o'],
+                'REF': ['Referência', 'rc'],
+                'COR': ['Cor', 'c'],
+                'TAM': ['Tamanho', 'c'],
                 'QTD': ['Quant.', 0, 'r'],
-                'VALOR': ['Valor', 4, 'r', 2], # p
+                'VALOR': ['Valor', 'p', 'r', 2],
             },
-        )
-        flags_bitmap = (
-            (1 * (self.detalhe == 'r')) +
-            (2 * (self.detalhe == 'c')) +
-            (4 * (self.detalhe == 'p')) +
-            (8 * (self.detalhe == 'o'))
         )
 
         pedidos = list(set([
@@ -254,7 +248,7 @@ class Expedicao(View):
             })
 
         table_defs.hfsd_dict_context(
-            self.context, bitmap=flags_bitmap)
+            self.context, bitmap=self.detalhe)
         self.context.update({
             'safe': [
                 'SOLICITACAO',
