@@ -23,6 +23,70 @@ class Expedicao(View):
         self.template_name = 'lotes/expedicao.html'
         self.title_name = 'Expedição'
 
+    def mount_grade(self):
+        data = queries.pedido.grade_expedicao(
+            self.cursor,
+            embarque_de=self.embarque_de,
+            embarque_ate=self.embarque_ate,
+            emissao_de=self.emissao_de,
+            emissao_ate=self.emissao_ate,
+            pedido_tussor=self.pedido_tussor,
+            pedido_cliente=self.pedido_cliente,
+            cliente=self.cliente,
+            deposito=self.deposito,
+            cancelamento=self.cancelamento,
+            faturamento=self.faturamento,
+            colecao=self.colecao_codigo,
+        )
+        if len(data) == 0:
+            self.context.update({
+                'msg_erro': 'Nada selecionado',
+            })
+            return
+
+        referencia = None
+        grade = []
+        quant = 0
+        data_refs = []
+        data.append({
+            'REF': 'ZZZZZ',
+            'COR': '-',
+            'TAM': '-',
+            'QTD': 0,
+        })
+        qtd_total = 0
+        for row in data:
+            qtd_total += row['QTD']
+            if referencia is not None and referencia != row['REF']:
+                grade.append({
+                    'tam': '',
+                    'cor': 'Total',
+                    'qtd': quant,
+                    '|STYLE': 'font-weight: bold;'
+                })
+                data_refs.append({
+                    'ref': referencia,
+                    'grade': {
+                        'headers': ['Tamanho', 'Cor', 'Quantidade'],
+                        'fields': ['tam', 'cor', 'qtd'],
+                        'data': grade,
+                        'style': {3: 'text-align: right;'},
+                    }
+                })
+                grade = []
+                quant = 0
+            grade.append({
+                'tam': row['TAM'],
+                'cor': row['COR'],
+                'qtd': row['QTD'],
+            })
+            quant += row['QTD']
+            referencia = row['REF']
+        self.context.update({
+            'data_refs': data_refs,
+            'qtd_total': qtd_total,
+        })
+
     def mount_context(self):
         self.context.update({
             'embarque_de': self.embarque_de,
@@ -42,68 +106,7 @@ class Expedicao(View):
         self.colecao_codigo = None if self.colecao is None else self.colecao.colecao
 
         if self.detalhe == 'g':
-            data = queries.pedido.grade_expedicao(
-                self.cursor,
-                embarque_de=self.embarque_de,
-                embarque_ate=self.embarque_ate,
-                emissao_de=self.emissao_de,
-                emissao_ate=self.emissao_ate,
-                pedido_tussor=self.pedido_tussor,
-                pedido_cliente=self.pedido_cliente,
-                cliente=self.cliente,
-                deposito=self.deposito,
-                cancelamento=self.cancelamento,
-                faturamento=self.faturamento,
-                colecao=self.colecao_codigo,
-            )
-            if len(data) == 0:
-                self.context.update({
-                    'msg_erro': 'Nada selecionado',
-                })
-                return
-
-            referencia = None
-            grade = []
-            quant = 0
-            data_refs = []
-            data.append({
-                'REF': 'ZZZZZ',
-                'COR': '-',
-                'TAM': '-',
-                'QTD': 0,
-            })
-            qtd_total = 0
-            for row in data:
-                qtd_total += row['QTD']
-                if referencia is not None and referencia != row['REF']:
-                    grade.append({
-                        'tam': '',
-                        'cor': 'Total',
-                        'qtd': quant,
-                        '|STYLE': 'font-weight: bold;'
-                    })
-                    data_refs.append({
-                        'ref': referencia,
-                        'grade': {
-                            'headers': ['Tamanho', 'Cor', 'Quantidade'],
-                            'fields': ['tam', 'cor', 'qtd'],
-                            'data': grade,
-                            'style': {3: 'text-align: right;'},
-                        }
-                    })
-                    grade = []
-                    quant = 0
-                grade.append({
-                    'tam': row['TAM'],
-                    'cor': row['COR'],
-                    'qtd': row['QTD'],
-                })
-                quant += row['QTD']
-                referencia = row['REF']
-            self.context.update({
-                'data_refs': data_refs,
-                'qtd_total': qtd_total,
-            })
+            self.mount_grade()
             return
 
         data = queries.pedido.ped_expedicao(
