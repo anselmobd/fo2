@@ -156,8 +156,8 @@ def ped_expedicao(
         , sum(i.QTDE_PEDIDA * i.VALOR_UNITARIO) VALOR """
     if detalhe == 'p':
         sql += """ --
-            , CASE WHEN cg.PEDIDO_VENDA IS NULL THEN 'N'
-              ELSE 'S' END GTIN_OK"""
+            , CASE WHEN cg.PEDIDO_VENDA IS NULL THEN 'Não'
+              ELSE 'Sim' END GTIN_OK"""
     sql += """ --
         FROM PEDI_100 ped -- pedido de venda
         LEFT JOIN FATU_050 f -- fatura

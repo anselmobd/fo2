@@ -197,11 +197,6 @@ class Expedicao(View):
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
             row['PEDIDO_VENDA|LINK'] = reverse(
                 'producao:pedido__get', args=[row['PEDIDO_VENDA']])
-            if self.detalhe == 'p':
-                if row['GTIN_OK'] == 'S':
-                    row['GTIN_OK'] = 'Sim'
-                else:
-                    row['GTIN_OK'] = 'Não'
             if self.detalhe == 'o':
                 if row['AGRUPADOR'] == 0:
                     row['AGRUPADOR'] = '-'
