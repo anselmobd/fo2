@@ -6,7 +6,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from utils.table_defs import TableDefs
+from utils.table_defs import TableDefsHpSD
 from utils.views import totalize_grouped_data, group_rowspan
 
 from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
@@ -110,7 +110,7 @@ class Expedicao(View):
             })
             return
 
-        table_defs = TableDefs(
+        table_defs = TableDefsHpSD(
             {
                 'PEDIDO_VENDA': ['Pedido Tussor'],
                 'AGRUPADOR': [],
@@ -130,10 +130,8 @@ class Expedicao(View):
                 'COR': ['Cor'],
                 'TAM': ['Tamanho'],
                 'QTD': ['Quant.', 'r'],
-                'VALOR': ['Valor', 'r'],
+                'VALOR': ['Valor', 'r', 2],
             },
-            ['header', '+style'],
-            style = {'_': 'text-align'},
         )
 
         field_lists = {
@@ -232,7 +230,6 @@ class Expedicao(View):
             else:
                 row['SOLICITACAO'] = '-'
             qtd_total += row['QTD']
-            row['VALOR|DECIMALS'] = 2
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
             row['PEDIDO_VENDA|LINK'] = reverse(
@@ -306,7 +303,8 @@ class Expedicao(View):
                 'group': group,
             })
 
-        self.context.update(table_defs.hfs_dict(*field_lists[self.detalhe]))
+        table_defs.hfsd_dict_context(
+            self.context, *field_lists[self.detalhe])
         self.context.update({
             'safe': [
                 'SOLICITACAO',
