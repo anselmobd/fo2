@@ -271,7 +271,7 @@ class Solicitacao(O2BaseGetView):
         pedidos_tuple = tuple(dict_pedidos.keys())
 
         pedidos_info = dictlist_indexed(
-            ped_inform(self.cursor, pedidos_tuple),
+            ped_inform(self.cursor, pedidos_tuple, empresa=None),
             'PEDIDO_VENDA',
         )
 
@@ -284,6 +284,11 @@ class Solicitacao(O2BaseGetView):
         self.dados_pedidos = [
             {
                 'pedido': pedido,
+                'empresa': (
+                    pedidos_info[pedido]['EMPRESA']
+                    if pedido in pedidos_info
+                    else '-'
+                ),
                 'cliente': (
                     pedidos_info[pedido]['CLIENTE']
                     if pedido in pedidos_info
@@ -304,10 +309,10 @@ class Solicitacao(O2BaseGetView):
         })
 
         self.context.update({
-            'p_headers': ["Pedido", "Cliente", "Data embarque", "Quantidade"],
-            'p_fields': ['pedido', 'cliente', 'dt_embarque', 'qtde'],
+            'p_headers': ["Empresa", "Pedido", "Cliente", "Data embarque", "Quantidade"],
+            'p_fields': ['empresa', 'pedido', 'cliente', 'dt_embarque', 'qtde'],
             'p_style': {
-                4: 'text-align: right;'
+                5: 'text-align: right;'
             },
             'p_data': self.dados_pedidos,
         })
