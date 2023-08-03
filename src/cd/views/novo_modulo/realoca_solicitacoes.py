@@ -4,6 +4,7 @@ from pprint import pprint
 from fo2.connections import db_cursor_so
 
 from o2.views.base.get_post import O2BaseGetPostView
+from utils.functions import coalesce
 from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
@@ -33,6 +34,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 'qtd_dbaixa': ['Qtd.Est.', 'r'],
                 'estagio': ['Estágio', 'c'],
                 'solicitacao': ['Solicitação'],
+                'pedido_destino': ['Pedido destino'],
                 'solicitacoes': ['Solicitações', 'c'],
                 'sol_fin': ['Solicit.Fin.', 'c'],
                 'sol': ['Solicitação'],
@@ -170,7 +172,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             self.cursor,
             solicitacao='!',
             lote=self.lista_lotes,
-            situacao=4,
+            situacao=(2, 3, 4),
         )
         return dados
 
@@ -179,20 +181,26 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         dados = {}
         for row in self.solis_de_lotes:
             sol = row['solicitacao']
-            if sol not in dados:
-                dados[sol] = 0
-            dados[sol] += row['qtde']
+            ped = row['pedido_destino']
+            key = (sol, ped)
+            if key not in dados:
+                dados[key] = 0
+            dados[key] += row['qtde']
         return [
             {
-                'solicitacao': sol,
+                'solicitacao': coalesce(key[0], 0),
+                'pedido_destino': coalesce(key[1], 0),
                 'qtde': qtde,
             }
-            for sol, qtde in dados.items()
+            for key, qtde in dados.items()
         ]
 
     def mount_solis(self):
         len_solis = len(self.solis)
-        self.solis.sort(key=operator.itemgetter('solicitacao'))
+        self.solis.sort(key=operator.itemgetter('solicitacao', 'pedido_destino'))
+        for row in self.solis:
+            if row['solicitacao'] == 0:
+                row['solicitacao'] = '#'
         sum_fields = ['qtde']
         totalize_data(
             self.solis,
@@ -206,11 +214,11 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             }
         )
         fields = [
-            'solicitacao', 'qtde'
+            'solicitacao', 'pedido_destino', 'qtde'
         ]
         self.context['solis'] = self.table_defs.hfs_dict(*fields)
         self.context['solis'].update({
-            'safe': ['solicitacao'],
+            'safe': ['solicitacao', 'pedido_destino'],
             'data': self.solis,
             'len': len_solis,
         })

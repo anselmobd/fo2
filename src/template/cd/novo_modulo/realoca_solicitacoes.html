@@ -25,7 +25,7 @@
       {% include "layout/tbody_generic.html" with fields=lotes_solis.fields data=lotes_solis.data safe=lotes_solis.safe style=lotes_solis.style only %}
     </table>
     <h4>{{solis.len}} solicitações</h4>
-    <table style="width: 15em;">
+    <table style="width: 25em;">
       {% include "layout/thead_generic.html" with data=solis.headers safe=solis.safe style=solis.style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=solis.fields data=solis.data safe=solis.safe style=solis.style only %}
     </table>
