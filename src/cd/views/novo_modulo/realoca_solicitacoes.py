@@ -32,7 +32,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 'qtd_prog qtd_lote': ['Tam.Lote', 'r'],
                 'qtd_dbaixa': ['Qtd.Est.', 'r'],
                 'estagio': ['Estágio', 'c'],
-                'solicitacao': ['Solicitação', 'c'],
+                'solicitacao': ['Solicitação'],
                 'solicitacoes': ['Solicitações', 'c'],
                 'sol_fin': ['Solicit.Fin.', 'c'],
                 'sol': ['Solicitação'],
@@ -165,30 +165,60 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         if len(self.lotes_solis) > 0:
             self.mount_lotes_solis()
 
-    def get_solis_tot(self, lotes):
+    def get_solis_de_lotes(self):
         dados = get_solicitacao(
             self.cursor,
             solicitacao='!',
-            lote=lotes,
+            lote=self.lista_lotes,
             situacao=4,
         )
         return dados
 
-    def mount_solis_tot(self):
-        len_solis_tot = len(self.solis_tot)
-        fields = [
-            'lote', 'solicitacao', 'qtde'
+    def get_solis(self):
+        self.solis_de_lotes = self.get_solis_de_lotes()
+        dados = {}
+        for row in self.solis_de_lotes:
+            sol = row['solicitacao']
+            if sol not in dados:
+                dados[sol] = 0
+            dados[sol] += row['qtde']
+        return [
+            {
+                'solicitacao': sol,
+                'qtde': qtde,
+            }
+            for sol, qtde in dados.items()
         ]
-        self.context['solis_tot'] = self.table_defs.hfs_dict(*fields)
-        self.context['solis_tot'].update({
-            'data': self.solis_tot,
-            'len': len_solis_tot,
+
+    def mount_solis(self):
+        len_solis = len(self.solis)
+        self.solis.sort(key=operator.itemgetter('solicitacao'))
+        sum_fields = ['qtde']
+        totalize_data(
+            self.solis,
+            {
+                'sum': sum_fields,
+                'descr': {'lote': 'Total geral:'},
+                'row_style':
+                    "font-weight: bold;"
+                    "background-image: linear-gradient(#DDD, white);",
+                'flags': ['NO_TOT_1'],
+            }
+        )
+        fields = [
+            'solicitacao', 'qtde'
+        ]
+        self.context['solis'] = self.table_defs.hfs_dict(*fields)
+        self.context['solis'].update({
+            'safe': ['solicitacao'],
+            'data': self.solis,
+            'len': len_solis,
         })
 
-    def mount_solis_totalizadas(self):
-        self.solis_tot = self.get_solis_tot(self.lista_lotes)
-        if len(self.solis_tot) > 0:
-            self.mount_solis_tot()
+    def mount_solicitacoes(self):
+        self.solis = self.get_solis()
+        if len(self.solis) > 0:
+            self.mount_solis()
 
     def filter_inputs(self):
         self.cor = None if self.cor == '' else self.cor
@@ -200,5 +230,5 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
         self.filter_inputs()
         self.mount_lotes_solicitados()
-        self.mount_solis_totalizadas()
+        self.mount_solicitacoes()
         self.mount_lotes_disponiveis()

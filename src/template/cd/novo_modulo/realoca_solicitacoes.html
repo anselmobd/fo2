@@ -24,10 +24,10 @@
       {% include "layout/thead_generic.html" with data=lotes_solis.headers safe=lotes_solis.safe style=lotes_solis.style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=lotes_solis.fields data=lotes_solis.data safe=lotes_solis.safe style=lotes_solis.style only %}
     </table>
-    <h4>{{solis_tot.len}} solicitações</h4>
-    <table>
-      {% include "layout/thead_generic.html" with data=solis_tot.headers safe=solis_tot.safe style=solis_tot.style thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=solis_tot.fields data=solis_tot.data safe=solis_tot.safe style=solis_tot.style only %}
+    <h4>{{solis.len}} solicitações</h4>
+    <table style="width: 15em;">
+      {% include "layout/thead_generic.html" with data=solis.headers safe=solis.safe style=solis.style thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=solis.fields data=solis.data safe=solis.safe style=solis.style only %}
     </table>
   {% else %}
     {% if request.POST %}
