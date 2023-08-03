@@ -263,3 +263,13 @@ class TableDefsHpSD(TableDefs):
             ['header', '+style', 'decimals'],
             style = {'_': 'text-align'},
         )
+
+
+class TableDefsHBpSD(TableDefs):
+
+    def __init__(self, definition):
+        super(TableDefsHBpSD, self).__init__(
+            definition,
+            ['header', 'flags_bitmap', '+style', 'decimals'],
+            style = {'_': 'text-align'},
+        )
