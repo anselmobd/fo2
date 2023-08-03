@@ -23,48 +23,44 @@ class Expedicao(View):
         self.template_name = 'lotes/expedicao.html'
         self.title_name = 'Expedição'
 
-    def mount_context(
-            self, cursor, embarque_de, embarque_ate,
-            emissao_de, emissao_ate,
-            pedido_tussor, pedido_cliente, cliente,
-            deposito, detalhe, cancelamento, faturamento, colecao):
-        context = {
-            'embarque_de': embarque_de,
-            'embarque_ate': embarque_ate,
-            'emissao_de': emissao_de,
-            'emissao_ate': emissao_ate,
-            'pedido_tussor': pedido_tussor,
-            'pedido_cliente': pedido_cliente,
-            'cliente': cliente,
-            'detalhe': detalhe,
-            'deposito': deposito,
-            'cancelamento': cancelamento,
-            'faturamento': faturamento,
-            'colecao': colecao,
-        }
+    def mount_context(self):
+        self.context.update({
+            'embarque_de': self.embarque_de,
+            'embarque_ate': self.embarque_ate,
+            'emissao_de': self.emissao_de,
+            'emissao_ate': self.emissao_ate,
+            'pedido_tussor': self.pedido_tussor,
+            'pedido_cliente': self.pedido_cliente,
+            'cliente': self.cliente,
+            'detalhe': self.detalhe,
+            'deposito': self.deposito,
+            'cancelamento': self.cancelamento,
+            'faturamento': self.faturamento,
+            'colecao': self.colecao,
+        })
 
-        colecao_codigo = None if colecao is None else colecao.colecao
+        self.colecao_codigo = None if self.colecao is None else self.colecao.colecao
 
-        if detalhe == 'g':
+        if self.detalhe == 'g':
             data = queries.pedido.grade_expedicao(
-                cursor,
-                embarque_de=embarque_de,
-                embarque_ate=embarque_ate,
-                emissao_de=emissao_de,
-                emissao_ate=emissao_ate,
-                pedido_tussor=pedido_tussor,
-                pedido_cliente=pedido_cliente,
-                cliente=cliente,
-                deposito=deposito,
-                cancelamento=cancelamento,
-                faturamento=faturamento,
-                colecao=colecao_codigo,
+                self.cursor,
+                embarque_de=self.embarque_de,
+                embarque_ate=self.embarque_ate,
+                emissao_de=self.emissao_de,
+                emissao_ate=self.emissao_ate,
+                pedido_tussor=self.pedido_tussor,
+                pedido_cliente=self.pedido_cliente,
+                cliente=self.cliente,
+                deposito=self.deposito,
+                cancelamento=self.cancelamento,
+                faturamento=self.faturamento,
+                colecao=self.colecao_codigo,
             )
             if len(data) == 0:
-                context.update({
+                self.context.update({
                     'msg_erro': 'Nada selecionado',
                 })
-                return context
+                return
 
             referencia = None
             grade = []
@@ -104,32 +100,32 @@ class Expedicao(View):
                 })
                 quant += row['QTD']
                 referencia = row['REF']
-            context.update({
+            self.context.update({
                 'data_refs': data_refs,
                 'qtd_total': qtd_total,
             })
-            return context
+            return
 
         data = queries.pedido.ped_expedicao(
-            cursor,
-            embarque_de=embarque_de,
-            embarque_ate=embarque_ate,
-            emissao_de=emissao_de,
-            emissao_ate=emissao_ate,
-            pedido_tussor=pedido_tussor,
-            pedido_cliente=pedido_cliente,
-            cliente=cliente,
-            detalhe=detalhe,
-            deposito=deposito,
-            cancelamento=cancelamento,
-            faturamento=faturamento,
-            colecao=colecao_codigo,
+            self.cursor,
+            embarque_de=self.embarque_de,
+            embarque_ate=self.embarque_ate,
+            emissao_de=self.emissao_de,
+            emissao_ate=self.emissao_ate,
+            pedido_tussor=self.pedido_tussor,
+            pedido_cliente=self.pedido_cliente,
+            cliente=self.cliente,
+            detalhe=self.detalhe,
+            deposito=self.deposito,
+            cancelamento=self.cancelamento,
+            faturamento=self.faturamento,
+            colecao=self.colecao_codigo,
         )
         if len(data) == 0:
-            context.update({
+            self.context.update({
                 'msg_erro': 'Nada selecionado',
             })
-            return context
+            return
 
         pedidos = list(set([
             row['PEDIDO_VENDA']
@@ -137,7 +133,7 @@ class Expedicao(View):
         ]))
 
         solict_pedidos = {}
-        s_dados = get_solicitacoes(cursor, pedido_destino=pedidos)
+        s_dados = get_solicitacoes(self.cursor, pedido_destino=pedidos)
         for row in s_dados:
             pedidos_destino_list = map(
                 str.strip,
@@ -185,17 +181,17 @@ class Expedicao(View):
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
             row['PEDIDO_VENDA|LINK'] = reverse(
                 'producao:pedido__get', args=[row['PEDIDO_VENDA']])
-            if detalhe == 'p':
+            if self.detalhe == 'p':
                 if row['GTIN_OK'] == 'S':
                     row['GTIN_OK'] = 'Sim'
                 else:
                     row['GTIN_OK'] = 'Não'
-            if detalhe == 'o':
+            if self.detalhe == 'o':
                 if row['AGRUPADOR'] == 0:
                     row['AGRUPADOR'] = '-'
                 else:
                     row['AGRUPADOR'] = f"{999000000+row['AGRUPADOR']}"
-                o_data = queries.pedido.ped_op(cursor, row['PEDIDO_VENDA'])
+                o_data = queries.pedido.ped_op(self.cursor, row['PEDIDO_VENDA'])
                 ops = []
                 for o_row in o_data:
                     if o_row['SITUACAO'] != 9:
@@ -210,7 +206,7 @@ class Expedicao(View):
                 else:
                     row['OP'] = '-'
 
-                r_data = queries.pedido.referencias.query(cursor, row['PEDIDO_VENDA'])
+                r_data = queries.pedido.referencias.query(self.cursor, row['PEDIDO_VENDA'])
                 if r_data:
                     referencias = ', '.join([r['ref'] for r in r_data])
                 else:
@@ -240,7 +236,7 @@ class Expedicao(View):
                     referencias,
                 )
 
-        if detalhe not in ['p', 'o']:
+        if self.detalhe not in ['p', 'o']:
             group = ['PEDIDO_VENDA', 'SOLICITACAO', 'PEDIDO_CLIENTE',
                      'DT_EMISSAO', 'DT_EMBARQUE',
                      'CLIENTE']
@@ -252,48 +248,48 @@ class Expedicao(View):
             group_rowspan(data, group)
 
         headers = ['Pedido Tussor']
-        if detalhe == 'o':
+        if self.detalhe == 'o':
             headers.append('Agrupador')
         headers.append('Solicitação')
-        if detalhe == 'p':
+        if self.detalhe == 'p':
             headers.append('GTIN OK')
         headers.append('Pedido cliente')
         headers.append('Data emissão')
         headers.append('Data embarque')
-        if detalhe == 'o':
+        if self.detalhe == 'o':
             headers.append('\N{department store}Cliente / \N{memo}Observação / \N{scroll}Referências')
             headers.append('OP')
         else:
             headers.append('Cliente')
-        if detalhe in ('r', 'c'):
+        if self.detalhe in ('r', 'c'):
             headers.append('Referência')
-        if detalhe == 'c':
+        if self.detalhe == 'c':
             headers.append('Cor')
             headers.append('Tamanho')
         headers.append('Quant.')
-        if detalhe == 'p':
+        if self.detalhe == 'p':
             headers.append('Valor')
 
         safe = []
 
         fields = ['PEDIDO_VENDA']
-        if detalhe == 'o':
+        if self.detalhe == 'o':
             fields.append('AGRUPADOR')
         fields.append('SOLICITACAO')
         safe.append('SOLICITACAO')
-        if detalhe == 'p':
+        if self.detalhe == 'p':
             fields.append('GTIN_OK')
         fields.append('PEDIDO_CLIENTE')
         fields.append('DT_EMISSAO')
         fields.append('DT_EMBARQUE')
         fields.append('CLIENTE')
-        if detalhe == 'o':
+        if self.detalhe == 'o':
             fields.append('OP')
             safe.append('CLIENTE')
             safe.append('OP')
-        if detalhe in ('r', 'c'):
+        if self.detalhe in ('r', 'c'):
             fields.append('REF')
-        if detalhe == 'c':
+        if self.detalhe == 'c':
             fields.append('COR')
             fields.append('TAM')
         fields.append('QTD')
@@ -301,11 +297,11 @@ class Expedicao(View):
         quant_col = len(fields)
         style = {quant_col: 'text-align: right;'}
 
-        if detalhe == 'p':
+        if self.detalhe == 'p':
             fields.append('VALOR')
             style.update({quant_col+1: 'text-align: right;'})
 
-        context.update({
+        self.context.update({
             'headers': headers,
             'fields': fields,
             'data': data,
@@ -313,61 +309,67 @@ class Expedicao(View):
             'qtd_total': qtd_total,
             'safe': safe,
         })
-        if detalhe not in ['p', 'o']:
-            context.update({
+        if self.detalhe not in ['p', 'o']:
+            self.context.update({
                 'group': group,
             })
 
-        return context
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
+        self.context = {'titulo': self.title_name}
         if 'pedido_cliente' in kwargs:
-            cursor = db_cursor_so(request)
-            fields = {
-                'embarque_de': None,
-                'embarque_ate': None,
-                'emissao_de': None,
-                'emissao_ate': None,
-                'pedido_tussor': '',
-                'pedido_cliente': kwargs['pedido_cliente'],
-                'cliente': kwargs['cliente'],
-                'deposito': '-',
-                'detalhe': 'o',
-                'cancelamento': '-',
-                'faturamento': '-',
-                'colecao': None,
-            }
-            context.update(
-                self.mount_context(cursor, *fields.values())
+            self.cursor = db_cursor_so(request)
+            self.embarque_de = None
+            self.embarque_ate = None
+            self.emissao_de = None
+            self.emissao_ate = None
+            self.pedido_tussor = ''
+            self.pedido_cliente = kwargs['pedido_cliente']
+            self.cliente = kwargs['cliente']
+            self.deposito = '-'
+            self.detalhe = 'o'
+            self.cancelamento = '-'
+            self.faturamento = '-'
+            self.colecao = None
+            self.mount_context()
+            form = self.Form_class(
+                initial={
+                    'embarque_de': self.embarque_de,
+                    'embarque_ate': self.embarque_ate,
+                    'emissao_de': self.emissao_de,
+                    'emissao_ate': self.emissao_ate,
+                    'pedido_tussor': self.pedido_tussor,
+                    'pedido_cliente': self.pedido_cliente,
+                    'cliente': self.cliente,
+                    'deposito': self.deposito,
+                    'detalhe': self.detalhe,
+                    'cancelamento': self.cancelamento,
+                    'faturamento': self.faturamento,
+                    'colecao': self.colecao,
+                }
             )
-            form = self.Form_class(initial=fields)
         else:
             form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
+        self.context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
-            embarque_de = form.cleaned_data['embarque_de']
-            embarque_ate = form.cleaned_data['embarque_ate']
-            emissao_de = form.cleaned_data['emissao_de']
-            emissao_ate = form.cleaned_data['emissao_ate']
-            pedido_tussor = form.cleaned_data['pedido_tussor']
-            pedido_cliente = form.cleaned_data['pedido_cliente']
-            cliente = form.cleaned_data['cliente']
-            deposito = form.cleaned_data['deposito']
-            detalhe = form.cleaned_data['detalhe']
-            cancelamento = form.cleaned_data['cancelamento']
-            faturamento = form.cleaned_data['faturamento']
-            colecao = form.cleaned_data['colecao']
-            cursor = db_cursor_so(request)
-            context.update(self.mount_context(
-                cursor, embarque_de, embarque_ate,
-                emissao_de, emissao_ate,
-                pedido_tussor, pedido_cliente, cliente,
-                deposito, detalhe, cancelamento, faturamento, colecao))
-        context['form'] = form
-        return render(request, self.template_name, context)
+            self.embarque_de = form.cleaned_data['embarque_de']
+            self.embarque_ate = form.cleaned_data['embarque_ate']
+            self.emissao_de = form.cleaned_data['emissao_de']
+            self.emissao_ate = form.cleaned_data['emissao_ate']
+            self.pedido_tussor = form.cleaned_data['pedido_tussor']
+            self.pedido_cliente = form.cleaned_data['pedido_cliente']
+            self.cliente = form.cleaned_data['cliente']
+            self.deposito = form.cleaned_data['deposito']
+            self.detalhe = form.cleaned_data['detalhe']
+            self.cancelamento = form.cleaned_data['cancelamento']
+            self.faturamento = form.cleaned_data['faturamento']
+            self.colecao = form.cleaned_data['colecao']
+            self.cursor = db_cursor_so(request)
+            self.mount_context()
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
