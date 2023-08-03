@@ -6,6 +6,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from utils.table_defs import TableDefs
 from utils.views import totalize_grouped_data, group_rowspan
 
 from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
@@ -109,6 +110,79 @@ class Expedicao(View):
             })
             return
 
+        table_defs = TableDefs(
+            {
+                'PEDIDO_VENDA': ['Pedido Tussor'],
+                'AGRUPADOR': [],
+                'SOLICITACAO': ['Solicitação'],
+                'GTIN_OK': ['GTIN OK'],
+                'PEDIDO_CLIENTE': ['Pedido cliente'],
+                'DT_EMISSAO': ['Data emissão'],
+                'DT_EMBARQUE': ['Data embarque'],
+                'CLIENTE': ['Cliente'],
+                'CLIENTE_INFO': [
+                    '\N{department store}Cliente / '
+                    '\N{memo}Observação / '
+                    '\N{scroll}Referências'
+                ],
+                'OP': ['OP'],
+                'REF': ['Referência'],
+                'COR': ['Cor'],
+                'TAM': ['Tamanho'],
+                'QTD': ['Quant.', 'r'],
+                'VALOR': ['Valor', 'r'],
+            },
+            ['header', '+style'],
+            style = {'_': 'text-align'},
+        )
+
+        field_lists = {
+            'r': [
+                'PEDIDO_VENDA',
+                'SOLICITACAO',
+                'PEDIDO_CLIENTE',
+                'DT_EMISSAO',
+                'DT_EMBARQUE',
+                'CLIENTE',
+                'REF',
+                'QTD',
+            ],
+            'c': [
+                'PEDIDO_VENDA',
+                'SOLICITACAO',
+                'PEDIDO_CLIENTE',
+                'DT_EMISSAO',
+                'DT_EMBARQUE',
+                'CLIENTE',
+                'REF',
+                'COR',
+                'TAM',
+                'QTD',
+            ],
+            'p': [
+                'PEDIDO_VENDA',
+                'SOLICITACAO',
+                'GTIN_OK',
+                'PEDIDO_CLIENTE',
+                'DT_EMISSAO',
+                'DT_EMBARQUE',
+                'CLIENTE',
+                'QTD',
+                'VALOR',
+            ],
+            'o': [
+                'PEDIDO_VENDA',
+                'AGRUPADOR',
+                'SOLICITACAO',
+                'PEDIDO_CLIENTE',
+                'DT_EMISSAO',
+                'DT_EMBARQUE',
+                'CLIENTE_INFO',
+                'OP',
+                'QTD',
+            ],
+        }
+
         pedidos = list(set([
             row['PEDIDO_VENDA']
             for row in data
@@ -204,7 +278,7 @@ class Expedicao(View):
                         row['OBSERVACAO'],
                     )
 
-                row['CLIENTE'] = """
+                row['CLIENTE_INFO'] = """
                     <ul style="list-style-type: '\N{department store}'; margin-bottom: 0px;">
                         <li>{}</li>
                     </ul>
@@ -228,73 +302,20 @@ class Expedicao(View):
                 'descr': {'REF': 'Total:'},
             })
             group_rowspan(data, group)
-
-        headers = ['Pedido Tussor']
-        if self.detalhe == 'o':
-            headers.append('Agrupador')
-        headers.append('Solicitação')
-        if self.detalhe == 'p':
-            headers.append('GTIN OK')
-        headers.append('Pedido cliente')
-        headers.append('Data emissão')
-        headers.append('Data embarque')
-        if self.detalhe == 'o':
-            headers.append('\N{department store}Cliente / \N{memo}Observação / \N{scroll}Referências')
-            headers.append('OP')
-        else:
-            headers.append('Cliente')
-        if self.detalhe in ('r', 'c'):
-            headers.append('Referência')
-        if self.detalhe == 'c':
-            headers.append('Cor')
-            headers.append('Tamanho')
-        headers.append('Quant.')
-        if self.detalhe == 'p':
-            headers.append('Valor')
-
-        safe = []
-
-        fields = ['PEDIDO_VENDA']
-        if self.detalhe == 'o':
-            fields.append('AGRUPADOR')
-        fields.append('SOLICITACAO')
-        safe.append('SOLICITACAO')
-        if self.detalhe == 'p':
-            fields.append('GTIN_OK')
-        fields.append('PEDIDO_CLIENTE')
-        fields.append('DT_EMISSAO')
-        fields.append('DT_EMBARQUE')
-        fields.append('CLIENTE')
-        if self.detalhe == 'o':
-            fields.append('OP')
-            safe.append('CLIENTE')
-            safe.append('OP')
-        if self.detalhe in ('r', 'c'):
-            fields.append('REF')
-        if self.detalhe == 'c':
-            fields.append('COR')
-            fields.append('TAM')
-        fields.append('QTD')
-
-        quant_col = len(fields)
-        style = {quant_col: 'text-align: right;'}
-
-        if self.detalhe == 'p':
-            fields.append('VALOR')
-            style.update({quant_col+1: 'text-align: right;'})
-
-        self.context.update({
-            'headers': headers,
-            'fields': fields,
-            'data': data,
-            'style': style,
-            'qtd_total': qtd_total,
-            'safe': safe,
-        })
-        if self.detalhe not in ['p', 'o']:
             self.context.update({
                 'group': group,
             })
+
+        self.context.update(table_defs.hfs_dict(*field_lists[self.detalhe]))
+        self.context.update({
+            'safe': [
+                'SOLICITACAO',
+                'CLIENTE_INFO',
+                'OP',
+            ],
+            'data': data,
+            'qtd_total': qtd_total,
+        })
 
     def mount_context(self):
         self.context.update({
