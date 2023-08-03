@@ -95,8 +95,8 @@ class Expedicao(View):
             </ul>
         """
 
-    def mount_pedidos(self):
-        data = queries.pedido.ped_expedicao(
+    def get_dados_pedidos(self):
+        self.dados_pedidos = queries.pedido.ped_expedicao(
             self.cursor,
             embarque_de=self.embarque_de,
             embarque_ate=self.embarque_ate,
@@ -111,7 +111,10 @@ class Expedicao(View):
             faturamento=self.faturamento,
             colecao=self.colecao_codigo,
         )
-        if len(data) == 0:
+
+    def mount_pedidos(self):
+        self.get_dados_pedidos()
+        if len(self.dados_pedidos) == 0:
             self.context.update({
                 'msg_erro': 'Nada selecionado',
             })
@@ -143,7 +146,7 @@ class Expedicao(View):
 
         pedidos = list(set([
             row['PEDIDO_VENDA']
-            for row in data
+            for row in self.dados_pedidos
         ]))
 
         solict_pedidos = {}
@@ -163,7 +166,7 @@ class Expedicao(View):
             solict_pedidos[ped] = ', '.join(map(str, solict_pedidos[ped]))
 
         qtd_total = 0
-        for row in data:
+        for row in self.dados_pedidos:
             if row['PEDIDO_VENDA'] in solict_pedidos:
                 num_solicit = solict_pedidos[row['PEDIDO_VENDA']]
                 if ',' in num_solicit:
@@ -237,12 +240,12 @@ class Expedicao(View):
             group = ['PEDIDO_VENDA', 'SOLICITACAO', 'PEDIDO_CLIENTE',
                      'DT_EMISSAO', 'DT_EMBARQUE',
                      'CLIENTE']
-            totalize_grouped_data(data, {
+            totalize_grouped_data(self.dados_pedidos, {
                 'group': group,
                 'sum': ['QTD'],
                 'descr': {'REF': 'Total:'},
             })
-            group_rowspan(data, group)
+            group_rowspan(self.dados_pedidos, group)
             self.context.update({
                 'group': group,
             })
@@ -255,7 +258,7 @@ class Expedicao(View):
                 'CLIENTE_INFO',
                 'OP',
             ],
-            'data': data,
+            'data': self.dados_pedidos,
             'qtd_total': qtd_total,
         })
 
