@@ -69,9 +69,16 @@ def get_solicitacao(
         filtra_lote = " OR ".join(cada_lote)
         filtra_lote = f" AND ( {filtra_lote} )"
 
-    filtra_situacao = f"""--
-        AND sl.SITUACAO = '{situacao}'
-    """ if situacao else ''
+    filtra_situacao = ''
+    if situacao:
+        if not isinstance(situacao, (tuple, list)):
+            situacao = [situacao]
+        cada_situacao = [
+            f"(sl.SITUACAO = '{s}')\n"
+            for s in situacao
+        ]
+        filtra_situacao = " OR ".join(cada_situacao)
+        filtra_situacao = f" AND ( {filtra_situacao} )"
 
     if order == 'sit_oc':
         order_by = f"""--
