@@ -182,9 +182,23 @@ class NovoEstoqueForm(forms.Form):
         ('se', "Sem empenho"),
     ]
     qtd_empenhada = forms.ChoiceField(
-        label='Quantidade empenhada',
+        label='Filtra total empenhado',
         choices=CHOICES,
         initial='t',
+    )
+
+    CHOICES = [
+        ('-', "* Não filtra"),
+        ('t', "Solicitação total"),
+        ('tp', "Solicitação total ou parcial"),
+        ('p', "Solicitação parcial"),
+        ('pn', "Solicitação parcial ou não solicitado"),
+        ('n', "Não solicitado"),
+    ]
+    qtd_solicitada = forms.ChoiceField(
+        label='Filtro por quantidade solicitada',
+        choices=CHOICES,
+        initial='-',
     )
 
     CHOICES = [

@@ -141,6 +141,7 @@ def query(
     corte_de=None,
     corte_ate=None,
     qtd_empenhada='t',
+    qtd_solicitada='-',
     solicitacoes=None,
 ):
     """
@@ -213,6 +214,13 @@ def query(
         nte: Não totalmente empenhado
         pe: Parcialmente empenhado
         se: Sem empenho
+    qtd_solicitada:
+        - ou None: Não filtra
+        t: Solicitação total
+        tp: Solicitação total ou parcial
+        p: Solicitação parcial
+        pn: Solicitação parcial ou não solicitado
+        n: Não solicitado
     selecao_ops: filtra no BD OPs
         63: Com estágio 63 (CD)
         n63: Sem estágio 63 (CD)
@@ -485,6 +493,22 @@ def query(
         filtra_qtd_empenhada = (
             dict_qtd_empenhada[qtd_empenhada] if qtd_empenhada else '')
 
+    filtra_qtd_solicitada = ''
+    if {'qtd', 'qtd_sol'}.issubset(fields):
+        dict_qtd_solicitada = {
+            '-': '',
+            't': "AND d.qtd_sol >= d.qtd",
+            'tp': "AND d.qtd_sol > 0",
+            'p': """--
+                AND d.qtd_sol > 0
+                AND d.qtd_sol < d.qtd
+            """,
+            'pn': "AND d.qtd_sol < d.qtd",
+            'n': "AND d.qtd_sol = 0",
+        }
+        filtra_qtd_solicitada = (
+            dict_qtd_solicitada[qtd_solicitada] if qtd_solicitada else '')
+
     field_statement = {
         'ref': "l.PROCONF_GRUPO",
         'ordem_tam': "COALESCE(tam.ORDEM_TAMANHO, 0)",
@@ -698,6 +722,7 @@ def query(
         FROM dados d
         WHERE 1=1
           {filtra_qtd_empenhada} -- filtra_qtd_empenhada
+          {filtra_qtd_solicitada} -- filtra_qtd_solicitada
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
