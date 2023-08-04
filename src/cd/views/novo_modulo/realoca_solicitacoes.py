@@ -315,8 +315,8 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         pprint(new_lotes_sols)
 
         print()
-        print("Lotes ordenados para uso")
-        lotes_ord = oti_emp.keys_order_by_dict(new_lotes_sols)
+        print("Lotes em ordem decrescente de quantidade")
+        lotes_ord = oti_emp.keys_order_by_dict(new_lotes_sols, reverse=True)
         pprint(lotes_ord)
 
         print()
@@ -336,17 +336,26 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         pprint(sols_ord)
 
         print()
-        print("Demais lotes do maior para o menor")
+        print("Lotes em ordem crescente de quantidade")
+        lotes_ord.reverse()
+        pprint(lotes_ord)
+
+        print()
+        print("Empenhar demais lotes")
         new_lotes_sols_iter_ord = oti_emp.lotes_parciais(
             new_lotes_sols, lotes_ord, sols_ord, solicitacoes)
         pprint(new_lotes_sols)
         print(oti_emp.conta_zerados(new_lotes_sols), "lotes zerados")
 
         print()
-        print("visão ordenada")
+        print("Visão ordenada dos empenhos otimizados")
         pprint(new_lotes_sols_iter_ord)
 
         new_lotes_sols_iter_ord_txt = pformat(new_lotes_sols_iter_ord)
+
+        self.context.update({
+            'a_fazer': new_lotes_sols_iter_ord_txt
+        })
 
         file_dir = "kb/cd/oti_emp/%Y/%m"
         filename = timezone.now().strftime(
@@ -366,10 +375,6 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 ])
             )
             file.write(new_lotes_sols_iter_ord_txt)
-
-        self.context.update({
-            'a_fazer': new_lotes_sols_iter_ord_txt
-        })
 
     def filter_inputs(self):
         self.endereco = None if self.endereco == '' else self.endereco

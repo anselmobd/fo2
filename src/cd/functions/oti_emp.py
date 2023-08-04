@@ -119,14 +119,15 @@ def keys_order_by_value(lotes):
     return list(map(lambda x: x[0], lotes_items))
 
 
-def keys_order_by_dict(lotes_sols):
+def keys_order_by_dict(lotes_sols, reverse=False):
     lotes_items = sorted(
         lotes_sols.items(),
         key=lambda k: k[1]['end'],
     )
+    mult = -1 if reverse else 1
     lotes_items_2 = sorted(
         lotes_items,
-        key=lambda k: -k[1]['ini'],
+        key=lambda k: mult * k[1]['ini'],
     )
     return [lote_item[0] for lote_item in lotes_items_2]
 
@@ -156,8 +157,8 @@ if __name__ == '__main__':
     pprint(new_lotes_sols)
 
     print()
-    print("Lotes ordenados para uso")
-    lotes_ord = keys_order_by_dict(new_lotes_sols)
+    print("Lotes em ordem decrescente de quantidade")
+    lotes_ord = keys_order_by_dict(new_lotes_sols, reverse=True)
     pprint(lotes_ord)
 
     print()
@@ -177,12 +178,17 @@ if __name__ == '__main__':
     pprint(sols_ord)
 
     print()
-    print("Demais lotes do maior para o menor")
+    print("Lotes em ordem crescente de quantidade")
+    lotes_ord.reverse()
+    pprint(lotes_ord)
+
+    print()
+    print("Empenhar demais lotes")
     new_lotes_sols_iter_ord = lotes_parciais(
         new_lotes_sols, lotes_ord, sols_ord, solicitacoes)
     pprint(new_lotes_sols)
     print(conta_zerados(new_lotes_sols), "lotes zerados")
 
     print()
-    print("visão ordenada")
+    print("Visão ordenada dos empenhos otimizados")
     pprint(new_lotes_sols_iter_ord)
