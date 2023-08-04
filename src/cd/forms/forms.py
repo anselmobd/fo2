@@ -1203,11 +1203,11 @@ class RealocaSolicitacoesForm(forms.Form):
     )
 
     CHOICES = [
-        ('s', "Solicitado"),
-        ('ps', "Parcialmente solicitado"),
+        ('ce', "Com empenho"),
+        ('pe', "Parcialmente empenhado"),
     ]
-    qtd_solicitada = forms.ChoiceField(
-        label='Quantidade solicitada',
+    qtd_empenhada = forms.ChoiceField(
+        label='Quantidade empenhada',
         choices=CHOICES,
         initial='s',
     )

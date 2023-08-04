@@ -53,7 +53,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         )
 
     def get_lotes(self):
-        qtd_solicitada = 't' if self.qtd_solicitada == 's' else 'nts'
+        qtd_empenhada = 't' if self.qtd_empenhada == 'ce' else 'nte'
         dados = refs_em_palets.query(
             self.cursor,
             fields='detalhe',
@@ -62,7 +62,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             modelo=self.modelo,
             endereco=self.endereco,
             tipo_prod='pagb',
-            qtd_solicitada=qtd_solicitada,
+            qtd_empenhada=qtd_empenhada,
             solicitacoes=self.solicitacoes,
         )
         for row in dados:
@@ -112,7 +112,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             tam=self.tam,
             modelo=self.modelo,
             tipo_prod='pagb',
-            qtd_solicitada=self.qtd_solicitada,
+            qtd_empenhada=self.qtd_empenhada,
             solicitacoes=self.solicitacoes,
         )
         for row in dados:
