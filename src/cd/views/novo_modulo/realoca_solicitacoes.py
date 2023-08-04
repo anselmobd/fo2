@@ -365,10 +365,15 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         print("Visão ordenada dos empenhos otimizados")
         pprint(new_lotes_sols_iter_ord)
 
+        registros_solis_txt = pformat(self.registros_solis)
         new_lotes_sols_iter_ord_txt = pformat(new_lotes_sols_iter_ord)
+        a_fazer = (
+            f"Solicitações a cancelar\n\n{registros_solis_txt}\n\n"
+            f"Solicitações a inserir\n\n{new_lotes_sols_iter_ord_txt}"
+        )
 
         self.context.update({
-            'a_fazer': new_lotes_sols_iter_ord_txt
+            'a_fazer': a_fazer
         })
 
         file_dir = "kb/cd/oti_emp/%Y/%m"
