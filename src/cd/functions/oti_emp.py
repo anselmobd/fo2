@@ -80,6 +80,7 @@ def lotes_uma_sol(new_lotes_sols, sols):
 def lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, sols):
     sols_iter = iter(sols_ord)
     sol = next(sols_iter)
+    new_lotes_sols_iter_ord = []
     for lote in lotes_ord:
         value = new_lotes_sols[lote]
         if value['fim'] is None:
@@ -95,6 +96,8 @@ def lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, sols):
                 value['sols'][sol] = qtd_deduzir
                 value['fim'] -= qtd_deduzir
                 sols[sol] -= qtd_deduzir
+        new_lotes_sols_iter_ord.append((lote, value))
+    return new_lotes_sols_iter_ord
 
 
 def conta_zerados(lotes_sols_procs):
@@ -175,6 +178,11 @@ if __name__ == '__main__':
 
     print()
     print("Demais lotes do maior para o menor")
-    lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, solicitacoes)
+    new_lotes_sols_iter_ord = lotes_parciais(
+        new_lotes_sols, lotes_ord, sols_ord, solicitacoes)
     pprint(new_lotes_sols)
     print(conta_zerados(new_lotes_sols), "lotes zerados")
+
+    print()
+    print("visão ordenada")
+    pprint(new_lotes_sols_iter_ord)
