@@ -4,6 +4,10 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
+def consulta(cursor, **kwargs):
+    return exec(cursor, consulta=True, **kwargs)
+
+
 def exec(
     cursor,
     finaliza=False,
