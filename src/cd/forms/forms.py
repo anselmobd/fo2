@@ -1202,6 +1202,16 @@ class RealocaSolicitacoesForm(forms.Form):
         )
     )
 
+    CHOICES = [
+        ('s', "Solicitado"),
+        ('ps', "Parcialmente solicitado"),
+    ]
+    qtd_solicitada = forms.ChoiceField(
+        label='Quantidade solicitada',
+        choices=CHOICES,
+        initial='s',
+    )
+
     def clean_cor(self):
         cleaned = self.cleaned_data['cor']
         if len(cleaned) == 0:
