@@ -173,7 +173,6 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             ],
             'data': self.lotes_solis,
             'len': len_lotes_solis,
-            'qtd_empenhada': self.qtd_empenhada,
         })
 
     def mount_lotes_solicitados(self):
@@ -252,6 +251,9 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.tam = None if self.tam == '' else self.tam
         self.modelo = None if self.modelo == '' else int(self.modelo)
         self.endereco = None if self.endereco == '' else self.endereco
+        self.context.update({
+            'qtd_empenhada': self.qtd_empenhada,
+        })
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
