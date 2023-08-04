@@ -16,7 +16,7 @@ from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
 from cd.queries.novo_modulo.solicitacao import get_solicitacao
 from cd.queries.novo_modulo import (
     empenho_hist,
-    finaliza_empenho,
+    situacao_empenho,
 )
 
 
@@ -88,7 +88,7 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
 
         for row in data:
             if row['situacao'] < 5:
-                empenho = finaliza_empenho.exec(
+                empenho = situacao_empenho.exec(
                     cursor,
                     ordem_producao=row['ordem_producao'],
                     ordem_confeccao=row['ordem_confeccao'],
@@ -105,7 +105,7 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
         count = 0
         for row in data:
             if row['situacao'] < 5:
-                count_exec = finaliza_empenho.exec(
+                count_exec = situacao_empenho.exec(
                     cursor,
                     executa=True,
                     ordem_producao=row['ordem_producao'],
