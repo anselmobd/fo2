@@ -15,9 +15,15 @@
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="analisa" value="Analisa""/>
+    {% if request.POST.analisa and a_fazer %}
+      <input type="submit" name="otimiza" value="Otimiza""/>
+    {% endif %}
   </form>
   <br/>
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
+  {% if msg_oti %}
+    <h2>{{msg_oti}}</h2>
+  {% endif %}
   {% if msg %}
     <h3>{{msg}}</h3>
   {% endif %}

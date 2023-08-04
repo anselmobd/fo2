@@ -406,9 +406,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             'qtd_empenhada': self.qtd_empenhada,
         })
 
-    def mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-        self.filter_inputs()
+    def analisa_solicitacoes(self):
         self.mount_lotes_solicitados()
         if not self.lotes_solis:
             return
@@ -426,3 +424,21 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.mount_solicitacoes()
         self.mount_lotes_disponiveis()
         self.mount_rascunho_oti()
+
+    def grava_alteracoes(self):
+        return True
+
+    def mount_context(self):
+        self.cursor = db_cursor_so(self.request)
+        self.filter_inputs()
+
+        self.analisa_solicitacoes()
+        if 'msg' in self.context:
+            return
+
+        if 'otimiza' in self.request.POST:
+            if self.grava_alteracoes():
+                self.context.update({
+                    'msg_oti': "Otimização executada.",
+                })
+            self.analisa_solicitacoes()
