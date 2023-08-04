@@ -75,10 +75,15 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             solicitacoes=self.solicitacoes,
         )
         lotes_a_trabalhar = []
+        self.oti_lotes = {}
         for row in lotes:
             row['qtd_dbaixa'] = row['qtd']
             if row['lote'] not in self.lotes_nao_trabalhar:
                 lotes_a_trabalhar.append(row)
+                self.oti_lotes[row['lote']] = (
+                    row['endereco'],
+                    row['qtd'],
+                )
         lotes_a_trabalhar.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
         return lotes_a_trabalhar
 
@@ -281,28 +286,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         if len(self.solis) > 0:
             self.mount_solis()
 
-    def mount_vars_oti(self):
-        self.oti_lotes = {
-            220304159: ('1Q0027', 100),
-            230901615: ('1Q0042', 100),
-            230901625: ('1Q0042', 100),
-            231202127: ('1Q0043', 100),
-            224802702: ('1Q0044', 13),
-            231202132: ('1Q0044', 100),
-            231801970: ('1Q0047', 48),
-            231801975: ('1Q0047', 39),
-            231202124: ('1Q0052', 100),
-            231202125: ('1Q0052', 100),
-            231202128: ('1Q0052', 100),
-            231202129: ('1Q0052', 100),
-            231202130: ('1Q0052', 100),
-            231202131: ('1Q0052', 100),
-            231202133: ('1Q0052', 100),
-        }
-
     def mount_rascunho_oti(self):
-        self.mount_vars_oti()
-
         print("Solicitações")
         pprint(self.oti_solicitacoes)
         total_sols = oti_emp.quant_total(self.oti_solicitacoes)
