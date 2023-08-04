@@ -54,7 +54,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
     def get_lotes(self):
         qtd_empenhada = 't' if self.qtd_empenhada == 'ce' else 'nte'
-        dados = refs_em_palets.query(
+        lotes = refs_em_palets.query(
             self.cursor,
             fields='detalhe',
             cor=self.cor,
@@ -65,10 +65,13 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             qtd_empenhada=qtd_empenhada,
             solicitacoes=self.solicitacoes,
         )
-        for row in dados:
+        lotes_a_trabalhar = []
+        for row in lotes:
             row['qtd_dbaixa'] = row['qtd']
-        dados.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
-        return dados
+            if row['lote'] not in self.lotes_nao_trabalhar:
+                lotes_a_trabalhar.append(row)
+        lotes_a_trabalhar.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
+        return lotes_a_trabalhar
 
     def mount_lotes(self):
         len_lotes = len(self.lotes)
@@ -130,6 +133,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         # - já nos endereços desejados; e
         # - com empenhos totais
         empenhos_a_trabalhar = []
+        self.lotes_nao_trabalhar = []
         for row in empenhos:
             row['qtd_dbaixa'] = row['qtd']
             row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
@@ -139,6 +143,8 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 or row['qtd_disp'] > 0
             ):
                 empenhos_a_trabalhar.append(row)
+            else:
+                self.lotes_nao_trabalhar.append(row['lote'])
         empenhos_a_trabalhar.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
         return empenhos_a_trabalhar
 
