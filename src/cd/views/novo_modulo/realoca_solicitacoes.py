@@ -324,23 +324,23 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
         print()
         print("Distribuição vazia")
-        new_lotes_sols =  oti_emp.inicia_distribuicao(self.oti_lotes)
-        pprint(new_lotes_sols)
+        self.new_lotes_sols =  oti_emp.inicia_distribuicao(self.oti_lotes)
+        pprint(self.new_lotes_sols)
 
         print()
         print("Lotes em ordem decrescente de quantidade")
-        lotes_ord = oti_emp.keys_order_by_dict(new_lotes_sols, reverse=True)
+        lotes_ord = oti_emp.keys_order_by_dict(self.new_lotes_sols, reverse=True)
         pprint(lotes_ord)
 
         print()
         print("Definindo quantidade final de lotes a não utilizar")
-        oti_emp.lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_solicitada)
-        pprint(new_lotes_sols)
+        oti_emp.lotes_nao_usar(self.new_lotes_sols, lotes_ord, qtd_nao_solicitada)
+        pprint(self.new_lotes_sols)
 
         print()
         print("Lotes atendidos com uma solicitação")
-        oti_emp.lotes_uma_sol(new_lotes_sols, self.oti_solicitacoes)
-        pprint(new_lotes_sols)
+        oti_emp.lotes_uma_sol(self.new_lotes_sols, self.oti_solicitacoes)
+        pprint(self.new_lotes_sols)
         pprint(self.oti_solicitacoes.keys())
 
         print()
@@ -356,9 +356,9 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         print()
         print("Empenhar demais lotes")
         new_lotes_sols_iter_ord = oti_emp.lotes_parciais(
-            new_lotes_sols, lotes_ord, sols_ord, self.oti_solicitacoes)
-        pprint(new_lotes_sols)
-        print(oti_emp.conta_zerados(new_lotes_sols), "lotes zerados")
+            self.new_lotes_sols, lotes_ord, sols_ord, self.oti_solicitacoes)
+        pprint(self.new_lotes_sols)
+        print(oti_emp.conta_zerados(self.new_lotes_sols), "lotes zerados")
         pprint(self.oti_solicitacoes.keys())
 
         print()
