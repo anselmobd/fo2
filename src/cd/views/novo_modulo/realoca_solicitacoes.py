@@ -104,8 +104,19 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         if len(self.lotes) > 0:
             self.mount_lotes()
 
+    def endereco_selecionado(self, end, selecao):
+        if selecao:
+            if len(selecao) == 6:
+                return end == selecao
+            elif '-' in selecao:
+                end_de, end_ate = tuple(selecao.split('-'))
+                return end >= end_de and end <= end_ate
+            else:
+                return end.startswith(selecao)
+        return False
+
     def get_lotes_solis(self):
-        dados = refs_em_palets.query(
+        empenhos = refs_em_palets.query(
             self.cursor,
             fields='detalhe',
             cor=self.cor,
@@ -115,12 +126,21 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             qtd_empenhada=self.qtd_empenhada,
             solicitacoes=self.solicitacoes,
         )
-        for row in dados:
+        # só vai trabalhar nos lotes que não estão
+        # - já nos endereços desejados; e
+        # - com empenhos totais
+        empenhos_a_trabalhar = []
+        for row in empenhos:
             row['qtd_dbaixa'] = row['qtd']
             row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
             row['qtd_disp'] = row['qtd_dbaixa'] - row['tot_emp']
-        dados.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
-        return dados
+            if (
+                (not self.endereco_selecionado(row['endereco'], self.endereco))
+                or row['qtd_disp'] > 0
+            ):
+                empenhos_a_trabalhar.append(row)
+        empenhos_a_trabalhar.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
+        return empenhos_a_trabalhar
 
     def mount_lotes_solis(self):
         len_lotes_solis = len(self.lotes_solis)
