@@ -21,7 +21,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.cleaned_data2self = True
         self.cleaned_data2data = True
         self.template_name = 'cd/novo_modulo/realoca_solicitacoes.html'
-        self.title_name = 'Realoca solicitações'
+        self.title_name = 'Realoca empenhos'
 
         self.table_defs = TableDefs(
             {
@@ -153,6 +153,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             ],
             'data': self.lotes_solis,
             'len': len_lotes_solis,
+            'qtd_empenhada': self.qtd_empenhada,
         })
 
     def mount_lotes_solicitados(self):
