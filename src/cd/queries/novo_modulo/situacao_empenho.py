@@ -19,6 +19,7 @@ def exec(
     alter_destino=None,
     sub_destino=None,
     cor_destino=None,
+    solicitacao=None,
 ):
 
     if sum([finaliza, cancela, consulta]) != 1:
@@ -69,6 +70,10 @@ def exec(
         AND sl.COR_DESTINO = {cor_destino}
     """
 
+    filtra_solicitacao = "" if solicitacao is None else f"""--
+        AND sl.SOLICITACAO = {solicitacao}
+    """
+
     sql = f"""--
         SELECT
           -- PK fields
@@ -109,6 +114,7 @@ def exec(
           {filtra_alter_destino} -- filtra_alter_destino
           {filtra_sub_destino} -- filtra_sub_destino
           {filtra_cor_destino} -- filtra_cor_destino
+          {filtra_solicitacao} -- filtra_solicitacao
     """
     if finaliza or cancela:
         situacao = 5 if finaliza else 9
