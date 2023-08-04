@@ -196,7 +196,7 @@ class Expedicao(View):
             qtd_total += row['QTD']
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
-            row['PEDIDO_VENDA|LINK'] = reverse(
+            row['PEDIDO_VENDA|A'] = reverse(
                 'producao:pedido__get', args=[row['PEDIDO_VENDA']])
             if self.detalhe == 'o':
                 if row['AGRUPADOR'] == 0:
