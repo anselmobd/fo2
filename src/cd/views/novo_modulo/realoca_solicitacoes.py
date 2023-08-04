@@ -301,6 +301,12 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         qtd_nao_solicitada = total_lotes - total_sols
         print("Quant. não solicitada", qtd_nao_solicitada)
 
+        if qtd_nao_solicitada < 0:
+            self.context.update({
+                'msg': "Não há quantidade suficiente nos endereços selecionados",
+            })
+            return
+
         print()
         print("Inicia nova distribuição")
 

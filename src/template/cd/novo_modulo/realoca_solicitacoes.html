@@ -18,6 +18,9 @@
   </form>
   <br/>
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
+  {% if msg %}
+    <h3>{{msg}}</h3>
+  {% endif %}
   {% if lotes_solis.data %}
     {% if qtd_empenhada == 'ce' %}
       <h4>{{lotes_solis.len}} lotes com empenhos a serem realocadas</h4>
@@ -44,8 +47,10 @@
       {% include "layout/thead_generic.html" with data=lotes.headers safe=lotes.safe style=lotes.style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=lotes.fields data=lotes.data safe=lotes.safe style=lotes.style only %}
     </table>
-    <h4>Rascunho do que deve ser feito</h4>
-    <pre>{{a_fazer}}</pre>
+    {% if a_fazer %}
+      <h4>Rascunho do que deve ser feito</h4>
+      <pre>{{a_fazer}}</pre>
+    {% endif %}
   {% else %}
     {% if request.POST %}
       <h4>Nenhum lote encontrado para atender os empenhos em questão</h4>
