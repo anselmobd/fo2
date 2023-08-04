@@ -177,8 +177,18 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.oti_solicitacoes = {}
         for row in self.registros_solis:
             if row['solicitacao'] not in self.oti_solicitacoes:
-                self.oti_solicitacoes[row['solicitacao']] = 0
-            self.oti_solicitacoes[row['solicitacao']] += row['qtde']
+                self.oti_solicitacoes[row['solicitacao']] = {
+                    'qtde': 0,
+                    'pedido_destino': row['pedido_destino'],
+                    'op_destino': row['op_destino'],
+                    'oc_destino': row['oc_destino'],
+                    'situacao': row['situacao'],
+                    'grupo_destino': row['grupo_destino'],
+                    'alter_destino': row['alter_destino'],
+                    'sub_destino': row['sub_destino'],
+                    'cor_destino': row['cor_destino'],
+                }
+            self.oti_solicitacoes[row['solicitacao']]['qtde'] += row['qtde']
 
         return empenhos_a_trabalhar
 
@@ -329,11 +339,11 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         print("Lotes atendidos com uma solicitação")
         oti_emp.lotes_uma_sol(new_lotes_sols, self.oti_solicitacoes)
         pprint(new_lotes_sols)
-        pprint(self.oti_solicitacoes)
+        pprint(self.oti_solicitacoes.keys())
 
         print()
         print("Solicitações ordenadas para uso")
-        sols_ord = oti_emp.keys_order_by_value(self.oti_solicitacoes)
+        sols_ord = oti_emp.get_sols_ord(self.oti_solicitacoes)
         pprint(sols_ord)
 
         print()
@@ -347,6 +357,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             new_lotes_sols, lotes_ord, sols_ord, self.oti_solicitacoes)
         pprint(new_lotes_sols)
         print(oti_emp.conta_zerados(new_lotes_sols), "lotes zerados")
+        pprint(self.oti_solicitacoes.keys())
 
         print()
         print("Visão ordenada dos empenhos otimizados")
