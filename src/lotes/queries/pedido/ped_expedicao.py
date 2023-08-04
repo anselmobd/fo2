@@ -133,7 +133,8 @@ def ped_expedicao(
             )"""
     sql += """ --
         SELECT
-          ped.PEDIDO_VENDA
+          ped.CODIGO_EMPRESA EMPRESA
+        , ped.PEDIDO_VENDA
         , ped.DATA_EMIS_VENDA DT_EMISSAO
         , ped.DATA_PREV_RECEB DT_RECEBIMENTO
         , ped.DATA_ENTR_VENDA DT_EMBARQUE
@@ -212,7 +213,8 @@ def ped_expedicao(
           {filtro_cancelamento} -- filtro_cancelamento
           {filtro_colecao} -- filtro_colecao
         GROUP BY
-          ped.PEDIDO_VENDA
+          ped.CODIGO_EMPRESA
+        , ped.PEDIDO_VENDA
         , ped.DATA_EMIS_VENDA
         , ped.DATA_PREV_RECEB
         , ped.DATA_ENTR_VENDA
