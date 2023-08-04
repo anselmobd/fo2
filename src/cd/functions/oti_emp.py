@@ -3,20 +3,96 @@ from pprint import pprint
 
 
 solicitacoes = {
-    2836: 11, 2856: 19, 2861: 13, 2960: 4,
-    2979: 3, 2981: 7, 2999: 6, 3002: 6
+    2836: {'alter_destino': 74,
+           'cor_destino': '0000ME',
+           'grupo_destino': '0156A',
+           'oc_destino': 0,
+           'op_destino': 47050,
+           'pedido_destino': 999001911,
+           'qtde': 11,
+           'situacao': 4,
+           'sub_destino': 'P'},
+    2856: {'alter_destino': 74,
+           'cor_destino': '0000ME',
+           'grupo_destino': '00156',
+           'oc_destino': 0,
+           'op_destino': 47070,
+           'pedido_destino': 999001931,
+           'qtde': 19,
+           'situacao': 4,
+           'sub_destino': 'P'},
+    2861: {'alter_destino': 74,
+           'cor_destino': '0000ME',
+           'grupo_destino': '0156A',
+           'oc_destino': 0,
+           'op_destino': 47130,
+           'pedido_destino': 999001951,
+           'qtde': 14,
+           'situacao': 4,
+           'sub_destino': 'P'},
+    2865: {'alter_destino': 74,
+           'cor_destino': '0000ME',
+           'grupo_destino': '0156A',
+           'oc_destino': 0,
+           'op_destino': 47032,
+           'pedido_destino': 38201,
+           'qtde': 10,
+           'situacao': 4,
+           'sub_destino': 'P'},
+    2960: {'alter_destino': 74,
+           'cor_destino': '0000ME',
+           'grupo_destino': '0156A',
+           'oc_destino': 0,
+           'op_destino': 47369,
+           'pedido_destino': 999002057,
+           'qtde': 4,
+           'situacao': 4,
+           'sub_destino': 'P'},
+    2979: {'alter_destino': 74,
+           'cor_destino': '0000ME',
+           'grupo_destino': '0156A',
+           'oc_destino': 0,
+           'op_destino': 47396,
+           'pedido_destino': 999002076,
+           'qtde': 3,
+           'situacao': 4,
+           'sub_destino': 'P'},
+    2981: {'alter_destino': 74,
+           'cor_destino': '0000ME',
+           'grupo_destino': '0156A',
+           'oc_destino': 0,
+           'op_destino': 47430,
+           'pedido_destino': 999002077,
+           'qtde': 7,
+           'situacao': 4,
+           'sub_destino': 'P'},
+    2999: {'alter_destino': 74,
+           'cor_destino': '0000ME',
+           'grupo_destino': '0156A',
+           'oc_destino': 0,
+           'op_destino': 47457,
+           'pedido_destino': 999002096,
+           'qtde': 6,
+           'situacao': 4,
+           'sub_destino': 'P'},
+    3002: {'alter_destino': 74,
+           'cor_destino': '0000ME',
+           'grupo_destino': '0156A',
+           'oc_destino': 0,
+           'op_destino': 47487,
+           'pedido_destino': 999002097,
+           'qtde': 6,
+           'situacao': 4,
+           'sub_destino': 'P'}
 }
 
 
 lotes = {
-    '220304127': ('1Q0027', 100),
-    '230401090': ('1Q0021', 70),
-    '230401091': ('1Q0021', 96),
     '230901570': ('1Q0043', 100),
-    '231202101': ('1Q0027', 100),
     '231801897': ('1Q0036', 20),
-    '231801933': ('1Q0037', 10),
+    '231801933': ('1Q0037', 10)
 }
+
 
 def ini_lote(value, sols):
     return {
@@ -28,7 +104,7 @@ def ini_lote(value, sols):
 
 
 def quant_total(dict_quant):
-    return sum(dict_quant.values())
+    return sum((row['qtde'] for _, row in dict_quant.items()))
 
 
 def quant_total_lotes(dict_quant):
@@ -72,16 +148,16 @@ def lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, sols):
         if value['fim'] is None:
             value['fim'] = value['ini']
             while value['fim'] > 0:
-                if sols[sol] == 0:
+                if sols[sol]['qtde'] == 0:
                     del(sols[sol])
                     try:
                         sol = next(sols_iter)
                     except StopIteration:
                         break
-                qtd_deduzir = min(value['fim'], sols[sol])
+                qtd_deduzir = min(value['fim'], sols[sol]['qtde'])
                 value['sols'][sol] = qtd_deduzir
                 value['fim'] -= qtd_deduzir
-                sols[sol] -= qtd_deduzir
+                sols[sol]['qtde'] -= qtd_deduzir
         new_lotes_sols_iter_ord.append((lote, value))
     return new_lotes_sols_iter_ord
 
@@ -100,9 +176,13 @@ def inicia_distribuicao(lotes):
     return lotes_sols
 
 
-def keys_order_by_value(lotes):
-    lotes_items = sorted(lotes.items(), key=lambda x: x[1], reverse=True)
-    return list(map(lambda x: x[0], lotes_items))
+def get_sols_ord(lotes):
+    lotes_items = sorted(
+        lotes.items(),
+        key=lambda k: k[1]['qtde'],
+        reverse=True,
+    )
+    return [lote_item[0] for lote_item in lotes_items]
 
 
 def keys_order_by_dict(lotes_sols, reverse=False):
@@ -160,7 +240,7 @@ if __name__ == '__main__':
 
     print()
     print("Solicitações ordenadas para uso")
-    sols_ord = keys_order_by_value(solicitacoes)
+    sols_ord = get_sols_ord(solicitacoes)
     pprint(sols_ord)
 
     print()
