@@ -80,10 +80,12 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             row['qtd_dbaixa'] = row['qtd']
             if row['lote'] not in self.lotes_nao_trabalhar:
                 lotes_a_trabalhar.append(row)
-                self.oti_lotes[row['lote']] = (
-                    row['endereco'],
-                    row['qtd'],
-                )
+                self.oti_lotes[row['lote']] = {
+                    'end': row['endereco'],
+                    'qtde': row['qtd'],
+                    'op': row['op'],
+                    'oc': row['lote'][4:],
+                }
         lotes_a_trabalhar.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
         return lotes_a_trabalhar
 
@@ -305,7 +307,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         print()
         print("Lotes")
         pprint(self.oti_lotes)
-        total_lotes = oti_emp.quant_total_lotes(self.oti_lotes)
+        total_lotes = oti_emp.quant_total(self.oti_lotes)
         print("Total dos lotes", total_lotes)
 
         qtd_nao_solicitada = total_lotes - total_sols
