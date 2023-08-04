@@ -3,110 +3,86 @@ from pprint import pprint
 
 
 solicitacoes = {
-    2836: {'alter_destino': 74,
-           'cor_destino': '0000ME',
-           'grupo_destino': '0156A',
-           'oc_destino': 0,
-           'op_destino': 47050,
-           'pedido_destino': 999001911,
-           'qtde': 11,
-           'situacao': 4,
-           'sub_destino': 'P'},
-    2856: {'alter_destino': 74,
-           'cor_destino': '0000ME',
-           'grupo_destino': '00156',
-           'oc_destino': 0,
-           'op_destino': 47070,
-           'pedido_destino': 999001931,
-           'qtde': 19,
-           'situacao': 4,
-           'sub_destino': 'P'},
-    2861: {'alter_destino': 74,
-           'cor_destino': '0000ME',
-           'grupo_destino': '0156A',
-           'oc_destino': 0,
-           'op_destino': 47130,
-           'pedido_destino': 999001951,
-           'qtde': 14,
-           'situacao': 4,
-           'sub_destino': 'P'},
-    2865: {'alter_destino': 74,
-           'cor_destino': '0000ME',
-           'grupo_destino': '0156A',
-           'oc_destino': 0,
-           'op_destino': 47032,
-           'pedido_destino': 38201,
-           'qtde': 10,
-           'situacao': 4,
-           'sub_destino': 'P'},
-    2960: {'alter_destino': 74,
-           'cor_destino': '0000ME',
-           'grupo_destino': '0156A',
-           'oc_destino': 0,
-           'op_destino': 47369,
-           'pedido_destino': 999002057,
-           'qtde': 4,
-           'situacao': 4,
-           'sub_destino': 'P'},
-    2979: {'alter_destino': 74,
-           'cor_destino': '0000ME',
-           'grupo_destino': '0156A',
-           'oc_destino': 0,
-           'op_destino': 47396,
-           'pedido_destino': 999002076,
-           'qtde': 3,
-           'situacao': 4,
-           'sub_destino': 'P'},
-    2981: {'alter_destino': 74,
-           'cor_destino': '0000ME',
-           'grupo_destino': '0156A',
-           'oc_destino': 0,
-           'op_destino': 47430,
-           'pedido_destino': 999002077,
-           'qtde': 7,
-           'situacao': 4,
-           'sub_destino': 'P'},
-    2999: {'alter_destino': 74,
-           'cor_destino': '0000ME',
-           'grupo_destino': '0156A',
-           'oc_destino': 0,
-           'op_destino': 47457,
-           'pedido_destino': 999002096,
-           'qtde': 6,
-           'situacao': 4,
-           'sub_destino': 'P'},
-    3002: {'alter_destino': 74,
-           'cor_destino': '0000ME',
-           'grupo_destino': '0156A',
-           'oc_destino': 0,
-           'op_destino': 47487,
-           'pedido_destino': 999002097,
-           'qtde': 6,
-           'situacao': 4,
-           'sub_destino': 'P'}
+ 2807: {'alter_destino': 74,
+        'cor_destino': '0000CB',
+        'grupo_destino': '0251A',
+        'oc_destino': 0,
+        'op_destino': 46916,
+        'pedido_destino': 999001896,
+        'qtde': 2,
+        'situacao': 4,
+        'sub_destino': 'P'},
+ 2856: {'alter_destino': 74,
+        'cor_destino': '0000CB',
+        'grupo_destino': '0251A',
+        'oc_destino': 0,
+        'op_destino': 47085,
+        'pedido_destino': 999001931,
+        'qtde': 8,
+        'situacao': 4,
+        'sub_destino': 'P'},
+ 2861: {'alter_destino': 74,
+        'cor_destino': '0000CB',
+        'grupo_destino': '0251A',
+        'oc_destino': 0,
+        'op_destino': 47132,
+        'pedido_destino': 999001951,
+        'qtde': 2,
+        'situacao': 4,
+        'sub_destino': 'P'},
+ 2876: {'alter_destino': 74,
+        'cor_destino': '0000CB',
+        'grupo_destino': '0251A',
+        'oc_destino': 0,
+        'op_destino': 47171,
+        'pedido_destino': 999001991,
+        'qtde': 15,
+        'situacao': 4,
+        'sub_destino': 'P'},
+ 2981: {'alter_destino': 74,
+        'cor_destino': '0000CB',
+        'grupo_destino': '0251A',
+        'oc_destino': 0,
+        'op_destino': 47432,
+        'pedido_destino': 999002077,
+        'qtde': 9,
+        'situacao': 4,
+        'sub_destino': 'P'},
+ 2982: {'alter_destino': 74,
+        'cor_destino': '0000CB',
+        'grupo_destino': '00251',
+        'oc_destino': 0,
+        'op_destino': 47443,
+        'pedido_destino': 38712,
+        'qtde': 42,
+        'situacao': 4,
+        'sub_destino': 'P'},
+ 2999: {'alter_destino': 74,
+        'cor_destino': '0000CB',
+        'grupo_destino': '0251A',
+        'oc_destino': 0,
+        'op_destino': 47459,
+        'pedido_destino': 999002096,
+        'qtde': 6,
+        'situacao': 4,
+        'sub_destino': 'P'},
+ 3002: {'alter_destino': 74,
+        'cor_destino': '0000CB',
+        'grupo_destino': '00251',
+        'oc_destino': 0,
+        'op_destino': 47475,
+        'pedido_destino': 999002097,
+        'qtde': 5,
+        'situacao': 4,
+        'sub_destino': 'P'}
 }
 
 
-lotes = {
-    '230901570': {
-        'end': '1Q0043',
-        'qtde': 100,
-        'op': 45123,
-        'oc': 1570,
-    },
-    '231801897': {
-        'end': '1Q0036',
-        'qtde': 20,
-        'op': 45124,
-        'oc': 1897,
-    },
-    '231801933': {
-        'end': '1Q0037',
-        'qtde': 10,
-        'op': 45124,
-        'oc': 1933,
-    },
-}
+lotes = {'231801904': {'end': '1Q0036', 'oc': '01904', 'op': 46625, 'qtde': 100},
+ '231801905': {'end': '1Q0046', 'oc': '01905', 'op': 46625, 'qtde': 96},
+ '231801906': {'end': '1Q0036', 'oc': '01906', 'op': 46625, 'qtde': 100},
+ '231801907': {'end': '1Q0036', 'oc': '01907', 'op': 46625, 'qtde': 88},
+ '231801942': {'end': '1Q0037', 'oc': '01942', 'op': 46625, 'qtde': 84}}
 
 
 def ini_lote(value, sols):
@@ -127,8 +103,8 @@ def quant_total(dict_quant):
 def lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_sol):
     for lote in lotes_ord:
         if qtd_nao_sol >= new_lotes_sols[lote]['ini']:
-            new_lotes_sols[lote]['fim'] = new_lotes_sols[lote]['ini']
             qtd_nao_sol -= new_lotes_sols[lote]['ini']
+            del(new_lotes_sols[lote])
         else:
             break
 
@@ -154,6 +130,8 @@ def lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, sols):
     sol = next(sols_iter)
     new_lotes_sols_iter_ord = []
     for lote in lotes_ord:
+        if not lote in new_lotes_sols:
+            continue
         value = new_lotes_sols[lote]
         if value['fim'] is None:
             value['fim'] = value['ini']
@@ -239,7 +217,7 @@ if __name__ == '__main__':
     pprint(lotes_ord)
 
     print()
-    print("Definindo quantidade final de lotes a não utilizar")
+    print("Excluindo lotes a não utilizar")
     lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_solicitada)
     pprint(new_lotes_sols)
 

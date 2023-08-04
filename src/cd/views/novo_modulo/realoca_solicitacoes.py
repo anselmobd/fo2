@@ -135,7 +135,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         return False
 
     def add_registros_solis(self, row):
-        solis = split_numbers(row['solicitacoes'])      
+        solis = split_numbers(row['solicitacoes'])
         for sol in solis:
             emps = situacao_empenho.consulta(
                 self.cursor,
@@ -333,7 +333,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         pprint(lotes_ord)
 
         print()
-        print("Definindo quantidade final de lotes a não utilizar")
+        print("Excluindo lotes a não utilizar")
         oti_emp.lotes_nao_usar(self.new_lotes_sols, lotes_ord, qtd_nao_solicitada)
         pprint(self.new_lotes_sols)
 
