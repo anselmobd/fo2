@@ -123,6 +123,9 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 return end.startswith(selecao)
         return False
 
+    def add_registros_solis(self, row):
+        pass
+
     def get_lotes_solis(self):
         empenhos = refs_em_palets.query(
             self.cursor,
@@ -139,6 +142,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         # - com empenhos totais
         empenhos_a_trabalhar = []
         self.lotes_nao_trabalhar = []
+        self.registros_solis = []
         for row in empenhos:
             row['qtd_dbaixa'] = row['qtd']
             row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
@@ -148,9 +152,21 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 or row['qtd_disp'] > 0
             ):
                 empenhos_a_trabalhar.append(row)
+                self.add_registros_solis(row)
             else:
                 self.lotes_nao_trabalhar.append(row['lote'])
         empenhos_a_trabalhar.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
+
+        # pprint(empenhos_a_trabalhar)
+        # raise SystemExit
+
+        self.oti_solicitacoes = {}
+        for row in self.registros_solis:
+            pass
+            # if sol not in sols:
+            #     sols[sol] = 0
+            # sols[sol] += qtd
+
         return empenhos_a_trabalhar
 
     def mount_lotes_solis(self):
