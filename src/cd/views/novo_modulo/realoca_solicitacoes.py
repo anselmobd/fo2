@@ -1,5 +1,9 @@
 import operator
+import os
+from pathlib import Path
 from pprint import pprint, pformat
+
+from django.utils import timezone
 
 from fo2.connections import db_cursor_so
 
@@ -342,8 +346,29 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         print("visão ordenada")
         pprint(new_lotes_sols_iter_ord)
 
+        new_lotes_sols_iter_ord_txt = pformat(new_lotes_sols_iter_ord)
+
+        file_dir = "kb/cd/oti_emp/%Y/%m"
+        filename = timezone.now().strftime(
+            f"{file_dir}/%Y-%m-%d_%H.%M.%S_%f.log")
+        Path(os.path.dirname(filename)).mkdir(
+                parents=True, exist_ok=True)
+
+        with open(filename, 'w') as file:
+            file.writelines(
+                map(lambda x: f"{x}\n", [
+                    f"endereco: {self.endereco}.",
+                    f"solicitacoes: {self.solicitacoes}.",
+                    f"modelo: {self.modelo}.",
+                    f"cor: {self.cor}.",
+                    f"tam: {self.tam}.",
+                    f"qtd_empenhada: {self.qtd_empenhada}.",
+                ])
+            )
+            file.write(new_lotes_sols_iter_ord_txt)
+
         self.context.update({
-            'a_fazer': pformat(new_lotes_sols_iter_ord)
+            'a_fazer': new_lotes_sols_iter_ord_txt
         })
 
     def filter_inputs(self):
