@@ -171,10 +171,9 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
         self.oti_solicitacoes = {}
         for row in self.registros_solis:
-            pass
-            # if sol not in sols:
-            #     sols[sol] = 0
-            # sols[sol] += qtd
+            if row['solicitacao'] not in self.oti_solicitacoes:
+                self.oti_solicitacoes[row['solicitacao']] = 0
+            self.oti_solicitacoes[row['solicitacao']] += row['qtde']
 
         return empenhos_a_trabalhar
 
@@ -283,18 +282,6 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             self.mount_solis()
 
     def mount_vars_oti(self):
-        self.oti_solicitacoes = {
-            '#': 14,
-            2807: 6,
-            2856: 45,
-            2861: 13,
-            2864: 2,
-            2876: 27,
-            2923: 534,
-            2980: 459,
-            2981: 27,
-            2999: 16,
-        }
         self.oti_lotes = {
             220304159: ('1Q0027', 100),
             230901615: ('1Q0042', 100),
