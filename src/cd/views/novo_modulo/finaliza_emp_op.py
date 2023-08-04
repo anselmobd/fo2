@@ -90,6 +90,7 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
             if row['situacao'] < 5:
                 empenho = situacao_empenho.exec(
                     cursor,
+                    consulta=True,
                     ordem_producao=row['ordem_producao'],
                     ordem_confeccao=row['ordem_confeccao'],
                     pedido_destino=row['pedido_destino'],
@@ -107,7 +108,7 @@ class FinalizaEmpenhoOp(PermissionRequiredMixin, O2BaseGetPostView):
             if row['situacao'] < 5:
                 count_exec = situacao_empenho.exec(
                     cursor,
-                    executa=True,
+                    finaliza=True,
                     ordem_producao=row['ordem_producao'],
                     ordem_confeccao=row['ordem_confeccao'],
                     pedido_destino=row['pedido_destino'],

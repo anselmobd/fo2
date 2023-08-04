@@ -6,7 +6,9 @@ from utils.functions.queries import debug_cursor_execute
 
 def exec(
     cursor,
-    executa=False,
+    finaliza=False,
+    cancela=False,
+    consulta=False,
     ordem_producao=None,
     ordem_confeccao=None,
     pedido_destino=None,
@@ -18,6 +20,10 @@ def exec(
     sub_destino=None,
     cor_destino=None,
 ):
+
+    if sum([finaliza, cancela, consulta]) != 1:
+        raise AttributeError(
+            "Defina uma ação. Indique finaliza ou cancela como True nos kwargs")
 
     filtra_ordem_producao = "" if ordem_producao is None else f"""--
         AND sl.ORDEM_PRODUCAO = {ordem_producao}
@@ -104,11 +110,12 @@ def exec(
           {filtra_sub_destino} -- filtra_sub_destino
           {filtra_cor_destino} -- filtra_cor_destino
     """
-    if executa:
+    if finaliza or cancela:
+        situacao = 5 if finaliza else 9
         sql = f"""
             UPDATE SYSTEXTIL.PCPC_044
             SET 
-              SITUACAO = 5
+              SITUACAO = {situacao}
             WHERE (
               -- PK fields
               ORDEM_PRODUCAO
@@ -127,7 +134,7 @@ def exec(
             )
         """
     debug_cursor_execute(cursor, sql)
-    if executa:
+    if finaliza or cancela:
         return cursor.rowcount
     else:
         dados = dictlist_lower(cursor)
