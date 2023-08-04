@@ -44,6 +44,8 @@
       {% include "layout/thead_generic.html" with data=lotes.headers safe=lotes.safe style=lotes.style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=lotes.fields data=lotes.data safe=lotes.safe style=lotes.style only %}
     </table>
+    <h4>Rascunho do que deve ser feito</h4>
+    <pre>{{a_fazer}}</pre>
   {% else %}
     {% if request.POST %}
       <h4>Nenhum lote encontrado para atender os empenhos em questão</h4>
