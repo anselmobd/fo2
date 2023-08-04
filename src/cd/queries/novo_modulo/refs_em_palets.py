@@ -140,7 +140,7 @@ def query(
     selecao_lotes='63',
     corte_de=None,
     corte_ate=None,
-    qtd_solicitada='t',
+    qtd_empenhada='t',
     solicitacoes=None,
 ):
     """
@@ -206,13 +206,13 @@ def query(
         enf: Empenhado não finalizado
         snf: Solicitado não finalizado
         esf: Empenhado/solicitado finalizado
-    qtd_solicitada:
+    qtd_empenhada:
         t: * Não filtra
-        s: Solicitado
-        ts: Totalmente solicitado
-        nts: Não totalmente solicitado
-        ps: Parcialmente solicitado
-        ns: Nenhuma quantidade solicitada
+        ce: Com empenho
+        te: Totalmente empenhado
+        nte: Não totalmente empenhado
+        pe: Parcialmente empenhado
+        se: Sem empenho
     selecao_ops: filtra no BD OPs
         63: Com estágio 63 (CD)
         n63: Sem estágio 63 (CD)
@@ -469,18 +469,21 @@ def query(
     if not isinstance(fields, (tuple, list)):
         fields = fields_tuple[fields]
 
-    filtra_qtd_solicitada = ''
-    if {'qtd', 'qtd_sol'}.issubset(fields):
-        dict_qtd_solicitada = {
+    filtra_qtd_empenhada = ''
+    if {'qtd', 'qtd_emp', 'qtd_sol'}.issubset(fields):
+        dict_qtd_empenhada = {
             't': '',
-            's': "AND d.qtd_sol > 0",
-            'ts': "AND d.qtd_sol >= d.qtd",
-            'nts': "AND d.qtd_sol < d.qtd",
-            'ps': "AND d.qtd_sol > 0 AND d.qtd_sol < d.qtd",
-            'ns': "AND d.qtd_sol = 0",
+            'ce': "AND (d.qtd_emp + d.qtd_sol) > 0",
+            'te': "AND (d.qtd_emp + d.qtd_sol) >= d.qtd",
+            'nte': "AND (d.qtd_emp + d.qtd_sol) < d.qtd",
+            'pe': """--
+                AND (d.qtd_emp + d.qtd_sol) > 0
+                AND (d.qtd_emp + d.qtd_sol) < d.qtd
+            """,
+            'se': "AND (d.qtd_emp + d.qtd_sol) = 0",
         }
-        filtra_qtd_solicitada = (
-            dict_qtd_solicitada[qtd_solicitada] if qtd_solicitada else '')
+        filtra_qtd_empenhada = (
+            dict_qtd_empenhada[qtd_empenhada] if qtd_empenhada else '')
 
     field_statement = {
         'ref': "l.PROCONF_GRUPO",
@@ -694,7 +697,7 @@ def query(
           d.*
         FROM dados d
         WHERE 1=1
-          {filtra_qtd_solicitada} -- filtra_qtd_solicitada
+          {filtra_qtd_empenhada} -- filtra_qtd_empenhada
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist_lower(cursor)
