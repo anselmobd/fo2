@@ -410,7 +410,19 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
         self.filter_inputs()
         self.mount_lotes_solicitados()
-        if self.lotes_solis:
-            self.mount_solicitacoes()
-            self.mount_lotes_disponiveis()
-            self.mount_rascunho_oti()
+        if not self.lotes_solis:
+            return
+
+        qtd_disp_tot = sum((
+            max(row['qtd_disp'], 0)
+            for row in self.lotes_solis
+        ))
+        if not qtd_disp_tot:
+            self.context.update({
+                'msg': "Todas as solicitações são totais. Não há o que otimizar.",
+            })
+            return
+
+        self.mount_solicitacoes()
+        self.mount_lotes_disponiveis()
+        self.mount_rascunho_oti()

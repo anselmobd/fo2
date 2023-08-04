@@ -31,11 +31,13 @@
       {% include "layout/thead_generic.html" with data=lotes_solis.headers safe=lotes_solis.safe style=lotes_solis.style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=lotes_solis.fields data=lotes_solis.data safe=lotes_solis.safe style=lotes_solis.style only %}
     </table>
-    <h4>{{solis.len}} empenhos</h4>
-    <table style="width: 25em;">
-      {% include "layout/thead_generic.html" with data=solis.headers safe=solis.safe style=solis.style thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=solis.fields data=solis.data safe=solis.safe style=solis.style only %}
-    </table>
+    {% if solis %}
+      <h4>{{solis.len}} empenhos</h4>
+      <table style="width: 25em;">
+        {% include "layout/thead_generic.html" with data=solis.headers safe=solis.safe style=solis.style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=solis.fields data=solis.data safe=solis.safe style=solis.style only %}
+      </table>
+    {% endif %}
   {% else %}
     {% if request.POST %}
       <h4>Nenhum lote com empenhos a serem realocadas</h4>
