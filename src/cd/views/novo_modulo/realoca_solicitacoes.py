@@ -9,12 +9,16 @@ from fo2.connections import db_cursor_so
 
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.functions import coalesce
+from utils.functions.strings import split_numbers
 from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
 import cd.forms
 from cd.functions import oti_emp
-from cd.queries.novo_modulo import refs_em_palets
+from cd.queries.novo_modulo import (
+    refs_em_palets,
+    situacao_empenho,
+)
 from cd.queries.novo_modulo.solicitacao import get_solicitacao
 
 
@@ -124,7 +128,15 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         return False
 
     def add_registros_solis(self, row):
-        pass
+        solis = split_numbers(row['solicitacoes'])      
+        for sol in solis:
+            emps = situacao_empenho.consulta(
+                self.cursor,
+                ordem_producao=row['op'],
+                ordem_confeccao=row['oc'],
+                solicitacao=sol,
+            )
+            self.registros_solis.extend(emps)
 
     def get_lotes_solis(self):
         empenhos = refs_em_palets.query(
@@ -156,9 +168,6 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             else:
                 self.lotes_nao_trabalhar.append(row['lote'])
         empenhos_a_trabalhar.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
-
-        # pprint(empenhos_a_trabalhar)
-        # raise SystemExit
 
         self.oti_solicitacoes = {}
         for row in self.registros_solis:
