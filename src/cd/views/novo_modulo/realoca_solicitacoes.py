@@ -347,10 +347,12 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         })
 
     def filter_inputs(self):
+        self.endereco = None if self.endereco == '' else self.endereco
+        self.solicitacoes = None if self.solicitacoes == '' else self.solicitacoes
+        self.modelo = None if self.modelo == '' else int(self.modelo)
         self.cor = None if self.cor == '' else self.cor
         self.tam = None if self.tam == '' else self.tam
-        self.modelo = None if self.modelo == '' else int(self.modelo)
-        self.endereco = None if self.endereco == '' else self.endereco
+        self.qtd_empenhada = None if self.qtd_empenhada == '' else self.qtd_empenhada
         self.context.update({
             'qtd_empenhada': self.qtd_empenhada,
         })
