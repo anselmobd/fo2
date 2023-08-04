@@ -88,16 +88,33 @@ solicitacoes = {
 
 
 lotes = {
-    '230901570': ('1Q0043', 100),
-    '231801897': ('1Q0036', 20),
-    '231801933': ('1Q0037', 10)
+    '230901570': {
+        'end': '1Q0043',
+        'qtde': 100,
+        'op': 45123,
+        'oc': 1570,
+    },
+    '231801897': {
+        'end': '1Q0036',
+        'qtde': 20,
+        'op': 45124,
+        'oc': 1897,
+    },
+    '231801933': {
+        'end': '1Q0037',
+        'qtde': 10,
+        'op': 45124,
+        'oc': 1933,
+    },
 }
 
 
 def ini_lote(value, sols):
     return {
-        'end': value[0],
-        'ini': value[1],
+        'end': value['end'],
+        'ini': value['qtde'],
+        'op': value['op'],
+        'oc': value['oc'],
         'fim': None,
         'sols': sols,
     }
@@ -105,13 +122,6 @@ def ini_lote(value, sols):
 
 def quant_total(dict_quant):
     return sum((row['qtde'] for _, row in dict_quant.items()))
-
-
-def quant_total_lotes(dict_quant):
-    return sum([
-        qtd
-        for _, qtd in dict_quant.values()
-    ])
 
 
 def lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_sol):
@@ -209,7 +219,7 @@ if __name__ == '__main__':
     print()
     print("Lotes")
     pprint(lotes)
-    total_lotes = quant_total_lotes(lotes)
+    total_lotes = quant_total(lotes)
     print("Total dos lotes", total_lotes)
 
     qtd_nao_solicitada = total_lotes - total_sols
