@@ -122,6 +122,7 @@ class Expedicao(View):
 
         table_defs = TableDefsHBpSD(
             {
+                'EMPRESA': [],
                 'PEDIDO_VENDA': ['Pedido'],
                 'DEPOSITO': [],
                 'AGRUPADOR': ['', 'o'],
@@ -233,7 +234,7 @@ class Expedicao(View):
                 row['CLIENTE_INFO'] = f"{cliente_html}{obs_html}{referencias_html}"
 
         if self.detalhe in ['r', 'c']:
-            group = ['PEDIDO_VENDA', 'DEPOSITO',
+            group = ['EMPRESA', 'PEDIDO_VENDA', 'DEPOSITO',
                      'SOLICITACAO', 'PEDIDO_CLIENTE',
                      'DT_EMISSAO', 'DT_EMBARQUE',
                      'CLIENTE']
