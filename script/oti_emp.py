@@ -2,9 +2,42 @@ from copy import deepcopy
 from pprint import pprint
 
 
-def ini_lote(qtd, sols):
+solicitacoes = {
+    '#': 14,
+    2807: 6,
+    2856: 45,
+    2861: 13,
+    2864: 2,
+    2876: 27,
+    2923: 534,
+    2980: 459,
+    2981: 27,
+    2999: 16,
+}
+
+
+lotes = {
+    220304159: ('1Q0027', 100),
+    230901615: ('1Q0042', 100),
+    230901625: ('1Q0042', 100),
+    231202127: ('1Q0043', 100),
+    224802702: ('1Q0044', 13),
+    231202132: ('1Q0044', 100),
+    231801970: ('1Q0047', 48),
+    231801975: ('1Q0047', 39),
+    231202124: ('1Q0052', 100),
+    231202125: ('1Q0052', 100),
+    231202128: ('1Q0052', 100),
+    231202129: ('1Q0052', 100),
+    231202130: ('1Q0052', 100),
+    231202131: ('1Q0052', 100),
+    231202133: ('1Q0052', 100),
+}
+
+def ini_lote(value, sols):
     return {
-        'ini': qtd,
+        'end': value[0],
+        'ini': value[1],
         'fim': None,
         'sols': sols,
     }
@@ -12,6 +45,13 @@ def ini_lote(qtd, sols):
 
 def quant_total(dict_quant):
     return sum(dict_quant.values())
+
+
+def quant_total_lotes(dict_quant):
+    return sum([
+        qtd
+        for _, qtd in dict_quant.values()
+    ])
 
 
 def lotes_nao_usar(new_lotes_sols, lotes_ord, qtd_nao_sol):
@@ -76,50 +116,27 @@ def keys_order_by_value(lotes):
     return list(map(lambda x: x[0], lotes_items))
 
 
-solicitacoes = {
-    '#': 14,
-    2807: 6,
-    2856: 45,
-    2861: 16,
-    2864: 2,
-    2866: 300,
-    2876: 27,
-    2923: 534,
-    2980: 524,
-    2981: 27,
-    2999: 16,
-}
+def keys_order_by_dict(lotes_sols):
+    lotes_items = sorted(
+        lotes_sols.items(),
+        key=lambda k: k[1]['end'],
+    )
+    lotes_items_2 = sorted(
+        lotes_items,
+        key=lambda k: -k[1]['ini'],
+    )
+    return [lote_item[0] for lote_item in lotes_items_2]
+
+
 print("Solicitações")
 pprint(solicitacoes)
 total_sols = quant_total(solicitacoes)
 print("Total solicitado", total_sols)
 
-lotes = {
-    231206046: ('1Q0022', 80),
-    231206047: ('1Q0022', 31),
-    231206048: ('1Q0022', 100),
-    231206052: ('1Q0022', 89),
-    220304159: ('1Q0027', 100),
-    220304161: ('1Q0027', 68),
-    230901615: ('1Q0042', 100),
-    230901625: ('1Q0042', 100),
-    231202127: ('1Q0043', 100),
-    224802702: ('1Q0044', 13),
-    231202132: ('1Q0044', 100),
-    231801970: ('1Q0047', 48),
-    231801975: ('1Q0047', 39),
-    231202124: ('1Q0052', 100),
-    231202125: ('1Q0052', 100),
-    231202128: ('1Q0052', 100),
-    231202129: ('1Q0052', 100),
-    231202130: ('1Q0052', 100),
-    231202131: ('1Q0052', 100),
-    231202133: ('1Q0052', 100),
-}
-
+print()
 print("Lotes")
 pprint(lotes)
-total_lotes = quant_total(lotes)
+total_lotes = quant_total_lotes(lotes)
 print("Total dos lotes", total_lotes)
 
 qtd_nao_solicitada = total_lotes - total_sols
@@ -129,14 +146,14 @@ print()
 print("Inicia nova distribuição")
 
 print()
-print("Lotes ordenados para uso")
-lotes_ord = keys_order_by_value(lotes)
-pprint(lotes_ord)
-
-print()
 print("Distribuição vazia")
 new_lotes_sols =  inicia_distribuicao(lotes)
 pprint(new_lotes_sols)
+
+print()
+print("Lotes ordenados para uso")
+lotes_ord = keys_order_by_dict(new_lotes_sols)
+pprint(lotes_ord)
 
 print()
 print("Definindo quantidade final de lotes a não utilizar")
