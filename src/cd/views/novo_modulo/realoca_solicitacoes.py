@@ -392,6 +392,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
         self.filter_inputs()
         self.mount_lotes_solicitados()
-        self.mount_solicitacoes()
-        self.mount_lotes_disponiveis()
-        self.mount_rascunho_oti()
+        if self.lotes_solis:
+            self.mount_solicitacoes()
+            self.mount_lotes_disponiveis()
+            self.mount_rascunho_oti()

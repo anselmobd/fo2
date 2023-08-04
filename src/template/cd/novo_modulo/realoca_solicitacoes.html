@@ -41,19 +41,21 @@
       <h4>Nenhum lote com empenhos a serem realocadas</h4>
     {% endif %}
   {% endif %}
-  {% if lotes.data %}
-    <h4>{{lotes.len}} lotes encontrados para atender os empenhos em questão</h4>
-    <table>
-      {% include "layout/thead_generic.html" with data=lotes.headers safe=lotes.safe style=lotes.style thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=lotes.fields data=lotes.data safe=lotes.safe style=lotes.style only %}
-    </table>
-    {% if a_fazer %}
-      <h4>Rascunho do que deve ser feito</h4>
-      <pre>{{a_fazer}}</pre>
-    {% endif %}
-  {% else %}
-    {% if request.POST %}
-      <h4>Nenhum lote encontrado para atender os empenhos em questão</h4>
+  {% if lotes %}
+    {% if lotes.data %}
+      <h4>{{lotes.len}} lotes encontrados para atender os empenhos em questão</h4>
+      <table>
+        {% include "layout/thead_generic.html" with data=lotes.headers safe=lotes.safe style=lotes.style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=lotes.fields data=lotes.data safe=lotes.safe style=lotes.style only %}
+      </table>
+      {% if a_fazer %}
+        <h4>Rascunho do que deve ser feito</h4>
+        <pre>{{a_fazer}}</pre>
+      {% endif %}
+    {% else %}
+      {% if request.POST %}
+        <h4>Nenhum lote encontrado para atender os empenhos em questão</h4>
+      {% endif %}
     {% endif %}
   {% endif %}
 {% endblock content %}
