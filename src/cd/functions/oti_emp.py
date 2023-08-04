@@ -127,8 +127,8 @@ def lotes_uma_sol(new_lotes_sols, sols):
     for value in new_lotes_sols.values():
         if value['fim'] is None:
             sols_iguais = [
-                sol for sol, qtd in sols.items()
-                if qtd == value['ini']
+                sol for sol, info in sols.items()
+                if info['qtde'] == value['ini']
             ]
             if sols_iguais:
                 sol = sols_iguais[0]
@@ -155,7 +155,8 @@ def lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, sols):
                     except StopIteration:
                         break
                 qtd_deduzir = min(value['fim'], sols[sol]['qtde'])
-                value['sols'][sol] = qtd_deduzir
+                value['sols'][sol] = sols[sol].copy()
+                value['sols'][sol]['qtde'] = qtd_deduzir
                 value['fim'] -= qtd_deduzir
                 sols[sol]['qtde'] -= qtd_deduzir
         new_lotes_sols_iter_ord.append((lote, value))
@@ -236,7 +237,7 @@ if __name__ == '__main__':
     print("Lotes atendidos com uma solicitação")
     lotes_uma_sol(new_lotes_sols, solicitacoes)
     pprint(new_lotes_sols)
-    pprint(solicitacoes)
+    pprint(solicitacoes.keys())
 
     print()
     print("Solicitações ordenadas para uso")
