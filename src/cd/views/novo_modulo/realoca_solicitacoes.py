@@ -371,9 +371,29 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             f"Solicitações a inserir\n\n{new_lotes_sols_iter_ord_txt}"
         )
 
+        old_trabalhados = self.context['lotes_solis']['len']
+        old_zerados = sum((
+            row['qtd_disp'] == 0
+            for row in self.lotes_solis
+        ))
+        new_trabalhados = len(self.new_lotes_sols)
+        new_zerados = oti_emp.conta_zerados(self.new_lotes_sols)
         self.context.update({
-            'a_fazer': a_fazer
+            'old_trabalhados': old_trabalhados,
+            'old_zerados': old_zerados,
+            'new_trabalhados': new_trabalhados,
+            'new_zerados': new_zerados,
         })
+
+        if (
+            new_zerados > old_zerados
+            or (new_zerados == old_zerados
+                and new_trabalhados < old_trabalhados
+            )
+        ):
+            self.context.update({
+                'a_fazer': a_fazer,
+            })
 
         file_dir = "kb/cd/oti_emp/%Y/%m"
         filename = timezone.now().strftime(

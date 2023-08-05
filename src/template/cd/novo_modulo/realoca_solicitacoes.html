@@ -56,9 +56,26 @@
         {% include "layout/thead_generic.html" with data=lotes.headers safe=lotes.safe style=lotes.style thclass='sticky' only %}
         {% include "layout/tbody_generic.html" with fields=lotes.fields data=lotes.data safe=lotes.safe style=lotes.style only %}
       </table>
-      {% if a_fazer %}
-        <h4>Rascunho do que deve ser feito</h4>
-        <pre>{{a_fazer}}</pre>
+      {% if old_trabalhados %}
+        <h4>Comparativo</h4>
+        <ul>
+          <li>Antes</li>
+          <ul>
+            <li>Lotes trabalhados: {{old_trabalhados}}</li>
+            <li>Lotes zerados: {{old_zerados}}</li>
+          </ul>
+          <li>Depois</li>
+          <ul>
+            <li>Lotes trabalhados: {{new_trabalhados}}</li>
+            <li>Lotes zerados: {{new_zerados}}</li>
+          </ul>
+        </ul>
+        {% if a_fazer %}
+          <h4>Rascunho do que deve ser feito</h4>
+          <pre>{{a_fazer}}</pre>
+        {% else %}
+          <h4>Não há otimização</h4>
+        {% endif %}
       {% endif %}
     {% else %}
       {% if request.POST %}
