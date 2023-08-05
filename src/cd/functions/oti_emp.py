@@ -241,9 +241,9 @@ if __name__ == '__main__':
     print("Empenhar demais lotes")
     new_lotes_sols_iter_ord = lotes_parciais(
         new_lotes_sols, lotes_ord, sols_ord, solicitacoes)
-    pprint(new_lotes_sols)
-    print(conta_zerados(new_lotes_sols), "lotes zerados")
 
     print()
     print("Visão ordenada dos empenhos otimizados")
     pprint(new_lotes_sols_iter_ord)
+
+    print(len(new_lotes_sols), "lotes trabalhados", conta_zerados(new_lotes_sols), "zerados")

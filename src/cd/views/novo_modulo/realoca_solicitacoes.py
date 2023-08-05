@@ -357,13 +357,12 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         print("Empenhar demais lotes")
         new_lotes_sols_iter_ord = oti_emp.lotes_parciais(
             self.new_lotes_sols, lotes_ord, sols_ord, self.oti_solicitacoes)
-        pprint(self.new_lotes_sols)
-        print(oti_emp.conta_zerados(self.new_lotes_sols), "lotes zerados")
-        pprint(self.oti_solicitacoes.keys())
 
         print()
         print("Visão ordenada dos empenhos otimizados")
         pprint(new_lotes_sols_iter_ord)
+
+        print(len(self.new_lotes_sols), "lotes trabalhados", oti_emp.conta_zerados(self.new_lotes_sols), "zerados")
 
         registros_solis_txt = pformat(self.registros_solis)
         new_lotes_sols_iter_ord_txt = pformat(new_lotes_sols_iter_ord)
