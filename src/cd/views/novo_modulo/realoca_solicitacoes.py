@@ -464,7 +464,8 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         })
 
         if (
-            new_zerados > old_zerados
+            self.forca_oti == 's'
+            or new_zerados > old_zerados
             or (new_zerados == old_zerados
                 and new_trabalhados < old_trabalhados
             )
@@ -536,6 +537,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             return
 
         if 'otimiza' in self.request.POST:
+            self.form.data['forca_oti'] = 'n'
             if self.grava_alteracoes():
                 self.context.update({
                     'msg_oti': "Otimização executada.",

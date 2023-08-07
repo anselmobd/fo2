@@ -199,13 +199,13 @@ class RetirarForm(forms.Form):
             ende = self.lote_object.local
             rua = ''.join(filter(str.isalpha, ende))
             try:
-                lotes.models.EnderecoDisponivel.objects.get(inicio=rua, disponivel=True) 
+                lotes.models.EnderecoDisponivel.objects.get(inicio=rua, disponivel=True)
             except lotes.models.EnderecoDisponivel.DoesNotExist:
                 # rua não válida -> permite retirar
                 return lote
 
             try:
-                lotes.models.EnderecoDisponivel.objects.get(inicio=ende, disponivel=False) 
+                lotes.models.EnderecoDisponivel.objects.get(inicio=ende, disponivel=False)
                 # endereço é inválido -> permite retirar
                 return lote
             except lotes.models.EnderecoDisponivel.DoesNotExist:
@@ -1210,6 +1210,16 @@ class RealocaSolicitacoesForm(forms.Form):
         label='Quantidade empenhada',
         choices=CHOICES,
         initial='s',
+    )
+
+    CHOICES = [
+        ('n', "Não"),
+        ('s', "Sim"),
+    ]
+    forca_oti = forms.ChoiceField(
+        label='Força otimização',
+        choices=CHOICES,
+        initial='n',
     )
 
     def clean_cor(self):
