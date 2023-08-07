@@ -83,4 +83,14 @@
       {% endif %}
     {% endif %}
   {% endif %}
+  {% if items %}
+    <hr>
+    {% if items.data %}
+      <h4>{{items.len}} itens encontrados</h4>
+      <table>
+        {% include "layout/thead_generic.html" with data=items.headers safe=items.safe style=items.style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=items.fields data=items.data safe=items.safe style=items.style only %}
+      </table>
+    {% endif %}
+  {% endif %}
 {% endblock content %}

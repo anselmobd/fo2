@@ -227,6 +227,64 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             'len': len_lotes_solis,
         })
 
+    def get_itens(self):
+        lotes = refs_em_palets.query(
+            self.cursor,
+            fields='detalhe',
+            tipo_prod='pagb',
+            qtd_empenhada=self.qtd_empenhada,
+            solicitacoes=self.solicitacoes,
+        )
+
+        model_qtd_dict = {}
+        items_set = set()
+        for item in lotes:
+            items_set.add((
+                item['modelo'],
+                item['cor'],
+                item['tam'],
+                item['ordem_tam'],
+            ))
+            key = item['modelo']
+            if key not in model_qtd_dict:
+                model_qtd_dict[key] = {
+                    'modelo': item['modelo'],
+                    'qtd_sol': 0,
+                }
+            model_qtd_dict[key]['qtd_sol'] += item['qtd_sol']
+
+        model_qtd = list(model_qtd_dict.values())
+        model_qtd.sort(key=operator.itemgetter('qtd_sol'), reverse=True)
+        model_ord = [
+            row['modelo']
+            for row in model_qtd
+        ]
+
+        items = [
+            {
+                'modelo': i[0],
+                'cor': i[1],
+                'tam': i[2],
+                'ordem_tam': i[3],
+            }
+            for i in items_set
+        ]
+        items.sort(key=lambda r: (model_ord.index(r['modelo']), r['cor'], r['ordem_tam']))
+        return items
+
+    def mount_itens(self):
+        self.items = self.get_itens()
+        self.context['items'] = self.table_defs.hfs_dict(
+            'modelo', 'cor', 'tam'
+        )
+        self.context['items'].update({
+            'safe': [
+                'modelo',
+            ],
+            'data': self.items,
+            'len': len(self.items),
+        })
+
     def mount_lotes_solicitados(self):
         self.lotes_solis = self.get_lotes_solis()
         self.lista_lotes = [
@@ -426,6 +484,8 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         })
 
     def analisa_solicitacoes(self):
+        self.mount_itens()
+
         self.mount_lotes_solicitados()
         if not self.lotes_solis:
             return
