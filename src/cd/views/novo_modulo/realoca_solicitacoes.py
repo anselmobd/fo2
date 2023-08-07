@@ -442,56 +442,37 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
         print(len(self.new_lotes_sols), "lotes trabalhados", oti_emp.conta_zerados(self.new_lotes_sols), "zerados")
 
-        registros_solis_txt = pformat(self.registros_solis)
-        new_lotes_sols_iter_ord_txt = pformat(new_lotes_sols_iter_ord)
+        self.registros_solis_txt = pformat(self.registros_solis)
+        self.new_lotes_sols_iter_ord_txt = pformat(new_lotes_sols_iter_ord)
         a_fazer = (
-            f"Solicitações a cancelar\n\n{registros_solis_txt}\n\n"
-            f"Solicitações a inserir\n\n{new_lotes_sols_iter_ord_txt}"
+            f"Solicitações a cancelar\n\n{self.registros_solis_txt}\n\n"
+            f"Solicitações a inserir\n\n{self.new_lotes_sols_iter_ord_txt}"
         )
 
-        old_trabalhados = self.context['lotes_solis']['len']
-        old_zerados = sum((
+        self.old_trabalhados = self.context['lotes_solis']['len']
+        self.old_zerados = sum((
             row['qtd_disp'] == 0
             for row in self.lotes_solis
         ))
-        new_trabalhados = len(self.new_lotes_sols)
-        new_zerados = oti_emp.conta_zerados(self.new_lotes_sols)
+        self.new_trabalhados = len(self.new_lotes_sols)
+        self.new_zerados = oti_emp.conta_zerados(self.new_lotes_sols)
         self.context.update({
-            'old_trabalhados': old_trabalhados,
-            'old_zerados': old_zerados,
-            'new_trabalhados': new_trabalhados,
-            'new_zerados': new_zerados,
+            'old_trabalhados': self.old_trabalhados,
+            'old_zerados': self.old_zerados,
+            'new_trabalhados': self.new_trabalhados,
+            'new_zerados': self.new_zerados,
         })
 
         if (
             self.forca_oti == 's'
-            or new_zerados > old_zerados
-            or (new_zerados == old_zerados
-                and new_trabalhados < old_trabalhados
+            or self.new_zerados > self.old_zerados
+            or (self.new_zerados == self.old_zerados
+                and self.new_trabalhados < self.old_trabalhados
             )
         ):
             self.context.update({
                 'a_fazer': a_fazer,
             })
-
-        file_dir = "kb/cd/oti_emp/%Y/%m"
-        filename = timezone.now().strftime(
-            f"{file_dir}/%Y-%m-%d_%H.%M.%S_%f.log")
-        Path(os.path.dirname(filename)).mkdir(
-                parents=True, exist_ok=True)
-
-        with open(filename, 'w') as file:
-            file.writelines(
-                map(lambda x: f"{x}\n", [
-                    f"endereco: {self.endereco}.",
-                    f"solicitacoes: {self.solicitacoes}.",
-                    f"modelo: {self.modelo}.",
-                    f"cor: {self.cor}.",
-                    f"tam: {self.tam}.",
-                    f"qtd_empenhada: {self.qtd_empenhada}.",
-                ])
-            )
-            file.write(new_lotes_sols_iter_ord_txt)
 
     def filter_inputs(self):
         self.endereco = None if self.endereco == '' else self.endereco
@@ -528,6 +509,36 @@ class RealocaSolicitacoes(O2BaseGetPostView):
     def grava_alteracoes(self):
         return True
 
+    def executa_alteracoes(self):
+        file_dir = "kb/cd/oti_emp/%Y/%m"
+        filename = timezone.now().strftime(
+            f"{file_dir}/%Y-%m-%d_%H.%M.%S_%f.log")
+        Path(os.path.dirname(filename)).mkdir(
+                parents=True, exist_ok=True)
+
+        with open(filename, 'w') as f:
+            f.writelines(
+                map(lambda x: f"{x}\n", [
+                    f"endereco: {self.endereco}",
+                    f"solicitacoes: {self.solicitacoes}",
+                    f"modelo: {self.modelo}",
+                    f"cor: {self.cor}",
+                    f"tam: {self.tam}",
+                    f"qtd_empenhada: {self.qtd_empenhada}",
+                    f"forca_oti: {self.forca_oti}",
+                    f"old_trabalhados: {self.old_trabalhados}",
+                    f"old_zerados: {self.old_zerados}",
+                    f"new_trabalhados: {self.new_trabalhados}",
+                    f"new_zerados: {self.new_zerados}",
+                    f"\nSolicitações a cancelar\n\n{self.registros_solis_txt}\n"
+                    f"\nSolicitações a inserir\n\n{self.new_lotes_sols_iter_ord_txt}\n"
+                    f"INICIANDO...\n",
+                ])
+            )
+            ok = self.grava_alteracoes(f)
+            f.write(f"\nFINALIZADO\n")
+        return ok
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
         self.filter_inputs()
@@ -538,7 +549,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
         if 'otimiza' in self.request.POST:
             self.form.data['forca_oti'] = 'n'
-            if self.grava_alteracoes():
+            if self.executa_alteracoes():
                 self.context.update({
                     'msg_oti': "Otimização executada.",
                 })
