@@ -67,6 +67,16 @@ class Solicitacao(O2BaseGetView):
             ),
             reverse=True,
         )
+        self.dados_enderecados2 = copy.deepcopy(self.dados_solicitados)
+        self.dados_enderecados2.sort(
+            key=itemgetter(
+                'situacao',
+                'rota',
+                'endereco',
+                'ordem_producao',
+                'lote',
+            ),
+        )
 
     def context_solicitados(self):
 
@@ -256,6 +266,97 @@ class Solicitacao(O2BaseGetView):
             'e_data': self.dados_enderecados,
         })
 
+    def context_enderecos2(self):
+        self.dados_enderecados2 = paginator_basic(
+            self.dados_enderecados2, self.por_pagina, self.page_end2)
+
+        for row in self.dados_enderecados2.object_list:
+            row['ordem_producao|LINK'] = reverse(
+                'producao:op__get',
+                args=[row['ordem_producao']],
+            )
+            row['ordem_producao|GLYPHICON'] = '_'
+            row['ordem_producao|TARGET'] = '_blank'
+
+            row['lote|LINK'] = reverse(
+                'producao:lote__get',
+                args=[row['lote']],
+            )
+            row['lote|GLYPHICON'] = '_'
+            row['lote|TARGET'] = '_blank'
+
+            row['ref|LINK'] = reverse(
+                'produto:ref__get',
+                args=[row['ref']],
+            )
+            row['ref|GLYPHICON'] = '_'
+            row['ref|TARGET'] = '_blank'
+
+            row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
+
+            if row['inclusao_palete']:
+                row['inclusao_palete'] = row['inclusao_palete'].strftime("%d/%m/%y %H:%M")
+            else:
+                row['inclusao_palete'] = '-'
+
+            if row['inclusao_endereco']:
+                row['inclusao_endereco'] = row['inclusao_endereco'].strftime("%d/%m/%y %H:%M")
+            else:
+                row['inclusao_endereco'] = '-'
+
+        totalize_data(self.dados_enderecados2.object_list, {
+            'sum': ['qtde'],
+            'descr': {'situacao': 'Total:'},
+            'row_style': 'font-weight: bold;',
+            'flags': ['NO_TOT_1'],
+        })
+
+        self.context.update({
+            'e2_headers': [
+                'Situação',
+                'Estágio',
+                'OP',
+                'Lote',
+                'Qtd.Lote',
+                'Ref.',
+                'Tam.',
+                'Cor',
+                'Qtde.',
+                'Parcial?',
+                'Inclusão S.',
+                'Palete',
+                'Inclusão P.',
+                'Rota',
+                'Endereço',
+                'Inclusão E.',
+            ],
+            'e2_fields': [
+                'situacao',
+                'codigo_estagio',
+                'ordem_producao',
+                'lote',
+                'qtd_ori',
+                'ref',
+                'tam',
+                'cor',
+                'qtde',
+                'int_parc',
+                'inclusao',
+                'palete',
+                'inclusao_palete',
+                'rota',
+                'endereco',
+                'inclusao_endereco',
+
+            ],
+            'e2_style': untuple_keys_concat({
+                (1, 2, 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16):
+                    'text-align: center;',
+                (5, 9): 'text-align: right;',
+            }),
+            'e2_data': self.dados_enderecados2,
+        })
+
     def monta_dados_pedidos(self):
         if not self.dados_solicitados:
             self.dados_pedidos = []
@@ -440,6 +541,8 @@ class Solicitacao(O2BaseGetView):
         self.page_sol = self.request.GET.get('page_sol', 1)
         self.context['page_end'] = self.request.GET.get('page_end', 0)
         self.page_end = self.request.GET.get('page_end', 1)
+        self.context['page_end2'] = self.request.GET.get('page_end2', 0)
+        self.page_end2 = self.request.GET.get('page_end2', 1)
         self.context['aba'] = self.request.GET.get('aba', 'default')
 
         self.og = OperacoesGrade()
@@ -469,6 +572,8 @@ class Solicitacao(O2BaseGetView):
         self.context_solicitados()
 
         self.context_enderecos()
+
+        self.context_enderecos2()
 
         self.context_pedidos()
 
