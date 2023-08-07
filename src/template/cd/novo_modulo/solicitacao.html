@@ -45,7 +45,7 @@
       <li><a data-toggle="tab" href="#grade_situacao">Grades por situação</a></li>
     </ul>
     <div class="tab-content">
-      <div id="lotes" class="tab-pane fade{% if not page_end and not page_end2 %} in active{% endif %}">
+      <div id="lotes" class="tab-pane fade{% if aba == 'default' or aba == 'lotes' %} in active{% endif %}">
         <p>Lista registros em que a OP não tem estágio 63-CD (isso exclui OPs de expedição)<br/>
           Ordem Situação, Estágio, OP e Lote.</p>
         {% include "layout/paginator_get.html" with data=data url_link=link_solicitacao url_gets=request.GET.urlencode var_page='page_sol' extra_var='aba' extra_value='lotes' only %}
@@ -55,7 +55,7 @@
         </table>
         {% include "layout/paginator_get.html" with data=data url_link=link_solicitacao url_gets=request.GET.urlencode var_page='page_sol' extra_var='aba' extra_value='lotes' only %}
       </div>
-      <div id="enderecos" class="tab-pane fade{% if page_end %} in active{% endif %}">
+      <div id="enderecos" class="tab-pane fade{% if aba == 'enderecos' %} in active{% endif %}">
         <p>"Palete" é onde está atualmente o lote. "Inclusão P." é quando o lote foi incluido no palete.<br/>
           "Endereço" é onde está atualmente o Palete. "Inclusão E." é quando o palete foi incluido no endereço.<br/>
           Ordem decrescente de Rota, Endereço, Situação, OP e Lote.</p>
@@ -66,7 +66,7 @@
         </table>
         {% include "layout/paginator_get.html" with data=e_data url_link=link_solicitacao url_gets=request.GET.urlencode var_page='page_end' extra_var='aba' extra_value='enderecos' only %}
       </div>
-      <div id="enderecos2" class="tab-pane fade{% if page_end2 %} in active{% endif %}">
+      <div id="enderecos2" class="tab-pane fade{% if aba == 'enderecos2' %} in active{% endif %}">
         <p>"Palete" é onde está atualmente o lote. "Inclusão P." é quando o lote foi incluido no palete.<br/>
           "Endereço" é onde está atualmente o Palete. "Inclusão E." é quando o palete foi incluido no endereço.<br/>
           Ordem crescente de Situação, Rota, Endereço, OP e Lote.</p>
