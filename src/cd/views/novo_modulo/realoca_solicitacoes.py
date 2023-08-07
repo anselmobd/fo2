@@ -3,12 +3,18 @@ import os
 from pathlib import Path
 from pprint import pprint, pformat
 
+from django.core.cache import cache
 from django.utils import timezone
 
 from fo2.connections import db_cursor_so
 
 from o2.views.base.get_post import O2BaseGetPostView
-from utils.functions import coalesce
+from utils.cache import timeout
+from utils.functions import (
+    coalesce,
+    fo2logger,
+    my_make_key_cache,
+)
 from utils.functions.strings import split_numbers
 from utils.table_defs import TableDefs
 from utils.views import totalize_data
@@ -228,6 +234,16 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         })
 
     def get_itens(self):
+        key_cache = my_make_key_cache(
+            'cd/views/novo_modulo/realoca_solicitacoes/get_itens',
+            self.qtd_empenhada,
+            self.solicitacoes,
+        )
+        items = cache.get(key_cache)
+        if items is not None:
+            fo2logger.info('cached '+key_cache)
+            return items
+
         lotes = refs_em_palets.query(
             self.cursor,
             fields='detalhe',
@@ -270,6 +286,10 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             for i in items_set
         ]
         items.sort(key=lambda r: (model_ord.index(r['modelo']), r['cor'], r['ordem_tam']))
+
+        cache.set(key_cache, items, timeout=timeout.HOUR)
+        fo2logger.info('calculated '+key_cache)
+
         return items
 
     def mount_itens(self):
