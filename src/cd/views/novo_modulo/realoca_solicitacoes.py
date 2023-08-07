@@ -433,17 +433,17 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
         print()
         print("Empenhar demais lotes")
-        new_lotes_sols_iter_ord = oti_emp.lotes_parciais(
+        self.new_lotes_sols_iter_ord = oti_emp.lotes_parciais(
             self.new_lotes_sols, lotes_ord, sols_ord, self.oti_solicitacoes)
 
         print()
         print("Visão ordenada dos empenhos otimizados")
-        pprint(new_lotes_sols_iter_ord)
+        pprint(self.new_lotes_sols_iter_ord)
 
         print(len(self.new_lotes_sols), "lotes trabalhados", oti_emp.conta_zerados(self.new_lotes_sols), "zerados")
 
         self.registros_solis_txt = pformat(self.registros_solis)
-        self.new_lotes_sols_iter_ord_txt = pformat(new_lotes_sols_iter_ord)
+        self.new_lotes_sols_iter_ord_txt = pformat(self.new_lotes_sols_iter_ord)
         a_fazer = (
             f"Solicitações a cancelar\n\n{self.registros_solis_txt}\n\n"
             f"Solicitações a inserir\n\n{self.new_lotes_sols_iter_ord_txt}"
@@ -506,7 +506,17 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.mount_lotes_disponiveis()
         self.mount_rascunho_oti()
 
-    def grava_alteracoes(self):
+    def grava_alteracoes(self, f):
+        for row in self.registros_solis:
+            f.write(f"{row['ordem_producao']}\n")
+            f.write(f"{row['ordem_confeccao']}\n")
+
+        f.write("\n")
+
+        for lote, row in self.new_lotes_sols_iter_ord:
+            f.write(f"{row['op']}\n")
+            f.write(f"{row['oc']}\n")
+
         return True
 
     def executa_alteracoes(self):
