@@ -19,7 +19,7 @@ from utils.functions.strings import split_numbers
 from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
-import cd.forms
+from cd.forms.realoca_solicitacoes import RealocaSolicitacoesForm
 from cd.functions import oti_emp
 from cd.queries.novo_modulo import (
     refs_em_palets,
@@ -32,7 +32,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(RealocaSolicitacoes, self).__init__(*args, **kwargs)
-        self.Form_class = cd.forms.RealocaSolicitacoesForm
+        self.Form_class = RealocaSolicitacoesForm
         self.cleaned_data2self = True
         self.cleaned_data2data = True
         self.template_name = 'cd/novo_modulo/realoca_solicitacoes.html'
