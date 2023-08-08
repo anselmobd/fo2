@@ -4,7 +4,7 @@ from pathlib import Path
 from pprint import pprint, pformat
 
 from django.core.cache import cache
-from django.db import transaction
+from django.db import DatabaseError, transaction
 from django.utils import timezone
 
 from fo2.connections import db_cursor_so
@@ -533,7 +533,6 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 sub_destino=lote_row['sub_destino'],
                 cor_destino=lote_row['cor_destino'],
                 solicitacao=lote_row['solicitacao'],
-                exec=False,
             )
             f.write("\n")
 
@@ -569,7 +568,6 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                     solicitacao=sol,
                     situacao=sol_row['situacao'],
                     qtde=sol_row['qtde'],
-                    exec=False,
                 )
                 f.write("\n")
 
@@ -603,7 +601,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             )
 
             try:
-                with transaction.atomic():
+                with transaction.atomic(using='sn'):
                     self.grava_alteracoes(f)
             except Exception:
                 f.write(f"\nERRO\n")
