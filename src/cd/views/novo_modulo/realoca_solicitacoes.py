@@ -175,6 +175,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             if (
                 (not self.endereco_selecionado(row['endereco'], self.endereco))
                 or row['qtd_disp'] > 0
+                or self.trab_sol_tot == 's'
             ):
                 empenhos_a_trabalhar.append(row)
                 self.add_registros_solis(row)
@@ -496,7 +497,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             max(row['qtd_disp'], 0)
             for row in self.lotes_solis
         ))
-        if not qtd_disp_tot:
+        if self.trab_sol_tot == 'n' and not qtd_disp_tot:
             self.context.update({
                 'msg': "Todas as solicitações são totais. Não há o que otimizar.",
             })
