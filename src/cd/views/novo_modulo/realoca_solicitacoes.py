@@ -27,6 +27,8 @@ from cd.queries.novo_modulo import (
 )
 from cd.queries.novo_modulo.solicitacao import get_solicitacao
 from cd.queries.novo_modulo import situacao_empenho
+from cd.queries.novo_modulo import empenho
+
 
 class RealocaSolicitacoes(O2BaseGetPostView):
 
@@ -509,35 +511,66 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
     def grava_alteracoes(self, f):
         f.write(f"situacao_empenho.cancela\n\n")
-        for row in self.registros_solis:
-            f.write(f"ordem_producao = {row['ordem_producao']}\n")
-            f.write(f"ordem_confeccao = {row['ordem_confeccao']}\n")
-            f.write(f"pedido_destino = {row['pedido_destino']}\n")
-            f.write(f"op_destino = {row['op_destino']}\n")
-            f.write(f"grupo_destino = {row['grupo_destino']}\n")
-            f.write(f"alter_destino = {row['alter_destino']}\n")
-            f.write(f"sub_destino = {row['sub_destino']}\n")
-            f.write(f"cor_destino = {row['cor_destino']}\n")
-            f.write(f"solicitacao = {row['solicitacao']}\n")
+        for lote_row in self.registros_solis:
+            f.write(f"ordem_producao = {lote_row['ordem_producao']}\n")
+            f.write(f"ordem_confeccao = {lote_row['ordem_confeccao']}\n")
+            f.write(f"pedido_destino = {lote_row['pedido_destino']}\n")
+            f.write(f"op_destino = {lote_row['op_destino']}\n")
+            f.write(f"grupo_destino = {lote_row['grupo_destino']}\n")
+            f.write(f"alter_destino = {lote_row['alter_destino']}\n")
+            f.write(f"sub_destino = {lote_row['sub_destino']}\n")
+            f.write(f"cor_destino = {lote_row['cor_destino']}\n")
+            f.write(f"solicitacao = {lote_row['solicitacao']}\n")
             situacao_empenho.cancela(
                 self.cursor,
-                ordem_producao=row['ordem_producao'],
-                ordem_confeccao=row['ordem_confeccao'],
-                pedido_destino=row['pedido_destino'],
-                op_destino=row['op_destino'],
-                grupo_destino=row['grupo_destino'],
-                alter_destino=row['alter_destino'],
-                sub_destino=row['sub_destino'],
-                cor_destino=row['cor_destino'],
-                solicitacao=row['solicitacao'],
+                ordem_producao=lote_row['ordem_producao'],
+                ordem_confeccao=lote_row['ordem_confeccao'],
+                pedido_destino=lote_row['pedido_destino'],
+                op_destino=lote_row['op_destino'],
+                grupo_destino=lote_row['grupo_destino'],
+                alter_destino=lote_row['alter_destino'],
+                sub_destino=lote_row['sub_destino'],
+                cor_destino=lote_row['cor_destino'],
+                solicitacao=lote_row['solicitacao'],
                 exec=False,
             )
+            f.write("\n")
 
         f.write("\n")
 
-        for lote, row in self.new_lotes_sols_iter_ord:
-            f.write(f"{row['op']}\n")
-            f.write(f"{row['oc']}\n")
+        f.write("empenho.insere\n")
+        for lote, lote_row in self.new_lotes_sols_iter_ord:
+            for sol, sol_row in lote_row['sols'].items():
+                f.write(f"endereco = {lote_row['end']}\n")
+                f.write(f"ordem_producao = {lote_row['op']}\n")
+                f.write(f"ordem_confeccao = {lote_row['oc']}\n")
+                f.write(f"pedido_destino = {sol_row['pedido_destino']}\n")
+                f.write(f"op_destino = {sol_row['op_destino']}\n")
+                f.write(f"oc_destino = {sol_row['oc_destino']}\n")
+                f.write(f"grupo_destino = {sol_row['grupo_destino']}\n")
+                f.write(f"alter_destino = {sol_row['alter_destino']}\n")
+                f.write(f"sub_destino = {sol_row['sub_destino']}\n")
+                f.write(f"cor_destino = {sol_row['cor_destino']}\n")
+                f.write(f"solicitacao = {sol}\n")
+                f.write(f"situacao = {sol_row['situacao']}\n")
+                f.write(f"qtde = {sol_row['qtde']}\n")
+                empenho.insere(
+                    self.cursor,
+                    ordem_producao=lote_row['op'],
+                    ordem_confeccao=lote_row['oc'],
+                    pedido_destino=sol_row['pedido_destino'],
+                    op_destino=sol_row['op_destino'],
+                    oc_destino=sol_row['oc_destino'],
+                    grupo_destino=sol_row['grupo_destino'],
+                    alter_destino=sol_row['alter_destino'],
+                    sub_destino=sol_row['sub_destino'],
+                    cor_destino=sol_row['cor_destino'],
+                    solicitacao=sol,
+                    situacao=sol_row['situacao'],
+                    qtde=sol_row['qtde'],
+                    exec=False,
+                )
+                f.write("\n")
 
         return True
 
