@@ -4,6 +4,14 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 
 
+def finaliza(cursor, **kwargs):
+    return exec(cursor, finaliza=True, **kwargs)
+
+
+def cancela(cursor, **kwargs):
+    return exec(cursor, cancela=True, **kwargs)
+
+
 def consulta(cursor, **kwargs):
     return exec(cursor, consulta=True, **kwargs)
 
@@ -24,6 +32,7 @@ def exec(
     sub_destino=None,
     cor_destino=None,
     solicitacao=None,
+    exec=True,
 ):
 
     if sum([finaliza, cancela, consulta]) != 1:
@@ -97,7 +106,7 @@ def exec(
         , sl.QTDE
         , sl.PERIODO_OC
         , sl.INCLUSAO
-        FROM pcpc_044 sl -- solicitação / lote 
+        FROM pcpc_044 sl -- solicitação / lote
         -- Na tabela de solicitações aparece a OP de expedição também como
         -- reservada, com situação 4. Para tentar evitar isso, não listo
         -- lotes que pertençam a OP que não tem estágio 63
@@ -124,7 +133,7 @@ def exec(
         situacao = 5 if finaliza else 9
         sql = f"""
             UPDATE SYSTEXTIL.PCPC_044
-            SET 
+            SET
               SITUACAO = {situacao}
             WHERE (
               -- PK fields
@@ -143,7 +152,7 @@ def exec(
               {sql} --sql
             )
         """
-    debug_cursor_execute(cursor, sql)
+    debug_cursor_execute(cursor, sql, exec=exec)
     if finaliza or cancela:
         return cursor.rowcount
     else:
