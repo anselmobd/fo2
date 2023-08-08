@@ -4,6 +4,7 @@ from pathlib import Path
 from pprint import pprint, pformat
 
 from django.core.cache import cache
+from django.db import transaction
 from django.utils import timezone
 
 from fo2.connections import db_cursor_so
@@ -572,7 +573,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 )
                 f.write("\n")
 
-        return True
+        return
 
     def executa_alteracoes(self):
         file_dir = "kb/cd/oti_emp/%Y/%m"
@@ -600,9 +601,16 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                     f"INICIANDO...\n",
                 ])
             )
-            ok = self.grava_alteracoes(f)
+
+            try:
+                with transaction.atomic():
+                    self.grava_alteracoes(f)
+            except Exception:
+                f.write(f"\nERRO\n")
+                return False
+
             f.write(f"\nFINALIZADO\n")
-        return ok
+        return True
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -617,5 +625,9 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             if self.executa_alteracoes():
                 self.context.update({
                     'msg_oti': "Otimização executada.",
+                })
+            else:
+                self.context.update({
+                    'msg_oti': "Otimização NÃO executada. Erro!",
                 })
             self.analisa_solicitacoes()
