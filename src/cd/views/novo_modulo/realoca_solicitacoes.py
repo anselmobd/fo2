@@ -514,7 +514,11 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 ordem_producao=row['ordem_producao'],
                 ordem_confeccao=row['ordem_confeccao'],
                 pedido_destino=row['pedido_destino'],
+                op_destino=row['op_destino'],
                 grupo_destino=row['grupo_destino'],
+                alter_destino=row['alter_destino'],
+                sub_destino=row['sub_destino'],
+                cor_destino=row['cor_destino'],
                 solicitacao=row['solicitacao'],
                 exec=False,
             )
