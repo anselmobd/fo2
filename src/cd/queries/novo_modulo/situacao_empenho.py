@@ -100,12 +100,17 @@ def exec(
         , sl.ALTER_DESTINO
         , sl.SUB_DESTINO
         , sl.COR_DESTINO
-          -- other fields
-        , sl.SOLICITACAO
-        , sl.SITUACAO
-        , sl.QTDE
-        , sl.PERIODO_OC
-        , sl.INCLUSAO
+    """
+    if finaliza or cancela:
+        sql += f"""--
+            -- other fields
+            , sl.SOLICITACAO
+            , sl.SITUACAO
+            , sl.QTDE
+            , sl.PERIODO_OC
+            , sl.INCLUSAO
+        """
+    sql += f"""--
         FROM pcpc_044 sl -- solicitação / lote
         -- Na tabela de solicitações aparece a OP de expedição também como
         -- reservada, com situação 4. Para tentar evitar isso, não listo
