@@ -101,7 +101,7 @@ def exec(
         , sl.SUB_DESTINO
         , sl.COR_DESTINO
     """
-    if finaliza or cancela:
+    if consulta:
         sql += f"""--
             -- other fields
             , sl.SOLICITACAO
