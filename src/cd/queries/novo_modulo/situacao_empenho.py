@@ -76,11 +76,11 @@ def exec(
     """
 
     filtra_sub_destino = "" if sub_destino is None else f"""--
-        AND sl.SUB_DESTINO = {sub_destino}
+        AND sl.SUB_DESTINO = '{sub_destino}'
     """
 
     filtra_cor_destino = "" if cor_destino is None else f"""--
-        AND sl.COR_DESTINO = {cor_destino}
+        AND sl.COR_DESTINO = '{cor_destino}'
     """
 
     filtra_solicitacao = "" if solicitacao is None else f"""--
