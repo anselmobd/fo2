@@ -17,9 +17,10 @@ def insere(
     solicitacao,
     situacao,
     qtde,
-    # dep_destino, # 0 
+    # dep_destino, # 0
     # periodo_oc, # NULL
     # inclusao, # automático
+    exec=True,
 ):
     sql = f"""
         INSERT INTO SYSTEXTIL.PCPC_044 (
@@ -57,7 +58,7 @@ def insere(
         )
     """
     try:
-        debug_cursor_execute(cursor, sql)
+        debug_cursor_execute(cursor, sql, exec=exec)
         return cursor.rowcount
     except Exception as e:
         return -1
