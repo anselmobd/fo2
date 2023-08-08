@@ -517,22 +517,23 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             f.write(f"ordem_confeccao = {lote_row['ordem_confeccao']}\n")
             f.write(f"pedido_destino = {lote_row['pedido_destino']}\n")
             f.write(f"op_destino = {lote_row['op_destino']}\n")
+            f.write(f"oc_destino = {lote_row['oc_destino']}\n")
             f.write(f"grupo_destino = {lote_row['grupo_destino']}\n")
             f.write(f"alter_destino = {lote_row['alter_destino']}\n")
             f.write(f"sub_destino = {lote_row['sub_destino']}\n")
             f.write(f"cor_destino = {lote_row['cor_destino']}\n")
             f.write(f"solicitacao = {lote_row['solicitacao']}\n")
-            situacao_empenho.cancela(
+            empenho.exclui(
                 self.cursor,
                 ordem_producao=lote_row['ordem_producao'],
                 ordem_confeccao=lote_row['ordem_confeccao'],
                 pedido_destino=lote_row['pedido_destino'],
                 op_destino=lote_row['op_destino'],
+                oc_destino=lote_row['oc_destino'],
                 grupo_destino=lote_row['grupo_destino'],
                 alter_destino=lote_row['alter_destino'],
                 sub_destino=lote_row['sub_destino'],
                 cor_destino=lote_row['cor_destino'],
-                solicitacao=lote_row['solicitacao'],
             )
             f.write("\n")
 
