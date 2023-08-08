@@ -127,13 +127,14 @@ def lotes_uma_sol(new_lotes_sols, sols):
 
 def lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, sols):
     sols_iter = iter(sols_ord)
-    sol = next(sols_iter)
+    if sols_ord:
+        sol = next(sols_iter)
     new_lotes_sols_iter_ord = []
     for lote in lotes_ord:
         if not lote in new_lotes_sols:
             continue
         value = new_lotes_sols[lote]
-        if value['fim'] is None:
+        if sols_ord and value['fim'] is None:
             value['fim'] = value['ini']
             while value['fim'] > 0:
                 if sols[sol]['qtde'] == 0:
