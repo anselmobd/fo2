@@ -26,7 +26,7 @@ from cd.queries.novo_modulo import (
     situacao_empenho,
 )
 from cd.queries.novo_modulo.solicitacao import get_solicitacao
-
+from cd.queries.novo_modulo import situacao_empenho
 
 class RealocaSolicitacoes(O2BaseGetPostView):
 
@@ -509,8 +509,15 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
     def grava_alteracoes(self, f):
         for row in self.registros_solis:
-            f.write(f"{row['ordem_producao']}\n")
-            f.write(f"{row['ordem_confeccao']}\n")
+            situacao_empenho.cancela(
+                self.cursor,
+                ordem_producao=row['ordem_producao'],
+                ordem_confeccao=row['ordem_confeccao'],
+                pedido_destino=row['pedido_destino'],
+                grupo_destino=row['grupo_destino'],
+                solicitacao=row['solicitacao'],
+                exec=False,
+            )
 
         f.write("\n")
 
