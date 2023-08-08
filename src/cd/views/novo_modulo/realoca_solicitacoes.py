@@ -508,7 +508,17 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.mount_rascunho_oti()
 
     def grava_alteracoes(self, f):
+        f.write(f"situacao_empenho.cancela\n\n")
         for row in self.registros_solis:
+            f.write(f"ordem_producao = {row['ordem_producao']}\n")
+            f.write(f"ordem_confeccao = {row['ordem_confeccao']}\n")
+            f.write(f"pedido_destino = {row['pedido_destino']}\n")
+            f.write(f"op_destino = {row['op_destino']}\n")
+            f.write(f"grupo_destino = {row['grupo_destino']}\n")
+            f.write(f"alter_destino = {row['alter_destino']}\n")
+            f.write(f"sub_destino = {row['sub_destino']}\n")
+            f.write(f"cor_destino = {row['cor_destino']}\n")
+            f.write(f"solicitacao = {row['solicitacao']}\n")
             situacao_empenho.cancela(
                 self.cursor,
                 ordem_producao=row['ordem_producao'],
