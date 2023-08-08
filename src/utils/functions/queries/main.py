@@ -113,7 +113,7 @@ def debug_cursor_execute_prt_off():
 
 
 def debug_cursor_execute(
-        cursor, sql, list_args=None, prt=None
+        cursor, sql, list_args=None, prt=None, exec=True
     ):
     if prt is None:
         prt=settings.DEBUG_CURSOR_EXECUTE_PRT
@@ -138,4 +138,5 @@ def debug_cursor_execute(
     statment = "\n".join(info)
     if prt:
         print(statment)
-    cursor.execute(statment, list_args)
+    if exec:
+        cursor.execute(statment, list_args)
