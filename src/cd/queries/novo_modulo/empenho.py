@@ -57,8 +57,4 @@ def insere(
         --, TIMESTAMP '2023-07-04 17:01:11.000000'
         )
     """
-    try:
-        debug_cursor_execute(cursor, sql, exec=exec)
-        return cursor.rowcount
-    except Exception as e:
-        return -1
+    debug_cursor_execute(cursor, sql, exec=exec)
