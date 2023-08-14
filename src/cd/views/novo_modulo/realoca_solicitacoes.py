@@ -78,7 +78,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             cor=self.cor,
             tam=self.tam,
             modelo=self.modelo,
-            endereco=self.endereco,
+            endereco=self.endereco if self.endereco else "*",
             tipo_prod='pagb',
             qtd_empenhada=qtd_empenhada,
             solicitacoes=self.solicitacoes,
