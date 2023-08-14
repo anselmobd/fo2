@@ -9,7 +9,7 @@ class RealocaSolicitacoesForm(forms.Form):
     a = FormWidgetAttrs()
 
     endereco = forms.CharField(
-        label='Endereço',
+        label='Endereço destino',
         required=False,
         min_length=1,
         widget=forms.TextInput(
