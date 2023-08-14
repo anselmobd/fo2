@@ -184,8 +184,11 @@ def query(
     modelo: filtra no DB por referências de modelo com OP
             e LOCALMENTE por modelo
         modelo de referência
-    endereco: filtra no BD por endereço do lote no CD
-        endereço do lote inteiro ou parcial (início) ou faixa (de-até)
+    endereco: filtra no BD por endereço do lote no CD, podendo ser:
+        endereço do lote inteiro
+        endereço do lote parcial (início)
+        faixa (de-até)
+        "*" significando endereço não nulo
     tipo_prod: filtra no DB por tipo de produto de acordo com características
                da referência
         pagb: PA/PG/PB
@@ -294,6 +297,10 @@ def query(
             filtra_endereco = f"""--
                 AND ec.COD_ENDERECO >= '{end_de}'
                 AND ec.COD_ENDERECO <= '{end_ate}'
+            """
+        elif endereco == "*":
+            filtra_endereco = f"""--
+                AND ec.COD_ENDERECO IS NOT NULL'
             """
         else:
             filtra_endereco = f"""--
