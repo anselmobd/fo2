@@ -8,9 +8,9 @@ def split_size_by_char(text, size_wanted, separator=' ', limit=None):
     Rules:
     - se o tamanho certo aceita uma quebra, aí será a quebra
     - senão, será no primeiro caractere diferente de separator 
-      anter do primeiro grupo encontrado à esquerda do tamanho
+      antes do primeiro grupo encontrado à esquerda do tamanho
       indicado
-    - o todos os caracteres iguais ao separador serão excluidos 
+    - todos os caracteres iguais ao separador serão excluidos 
       do início da segunda parte do split
     """
     text = text.rstrip(separator)
