@@ -288,6 +288,7 @@ def query(
 
     filtra_endereco = ''
     if endereco:
+        end_list = endereco.split()
         if len(endereco) == 6:
             filtra_endereco = f"""--
                 AND ec.COD_ENDERECO = '{endereco}'
