@@ -1,6 +1,6 @@
 from pprint import pprint
 
-__all__=['split_size_by_char']
+__all__=['split_size_by_char', 'splited']
 
 
 def split_size_by_char(text, size_wanted, separator=' ', limit=None):
@@ -36,3 +36,9 @@ def split_size_by_char(text, size_wanted, separator=' ', limit=None):
         # Acontece se só tem separator antes do size ou do limit
         before = ''
     return before, after
+
+
+def splited(text, separator=' '):
+    """ Split text on separator by considering consequent separators as one
+    """
+    return list(filter(lambda x: x, text.split(separator)))
