@@ -5,6 +5,8 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import split_numbers
 
+from o2.functions.text import splited
+
 from lotes.functions.varias import (
     lote_de_periodo_oc,
     modelo_de_ref,
@@ -184,13 +186,14 @@ def query(
     modelo: filtra no DB por referências de modelo com OP
             e LOCALMENTE por modelo
         modelo de referência
-    endereco: filtra no BD por endereço do lote no CD, podendo ser:
+    endereco: filtra no BD por endereço do lote no CD, podendo ser uma
+              ou mais ocorrencias, separadas por espaços, de:
         endereço do lote inteiro
         endereço do lote parcial (início)
         faixa (de-até)
         "*" significando endereço não nulo
-    tipo_prod: filtra no DB por tipo de produto de acordo com características
-               da referência
+    tipo_prod: filtra no DB por tipo de produto de acordo com
+               características da referência
         pagb: PA/PG/PB
         pgb: PG/PB
         pa: PA
@@ -288,25 +291,30 @@ def query(
 
     filtra_endereco = ''
     if endereco:
-        end_list = endereco.split()
-        if len(endereco) == 6:
-            filtra_endereco = f"""--
-                AND ec.COD_ENDERECO = '{endereco}'
-            """
-        elif '-' in endereco:
-            end_de, end_ate = tuple(endereco.split('-'))
-            filtra_endereco = f"""--
-                AND ec.COD_ENDERECO >= '{end_de}'
-                AND ec.COD_ENDERECO <= '{end_ate}'
-            """
-        elif endereco == "*":
-            filtra_endereco = f"""--
-                AND ec.COD_ENDERECO IS NOT NULL
-            """
-        else:
-            filtra_endereco = f"""--
-                AND ec.COD_ENDERECO LIKE '{endereco}%'
-            """
+        end_list = splited(endereco)
+        filtro_list = []
+        for end in end_list:
+            if len(end) == 6:
+                filtra_end1 = f"""--
+                    ec.COD_ENDERECO = '{end}'
+                """
+            elif '-' in end:
+                end_de, end_ate = tuple(end.split('-'))
+                filtra_end1 = f"""--
+                    ( ec.COD_ENDERECO >= '{end_de}'
+                    AND ec.COD_ENDERECO <= '{end_ate}' )
+                """
+            elif end == "*":
+                filtra_end1 = f"""--
+                    ec.COD_ENDERECO IS NOT NULL
+                """
+            else:
+                filtra_end1 = f"""--
+                    ec.COD_ENDERECO LIKE '{end}%'
+                """
+            filtro_list.append(filtra_end1)
+        filtra_endereco = ' OR '.join(filtro_list)
+        filtra_endereco = f"AND ({filtra_endereco})"
         joins.add('1ec')
 
     dict_tipo_prod = {
