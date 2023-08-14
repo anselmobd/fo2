@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from fo2.connections import db_cursor_so
 
+from o2.functions.text import splited
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.cache import timeout
 from utils.functions import (
@@ -134,13 +135,20 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
     def endereco_selecionado(self, end, selecao):
         if selecao:
-            if len(selecao) == 6:
-                return end == selecao
-            elif '-' in selecao:
-                end_de, end_ate = tuple(selecao.split('-'))
-                return end >= end_de and end <= end_ate
-            else:
-                return end.startswith(selecao)
+            selec_list = splited(selecao)
+            for selec in selec_list:
+                if len(selec) == 6:
+                    if end == selec:
+                        return True
+                elif '-' in selec:
+                    end_de, end_ate = tuple(selec.split('-'))
+                    if end >= end_de and end <= end_ate:
+                        return True
+                else:
+                    if end.startswith(selec):
+                        return True
+        else:
+            return end != '-'
         return False
 
     def add_registros_solis(self, row):
