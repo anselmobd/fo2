@@ -300,7 +300,7 @@ def query(
             """
         elif endereco == "*":
             filtra_endereco = f"""--
-                AND ec.COD_ENDERECO IS NOT NULL'
+                AND ec.COD_ENDERECO IS NOT NULL
             """
         else:
             filtra_endereco = f"""--
