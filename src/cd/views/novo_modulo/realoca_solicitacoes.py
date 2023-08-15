@@ -319,6 +319,25 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             'data': self.items,
             'len': len(self.items),
         })
+        last_item = ('!', '!', '!')
+        for item in self.items:
+            if last_item == (
+                self.modelo,
+                self.cor,
+                self.tam,
+            ):
+                self.context.update({
+                    'prox_modelo': item['modelo'],
+                    'prox_cor': item['cor'],
+                    'prox_tam': item['tam'],
+                })
+                break
+            last_item = (
+                item['modelo'],
+                item['cor'],
+                item['tam'],
+            )
+
 
     def mount_lotes_solicitados(self):
         self.lotes_solis = self.get_lotes_solis()

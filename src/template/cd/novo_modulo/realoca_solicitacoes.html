@@ -20,6 +20,9 @@
     {% endif %}
   </form>
   <br/>
+  {% if prox_modelo %}
+    <p>Próximo item a analisar: {{prox_modelo}} {{prox_cor}} {{prox_tam}}</p>
+  {% endif %}
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
   {% if msg_oti %}
     <h2>{{msg_oti}}</h2>
