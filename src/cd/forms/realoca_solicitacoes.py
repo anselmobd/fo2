@@ -85,7 +85,17 @@ class RealocaSolicitacoesForm(forms.Form):
         ('s', "Sim"),
     ]
     trab_sol_tot = forms.ChoiceField(
-        label='Trabalha lotes com solicitações totais',
+        label='Trabalha lotes com solicitações totais?',
+        choices=CHOICES,
+        initial='s',
+    )
+
+    CHOICES = [
+        ('n', "Não"),
+        ('s', "Sim"),
+    ]
+    trab_sol_tot_dest = forms.ChoiceField(
+        label='Trabalha lotes com solicitações totais no destino?',
         choices=CHOICES,
         initial='n',
     )
@@ -95,7 +105,7 @@ class RealocaSolicitacoesForm(forms.Form):
         ('s', "Sim"),
     ]
     forca_oti = forms.ChoiceField(
-        label='Força otimização após comparativo',
+        label='Força otimização após comparativo?',
         choices=CHOICES,
         initial='n',
     )

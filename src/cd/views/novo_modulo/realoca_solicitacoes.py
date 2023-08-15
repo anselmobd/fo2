@@ -183,11 +183,14 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             row['qtd_dbaixa'] = row['qtd']
             row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
             row['qtd_disp'] = row['qtd_dbaixa'] - row['tot_emp']
-            if (
-                (not self.endereco_selecionado(row['endereco'], self.endereco))
-                or row['qtd_disp'] > 0
-                or self.trab_sol_tot == 's'
-            ):
+            end_dest = self.endereco_selecionado(row['endereco'], self.endereco)
+            emp_total = row['qtd_disp'] == 0
+            trabalha_lote = True
+            if emp_total and end_dest and self.trab_sol_tot_dest == 'n':
+                trabalha_lote = False
+            elif emp_total and self.trab_sol_tot == 'n':
+                trabalha_lote = False
+            if trabalha_lote:
                 empenhos_a_trabalhar.append(row)
                 self.add_registros_solis(row)
             else:
