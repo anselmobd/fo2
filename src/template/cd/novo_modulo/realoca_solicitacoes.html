@@ -21,7 +21,7 @@
   </form>
   <br/>
   {% if prox_modelo %}
-    <p>Próximo item a analisar: {{prox_modelo}} {{prox_cor}} {{prox_tam}}</p>
+    <p>Próximo item a analisar: <a href="#" onclick="set_prox();">{{prox_modelo}} {{prox_cor}} {{prox_tam}}</a></p>
   {% endif %}
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
   {% if msg_oti %}
@@ -97,3 +97,18 @@
     {% endif %}
   {% endif %}
 {% endblock content %}
+
+{% block javascript %}
+{{ block.super }}
+<script>
+  function set_prox() {
+    let em = document.getElementById('id_modelo');
+    em.value = "{{prox_modelo}}";
+    let ec = document.getElementById('id_cor');
+    ec.value = "{{prox_cor}}";
+    let et = document.getElementById('id_tam');
+    et.value = "{{prox_tam}}";
+    return false;
+  }
+</script>
+{% endblock javascript %}
