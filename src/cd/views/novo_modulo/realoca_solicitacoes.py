@@ -4,7 +4,7 @@ from pathlib import Path
 from pprint import pprint, pformat
 
 from django.core.cache import cache
-from django.db import DatabaseError, transaction
+from django.db import DatabaseError, transaction, IntegrityError
 from django.utils import timezone
 
 from fo2.connections import db_cursor_so
@@ -24,12 +24,11 @@ from utils.views import totalize_data
 from cd.forms.realoca_solicitacoes import RealocaSolicitacoesForm
 from cd.functions import oti_emp
 from cd.queries.novo_modulo import (
+    empenho,
     refs_em_palets,
     situacao_empenho,
 )
 from cd.queries.novo_modulo.solicitacao import get_solicitacao
-from cd.queries.novo_modulo import situacao_empenho
-from cd.queries.novo_modulo import empenho
 
 
 class RealocaSolicitacoes(O2BaseGetPostView):
@@ -576,7 +575,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
         f.write("\n")
 
-        f.write("empenho.insere\n")
+        f.write("empenho.insere or altera\n")
         for lote, lote_row in self.new_lotes_sols_iter_ord:
             for sol, sol_row in lote_row['sols'].items():
                 f.write(f"endereco = {lote_row['end']}\n")
@@ -592,21 +591,39 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 f.write(f"solicitacao = {sol}\n")
                 f.write(f"situacao = {sol_row['situacao']}\n")
                 f.write(f"qtde = {sol_row['qtde']}\n")
-                empenho.insere(
-                    self.cursor,
-                    ordem_producao=lote_row['op'],
-                    ordem_confeccao=lote_row['oc'],
-                    pedido_destino=sol_row['pedido_destino'],
-                    op_destino=sol_row['op_destino'],
-                    oc_destino=sol_row['oc_destino'],
-                    grupo_destino=sol_row['grupo_destino'],
-                    alter_destino=sol_row['alter_destino'],
-                    sub_destino=sol_row['sub_destino'],
-                    cor_destino=sol_row['cor_destino'],
-                    solicitacao=sol,
-                    situacao=sol_row['situacao'],
-                    qtde=sol_row['qtde'],
-                )
+                try:
+                    empenho.insere(
+                        self.cursor,
+                        ordem_producao=lote_row['op'],
+                        ordem_confeccao=lote_row['oc'],
+                        pedido_destino=sol_row['pedido_destino'],
+                        op_destino=sol_row['op_destino'],
+                        oc_destino=sol_row['oc_destino'],
+                        grupo_destino=sol_row['grupo_destino'],
+                        alter_destino=sol_row['alter_destino'],
+                        sub_destino=sol_row['sub_destino'],
+                        cor_destino=sol_row['cor_destino'],
+                        solicitacao=sol,
+                        situacao=sol_row['situacao'],
+                        qtde=sol_row['qtde'],
+                    )
+                    f.write("Inseriu\n")
+                except IntegrityError:
+                    situacao_empenho.altera_qtde(
+                        self.cursor,
+                        ordem_producao=lote_row['op'],
+                        ordem_confeccao=lote_row['oc'],
+                        pedido_destino=sol_row['pedido_destino'],
+                        op_destino=sol_row['op_destino'],
+                        oc_destino=sol_row['oc_destino'],
+                        grupo_destino=sol_row['grupo_destino'],
+                        alter_destino=sol_row['alter_destino'],
+                        sub_destino=sol_row['sub_destino'],
+                        cor_destino=sol_row['cor_destino'],
+                        solicitacao=sol,
+                        qtde=sol_row['qtde'],
+                    )
+                    f.write("Alterou\n")
                 f.write("\n")
 
         return
@@ -641,8 +658,8 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             try:
                 with transaction.atomic(using='sn'):
                     self.grava_alteracoes(f)
-            except Exception:
-                f.write(f"\nERRO\n")
+            except Exception as e:
+                f.write(f"\nERRO <{e}>\n")
                 return False
 
             f.write(f"\nFINALIZADO\n")
