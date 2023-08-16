@@ -16,11 +16,16 @@ def consulta(cursor, **kwargs):
     return exec(cursor, consulta=True, **kwargs)
 
 
+def altera_qtde(cursor, **kwargs):
+    return exec(cursor, altera_qtde=True, **kwargs)
+
+
 def exec(
     cursor,
     finaliza=False,
     cancela=False,
     consulta=False,
+    altera_qtde=False,
     ordem_producao=None,
     ordem_confeccao=None,
     pedido_destino=None,
@@ -32,12 +37,15 @@ def exec(
     sub_destino=None,
     cor_destino=None,
     solicitacao=None,
+    qtde=None,
     exec=True,
 ):
 
-    if sum([finaliza, cancela, consulta]) != 1:
+    if sum([finaliza, cancela, consulta, altera_qtde]) != 1:
         raise AttributeError(
-            "Defina uma ação. Indique finaliza ou cancela como True nos kwargs")
+            "Defina uma ação. Indique finaliza, cancela, "
+            "consulta ou altera_qtde como True nos kwargs"
+        )
 
     filtra_ordem_producao = "" if ordem_producao is None else f"""--
         AND sl.ORDEM_PRODUCAO = {ordem_producao}
@@ -157,9 +165,32 @@ def exec(
               {sql} --sql
             )
         """
+    elif altera_qtde:
+        sinal_qtde = f"{qtde}" if qtde < 0 else f"+{qtde}"
+        sql = f"""
+            UPDATE SYSTEXTIL.PCPC_044
+            SET
+              QTDE = QTDE {sinal_qtde}
+            WHERE (
+              -- PK fields
+              ORDEM_PRODUCAO
+            , ORDEM_CONFECCAO
+            , PEDIDO_DESTINO
+            , OP_DESTINO
+            , OC_DESTINO
+            , DEP_DESTINO
+            , GRUPO_DESTINO
+            , ALTER_DESTINO
+            , SUB_DESTINO
+            , COR_DESTINO
+            )
+            IN (
+              {sql} --sql
+            )
+        """
     debug_cursor_execute(cursor, sql, exec=exec)
-    if finaliza or cancela:
-        return cursor.rowcount
-    else:
+    if consulta:
         dados = dictlist_lower(cursor)
         return dados
+    else:
+        return cursor.rowcount
