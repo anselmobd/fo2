@@ -19,7 +19,6 @@
       <input type="submit" name="otimiza" value="Otimiza""/>
     {% endif %}
   </form>
-  <br/>
   {% if msg_oti %}
     <h2>{{msg_oti}}</h2>
   {% endif %}
@@ -106,6 +105,8 @@
 {{ block.super }}
 <script>
   function set_item(modelo, cor, tam) {
+    let ee = document.getElementById('id_endereco');
+    ee.value = '';
     let em = document.getElementById('id_modelo');
     em.value = modelo;
     let ec = document.getElementById('id_cor');
