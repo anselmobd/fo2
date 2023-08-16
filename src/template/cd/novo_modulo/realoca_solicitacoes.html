@@ -20,6 +20,12 @@
     {% endif %}
   </form>
   <br/>
+  {% if msg_oti %}
+    <h2>{{msg_oti}}</h2>
+  {% endif %}
+  {% if msg %}
+    <h3>{{msg}}</h3>
+  {% endif %}
   {% if prox_modelo %}
     <p>Analisa: Próximo item <a href="#" onclick="set_item('{{prox_modelo|safe}}', '{{prox_cor}}', '{{prox_tam}}');">{{prox_modelo|safe}} {{prox_cor}} {{prox_tam}}</a>;
     {% if prox_modelo %}
@@ -28,17 +34,11 @@
     </p>
   {% endif %}
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
-  {% if msg_oti %}
-    <h2>{{msg_oti}}</h2>
-  {% endif %}
-  {% if msg %}
-    <h3>{{msg}}</h3>
-  {% endif %}
   {% if lotes_solis.data %}
     {% if qtd_empenhada == 'ce' %}
-      <h4>{{lotes_solis.len}} lotes com empenhos a serem realocadas</h4>
+      <h4>{{lotes_solis.len}} lotes com empenhos a serem realocados</h4>
     {% else %}
-      <h4>{{lotes_solis.len}} lotes com empenhos parciais a serem realocadas</h4>
+      <h4>{{lotes_solis.len}} lotes com empenhos parciais a serem realocados</h4>
     {% endif %}
     <table>
       {% include "layout/thead_generic.html" with data=lotes_solis.headers safe=lotes_solis.safe style=lotes_solis.style thclass='sticky' only %}
@@ -53,7 +53,7 @@
     {% endif %}
   {% else %}
     {% if request.POST %}
-      <h4>Nenhum lote com empenhos a serem realocadas</h4>
+      <h4>Nenhum lote com empenhos a serem realocados</h4>
     {% endif %}
   {% endif %}
   {% if lotes %}
