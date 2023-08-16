@@ -480,7 +480,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         print("Visão ordenada dos empenhos otimizados")
         pprint(self.new_lotes_sols_iter_ord)
 
-        print(len(self.new_lotes_sols), "lotes trabalhados", oti_emp.conta_zerados(self.new_lotes_sols), "zerados")
+        print(len(self.new_lotes_sols_iter_ord), "lotes trabalhados", oti_emp.conta_zerados(self.new_lotes_sols), "zerados")
 
         self.registros_solis_txt = pformat(self.registros_solis)
         self.new_lotes_sols_iter_ord_txt = pformat(self.new_lotes_sols_iter_ord)
@@ -494,7 +494,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             row['qtd_disp'] == 0
             for row in self.lotes_solis
         ))
-        self.new_trabalhados = len(self.new_lotes_sols)
+        self.new_trabalhados = len(self.new_lotes_sols_iter_ord)
         self.new_zerados = oti_emp.conta_zerados(self.new_lotes_sols)
         self.context.update({
             'old_trabalhados': self.old_trabalhados,

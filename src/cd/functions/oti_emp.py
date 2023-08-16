@@ -134,7 +134,7 @@ def lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, sols):
         if not lote in new_lotes_sols:
             continue
         value = new_lotes_sols[lote]
-        if sols_ord and value['fim'] is None:
+        if sols and sols_ord and value['fim'] is None:
             value['fim'] = value['ini']
             while value['fim'] > 0:
                 if sols[sol]['qtde'] == 0:
@@ -148,7 +148,8 @@ def lotes_parciais(new_lotes_sols, lotes_ord, sols_ord, sols):
                 value['sols'][sol]['qtde'] = qtd_deduzir
                 value['fim'] -= qtd_deduzir
                 sols[sol]['qtde'] -= qtd_deduzir
-        new_lotes_sols_iter_ord.append((lote, value))
+        if value['fim'] is not None:
+            new_lotes_sols_iter_ord.append((lote, value))
     return new_lotes_sols_iter_ord
 
 
