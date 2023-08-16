@@ -27,7 +27,7 @@
   {% endif %}
   {% if prox_modelo %}
     <p>Analisa: Próximo item <a href="#" onclick="set_item('{{prox_modelo|safe}}', '{{prox_cor}}', '{{prox_tam}}');">{{prox_modelo|safe}} {{prox_cor}} {{prox_tam}}</a>;
-    {% if prox_modelo %}
+    {% if ante_modelo %}
       Item anterior <a href="#" onclick="set_item('{{ante_modelo|safe}}', '{{ante_cor}}', '{{ante_tam}}');">{{ante_modelo|safe}} {{ante_cor}} {{ante_tam}}</a>
     {% endif %}
     </p>
