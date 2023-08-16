@@ -548,7 +548,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.mount_rascunho_oti()
 
     def grava_alteracoes(self, f):
-        f.write(f"situacao_empenho.cancela\n\n")
+        f.write(f"empenho.exclui\n\n")
         for lote_row in self.registros_solis:
             f.write(f"ordem_producao = {lote_row['ordem_producao']}\n")
             f.write(f"ordem_confeccao = {lote_row['ordem_confeccao']}\n")
