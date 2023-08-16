@@ -319,7 +319,8 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             'data': self.items,
             'len': len(self.items),
         })
-        last_item = ('!', '!', '!')
+        pre_last_item = ('', '', '')
+        last_item = ('', '', '')
         for item in self.items:
             if last_item == (
                 self.modelo,
@@ -332,11 +333,17 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                     'prox_tam': item['tam'],
                 })
                 break
+            pre_last_item = last_item
             last_item = (
                 item['modelo'],
                 item['cor'],
                 item['tam'],
             )
+        self.context.update({
+            'ante_modelo': pre_last_item[0],
+            'ante_cor': pre_last_item[1],
+            'ante_tam': pre_last_item[2],
+        })
 
 
     def mount_lotes_solicitados(self):

@@ -21,7 +21,11 @@
   </form>
   <br/>
   {% if prox_modelo %}
-    <p>Analisa próximo item <a href="#" onclick="set_prox();">{{prox_modelo|safe}} {{prox_cor}} {{prox_tam}}</a></p>
+    <p>Analisa: Próximo item <a href="#" onclick="set_item('{{prox_modelo|safe}}', '{{prox_cor}}', '{{prox_tam}}');">{{prox_modelo|safe}} {{prox_cor}} {{prox_tam}}</a>;
+    {% if prox_modelo %}
+      Item anterior <a href="#" onclick="set_item('{{ante_modelo|safe}}', '{{ante_cor}}', '{{ante_tam}}');">{{ante_modelo|safe}} {{ante_cor}} {{ante_tam}}</a>
+    {% endif %}
+    </p>
   {% endif %}
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
   {% if msg_oti %}
@@ -101,13 +105,13 @@
 {% block javascript %}
 {{ block.super }}
 <script>
-  function set_prox() {
+  function set_item(modelo, cor, tam) {
     let em = document.getElementById('id_modelo');
-    em.value = "{{prox_modelo}}";
+    em.value = modelo;
     let ec = document.getElementById('id_cor');
-    ec.value = "{{prox_cor}}";
+    ec.value = cor;
     let et = document.getElementById('id_tam');
-    et.value = "{{prox_tam}}";
+    et.value = tam;
     let ea = document.getElementById('id_btn_analisa');
     ea.click();
     return false;
