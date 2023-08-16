@@ -657,7 +657,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             return
 
         if 'otimiza' in self.request.POST:
-            self.form.data['forca_oti'] = 'n'
+            # self.form.data['forca_oti'] = 'n'
             if self.executa_alteracoes():
                 self.context.update({
                     'msg_oti': "Otimização executada.",
