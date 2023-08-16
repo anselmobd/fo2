@@ -14,7 +14,7 @@ class RealocaSolicitacoesForm(forms.Form):
         min_length=1,
         widget=forms.TextInput(
             attrs={
-                'size': 20,
+                'size': 30,
                 **a.string_upper,
                 **a.autofocus,
             }
@@ -26,7 +26,7 @@ class RealocaSolicitacoesForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'size': 40,
+                'size': 50,
                 'type': 'text',
             }
         )
