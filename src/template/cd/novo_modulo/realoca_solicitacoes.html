@@ -14,14 +14,14 @@
   <form action="{% url 'cd:realoca_solicitacoes' %}" method="post" name="myForm">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="analisa" value="Analisa""/>
+    <input id="id_btn_analisa" type="submit" name="analisa" value="Analisa""/>
     {% if request.POST.analisa and a_fazer %}
       <input type="submit" name="otimiza" value="Otimiza""/>
     {% endif %}
   </form>
   <br/>
   {% if prox_modelo %}
-    <p>Próximo item a analisar: <a href="#" onclick="set_prox();">{{prox_modelo}} {{prox_cor}} {{prox_tam}}</a></p>
+    <p>Analisa próximo item <a href="#" onclick="set_prox();">{{prox_modelo|safe}} {{prox_cor}} {{prox_tam}}</a></p>
   {% endif %}
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
   {% if msg_oti %}
@@ -108,6 +108,8 @@
     ec.value = "{{prox_cor}}";
     let et = document.getElementById('id_tam');
     et.value = "{{prox_tam}}";
+    let ea = document.getElementById('id_btn_analisa');
+    ea.click();
     return false;
   }
 </script>
