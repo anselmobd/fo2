@@ -46,9 +46,13 @@ class VisaoBlocoLotes(O2BaseGetView):
 
         for row in lotes:
             if 'endereco' in row:
-                row['endereco|LINK'] = reverse(
+                row['endereco|A'] = reverse(
                     'cd:visao_bloco_detalhe__get', args=[
                         f"{row['endereco']}"
+                    ])
+                row['lote|A'] = reverse(
+                    'producao:lote__get', args=[
+                        f"{row['lote']}"
                     ])
 
         group = [local_field]
