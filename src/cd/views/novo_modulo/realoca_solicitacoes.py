@@ -491,7 +491,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
         self.old_trabalhados = self.context['lotes_solis']['len']
         self.old_zerados = sum((
-            row['qtd_disp'] == 0
+            row['qtd_disp'] == 0 and row['lote'] != 'Total geral:'
             for row in self.lotes_solis
         ))
         self.new_trabalhados = len(self.new_lotes_sols_iter_ord)
