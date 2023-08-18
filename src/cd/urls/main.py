@@ -29,6 +29,7 @@ from cd.views.novo_modulo import (
     finaliza_emp_op,
     disponibilidade,
     disponibilidade_ficticio,
+    distribuicao,
     grade_estoque_totais,
     historico_lote,
     nao_enderecados,
@@ -278,5 +279,8 @@ urlpatterns = [
 
     re_path(r'^disponibilidade_ficticio/$',
         disponibilidade_ficticio.DisponibilidadeFicticio.as_view(), name='disponibilidade_ficticio'),
+
+    re_path(r'^distribuicao/$',
+        distribuicao.Distribuicao.as_view(), name='distribuicao'),
 
 ]
