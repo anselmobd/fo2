@@ -49,5 +49,27 @@
 {% block javascript %}
   <script type="text/javascript">
     {% include "layout/paginator_javascript.js" with form='myForm' field='page' only %}
-  </script>
+
+    var select_sum = document.querySelector("#select_sum");
+    var select_values = document.querySelectorAll(".select_value");
+    select_values.forEach((select_value) => {
+      select_value.addEventListener(
+        "click",
+        function (event) {
+          let el = event.target;
+          if (el.innerHTML.startsWith("+")) {
+            el.innerHTML = el.innerHTML.slice(1);
+            select_sum.innerHTML = parseInt(select_sum.innerHTML) - parseInt(el.innerHTML);
+          } else {
+            select_sum.innerHTML = parseInt("0" + select_sum.innerHTML) + parseInt(el.innerHTML);
+            el.innerHTML = "+" + el.innerHTML;
+          }
+          if (select_sum.innerHTML == '0') {
+            select_sum.innerHTML = "";
+          }
+        }
+      );
+    });
+
+</script>
 {% endblock %}

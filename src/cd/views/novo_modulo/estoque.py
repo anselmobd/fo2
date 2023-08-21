@@ -37,7 +37,10 @@ class NovoEstoque(O2BaseGetPostView):
                 'sol_fin': ['Solicit.Fin.', 'c'],
                 'sol': ['Solicitação'],
                 'qtd_emp': ['Qtd.Empen.', 'r'],
-                'qtd_sol': ['Qtd.Solic.', 'r'],
+                'qtd_sol': [
+                    ('Qtd.Solic.<span id="select_sum"></span> ',),
+                    'r'
+                ],
                 'tot_emp': ['Tot.Empen.', 'r'],
                 'qtd_disp': ['Qtd.Disp.', 'r'],
                 'qtd_fin': ['Qtd.Fin.', 'r'],
@@ -97,6 +100,8 @@ class NovoEstoque(O2BaseGetPostView):
                 self.lotes.sort(key=operator.itemgetter(
                     'modelo', 'ref', 'ordem_tam', 'cor', 'tot_emp', 'endereco', 'op', 'lote'))
 
+        for row in self.lotes:
+            row['qtd_sol|CLASS'] = 'select_value'
         len_lotes = len(self.lotes)
         sum_fields = ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp']
         if self.situacao_empenho == 'esf':
