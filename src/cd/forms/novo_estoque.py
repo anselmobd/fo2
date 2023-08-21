@@ -214,7 +214,8 @@ class NovoEstoqueForm(forms.Form):
 
     CHOICES = [
         ('el', "Endereço, lote"),
-        ('mod', "Modelo, referência"),
+        ('mod', "Modelo, item, endereço, lote"),
+        ('emp', "Modelo, item, qtd. empenho, endereço, lote"),
     ]
     order = forms.ChoiceField(
         label='Ordenação',

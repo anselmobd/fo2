@@ -91,7 +91,11 @@ class NovoEstoque(O2BaseGetPostView):
             if self.order == 'el':
                 self.lotes.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
             elif self.order == 'mod':
-                self.lotes.sort(key=operator.itemgetter('modelo', 'ref', 'ordem_tam', 'cor', 'op', 'lote'))
+                self.lotes.sort(key=operator.itemgetter(
+                    'modelo', 'ref', 'ordem_tam', 'cor', 'endereco', 'op', 'lote'))
+            elif self.order == 'emp':
+                self.lotes.sort(key=operator.itemgetter(
+                    'modelo', 'ref', 'ordem_tam', 'cor', 'tot_emp', 'endereco', 'op', 'lote'))
 
         len_lotes = len(self.lotes)
         sum_fields = ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp']
