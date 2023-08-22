@@ -98,7 +98,7 @@ class NovoEstoque(O2BaseGetPostView):
                     'modelo', 'ref', 'ordem_tam', 'cor', 'endereco', 'op', 'lote'))
             elif self.order == 'emp':
                 self.lotes.sort(key=operator.itemgetter(
-                    'modelo', 'ref', 'ordem_tam', 'cor', 'tot_emp', 'endereco', 'op', 'lote'))
+                    'modelo', 'ref', 'ordem_tam', 'cor', 'qtd_sol', 'endereco', 'op', 'lote'))
 
         for row in self.lotes:
             row['qtd_sol|CLASS'] = 'select_value'
