@@ -11,11 +11,13 @@
 {% endblock %}
 
 {% block content %}
-  <form action="{% url 'cd:novo_estoque' %}" method="post" name="myForm">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" name="busca" value="Busca" onclick="o2SetPage1AndSubmit()"/>
-  </form>
+  <div class="noprint">
+    <form action="{% url 'cd:novo_estoque' %}" method="post" name="myForm">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" name="busca" value="Busca" onclick="o2SetPage1AndSubmit()"/>
+    </form>
+  </div>
   {% if erro %}
     <h4>{{ erro }}</h4>
   {% endif %}
