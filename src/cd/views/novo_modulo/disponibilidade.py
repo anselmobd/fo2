@@ -23,11 +23,11 @@ from cd.forms.disponibilidade import DisponibilidadeForm
 from cd.queries.novo_modulo import refs_em_palets
 
 
-class Disponibilidade(PermissionRequiredMixin, O2BaseGetPostView):
+class Disponibilidade(O2BaseGetPostView):  # PermissionRequiredMixin
 
     def __init__(self):
         super().__init__()
-        self.permission_required = 'cd.can_view_grades_estoque'
+        # self.permission_required = 'cd.can_view_grades_estoque'
         self.Form_class = DisponibilidadeForm
         self.cleaned_data2self = True
         self.template_name = 'cd/novo_modulo/disponibilidade.html'
