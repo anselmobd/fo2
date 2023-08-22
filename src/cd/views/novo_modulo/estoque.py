@@ -102,6 +102,9 @@ class NovoEstoque(O2BaseGetPostView):
 
         for row in self.lotes:
             row['qtd_sol|CLASS'] = 'select_value'
+            row['lote|CLASS'] = 'select_mark'
+            row['endereco|CLASS'] = 'select_mark'
+            row['solicitacoes|CLASS'] = 'select_mark'
         len_lotes = len(self.lotes)
         sum_fields = ['qtd_dbaixa', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp']
         if self.situacao_empenho == 'esf':

@@ -59,12 +59,22 @@
         "click",
         function (event) {
           let el = event.target;
+          let el_parent = el.parentNode;
+          let el_marks = el_parent.querySelectorAll(".select_mark")
           if (el.innerHTML.startsWith("+")) {
             el.innerHTML = el.innerHTML.slice(1);
+            el_parent.style = "font-weight: normal;";
+            el_marks.forEach((el)=>{
+              el.innerHTML = el.innerHTML.slice(1, -1);
+            })
             select_sum.innerHTML = parseInt(select_sum.innerHTML) - parseInt(el.innerHTML);
           } else {
             select_sum.innerHTML = parseInt("0" + select_sum.innerHTML) + parseInt(el.innerHTML);
             el.innerHTML = "+" + el.innerHTML;
+            el_parent.style = "font-weight: bold;";
+            el_marks.forEach((el)=>{
+              el.innerHTML = "{" + el.innerHTML + "}";
+            }) 
           }
           if (select_sum.innerHTML == '0') {
             select_sum.innerHTML = "";
