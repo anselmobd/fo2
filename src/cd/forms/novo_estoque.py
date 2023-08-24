@@ -27,6 +27,17 @@ class NovoEstoqueForm(forms.Form):
         )
     )
 
+    # palete = forms.CharField(
+    #     min_length=1,
+    #     required=False,
+    #     widget=forms.TextInput(
+    #         attrs={
+    #             'size': 6,
+    #             **a.string_upper,
+    #         }
+    #     )
+    # )
+
     op = forms.CharField(
         label='OP',
         min_length=1,
@@ -223,13 +234,25 @@ class NovoEstoqueForm(forms.Form):
         initial='el',
     )
 
+    CHOICES_PLT_DT = [
+        ('s', 'Sim'),
+        ('n', 'Não'),
+    ]
+    palete_dt = forms.ChoiceField(
+        label='Mostra data/hora de bipagem do lote no palete',
+        choices=CHOICES_PLT_DT,
+        initial='n',
+    )
+
     CHOICES_PAGINADOR = [
         ('s', 'Sim'),
         ('n', 'Não'),
     ]
     usa_paginador = forms.ChoiceField(
         label='Utiliza paginador',
-        choices=CHOICES_PAGINADOR, initial='s')
+        choices=CHOICES_PAGINADOR,
+        initial='s',
+    )
 
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())

@@ -26,6 +26,7 @@ class NovoEstoque(O2BaseGetPostView):
         self.table_defs = TableDefs(
             {
                 'palete rota modelo cor lote': [],
+                'palete_dt': ['Data/Hora'],
                 'endereco': ['Endereço'],
                 'ref': ['Ref.'],
                 'tam': ['Tam.'],
@@ -137,6 +138,8 @@ class NovoEstoque(O2BaseGetPostView):
             'qtd_prog', 'qtd_dbaixa', 'estagio',
             'solicitacoes', 'qtd_emp', 'qtd_sol', 'tot_emp', 'qtd_disp',
         ]
+        if self.palete_dt == 's':
+            fields.insert(1, 'palete_dt')
         if self.situacao_empenho == 'esf':
             fields.append('sol_fin')
             fields.append('qtd_fin')
