@@ -95,6 +95,7 @@ fields_tuple = {
         'est_sol',
         'solicitacoes',
         'palete',
+        'palete_dt',
         'endereco',
         'rota',
     ),
@@ -114,6 +115,7 @@ fields_tuple = {
         'est_sol',
         'solicitacoes',
         'palete',
+        'palete_dt',
         'endereco',
         'rota',
         'sol_fin',
@@ -549,6 +551,14 @@ def query(
                AND lp.COD_CONTAINER <> '0'
               THEN lp.COD_CONTAINER
               ELSE '-'
+            END
+        """,
+        'palete_dt': """--
+            CASE
+              WHEN lp.COD_CONTAINER IS NOT NULL
+               AND lp.COD_CONTAINER <> '0'
+              THEN lp.DATA_INCLUSAO
+              ELSE NULL
             END
         """,
         'rota': "COALESCE(e.ROTA, '-')",
