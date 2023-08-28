@@ -14,6 +14,23 @@ from systextil.models import Colecao
 class NovoEstoqueForm(forms.Form):
     a = FormWidgetAttrs()
 
+    field_control = [
+        ['endereco', 'op', 'lote'],
+        ['solicitacoes'],
+        ['colecao'],
+        ['modelo', 'referencia', 'cor', 'tam'],
+        ['tipo_prod'],
+        ['selecao_ops'],
+        ['selecao_lotes'],
+        ['situacao_empenho'],
+        ['qtd_empenhada'],
+        ['qtd_solicitada'],
+        ['paletizado'],
+        ['palete_dt'],
+        ['order'],
+        ['usa_paginador'],
+    ]
+
     endereco = forms.CharField(
         label='Endereço',
         min_length=1,
