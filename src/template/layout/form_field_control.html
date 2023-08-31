@@ -10,3 +10,8 @@
     {% endfor %}
   </p>
 {% endfor %}
+{% for input in form %}
+  {% if input.field.widget.input_type == 'hidden' %}
+    {{ input }}
+  {% endif %}
+{% endfor %}
