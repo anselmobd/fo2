@@ -1,5 +1,7 @@
 {% if input.value %}
-  <h{{h}}>
+  {% if h %}
+    <h{{h}}>
+  {% endif %}
     {{input.label}}:
     {% if input.field.widget.input_type == 'select' %}
       {% for choice in input.field.choices %}
@@ -10,5 +12,9 @@
     {% else %}
       {{input.value}}
     {% endif %}
-  </h{{h}}>
+  {% if h %}
+    </h{{h}}>
+  {% else %}
+    &nbsp;
+  {% endif %}
 {% endif %}

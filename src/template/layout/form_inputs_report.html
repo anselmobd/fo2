@@ -3,17 +3,31 @@
     <h{{h}}>{{line}}</h{{h}}>
   {% endfor %}
 {% endif %}
-{% for input in form %}
-  {% if input.field.widget.input_type != 'hidden' %}
-    {% if excludes %}
-      {% if input.name not in excludes %}
+{% if form.field_control %}
+  {% for field_set in form.field_control %}
+    <h{{h}}>
+      {% for field_name in field_set %}
+        {% for input in form %}
+          {%if field_name == input.name%}
+            {% include "layout/form_inputs_report_value.html" with input=input only%}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </h{{h}}>
+  {% endfor %}
+{% else %}
+  {% for input in form %}
+    {% if input.field.widget.input_type != 'hidden' %}
+      {% if excludes %}
+        {% if input.name not in excludes %}
+          {% include "layout/form_inputs_report_value.html" with input=input h=h only%}
+        {% endif %}
+      {% else %}
         {% include "layout/form_inputs_report_value.html" with input=input h=h only%}
       {% endif %}
-    {% else %}
-      {% include "layout/form_inputs_report_value.html" with input=input h=h only%}
     {% endif %}
-  {% endif %}
-{% endfor %}
+  {% endfor %}
+{% endif %}
 {% if lines_after %}
   {% for line in lines_after %}
     <h{{h}}>{{line}}</h{{h}}>
