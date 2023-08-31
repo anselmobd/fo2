@@ -18,6 +18,9 @@ class FormWidgetAttrs():
     autofocus = {
         'autofocus': 'autofocus',
     }
+    placeholder_n0 = {
+        'placeholder': '0',
+    }
     placeholder_0 = {
         'placeholder': '0...',
     }
