@@ -8,6 +8,16 @@ from o2.forms.widget_attrs import FormWidgetAttrs
 class RealocaSolicitacoesForm(forms.Form):
     a = FormWidgetAttrs()
 
+    field_control = [
+        ['endereco'],
+        ['solicitacoes'],
+        ['modelo', 'cor', 'tam'],
+        ['qtd_empenhada'],
+        ['trab_sol_tot'],
+        ['trab_sol_tot_dest'],
+        ['forca_oti'],
+    ]
+
     endereco = forms.CharField(
         label='Endereço destino',
         required=False,
