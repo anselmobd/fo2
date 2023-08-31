@@ -22,8 +22,8 @@
     {% include "layout/form_inputs_report.html" with form=form h=4 only %}
     {% if data %}
       <table>
-        {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
-        {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe style=style only %}
+        {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
       </table>
     {% else %}
       <h4>Nada encontrado</h4>

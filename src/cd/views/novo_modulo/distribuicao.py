@@ -7,6 +7,10 @@ from fo2.connections import db_cursor_so
 
 from o2.views.base.get_post import O2BaseGetPostView
 from utils.table_defs import TableDefs
+from utils.views import (
+    group_rowspan,
+    totalize_grouped_data,
+)
 
 from cd.forms.distribuiccao import DistribuicaoForm
 from cd.queries.novo_modulo import refs_em_palets
@@ -79,7 +83,20 @@ class Distribuicao(PermissionRequiredMixin, O2BaseGetPostView):
         
         distr.sort(key=operator.itemgetter('empresa', 'andar'))
         
+        group = ['empresa']
+        totalize_grouped_data(distr, {
+            'group': group,
+            'sum': ['lotes', 'qtd'],
+            'descr': {'andar': 'Totais:'},
+            'global_sum': ['lotes', 'qtd'],
+            'global_descr': {'andar': 'Totais gerais:'},
+            'flags': ['NO_TOT_1'],
+            'row_style': 'font-weight: bold;',
+        })
+        group_rowspan(distr, group)
+
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
             'data': distr,
+            'group': group,
         })
