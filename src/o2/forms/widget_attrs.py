@@ -3,10 +3,10 @@ from pprint import pprint
 
 class FormWidgetAttrs():
     number = {
-        'type': 'number;',
+        'type': 'number',
     }
     string = {
-        'type': 'string;',
+        'type': 'string',
     }
     date = {
         'type': 'date',
@@ -16,7 +16,7 @@ class FormWidgetAttrs():
         'style': 'text-transform:uppercase;',
     }
     autofocus = {
-        'autofocus': 'autofocus;',
+        'autofocus': 'autofocus',
     }
     placeholder_0 = {
         'placeholder': '0...',
