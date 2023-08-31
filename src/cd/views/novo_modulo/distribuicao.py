@@ -56,35 +56,29 @@ class Distribuicao(PermissionRequiredMixin, O2BaseGetPostView):
                     f"{ender[3]}º andar"
                 )
 
-        por_end = {}
+        por_local = {}
         for row in lotes:
             local = get_local(row['endereco'])
-            if local not in por_end:
-                por_end[local] = {
+            if local not in por_local:
+                por_local[local] = {
                     'lotes': 0,
                     'qtd': 0,
                 }
-            por_end[local]['lotes'] += 1
-            por_end[local]['qtd'] += row['qtd']
-
-        pprint(por_end)
+            por_local[local]['lotes'] += 1
+            por_local[local]['qtd'] += row['qtd']
 
         distr = [
             {
                 'empresa': local[0],
                 'andar': local[1],
-                'lotes': por_end[local]['lotes'],
-                'qtd': por_end[local]['qtd'],
+                'lotes': por_local[local]['lotes'],
+                'qtd': por_local[local]['qtd'],
             }
-            for local in por_end 
+            for local in por_local 
         ]
         
-        pprint(distr)
-
         distr.sort(key=operator.itemgetter('empresa', 'andar'))
         
-        pprint(distr)
-
         self.context.update(self.table_defs.hfs_dict())
         self.context.update({
             'data': distr,
