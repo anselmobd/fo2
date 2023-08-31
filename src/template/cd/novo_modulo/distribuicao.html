@@ -13,9 +13,13 @@
   <form action="{% url 'cd:distribuicao' %}" method="post" name="myForm">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="busca" value="Busca" onclick="o2SetPage1AndSubmit()"/>
+    <input type="submit" name="visualiza" value="Visualiza"/>
   </form>
   {% if erro %}
     <h4>{{ erro }}</h4>
   {% endif %}
+  <table>
+    {% include "layout/thead_generic.html" with data=headers safe=safe style=style thclass='sticky' only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe style=style only %}
+  </table>
 {% endblock content %}
