@@ -31,7 +31,10 @@ class Distribuicao(PermissionRequiredMixin, O2BaseGetPostView):
                 'empresa': [],
                 'andar': [],
                 'lotes': ['Lotes', 'r'],
-                'qtd': ['Qtd.', 'r'],
+                'qtd': ['Quantidade', 'r'],
+                'param': ['Parâmetro de custo de coleta', 'r'],
+                'custo_l': ['Custo*Lote', 'r'],
+                'custo_q': ['Custo*Quantidade', 'r'],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
@@ -48,16 +51,24 @@ class Distribuicao(PermissionRequiredMixin, O2BaseGetPostView):
 
         def get_local(ender):
             if not ender or ender == '-':
-                return ('-', '-')
+                return ('-', '-', 9)
             if ender.startswith("1Q"):
                 return (
                     "Agator",
-                    "1º andar" if ender > "1Q0030" else "2º andar"
+                    "1º andar" if ender > "1Q0030" else "2º andar",
+                    2 if ender > "1Q0030" else 3,
                 )
             else:
+                custo_login = {
+                    '1': 1,
+                    '2': 3,
+                    '3': 4,
+                    '4': 6,
+                }
                 return (
                     "Logyn",
-                    f"{ender[3]}º andar"
+                    f"{ender[3]}º andar",
+                    custo_login[ender[3]]
                 )
 
         por_local = {}
@@ -75,8 +86,11 @@ class Distribuicao(PermissionRequiredMixin, O2BaseGetPostView):
             {
                 'empresa': local[0],
                 'andar': local[1],
+                'param': local[2],
                 'lotes': por_local[local]['lotes'],
+                'custo_l': local[2] * por_local[local]['lotes'],
                 'qtd': por_local[local]['qtd'],
+                'custo_q': local[2] * por_local[local]['qtd'],
             }
             for local in por_local 
         ]
@@ -86,9 +100,9 @@ class Distribuicao(PermissionRequiredMixin, O2BaseGetPostView):
         group = ['empresa']
         totalize_grouped_data(distr, {
             'group': group,
-            'sum': ['lotes', 'qtd'],
+            'sum': ['lotes', 'custo_l', 'qtd', 'custo_q'],
             'descr': {'andar': 'Totais:'},
-            'global_sum': ['lotes', 'qtd'],
+            'global_sum': ['lotes', 'custo_l', 'qtd', 'custo_q'],
             'global_descr': {'andar': 'Totais gerais:'},
             'flags': ['NO_TOT_1'],
             'row_style': 'font-weight: bold;',
@@ -99,4 +113,9 @@ class Distribuicao(PermissionRequiredMixin, O2BaseGetPostView):
         self.context.update({
             'data': distr,
             'group': group,
+            'custo_medio_l': distr[-1]['custo_l'] / distr[-1]['lotes'],
+            'custo_medio_q': distr[-1]['custo_q'] / distr[-1]['qtd'],
+            'qtd_lote': distr[-1]['qtd'] / distr[-1]['lotes'],
         })
+
+

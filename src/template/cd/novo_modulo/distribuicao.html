@@ -25,6 +25,14 @@
         {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
         {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
       </table>
+      <ul>
+        <li>Custo médio de coleta:</li>
+        <ul>
+          <li>Por lote: {{custo_medio_l|floatformat:2}}</li>
+          <li>Por item: {{custo_medio_q|floatformat:2}}</li>
+        </ul>
+        <li>Média de itens por lote: {{qtd_lote|floatformat:2}}</li>
+      </ul>
     {% else %}
       <h4>Nada encontrado</h4>
     {% endif %}
