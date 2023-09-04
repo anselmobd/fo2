@@ -8,28 +8,25 @@ impresso
 # Uploads
 media/upload/
 
-# Media Original
+# Mídia Original
 media/00_Original
 
-# Medias específicas
+# Mídias específicas
 media/documentos_nasajon
+media/insumos_rolos_bipados
+media/pop/
 
 # Development Environment DB
 src/db.sqlite3
 src/db.sqlite3-journal
 src/sqlite3/
 
-# Specific to the production environment
+# Secret configuration
 etc/secret_key.txt
+
+# Specific to the production environment
 src/fo2/db_password.py
 script/db_password.py
-
-# Trash
-*.old
-*.bak
-*.~*
-nohup.out
-~*
 
 # Rascunho
 *-rascunho-*.*
@@ -41,13 +38,23 @@ inventario/
 kb/
 kb
 
-# Secret configuration
-etc/secret_key.txt
+# Docs - arquivos gerados
+docs/models.pdf
+
+# Docs - fluxos
+docs/fluxos/pdf
 
 # PyCharm
 .idea/
 
-####
+# Trash
+*.old
+*.bak
+*.~*
+nohup.out
+~*
+
+#### #### #### #### #### #### #### ####
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -150,13 +157,3 @@ ENV/
 
 # mypy
 .mypy_cache/
-
-# Media específica
-media/insumos_rolos_bipados
-media/pop/
-
-# Docs - arquivos gerados
-docs/models.pdf
-
-# Docs - fluxos
-docs/fluxos/pdf
