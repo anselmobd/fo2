@@ -8,7 +8,7 @@ from o2.views.base.get_post import O2BaseGetPostView
 from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
-from cd.forms.novo_estoque import NovoEstoqueForm
+from cd.forms.novo_modulo.novo_estoque import NovoEstoqueForm
 from cd.queries.novo_modulo.lotes_em_estoque import LotesEmEstoque
 from cd.queries.mount.records import Records
 from cd.queries.novo_modulo import refs_em_palets
