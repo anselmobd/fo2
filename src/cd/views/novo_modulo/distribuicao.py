@@ -27,10 +27,10 @@ class Distribuicao(O2BaseGetPostView):
             {
                 'empresa': [],
                 'andar': [],
+                'param': ['Custo de coleta', 'r'],
                 'lotes': ['Lotes', 'r'],
-                'qtd': ['Quantidade', 'r'],
-                'param': ['Parâmetro de custo de coleta', 'r'],
                 'custo_l': ['Custo*Lote', 'r'],
+                'qtd': ['Quantidade', 'r'],
                 'custo_q': ['Custo*Quantidade', 'r'],
             },
             ['header', '+style'],
