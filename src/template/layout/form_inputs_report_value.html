@@ -2,7 +2,7 @@
   {% if h %}
     <h{{h}}>
   {% endif %}
-    {{input.label}}:
+    {{input.label}}{%if input.label|last not in ":?" %}:{%endif%}
     {% if input.field.widget.input_type == 'select' %}
       {% for choice in input.field.choices %}
         {% if choice.0|safe == input.value|safe %}
