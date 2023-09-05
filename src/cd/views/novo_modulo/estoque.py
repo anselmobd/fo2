@@ -77,6 +77,7 @@ class NovoEstoque(O2BaseGetPostView):
             qtd_empenhada=self.qtd_empenhada,
             qtd_solicitada=self.qtd_solicitada,
             solicitacoes=self.solicitacoes,
+            modelos=self.modelos,
         )
         for row in dados:
             if row['est_sol'] and row['estagio'] != row['est_sol']:

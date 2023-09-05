@@ -19,6 +19,7 @@ class NovoEstoqueForm(forms.Form):
         ['solicitacoes'],
         ['colecao'],
         ['modelo', 'referencia', 'cor', 'tam'],
+        ['modelos'],
         ['tipo_prod'],
         ['selecao_ops'],
         ['selecao_lotes'],
@@ -143,6 +144,18 @@ class NovoEstoqueForm(forms.Form):
             attrs={
                 'size': 3,
                 **a.string_upper,
+            }
+        )
+    )
+
+    modelos = forms.CharField(
+        label='Modelos',
+        help_text="lista de modelos a incluir ou escluir",
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 40,
+                'type': 'text',
             }
         )
     )
