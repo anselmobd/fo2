@@ -147,6 +147,7 @@ def query(
     qtd_empenhada='t',
     qtd_solicitada='-',
     solicitacoes=None,
+    modelos=None,
 ):
     """
     cursor: cursor de acesso ao BD
@@ -242,6 +243,11 @@ def query(
         60 = lotes com quantidade no estágio 60
         57 = lotes com quantidade no estágio 57
         fin = lotes finalizados
+    modelos: filtra LOCALMENTE
+        string com lista de modelos
+        pode ter "-" antes do modelo
+        filtra lotes que são dos modelos sem "-"
+        e que não são dos modelos com "-"
     """
     joins = set()
 
@@ -771,6 +777,18 @@ def query(
             if (
                 (numbers_set(row['solicitacoes']).intersection(sols_in) or not sols_in)
                 and not numbers_set(row['solicitacoes']).intersection(sols_out)
+            )
+        ]
+
+    if modelos:
+        mods_in, mods_out = numbers_sets(modelos)
+        mods_in = list(map(int, mods_in))
+        mods_out = list(map(int, mods_out))
+        dados = [
+            row for row in dados
+            if (
+                ((row['modelo'] in mods_in) or not mods_in)
+                and (row['modelo'] not in mods_out)
             )
         ]
 
