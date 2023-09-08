@@ -1,7 +1,11 @@
 <tbody>
 {% for row in data %}{% spaceless %}
   {% if not group or group|length_is:"0" %}
-    <tr>
+    {% if row|get_item:'|CLASS' %}
+      <tr class="{{ row|get_item:'|CLASS' }}">
+    {% else %}
+      <tr>
+    {% endif %}
   {% else %}
     <tr class="group">
   {% endif %}
