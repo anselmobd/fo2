@@ -7,6 +7,11 @@
   <style>
     {% include 'layout/simple_table.css' %}
     {% include "layout/paginator_stylesheet.css" %}
+    @media print {
+      .pagebreak {
+        page-break-before: always;
+      }
+    }    
     table {
       page-break-inside:auto
     }

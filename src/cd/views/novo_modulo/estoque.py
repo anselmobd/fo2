@@ -125,10 +125,27 @@ class NovoEstoque(O2BaseGetPostView):
         totalizador_lotes = self.lotes[-1]
         del(self.lotes[-1])
 
+        if self.order == 'el' and self.usa_paginador == 'n':
+            field = 'endereco'
+            old_value = None
+            new_lotes = []
+            for row in self.lotes:
+                if row[field] != old_value:
+                    new_row = {}
+                    for key in row:
+                        new_row[key] = row[key] if key == field else ''
+                    new_row['|STYLE'] = 'font-weight: bold;'
+                    if old_value is not None:
+                        new_row['|CLASS'] = 'pagebreak'
+                    new_lotes.append(new_row)
+                new_lotes.append(row)
+                old_value = row[field]
+            self.lotes = new_lotes
+
         self.lotes = paginator_basic(self.lotes, self.lotes_por_pagina, self.page)
 
         for row in self.lotes.object_list:
-            if row['qtd_disp'] < 0:
+            if row['qtd_disp'] and row['qtd_disp'] < 0:
                 row['qtd_disp|STYLE'] = 'color: red;'
 
         self.lotes.object_list.append(totalizador_lotes)
