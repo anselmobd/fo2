@@ -254,14 +254,15 @@ class NovoEstoqueForm(forms.Form):
     )
 
     CHOICES = [
-        ('el', "Endereço, lote"),
+        ('elpp', "Endereço, lote (pula página)"),
+        ('eld', "Endereço, lote (direto)"),
         ('mod', "Modelo, item, endereço, lote"),
         ('emp', "Modelo, item, qtd. solicitada, endereço, lote"),
     ]
     order = forms.ChoiceField(
         label='Ordenação',
         choices=CHOICES,
-        initial='el',
+        initial='elpp',
     )
 
     CHOICES_PLT_DT = [

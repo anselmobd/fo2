@@ -93,7 +93,7 @@ class NovoEstoque(O2BaseGetPostView):
     def mount_lotes_em_estoque(self):
 
         if self.order:
-            if self.order == 'el':
+            if self.order in ['elpp', 'eld']:
                 self.lotes.sort(key=operator.itemgetter('endereco', 'op', 'lote'))
             elif self.order == 'mod':
                 self.lotes.sort(key=operator.itemgetter(
@@ -125,7 +125,7 @@ class NovoEstoque(O2BaseGetPostView):
         totalizador_lotes = self.lotes[-1]
         del(self.lotes[-1])
 
-        if self.order == 'el' and self.usa_paginador == 'n':
+        if self.order == 'elpp' and self.usa_paginador == 'n':
             field = 'endereco'
             old_value = None
             new_lotes = []
