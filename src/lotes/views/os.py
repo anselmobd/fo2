@@ -84,7 +84,7 @@ class Os(View):
         i_data = lotes.queries.os.os_itens(cursor, os)
         for row in i_data:
             rowlinks = {}
-            if row['NIVEL'] is '1':
+            if row['NIVEL'] == '1':
                 row['REF|LINK'] = reverse(
                     'produto:ref__get', args=[row['REF']])
             else:

@@ -6,11 +6,11 @@ django-ipware==4.0.0
 django-redis==5.2.0
 django-settings-export==1.2.1
 fdb==2.0.2
-firebirdsql==1.1.4
+firebirdsql==1.2.2
 future==0.18.2
 gunicorn==20.1.0
 pandas==1.1.5
-Pillow==9.0.1
+pillow==10.2.0
 psycopg2-binary==2.9.3
 pysmb==1.2.7
 python-stdnum==1.17
