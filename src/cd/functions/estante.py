@@ -96,7 +96,7 @@ def gera_agator_enderecos():
 def gera_lateral_enderecos():
     return [
         f"1L{i:04}"
-        for i in range(1, 13)
+        for i in range(1, 201)
     ]
 
 def gera_externos_xyz_enderecos():
