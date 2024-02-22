@@ -68,8 +68,6 @@ class EsvaziaPalete(LoginRequiredMixin, View):
             'identificado': identificado,
         })
 
-        self.context['form'].data = self.context['form'].data.copy()
-
         dados_palete = get_palete(cursor, palete)
         if not dados_palete:
             self.context.update({
@@ -121,5 +119,7 @@ class EsvaziaPalete(LoginRequiredMixin, View):
         request = self.request
         self.context['form'] = self.Form_class(request.POST)
         if self.context['form'].is_valid():
+            # necessário para conseguir editar conteúdo do form em outros pontos da classe
+            self.context['form'].data = self.context['form'].data.copy()
             self.mount_context()
         return render(request, self.template_name, self.context)
