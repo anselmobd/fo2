@@ -74,7 +74,6 @@ class EsvaziaPalete(LoginRequiredMixin, View):
         if not dados_palete:
             self.context.update({
                 'erro': "Palete inexistênte."})
-            # self.context['identificado'] = None
             self.context_form_set_identificado(None)
             return
 
@@ -86,23 +85,17 @@ class EsvaziaPalete(LoginRequiredMixin, View):
         else:
             self.context.update({
                 'erro': "Palete já vazio."})
-            # self.context['identificado'] = None
             self.context_form_set_identificado(None)
             return
 
         if not identificado:
-            # self.context['identificado'] = palete
-            # self.context['form'].data = self.context['form'].data.copy()
-            # self.context['form'].data['identificado'] = palete
             self.context_form_set_identificado(palete)
-            # self.context['form'].data['palete'] = None
             self.context_form_set_palete(None)
             return
 
         if identificado != palete:
             self.context.update({
                 'erro': "Não confirmado mesmo palete."})
-            # self.context['identificado'] = None
             self.context_form_set_identificado(None)
             return
 
@@ -117,8 +110,6 @@ class EsvaziaPalete(LoginRequiredMixin, View):
             self.context.update({
                 'erro': f"Erro ao esvaziar palete {palete}."})
 
-        # self.context['identificado'] = None
-        # self.context_form_set_palete(None)
         self.context_form_set_identificado(None)
 
 
