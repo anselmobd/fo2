@@ -32,7 +32,7 @@ table {
   {% if data %}
     {{ qtd_lotes }} lote{{ qtd_lotes|pluralize }} no {{nome_tipo_local}} {{ local }}
     {% if endereco_lotes %}
-      <br/>Endereço: {{endereco_lotes}}
+      <br/>Endereço: <!-- {{endereco_lotes}} -->{{endereco_link|safe}}
     {% endif %}
     {% if palete_lotes %}
       <br/>Palete: <!-- {{palete_lotes}} -->{{palete_link|safe}}

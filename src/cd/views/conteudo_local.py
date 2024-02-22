@@ -68,6 +68,17 @@ class ConteudoLocal(View):
             self.context.update({
                 'endereco_lotes': ', '.join(enderecos),
             })
+            endereco_links = []
+            for endereco in enderecos:
+                endereco_url = reverse(
+                    'cd:conteudo_local',
+                    args=[endereco]
+                )
+                endereco_link = f'<a href="{endereco_url}">{endereco}</a>'
+                endereco_links.append(endereco_link)
+            self.context.update({
+                'endereco_link': ', '.join(endereco_links),
+            })
             if len(enderecos) > 1:
                 headers += ['Endereço']
                 fields += ['endereco']
