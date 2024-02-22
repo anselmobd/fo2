@@ -26,7 +26,7 @@ class EsvaziaPalete(LoginRequiredMixin, View):
         self.template_name = 'cd/esvazia_palete.html'
         self.context = {'titulo': 'Esvazia palete'}
 
-    def mount_context(self):
+    def verify_user(self):
         try:
             colab = Colaborador.objects.get(user=self.request.user)
         except Colaborador.DoesNotExist as e:
@@ -34,15 +34,29 @@ class EsvaziaPalete(LoginRequiredMixin, View):
                 'erro': 'Não é possível utilizar um usuário que não '
                     'está cadastrado como colaborador.'
             })
-            return
+            return False
 
         try:
-            s_user = SystextilUsuario.objects.get(codigo_usuario=colab.matricula)
+            self.s_user = SystextilUsuario.objects.get(codigo_usuario=colab.matricula)
         except SystextilUsuario.DoesNotExist as e:
             self.context.update({
                 'erro': 'Não é possível utilizar um colaborador sem '
                     'matrícula válida ou inativo.'
             })
+            return False
+
+        return True
+
+    def context_form_set_palete(self, palete):
+        self.context['palete'] = palete
+        self.context['form'].data['palete'] = palete
+
+    def context_form_set_identificado(self, identificado):
+        self.context['identificado'] = identificado
+        self.context['form'].data['identificado'] = identificado
+
+    def mount_context(self):
+        if not self.verify_user():
             return
 
         cursor = db_cursor_so(self.request)
@@ -54,11 +68,14 @@ class EsvaziaPalete(LoginRequiredMixin, View):
             'identificado': identificado,
         })
 
+        self.context['form'].data = self.context['form'].data.copy()
+
         dados_palete = get_palete(cursor, palete)
         if not dados_palete:
             self.context.update({
                 'erro': "Palete inexistênte."})
-            self.context['identificado'] = None
+            # self.context['identificado'] = None
+            self.context_form_set_identificado(None)
             return
 
         lotes_end = conteudo_local(cursor, local=palete)
@@ -69,23 +86,27 @@ class EsvaziaPalete(LoginRequiredMixin, View):
         else:
             self.context.update({
                 'erro': "Palete já vazio."})
-            self.context['identificado'] = None
+            # self.context['identificado'] = None
+            self.context_form_set_identificado(None)
             return
 
         if not identificado:
-            self.context['identificado'] = palete
-            self.context['form'].data = self.context['form'].data.copy()
-            self.context['form'].data['identificado'] = palete
-            self.context['form'].data['palete'] = None
+            # self.context['identificado'] = palete
+            # self.context['form'].data = self.context['form'].data.copy()
+            # self.context['form'].data['identificado'] = palete
+            self.context_form_set_identificado(palete)
+            # self.context['form'].data['palete'] = None
+            self.context_form_set_palete(None)
             return
 
         if identificado != palete:
             self.context.update({
                 'erro': "Não confirmado mesmo palete."})
-            self.context['identificado'] = None
+            # self.context['identificado'] = None
+            self.context_form_set_identificado(None)
             return
 
-        if not palete_guarda_hist(cursor, palete, s_user.usuario):
+        if not palete_guarda_hist(cursor, palete, self.s_user.usuario):
             self.context.update({
                 'erro': f"Erro ao guardar histórico do palete {palete}."})
 
@@ -96,7 +117,9 @@ class EsvaziaPalete(LoginRequiredMixin, View):
             self.context.update({
                 'erro': f"Erro ao esvaziar palete {palete}."})
 
-        self.context['identificado'] = None
+        # self.context['identificado'] = None
+        # self.context_form_set_palete(None)
+        self.context_form_set_identificado(None)
 
 
     def get(self, request, *args, **kwargs):
