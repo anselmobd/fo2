@@ -35,7 +35,7 @@ table {
       <br/>Endereço: {{endereco_lotes}}
     {% endif %}
     {% if palete_lotes %}
-      <br/>Palete: {{palete_lotes}}
+      <br/>Palete: <!-- {{palete_lotes}} -->{{palete_link|safe}}
     {% endif %}
     {% if total_qtd %}
     - {{ total_qtd }} ite{{ total_qtd|pluralize:"m,ns" }}

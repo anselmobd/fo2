@@ -79,6 +79,17 @@ class ConteudoLocal(View):
             self.context.update({
                 'palete_lotes': ', '.join(paletes),
             })
+            palete_links = []
+            for palete in paletes:
+                palete_url = reverse(
+                    'cd:conteudo_local',
+                    args=[palete]
+                )
+                palete_link = f'<a href="{palete_url}">{palete}</a>'
+                palete_links.append(palete_link)
+            self.context.update({
+                'palete_link': ', '.join(palete_links),
+            })
             if len(paletes) > 1:
                 headers += ['Palete']
                 fields += ['palete']
