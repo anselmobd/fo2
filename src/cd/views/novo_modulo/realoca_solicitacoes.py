@@ -82,6 +82,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             tipo_prod='pagb',
             qtd_empenhada=qtd_empenhada,
             solicitacoes=self.solicitacoes,
+            verifica_sols_in=False,
         )
         lotes_a_trabalhar = []
         self.oti_lotes = {}
