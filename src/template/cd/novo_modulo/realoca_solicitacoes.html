@@ -36,6 +36,9 @@
     {% if ante_modelo %}
       Item anterior <a href="#" onclick="set_item('{{ante_modelo|safe}}', '{{ante_cor}}', '{{ante_tam}}');">{{ante_modelo|safe}} {{ante_cor}} {{ante_tam}}</a>
     {% endif %}
+    {% if form.endereco.value %}
+      &nbsp;&nbsp;|&nbsp;&nbsp; <a href="#" onclick="limpa_endereco();">Limpa endereço</a>
+    {% endif %}
     </p>
   {% endif %}
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
@@ -111,8 +114,6 @@
 {{ block.super }}
 <script>
   function set_item(modelo, cor, tam) {
-    let ee = document.getElementById('id_endereco');
-    ee.value = '';
     let em = document.getElementById('id_modelo');
     em.value = modelo;
     let ec = document.getElementById('id_cor');
@@ -121,6 +122,12 @@
     et.value = tam;
     let ea = document.getElementById('id_btn_analisa');
     ea.click();
+    return false;
+  }
+
+  function limpa_endereco() {
+    let ee = document.getElementById('id_endereco');
+    ee.value = '';
     return false;
   }
 </script>
