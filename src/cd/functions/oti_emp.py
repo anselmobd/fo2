@@ -160,10 +160,11 @@ def conta_zerados(lotes_sols_procs):
     )
 
 
-def inicia_distribuicao(lotes):
+def inicia_distribuicao(lotes, atendimento):
     lotes_sols = {}
     for lote, value in lotes.items():
-        lotes_sols[lote] = ini_lote(value, {})
+        if atendimento is None or lote in atendimento:
+            lotes_sols[lote] = ini_lote(value, {})
     return lotes_sols
 
 

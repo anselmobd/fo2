@@ -443,34 +443,39 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
         print()
         print("Distribuição vazia")
-        self.new_lotes_sols =  oti_emp.inicia_distribuicao(self.oti_lotes)
+        self.new_lotes_sols =  oti_emp.inicia_distribuicao(self.oti_lotes, self.lotes_atendimento)
         pprint(self.new_lotes_sols)
 
         print()
-        print("Lotes em ordem decrescente de quantidade")
-        lotes_ord = oti_emp.keys_order_by_dict(self.new_lotes_sols, reverse=True)
+        print("Lotes em ordem decrescente de quantidade (ou forçada)")
+        if self.lotes_atendimento:
+            lotes_ord = self.lotes_atendimento
+        else:
+            lotes_ord = oti_emp.keys_order_by_dict(self.new_lotes_sols, reverse=True)
         pprint(lotes_ord)
 
-        print()
-        print("Excluindo lotes a não utilizar")
-        oti_emp.lotes_nao_usar(self.new_lotes_sols, lotes_ord, qtd_nao_solicitada)
-        pprint(self.new_lotes_sols)
+        if not self.lotes_atendimento:
+            print()
+            print("Excluindo lotes a não utilizar")
+            oti_emp.lotes_nao_usar(self.new_lotes_sols, lotes_ord, qtd_nao_solicitada)
+            pprint(self.new_lotes_sols)
 
-        print()
-        print("Lotes atendidos com uma solicitação")
-        oti_emp.lotes_uma_sol(self.new_lotes_sols, self.oti_solicitacoes)
-        pprint(self.new_lotes_sols)
-        pprint(self.oti_solicitacoes.keys())
+            print()
+            print("Lotes atendidos com uma solicitação")
+            oti_emp.lotes_uma_sol(self.new_lotes_sols, self.oti_solicitacoes)
+            pprint(self.new_lotes_sols)
+            pprint(self.oti_solicitacoes.keys())
 
         print()
         print("Solicitações ordenadas para uso")
         sols_ord = oti_emp.get_sols_ord(self.oti_solicitacoes)
         pprint(sols_ord)
 
-        print()
-        print("Lotes em ordem crescente de quantidade")
-        lotes_ord.reverse()
-        pprint(lotes_ord)
+        if not self.lotes_atendimento:
+            print()
+            print("Lotes em ordem crescente de quantidade")
+            lotes_ord.reverse()
+            pprint(lotes_ord)
 
         print()
         print("Empenhar demais lotes")
