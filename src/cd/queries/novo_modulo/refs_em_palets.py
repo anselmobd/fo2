@@ -147,6 +147,8 @@ def query(
     qtd_empenhada='t',
     qtd_solicitada='-',
     solicitacoes=None,
+    verifica_sols_in=True,
+    verifica_sols_out=True,
     modelos=None,
 ):
     """
@@ -772,13 +774,23 @@ def query(
 
     if solicitacoes and 'solicitacoes' in fields:
         sols_in, sols_out = numbers_sets(solicitacoes)
-        dados = [
-            row for row in dados
-            if (
-                (numbers_set(row['solicitacoes']).intersection(sols_in) or not sols_in)
-                and not numbers_set(row['solicitacoes']).intersection(sols_out)
-            )
-        ]
+        dados_solicitacoes = []
+        for row in dados:
+            if verifica_sols_in:
+                solic_ok = (
+                    numbers_set(row['solicitacoes']).intersection(sols_in) or
+                    not sols_in
+                )
+            else:
+                solic_ok = True
+            if verifica_sols_out:
+                solic_ok = (
+                    solic_ok and
+                    not numbers_set(row['solicitacoes']).intersection(sols_out)
+                )
+            if solic_ok:
+                dados_solicitacoes.append(row)
+        dados = dados_solicitacoes
 
     if modelos:
         mods_in, mods_out = numbers_sets(modelos)
