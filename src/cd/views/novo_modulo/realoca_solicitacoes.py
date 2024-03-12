@@ -522,6 +522,10 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.cor = None if self.cor == '' else self.cor
         self.tam = None if self.tam == '' else self.tam
         self.qtd_empenhada = None if self.qtd_empenhada == '' else self.qtd_empenhada
+        self.lotes_atendimento = (
+            None if self.lotes_atendimento == ''
+            else split_numbers(self.lotes_atendimento)
+        )
         self.context.update({
             'qtd_empenhada': self.qtd_empenhada,
         })

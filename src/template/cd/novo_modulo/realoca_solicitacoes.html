@@ -114,6 +114,8 @@
 {{ block.super }}
 <script>
   function set_item(modelo, cor, tam) {
+    let ela = document.getElementById('id_lotes_atendimento');
+    ela.value = '';
     let em = document.getElementById('id_modelo');
     em.value = modelo;
     let ec = document.getElementById('id_cor');

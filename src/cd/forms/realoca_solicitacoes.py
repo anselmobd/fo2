@@ -16,6 +16,7 @@ class RealocaSolicitacoesForm(forms.Form):
         ['trab_sol_tot'],
         ['trab_sol_tot_dest'],
         ['forca_oti'],
+        ['lotes_atendimento'],
     ]
 
     endereco = forms.CharField(
@@ -118,6 +119,17 @@ class RealocaSolicitacoesForm(forms.Form):
         label='Força otimização após comparativo?',
         choices=CHOICES,
         initial='n',
+    )
+
+    lotes_atendimento = forms.CharField(
+        label='Atender com o lotes ordenados',
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 100,
+                'type': 'text',
+            }
+        )
     )
 
     def clean_cor(self):
