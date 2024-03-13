@@ -126,7 +126,7 @@ class RealocaSolicitacoesForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'size': 100,
+                'size': 50,
                 'type': 'text',
             }
         )
