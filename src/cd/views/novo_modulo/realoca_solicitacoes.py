@@ -79,7 +79,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             modelo=self.modelo,
             endereco=self.endereco if self.endereco else "*",
             tipo_prod='pagb',
-            qtd_empenhada='nte',
+            # qtd_empenhada='nte',
             solicitacoes=self.solicitacoes,
             verifica_sols_in=False,
         )
@@ -90,7 +90,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 row['qtd_dbaixa'] = row['qtd']
             else:
                 row['qtd_dbaixa'] = row['qtd'] - row['qtd_emp'] - row['qtd_sol']
-            if row['lote'] not in self.lotes_nao_trabalhar:
+            if row['lote'] not in self.lotes_nao_trabalhar and row['qtd_dbaixa'] > 0:
                 lotes_a_trabalhar.append(row)
                 self.oti_lotes[row['lote']] = {
                     'end': row['endereco'],
