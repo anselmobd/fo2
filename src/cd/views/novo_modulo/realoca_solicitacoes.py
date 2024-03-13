@@ -71,7 +71,6 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         )
 
     def get_lotes(self):
-        qtd_empenhada = 't' if self.qtd_empenhada == 'ce' else 'nte'
         lotes = refs_em_palets.query(
             self.cursor,
             fields='detalhe',
@@ -80,19 +79,22 @@ class RealocaSolicitacoes(O2BaseGetPostView):
             modelo=self.modelo,
             endereco=self.endereco if self.endereco else "*",
             tipo_prod='pagb',
-            qtd_empenhada=qtd_empenhada,
+            qtd_empenhada='nte',
             solicitacoes=self.solicitacoes,
             verifica_sols_in=False,
         )
         lotes_a_trabalhar = []
         self.oti_lotes = {}
         for row in lotes:
-            row['qtd_dbaixa'] = row['qtd']
+            if row['lote'] in self.lista_lotes:
+                row['qtd_dbaixa'] = row['qtd']
+            else:
+                row['qtd_dbaixa'] = row['qtd'] - row['qtd_emp'] - row['qtd_sol']
             if row['lote'] not in self.lotes_nao_trabalhar:
                 lotes_a_trabalhar.append(row)
                 self.oti_lotes[row['lote']] = {
                     'end': row['endereco'],
-                    'qtde': row['qtd'],
+                    'qtde': row['qtd_dbaixa'],
                     'op': row['op'],
                     'oc': row['lote'][4:],
                 }
