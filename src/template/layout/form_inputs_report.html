@@ -1,35 +1,34 @@
-{% if lines_before %}
-  {% for line in lines_before %}
+{% if lines_before %}{% spaceless %}
+  {% for line in lines_before %}{% spaceless %}
     <h{{h}}>{{line}}</h{{h}}>
-  {% endfor %}
-{% endif %}
+  {% endspaceless %}{% endfor %}
+{% endspaceless %}{% endif %}
 {% if form.field_control %}
   {% for field_set in form.field_control %}
-    <h{{h}}>
-      {% for field_name in field_set %}
-        {% for input in form %}
-          {%if field_name == input.name%}
+    <h{{h}}>{% spaceless %}
+      {% for field_name in field_set %}{% spaceless %}
+        {% for input in form %}{% spaceless %}
+          {%if field_name == input.name%}{% spaceless %}
             {% include "layout/form_inputs_report_value.html" with input=input only%}
-          {% endif %}
-        {% endfor %}
-      {% endfor %}
-    </h{{h}}>
-  {% endfor %}
-{% else %}
-  {% for input in form %}
-    {% if input.field.widget.input_type != 'hidden' %}
-      {% if excludes %}
-        {% if input.name not in excludes %}
+          {% endspaceless %}{% endif %}
+        {% endspaceless %}{% endfor %}
+      {% endspaceless %}{% endfor %}
+  {% endspaceless %}</h{{h}}>{% endfor %}
+{% else %}{% spaceless %}
+  {% for input in form %}{% spaceless %}
+    {% if input.field.widget.input_type != 'hidden' %}{% spaceless %}
+      {% if excludes %}{% spaceless %}
+        {% if input.name not in excludes %}{% spaceless %}
           {% include "layout/form_inputs_report_value.html" with input=input h=h only%}
-        {% endif %}
-      {% else %}
+        {% endspaceless %}{% endif %}
+      {% endspaceless %}{% else %}{% spaceless %}
         {% include "layout/form_inputs_report_value.html" with input=input h=h only%}
-      {% endif %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
-{% if lines_after %}
-  {% for line in lines_after %}
+      {% endspaceless %}{% endif %}
+    {% endspaceless %}{% endif %}
+  {% endspaceless %}{% endfor %}
+{% endspaceless %}{% endif %}
+{% if lines_after %}{% spaceless %}
+  {% for line in lines_after %}{% spaceless %}
     <h{{h}}>{{line}}</h{{h}}>
-  {% endfor %}
-{% endif %}
+  {% endspaceless %}{% endfor %}
+{% endspaceless %}{% endif %}

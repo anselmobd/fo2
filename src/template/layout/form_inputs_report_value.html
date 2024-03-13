@@ -1,20 +1,16 @@
-{% if input.value %}
-  {% if h %}
-    <h{{h}}>
-  {% endif %}
-    {{input.label}}{%if input.label|last not in ":?" %}:{%endif%}
-    {% if input.field.widget.input_type == 'select' %}
-      {% for choice in input.field.choices %}
-        {% if choice.0|safe == input.value|safe %}
-          {{choice.1}}
-        {% endif %}
-      {% endfor %}
-    {% else %}
-      {{input.value}}
-    {% endif %}
-  {% if h %}
-    </h{{h}}>
-  {% else %}
-    &nbsp;
-  {% endif %}
-{% endif %}
+{% spaceless %}
+{% if input.value %}{% spaceless %}
+  {% if h %}<h{{h}}>{% endif %}
+  {{input.label}}{%if input.label|last not in ":?" %}:{% endif %}{% spaceless %}
+  {% endspaceless %}{% if input.field.widget.input_type == 'select' %}{% spaceless %}
+    {% for choice in input.field.choices %}{% spaceless %}
+      {% if choice.0|safe == input.value|safe %}{% spaceless %}
+        {{choice.1}}
+      {% endspaceless %}{% endif %}
+    {% endspaceless %}{% endfor %}
+  {% endspaceless %}{% else %}{% spaceless %}
+    {{input.value}}
+  {% endspaceless %}{% endif %}{% spaceless %}
+  {% endspaceless %}{% if h %}</h{{h}}>{% else %}&nbsp;{% endif %}
+{% endspaceless %}{% endif %}
+{% endspaceless %}
