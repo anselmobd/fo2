@@ -75,7 +75,7 @@ class NovoEstoqueForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
-                'size': 9,
+                'size': 10,
                 'type': 'number',
             }
         )
