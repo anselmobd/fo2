@@ -149,8 +149,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'flags': ['NO_TOT_1'],
             }
         )
-        totalizador_lotes = self.lotes[-1]
-        del(self.lotes[-1])
+        totalizador_lotes = self.lotes.pop()
 
         self.lotes = paginator_basic(self.lotes, self.lotes_por_pagina, self.page)
 

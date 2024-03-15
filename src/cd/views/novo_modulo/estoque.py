@@ -122,8 +122,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'flags': ['NO_TOT_1'],
             }
         )
-        totalizador_lotes = self.lotes[-1]
-        del(self.lotes[-1])
+        totalizador_lotes = self.lotes.pop()
 
         if self.order == 'elpp' and self.usa_paginador == 'n':
             field = 'endereco'
