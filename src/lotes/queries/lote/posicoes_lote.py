@@ -18,6 +18,7 @@ def posicoes_lote(cursor, periodo, ordem_confeccao):
         , l.QTDE_PECAS_PROD QTD
         , 'FINALIZADO 1A.' TIPO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO || ' (ULTIMO)' ESTAGIO
+        , l.CODIGO_ESTAGIO
         FROM lotes sel
         JOIN PCPC_040 l
           ON l.PERIODO_PRODUCAO = sel.PERIODO_PRODUCAO
@@ -41,6 +42,7 @@ def posicoes_lote(cursor, periodo, ordem_confeccao):
         , l.QTDE_PECAS_2A QTD
         , 'FINALIZADO 2A.' TIPO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO || ' (ULTIMO)' ESTAGIO
+        , l.CODIGO_ESTAGIO
         FROM lotes sel
         JOIN PCPC_040 l
           ON l.PERIODO_PRODUCAO = sel.PERIODO_PRODUCAO
@@ -64,6 +66,7 @@ def posicoes_lote(cursor, periodo, ordem_confeccao):
         , l.QTDE_DISPONIVEL_BAIXA QTD
         , 'A PRODUZIR' TIPO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , l.CODIGO_ESTAGIO
         FROM lotes sel
         JOIN PCPC_040 l
           ON l.PERIODO_PRODUCAO = sel.PERIODO_PRODUCAO
@@ -80,6 +83,7 @@ def posicoes_lote(cursor, periodo, ordem_confeccao):
         , CASE WHEN l.CODIGO_ESTAGIO = 63 THEN 'ENDEREÇADO'
           ELSE 'EM CONSERTO' END TIPO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , l.CODIGO_ESTAGIO
         FROM lotes sel
         JOIN PCPC_040 l
           ON l.PERIODO_PRODUCAO = sel.PERIODO_PRODUCAO
@@ -95,6 +99,7 @@ def posicoes_lote(cursor, periodo, ordem_confeccao):
         , l.QTDE_PERDAS QTD
         , 'PERDAS' TIPO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , l.CODIGO_ESTAGIO
         FROM lotes sel
         JOIN PCPC_040 l
           ON l.PERIODO_PRODUCAO = sel.PERIODO_PRODUCAO
