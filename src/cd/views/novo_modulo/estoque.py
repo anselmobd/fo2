@@ -5,6 +5,7 @@ from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
 from o2.views.base.get_post import O2BaseGetPostView
+from utils.functions.models.row_field import PrepRows
 from utils.table_defs import TableDefs
 from utils.views import totalize_data
 
@@ -87,6 +88,13 @@ class NovoEstoque(O2BaseGetPostView):
             row['qtd_dbaixa'] = row['qtd']
             row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
             row['qtd_disp'] = row['qtd_dbaixa'] - row['tot_emp']
+
+        PrepRows(
+            dados,
+        ).date_dash(
+            'palete_dt'
+        ).process()
+
         return dados
 
 
