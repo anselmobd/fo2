@@ -88,13 +88,13 @@ class NovoEstoque(O2BaseGetPostView):
             row['qtd_dbaixa'] = row['qtd']
             row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
             row['qtd_disp'] = row['qtd_dbaixa'] - row['tot_emp']
-
         PrepRows(
             dados,
         ).date_dash(
             'palete_dt'
+        ).a_blank(
+            'lote', 'producao:lote__get'
         ).process()
-
         return dados
 
 
