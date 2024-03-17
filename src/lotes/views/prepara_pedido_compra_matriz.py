@@ -8,12 +8,12 @@ from fo2.connections import db_cursor_so
 
 import lotes.queries
 from lotes.queries.pedido.ped_alter import (
-    exclui_pedido_compra_matriz_capa,
-    inclui_pedido_compra_matriz_capa,
     emite_pedido_compra_matriz,
-    inclui_pedido_compra_matriz_itens,
+    exclui_pedido_compra_matriz_capa,
     exclui_pedido_compra_matriz_itens,
     get_pedido_compra_matriz_itens,
+    inclui_pedido_compra_matriz_capa,
+    inclui_pedido_compra_matriz_itens,
     pedido_matriz_de_pedido_filial,
 )
 
