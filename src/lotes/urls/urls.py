@@ -3,17 +3,18 @@ from django.urls import include, path, re_path
 import lotes.views as views
 from lotes.views import (
     lote,
+    perda,
     por_celula,
+    prepara_pedido_compra_matriz,
     prepara_pedido_corte,
     prepara_pedido_op_cortada,
-    prepara_pedido_compra_matriz,
 )
-from lotes.views import perda
-from lotes.views.ops import seq_erro
-from lotes.views.analise import produzir_grade_empenho
 from lotes.views.ajax import produzir_modelo_grade as ajax_produzir_modelo_grade
-from lotes.views.pedido.rastreabilidade import RastreabilidadeView
+from lotes.views.ajax.produz_lote import ProduzLote
+from lotes.views.analise import produzir_grade_empenho
+from lotes.views.ops import seq_erro
 from lotes.views.pedido import cancela_pedido
+from lotes.views.pedido.rastreabilidade import RastreabilidadeView
 
 app_name = 'producao'
 urlpatterns = [
@@ -199,6 +200,10 @@ urlpatterns = [
     re_path(r'^ajax/prepara_pedido_compra_matriz/(?P<pedido_filial>[^/]+)/$',
         prepara_pedido_compra_matriz.PreparaPedidoCompraMatriz.as_view(),
         name='prepara_pedido_compra_matriz'),
+
+    re_path(r'^ajax/produz_lote/(?P<lote>[^/]+)/$',
+        ProduzLote.as_view(),
+        name='produz_lote'),
 
     re_path(r'^totais_estagio/$',
         views.analise.TotalEstagio.as_view(), name='totais_estagio'),
