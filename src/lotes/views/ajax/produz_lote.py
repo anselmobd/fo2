@@ -19,8 +19,25 @@ class ProduzLote(View):
             self._cursor = db_cursor_so(self.request)
         return self._cursor 
 
-    def process(self, kwargs):
+    def get_movimentacoes(self, kwargs):
+        self.movimentacoes = None
         try:
+            self.movimentacoes = movimentacao_de_lote.get_movimentacoes(
+                self.cursor, kwargs['lote'], kwargs['estagio'])
+        except Exception as e:
+            return ('ERROR',  f"Erro ao buscar movimentações do lote no estágio: {e}")
+
+    def process(self, kwargs):
+        self.get_movimentacoes()
+
+        if not self.movimentacoes:
+            return (
+                'ERROR',
+                "Só é possível inserir movimentação se já houver movimentação no estágio",
+            )
+
+        try:
+            1/0
             movimentacao_de_lote.insere(
                 self.cursor, kwargs['lote'], kwargs['estagio'], kwargs['qtd'])
             return ('OK', "OK!")
