@@ -4,6 +4,8 @@ from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import lms
 
+import lotes.queries.lote.lote_estagios
+
 
 def insere(cursor, lote, estagio, qtd, estagio_modelo=None):
     estagio_modelo = estagio_modelo if estagio_modelo else estagio
@@ -85,6 +87,29 @@ def get_movimentacoes(cursor, lote, estagio):
         WHERE ml.PCPC040_PERCONF = {lote[:4]}
           AND ml.PCPC040_ORDCONF = {lote[4:]}
           AND ml.PCPC040_ESTCONF = {estagio}
+        ORDER BY 
+          ml.SEQUENCIA
+    """)
+    debug_cursor_execute(cursor, sql)
+    return dictlist_lower(cursor)
+
+
+def get_movimentacoes_estagio_anterior(cursor, lote, estagio):
+    print("get_movimentacoes_estagio_anterior")
+    estagios = lotes.queries.lote.lote_estagios.query(
+        cursor, lote)
+    estagios = list(map(str, estagios))
+    idx_estagio = estagios.index(estagio)
+    if idx_estagio <= 0:
+        return []
+
+    sql = lms(f"""\
+        SELECT
+          ml.*
+        FROM PCPC_045 ml
+        WHERE ml.PCPC040_PERCONF = {lote[:4]}
+          AND ml.PCPC040_ORDCONF = {lote[4:]}
+          AND ml.PCPC040_ESTCONF = {estagios[idx_estagio-1]}
         ORDER BY 
           ml.SEQUENCIA
     """)
