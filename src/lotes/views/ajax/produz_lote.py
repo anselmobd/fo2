@@ -10,13 +10,19 @@ from lotes.queries.lote import movimentacao_de_lote
 
 class ProduzLote(View):
 
-    def process(self, request, kwargs):
-        cursor = db_cursor_so(request)
+    def __init__(self):
+        self._cursor = None
 
+    @property
+    def cursor(self):
+        if not self._cursor:
+            self._cursor = db_cursor_so(self.request)
+        return self._cursor 
+
+    def process(self, kwargs):
         try:
             movimentacao_de_lote.insere(
-                cursor, kwargs['lote'], kwargs['estagio'], kwargs['qtd']
-            )
+                self.cursor, kwargs['lote'], kwargs['estagio'], kwargs['qtd'])
             return ('OK', "OK!")
         except Exception as e:
             return ('ERROR',  f"Erro ao inserir movimentação de lote: {e}")
@@ -30,5 +36,6 @@ class ProduzLote(View):
         }
 
     def get(self, request, *args, **kwargs):
-        result = self.process(request, kwargs)
+        self.request = request
+        result = self.process(kwargs)
         return JsonResponse(self.response(result), safe=False)
