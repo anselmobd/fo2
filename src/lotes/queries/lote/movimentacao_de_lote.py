@@ -5,7 +5,8 @@ from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import lms
 
 
-def insere(cursor, lote, estagio, qtd):
+def insere(cursor, lote, estagio, qtd, estagio_modelo=None):
+    estagio_modelo = estagio_modelo if estagio_modelo else estagio
     sql = lms(f"""\
         INSERT INTO SYSTEXTIL.PCPC_045
         ( PCPC040_PERCONF, PCPC040_ORDCONF, PCPC040_ESTCONF, SEQUENCIA
@@ -23,7 +24,7 @@ def insere(cursor, lote, estagio, qtd):
         ( SELECT
             ml.PCPC040_PERCONF
           , ml.PCPC040_ORDCONF
-          , ml.PCPC040_ESTCONF
+          , {estagio} -- ml.PCPC040_ESTCONF
           , ml.SEQUENCIA+1
           , CURRENT_DATE DATA_PRODUCAO
           , CURRENT_DATE HORA_PRODUCAO
@@ -64,7 +65,7 @@ def insere(cursor, lote, estagio, qtd):
           WHERE 1=1
             AND ml.PCPC040_PERCONF = {lote[:4]}
             AND ml.PCPC040_ORDCONF = {lote[4:]}
-            AND ml.PCPC040_ESTCONF = {estagio}
+            AND ml.PCPC040_ESTCONF = {estagio_modelo}
           ORDER BY 
             ml.SEQUENCIA DESC
         )
