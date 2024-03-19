@@ -201,7 +201,7 @@ urlpatterns = [
         prepara_pedido_compra_matriz.PreparaPedidoCompraMatriz.as_view(),
         name='prepara_pedido_compra_matriz'),
 
-    re_path(r'^ajax/produz_lote/(?P<lote>[^/]+)/$',
+    re_path(r'^ajax/produz_lote/(?P<lote>[^/]+)/(?P<estagio>[^/]+)/(?P<qtd>[^/]+)/$',
         ProduzLote.as_view(),
         name='produz_lote'),
 
