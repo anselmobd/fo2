@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import lms
 
@@ -73,3 +74,19 @@ def insere(cursor, lote, estagio, qtd):
         WHERE rownum = 1
     """)
     debug_cursor_execute(cursor, sql)
+
+
+def get_movimentacoes(cursor, lote, estagio):
+    sql = lms(f"""\
+        SELECT
+          ml.*
+        FROM PCPC_045 ml
+        WHERE ml.PCPC040_PERCONF = {lote[:4]}
+          AND ml.PCPC040_ORDCONF = {lote[4:]}
+          AND ml.PCPC040_ESTCONF = {estagio}
+        ORDER BY 
+          ml.SEQUENCIA
+    """)
+    debug_cursor_execute(cursor, sql)
+    return dictlist_lower(cursor)
+
