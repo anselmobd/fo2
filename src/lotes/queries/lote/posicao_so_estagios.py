@@ -1,10 +1,18 @@
 from pprint import pprint
+from typing import overload
 
 from utils.functions.models.dictlist import dictlist
+from utils.functions.queries import debug_cursor_execute
+from utils.functions.strings import lms
+
+
+@overload
+def posicao_so_estagios(cursor, lote):
+    return posicao_so_estagios(cursor, lote[:4], lote[4:])
 
 
 def posicao_so_estagios(cursor, periodo, ordem_confeccao):
-    sql = '''
+    sql = lms(f"""\
         SELECT
           l.CODIGO_ESTAGIO COD_EST
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST
@@ -25,10 +33,10 @@ def posicao_so_estagios(cursor, periodo, ordem_confeccao):
         FROM PCPC_040 l
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
-        WHERE l.PERIODO_PRODUCAO = %s
-          AND l.ORDEM_CONFECCAO = %s
+        WHERE l.PERIODO_PRODUCAO = {periodo}
+          AND l.ORDEM_CONFECCAO = {ordem_confeccao}
         ORDER BY
           l.SEQ_OPERACAO
-    '''
-    cursor.execute(sql, [periodo, ordem_confeccao])
+    """)
+    debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
