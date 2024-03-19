@@ -25,23 +25,15 @@ class ProduzLote(View):
 
     def get_movimentacoes(self, lote, estagio):
         try:
-            self.movimentacoes = movimentacao_de_lote.get_movimentacoes(
+            self.movimentacoes = movimentacao_de_lote.get_movimentacoes_ate_estagio(
                 cursor=self.cursor,
                 lote=lote,
                 estagio=estagio,
             )
         except Exception as e:
             return f"Erro ao buscar movimentações do lote no estágio: {e}"
-
-    def get_movimentacoes_estagio_anterior(self, lote, estagio):
-        try:
-            self.movimentacoes = movimentacao_de_lote.get_movimentacoes_estagio_anterior(
-                cursor=self.cursor,
-                lote=lote,
-                estagio=estagio,
-            )
-        except Exception as e:
-            return f"Erro ao buscar movimentações em estágios anteriores do lote no estágio: {e}"
+        if not self.movimentacoes:
+            return "Só é possível inserir movimentação se já houver movimentação no lote"
 
     def process(self, kwargs):
         self.movimentacoes = None
@@ -52,20 +44,6 @@ class ProduzLote(View):
         )
         if result_error:
             return (self.ERROR_STATUS, result_error)
-
-        if not self.movimentacoes:
-            result_error = self.get_movimentacoes_estagio_anterior(
-                lote=kwargs['lote'],
-                estagio=kwargs['estagio'],
-            )
-            if result_error:
-                return (self.ERROR_STATUS, result_error)
-
-        if not self.movimentacoes:
-            return (
-                'ERROR',
-                "Só é possível inserir movimentação se já houver movimentação no lote",
-            )
 
         pprint(self.movimentacoes)
 
