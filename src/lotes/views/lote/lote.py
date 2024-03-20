@@ -34,9 +34,32 @@ class Lote(View):
 
         data = queries.lote.posicoes_lote(cursor, periodo, ordem_confeccao)
         if len(data) != 0:
+            headers = ['Posição', 'Quantidade', 'Estágio']
+            fields = ['TIPO', 'QTD', 'ESTAGIO']
+            has_acao = False
+            if self.request.user.is_authenticated:
+                for row in data:
+                    if row['TIPO'] == 'A PRODUZIR':
+                        has_acao = True
+                        row['PRODUZ'] = f"produzir {row['QTD']}"
+                        row['PRODUZ|TARGET'] = 'BLANK'
+                        row['PRODUZ|A'] = reverse(
+                            'producao:produz_lote_programa',
+                            args=[
+                                lote,
+                                row['CODIGO_ESTAGIO'],
+                                row['QTD'],
+                                'lote_oc',
+                            ]
+                        )
+                    else:
+                        row['PRODUZ'] = "-"
+            if has_acao:
+                headers.append('Ação')
+                fields.append('PRODUZ')
             context.update({
-                'p_headers': ('Posição', 'Quantidade', 'Estágio'),
-                'p_fields': ('TIPO', 'QTD', 'ESTAGIO'),
+                'p_headers': headers,
+                'p_fields': fields,
                 'p_style': {0: 'font-size: large;', },
                 'p_data': data,
             })
