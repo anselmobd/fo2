@@ -82,12 +82,13 @@ class ProduzLote(View):
 
     def corrige_usuario(self):
         try:
-            movimentacao_de_lote.corrige_usuario(
+            movimentacao_de_lote.corrige_usuario_programa(
                 cursor=self.cursor,
                 lote=self.lote,
                 estagio=self.estagio,
                 sequencia=self.sequencia_nova,
                 usuario=self.logged_in.user,
+                programa=self.programa,
             )
         except Exception as e:
             return f"Erro ao corrigir o campo usuário: {e}"
