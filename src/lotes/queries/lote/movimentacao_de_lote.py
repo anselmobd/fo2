@@ -81,9 +81,9 @@ def insere(cursor, lote, estagio, qtd, estagio_modelo=None):
 
 def get_movimentacoes_ate_estagio(cursor, lote, estagio):
     print("get_movimentacoes_ate_estagio")
-    estagios = lotes.queries.lote.lote_estagios.get_estagios_str(
-        cursor, lote)
-
+    estagios = lotes.queries.lote.lote_estagios.get_estagios(
+        cursor, lote, ['COD_EST', 'Q_AP'], cod_est_fn=str)
+    pprint(estagios)
     idx_estagio = estagios.index(estagio)
     if idx_estagio == -1:
         return []
