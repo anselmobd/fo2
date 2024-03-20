@@ -1,17 +1,13 @@
 from pprint import pprint
-from typing import overload
 
 from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import lms
 
 
-@overload
-def posicao_so_estagios(cursor, lote):
-    return posicao_so_estagios(cursor, lote[:4], lote[4:])
-
-
-def posicao_so_estagios(cursor, periodo, ordem_confeccao):
+def posicao_so_estagios(cursor, periodo=None, ordem_confeccao=None, lote=None):
+    periodo = periodo if lote is None else lote[:4]
+    ordem_confeccao = ordem_confeccao if lote is None else lote[4:]
     sql = lms(f"""\
         SELECT
           l.CODIGO_ESTAGIO COD_EST
