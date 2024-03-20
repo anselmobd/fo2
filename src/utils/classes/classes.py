@@ -59,7 +59,7 @@ class LoggedInUser(SingletonBaseMeta):
         return self.user
 
     @property
-    def have_user(self):
+    def has_user(self):
         return self.user is not None
 
 
