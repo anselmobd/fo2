@@ -117,6 +117,8 @@
     console.log(clickedLink);
     console.log(clickedLink.href);
     var url=clickedLink.href;
+    if (confirmWithEnter()) {
+      console.log('Confirmou');
       $.ajax({
         type: 'GET',
         url: url,
@@ -143,7 +145,15 @@
           console.log('Erro na requisição');
         }  // error
       });  // ajax
+    } else {
+      console.log('Cancelou ');
+    }
     return false;
+  }
+
+  function confirmWithEnter() {
+    const confirmationMessage = "Pressione Enter para confirmar ou Escape para cancelar";
+    return window.confirm(confirmationMessage);
   }
 
   var inp = document.getElementById('id_lote');
