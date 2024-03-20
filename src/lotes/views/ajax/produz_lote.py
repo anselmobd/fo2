@@ -21,8 +21,12 @@ class ProduzLote(View):
         if not self.estagios:
             return "Lote não encontrado"
         self.processa_estagios()
-        if self.estagio_selecionado['Q_AP'] < self.qtd:
-            return f"Estágio {self.estagio} do lote {self.lote} com quantidade menor do que {self.qtd}"
+        qtd_estagio = self.estagio_selecionado['Q_AP']
+        if qtd_estagio < self.qtd:
+            return (
+                f"Estágio {self.estagio} do lote {self.lote} "
+                f"com quantidade {qtd_estagio}, que é menor do que {self.qtd}"
+            )
 
     def processa_estagios(self):
         self.estagio_selecionado = next(
