@@ -5,6 +5,8 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from utils.classes import LoggedInUser
+
 from lotes.queries.lote import movimentacao_de_lote
 from lotes.queries.lote import lote_estagios
 
@@ -13,6 +15,11 @@ class ProduzLote(View):
 
     ERROR_STATUS = "ERROR"
     OK_STATUS = "OK"
+
+    def verifica_usuario(self):
+        self.logged_in = LoggedInUser()
+        if not self.logged_in.has_user:
+            return "É necessário estar logado"
 
     def verifica_estagios(self):
         self.estagios = lote_estagios.get_estagios(
@@ -85,6 +92,7 @@ class ProduzLote(View):
 
     def process(self):
         for passo in [
+            self.verifica_usuario,
             self.verifica_estagios,
             self.get_movimentacoes,
             self.insere_movimentacao,
