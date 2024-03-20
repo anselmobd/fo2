@@ -23,16 +23,17 @@ class ProduzLote(View):
 
     def verifica_estagios(self):
         self.estagios = lote_estagios.get_estagios(
-            self.cursor, self.lote, ['COD_EST', 'Q_AP', 'SEQ_EST'])
+            self.cursor, self.lote, ['COD_EST', 'Q_DB', 'SEQ_EST'])
         pprint(self.estagios)
         if not self.estagios:
             return "Lote não encontrado"
         self.processa_estagios()
-        qtd_estagio = self.estagio_selecionado['Q_AP']
+        qtd_estagio = self.estagio_selecionado['Q_DB']
         if qtd_estagio < self.qtd:
             return (
                 f"Estágio {self.estagio} do lote {self.lote} "
-                f"com quantidade {qtd_estagio}, que é menor do que {self.qtd}"
+                f"com quantidade {qtd_estagio} disponível para baixa, "
+                f"que é menor do que {self.qtd}"
             )
 
     def processa_estagios(self):
