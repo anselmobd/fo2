@@ -27,8 +27,8 @@ def insere(cursor, lote, estagio, qtd, estagio_modelo, sequencia_modelo):
         , ml.PCPC040_ORDCONF
         , {estagio} -- ml.PCPC040_ESTCONF
         , {nova_sequencia} -- ml.SEQUENCIA
-        , CURRENT_DATE ml.DATA_PRODUCAO
-        , CURRENT_DATE ml.HORA_PRODUCAO
+        , CURRENT_DATE -- ml.DATA_PRODUCAO
+        , CURRENT_DATE -- ml.HORA_PRODUCAO
         , {qtd} -- ml.QTDE_PRODUZIDA
         , ml.QTDE_PECAS_2A
         , ml.QTDE_CONSERTO
