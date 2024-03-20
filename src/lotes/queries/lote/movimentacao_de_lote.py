@@ -7,8 +7,8 @@ from utils.functions.strings import lms
 import lotes.queries.lote.lote_estagios
 
 
-def insere(cursor, lote, estagio, qtd, estagio_modelo=None):
-    estagio_modelo = estagio_modelo if estagio_modelo else estagio
+def insere(cursor, lote, estagio, qtd, estagio_modelo, sequencia_modelo):
+    nova_sequencia = (sequencia_modelo + 1) if estagio == estagio_modelo else 1
     sql = lms(f"""\
         INSERT INTO SYSTEXTIL.PCPC_045
         ( PCPC040_PERCONF, PCPC040_ORDCONF, PCPC040_ESTCONF, SEQUENCIA
@@ -22,59 +22,52 @@ def insere(cursor, lote, estagio, qtd, estagio_modelo=None):
         , COD_OCORRENCIA_ESTORNO, SOLICITACAO_CONSERTO, NUMERO_SOLICITACAO
         , NUMERO_ORDEM, MINUTOS_PECA, NR_OPERADORES_INFORMADO, EFICIENCIA
         )
-        WITH movimentos_estagio AS 
-        ( SELECT
-            ml.PCPC040_PERCONF
-          , ml.PCPC040_ORDCONF
-          , {estagio} -- ml.PCPC040_ESTCONF
-          , ml.SEQUENCIA+1
-          , CURRENT_DATE DATA_PRODUCAO
-          , CURRENT_DATE HORA_PRODUCAO
-          , {qtd} -- ml.QTDE_PRODUZIDA
-          , ml.QTDE_PECAS_2A
-          , ml.QTDE_CONSERTO
-          , 1 -- ml.TURNO_PRODUCAO
-          , 0 -- ml.TIPO_ENTRADA_ORD
-          , ml.NOTA_ENTR_ORDEM
-          , NULL -- ml.SERIE_NF_ENT_ORD
-          , ml.SEQ_NF_ENTR_ORD
-          , ml.ORDEM_PRODUCAO
-          , 1 -- ml.CODIGO_USUARIO
-          , ml.QTDE_PERDAS
-          , ml.NUMERO_DOCUMENTO
-          , ml.CODIGO_DEPOSITO
-          , ml.CODIGO_FAMILIA
-          , ml.CODIGO_INTERVALO
-          , ml.EXECUTA_TRIGGER
-          , CURRENT_DATE -- ml.DATA_INSERCAO
-          , NULL -- ml.PROCESSO_SYSTEXTIL
-          , ml.NUMERO_VOLUME
-          , 0 -- ml.NR_OPERADORES
-          , ml.ATZ_PODE_PRODUZIR
-          , ml.ATZ_EM_PROD
-          , ml.ATZ_A_PROD
-          , ml.EFICIENCIA_INFORMADA
-          , NULL -- ml.USUARIO_SYSTEXTIL
-          , ml.CODIGO_OCORRENCIA
-          , ml.COD_OCORRENCIA_ESTORNO
-          , ml.SOLICITACAO_CONSERTO
-          , ml.NUMERO_SOLICITACAO
-          , ml.NUMERO_ORDEM
-          , ml.MINUTOS_PECA
-          , ml.NR_OPERADORES_INFORMADO
-          , ml.EFICIENCIA
-          FROM PCPC_045 ml
-          WHERE 1=1
-            AND ml.PCPC040_PERCONF = {lote[:4]}
-            AND ml.PCPC040_ORDCONF = {lote[4:]}
-            AND ml.PCPC040_ESTCONF = {estagio_modelo}
-          ORDER BY 
-            ml.SEQUENCIA DESC
-        )
-        SELECT 
-          *
-        FROM movimentos_estagio
-        WHERE rownum = 1
+        SELECT
+          ml.PCPC040_PERCONF
+        , ml.PCPC040_ORDCONF
+        , {estagio} -- ml.PCPC040_ESTCONF
+        , {nova_sequencia} -- ml.SEQUENCIA
+        , CURRENT_DATE ml.DATA_PRODUCAO
+        , CURRENT_DATE ml.HORA_PRODUCAO
+        , {qtd} -- ml.QTDE_PRODUZIDA
+        , ml.QTDE_PECAS_2A
+        , ml.QTDE_CONSERTO
+        , 1 -- ml.TURNO_PRODUCAO
+        , 0 -- ml.TIPO_ENTRADA_ORD
+        , ml.NOTA_ENTR_ORDEM
+        , NULL -- ml.SERIE_NF_ENT_ORD # será sobreposto por trigger
+        , ml.SEQ_NF_ENTR_ORD
+        , ml.ORDEM_PRODUCAO
+        , 1 -- ml.CODIGO_USUARIO # DUOMO
+        , ml.QTDE_PERDAS
+        , ml.NUMERO_DOCUMENTO
+        , ml.CODIGO_DEPOSITO
+        , ml.CODIGO_FAMILIA
+        , ml.CODIGO_INTERVALO
+        , ml.EXECUTA_TRIGGER
+        , CURRENT_DATE -- ml.DATA_INSERCAO
+        , NULL -- ml.PROCESSO_SYSTEXTIL # será sobreposto por trigger
+        , ml.NUMERO_VOLUME
+        , 0 -- ml.NR_OPERADORES
+        , ml.ATZ_PODE_PRODUZIR
+        , ml.ATZ_EM_PROD
+        , ml.ATZ_A_PROD
+        , ml.EFICIENCIA_INFORMADA
+        , NULL -- ml.USUARIO_SYSTEXTIL # será sobreposto por trigger
+        , ml.CODIGO_OCORRENCIA
+        , ml.COD_OCORRENCIA_ESTORNO
+        , ml.SOLICITACAO_CONSERTO
+        , ml.NUMERO_SOLICITACAO
+        , ml.NUMERO_ORDEM
+        , ml.MINUTOS_PECA
+        , ml.NR_OPERADORES_INFORMADO
+        , ml.EFICIENCIA
+        FROM PCPC_045 ml
+        WHERE 1=1
+        AND ml.PCPC040_PERCONF = {lote[:4]}
+        AND ml.PCPC040_ORDCONF = {lote[4:]}
+        AND ml.PCPC040_ESTCONF = {estagio_modelo}
+        AND ml.SEQUENCIA = {sequencia_modelo}
     """)
     debug_cursor_execute(cursor, sql)
 
