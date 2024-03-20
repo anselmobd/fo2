@@ -37,7 +37,10 @@ class Lote(View):
             headers = ['Posição', 'Quantidade', 'Estágio']
             fields = ['TIPO', 'QTD', 'ESTAGIO']
             has_acao = False
-            if self.request.user.is_authenticated:
+            if (
+                self.request.user.is_authenticated and
+                has_permission(self.request, 'lotes.pode_produzir_lote')
+            ):
                 for row in data:
                     if row['TIPO'] == 'A PRODUZIR':
                         has_acao = True
