@@ -13,7 +13,11 @@ def posicao_historico(cursor, periodo, ordem_confeccao):
         , h.QTDE_PECAS_2A Q_P2
         , h.QTDE_CONSERTO Q_C
         , h.QTDE_PERDAS Q_P
-        , coalesce(u.USUARIO, ' ') USU
+        -- , coalesce(u.USUARIO, ' ') USU
+        , CASE WHEN h.USUARIO_SYSTEXTIL LIKE '%:%'
+          THEN SUBSTR(h.USUARIO_SYSTEXTIL, 0, INSTR(h.USUARIO_SYSTEXTIL, ':')-1)
+          ELSE coalesce(u.USUARIO, ' ')
+          END USU
         , CASE WHEN h.USUARIO_SYSTEXTIL LIKE '%:%'
           THEN SUBSTR(h.USUARIO_SYSTEXTIL, INSTR(h.USUARIO_SYSTEXTIL, ':') + 1)
           ELSE h.PROCESSO_SYSTEXTIL
