@@ -7,8 +7,7 @@ from utils.functions.strings import lms
 import lotes.queries.lote.lote_estagios
 
 
-def insere(cursor, lote, estagio, qtd, estagio_modelo, sequencia_modelo):
-    nova_sequencia = (sequencia_modelo + 1) if estagio == estagio_modelo else 1
+def insere(cursor, lote, estagio, qtd, estagio_modelo, sequencia_modelo, sequencia_nova):
     sql = lms(f"""\
         INSERT INTO SYSTEXTIL.PCPC_045
         ( PCPC040_PERCONF, PCPC040_ORDCONF, PCPC040_ESTCONF, SEQUENCIA
@@ -26,7 +25,7 @@ def insere(cursor, lote, estagio, qtd, estagio_modelo, sequencia_modelo):
           ml.PCPC040_PERCONF
         , ml.PCPC040_ORDCONF
         , {estagio} -- ml.PCPC040_ESTCONF
-        , {nova_sequencia} -- ml.SEQUENCIA
+        , {sequencia_nova} -- ml.SEQUENCIA
         , CURRENT_DATE -- ml.DATA_PRODUCAO
         , CURRENT_DATE -- ml.HORA_PRODUCAO
         , {qtd} -- ml.QTDE_PRODUZIDA

@@ -58,6 +58,7 @@ class ProduzLote(View):
     def insere_movimentacao(self):
         estagio_modelo = self.movimentacoes[-1]['pcpc040_estconf']
         sequencia_modelo = self.movimentacoes[-1]['sequencia']
+        self.sequencia_nova = (sequencia_modelo + 1) if self.estagio == estagio_modelo else 1
         try:
             movimentacao_de_lote.insere(
                 cursor=self.cursor,
@@ -66,6 +67,7 @@ class ProduzLote(View):
                 qtd=self.qtd,
                 estagio_modelo=estagio_modelo,
                 sequencia_modelo=sequencia_modelo,
+                sequencia_nova=self.sequencia_nova,
             )
         except Exception as e:
             return f"Erro ao inserir movimentação de lote: {e}"
