@@ -72,39 +72,6 @@ def insere(cursor, lote, estagio, qtd, estagio_modelo, sequencia_modelo):
     debug_cursor_execute(cursor, sql)
 
 
-def get_movimentacoes_ate_estagio(cursor, lote, estagio):
-    print("get_movimentacoes_ate_estagio")
-    estagios = lotes.queries.lote.lote_estagios.get_estagios(
-        cursor, lote, ['COD_EST', 'Q_AP'], cod_est_fn=str)
-    pprint(estagios)
-    idx_estagio = estagios.index(estagio)
-    if idx_estagio == -1:
-        return []
-
-    in_estagios = ", ".join([
-        f"'{estagio}'"
-        for estagio in estagios[:idx_estagio+1]
-    ])
-
-    sql = lms(f"""\
-        SELECT
-          ml.*
-        FROM PCPC_045 ml
-        JOIN PCPC_040 l
-          ON l.PERIODO_PRODUCAO = ml.PCPC040_PERCONF 
-         AND l.ORDEM_CONFECCAO = ml.PCPC040_ORDCONF 
-         AND l.CODIGO_ESTAGIO = ml.PCPC040_ESTCONF
-        WHERE ml.PCPC040_PERCONF = {lote[:4]}
-          AND ml.PCPC040_ORDCONF = {lote[4:]}
-          AND ml.PCPC040_ESTCONF IN ({in_estagios})
-        ORDER BY 
-          l.SEQUENCIA_ESTAGIO
-        , ml.SEQUENCIA
-    """)
-    debug_cursor_execute(cursor, sql)
-    return dictlist_lower(cursor)
-
-
 def get_movimentacoes_estagios(cursor, lote, estagios):
     print("get_movimentacoes_ate_estagios")
     
