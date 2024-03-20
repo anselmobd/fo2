@@ -37,4 +37,7 @@ class LotesPermissions(models.Model):
             (   "informa_nf_envio_matriz_filial",
                 "Informa NF de envio Matriz->Filial"
             ),
+            (   "pode_produzir_lote",
+                "Pode Produzir Lote"
+            ),
         )
