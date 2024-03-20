@@ -16,7 +16,7 @@ class ProduzLote(View):
 
     def verifica_estagios(self):
         self.estagios = lote_estagios.get_estagios(
-            self.cursor, self.lote, ['COD_EST', 'Q_AP', 'SEQ_EST'], cod_est_fn=str)
+            self.cursor, self.lote, ['COD_EST', 'Q_AP', 'SEQ_EST'])
         pprint(self.estagios)
         if not self.estagios:
             return "Lote não encontrado"
@@ -89,7 +89,7 @@ class ProduzLote(View):
     def inicializa_variaveis(self, request, kwargs):
         self.cursor = db_cursor_so(request)
         self.lote=kwargs['lote']
-        self.estagio=kwargs['estagio']
+        self.estagio=int(kwargs['estagio'])
         self.qtd=int(kwargs['qtd'])
 
     def get(self, request, *args, **kwargs):
