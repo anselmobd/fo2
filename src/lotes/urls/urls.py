@@ -201,9 +201,13 @@ urlpatterns = [
         prepara_pedido_compra_matriz.PreparaPedidoCompraMatriz.as_view(),
         name='prepara_pedido_compra_matriz'),
 
-    re_path(r'^ajax/produz_lote/(?P<lote>[^/]+)/(?P<estagio>[^/]+)/(?P<qtd>[^/]+)(/(?P<programa>[^/]+))?/$',
+    re_path(r'^ajax/produz_lote/(?P<lote>[^/]+)/(?P<estagio>[^/]+)/(?P<qtd>[^/]+)/$',
         ProduzLote.as_view(),
         name='produz_lote'),
+
+    re_path(r'^ajax/produz_lote/(?P<lote>[^/]+)/(?P<estagio>[^/]+)/(?P<qtd>[^/]+)/(?P<programa>[^/]+)/$',
+        ProduzLote.as_view(),
+        name='produz_lote_programa'),
 
     re_path(r'^totais_estagio/$',
         views.analise.TotalEstagio.as_view(), name='totais_estagio'),
