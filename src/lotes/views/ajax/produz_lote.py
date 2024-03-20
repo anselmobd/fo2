@@ -5,6 +5,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from geral.functions import has_permission
 from utils.classes import LoggedInUser
 
 from lotes.queries.lote import movimentacao_de_lote
@@ -20,6 +21,8 @@ class ProduzLote(View):
         self.logged_in = LoggedInUser()
         if not self.logged_in.has_user:
             return "É necessário estar logado"
+        if not has_permission(self.request, 'lotes.pode_produzir_lote'):
+            return "É necessário ter permissão para utilizar esta rotina"
 
     def verifica_estagios(self):
         self.estagios = lote_estagios.get_estagios(
