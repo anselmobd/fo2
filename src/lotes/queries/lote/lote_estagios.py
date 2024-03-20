@@ -3,14 +3,13 @@ from pprint import pprint
 import lotes.queries
 
 
-def get_estagios(cursor, lote):
-    dados = lotes.queries.lote.posicao_so_estagios(cursor, lote[:4], lote[4:])
+def get_estagios(cursor, lote, colunas, cod_est_fn=None):
+    dados = lotes.queries.lote.posicao_so_estagios(cursor, lote=lote)
+    cod_est_fn = cod_est_fn if cod_est_fn else lambda x: x
     return [
-      row['COD_EST']
-      for row in dados
+        {
+            col: cod_est_fn(row[col]) if col == 'COD_EST' else row[col]
+            for col in colunas
+        }
+        for row in dados
     ]
-
-
-def get_estagios_str(cursor, lote):
-    estagios = get_estagios(cursor, lote)
-    return list(map(str, estagios))
