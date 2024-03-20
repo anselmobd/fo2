@@ -59,6 +59,7 @@ class ProduzLote(View):
                 estagio=self.estagio,
                 qtd=self.qtd,
                 estagio_modelo=self.movimentacoes[-1]['pcpc040_estconf'],
+                sequencia_modelo=self.movimentacoes[-1]['sequencia'],
             )
         except Exception as e:
             return f"Erro ao inserir movimentação de lote: {e}"
