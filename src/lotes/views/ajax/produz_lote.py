@@ -72,11 +72,23 @@ class ProduzLote(View):
         except Exception as e:
             return f"Erro ao inserir movimentação de lote: {e}"
 
+    def corrige_usuario(self):
+        try:
+            movimentacao_de_lote.corrige_usuario(
+                cursor=self.cursor,
+                lote=self.lote,
+                estagio=self.estagio,
+                sequencia=self.sequencia_nova,
+            )
+        except Exception as e:
+            return f"Erro ao corrigir o campo usuário: {e}"
+
     def process(self):
         for passo in [
             self.verifica_estagios,
             self.get_movimentacoes,
             self.insere_movimentacao,
+            self.corrige_usuario,
         ]:
             result_error = passo()
             if result_error:
