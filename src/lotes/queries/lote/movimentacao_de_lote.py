@@ -98,11 +98,11 @@ def get_movimentacoes_estagios(cursor, lote, estagios):
     return dictlist_lower(cursor)
 
 
-def corrige_usuario(cursor, lote, estagio, sequencia):
+def corrige_usuario(cursor, lote, estagio, sequencia, usuario):
     sql = lms(f"""\
         UPDATE PCPC_045 ml
         SET
-          ml.USUARIO_SYSTEXTIL = 'DUOMO:lotes.produz_lote'
+          ml.USUARIO_SYSTEXTIL = '{usuario}:apoio.produz_lote'
         WHERE 1=1
           AND ml.PCPC040_PERCONF = {lote[:4]}
           AND ml.PCPC040_ORDCONF = {lote[4:]}

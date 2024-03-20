@@ -86,6 +86,7 @@ class ProduzLote(View):
                 lote=self.lote,
                 estagio=self.estagio,
                 sequencia=self.sequencia_nova,
+                usuario=self.logged_in.user,
             )
         except Exception as e:
             return f"Erro ao corrigir o campo usuário: {e}"
