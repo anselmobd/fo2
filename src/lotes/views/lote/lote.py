@@ -42,6 +42,7 @@ class Lote(View):
                     if row['TIPO'] == 'A PRODUZIR':
                         has_acao = True
                         row['PRODUZ'] = f"produzir {row['QTD']}"
+                        row['PRODUZ|CLASS'] = 'produzir_ajax'
                         row['PRODUZ|TARGET'] = 'BLANK'
                         row['PRODUZ|A'] = reverse(
                             'producao:produz_lote_programa',

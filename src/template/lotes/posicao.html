@@ -95,7 +95,59 @@
 
 {% block javascript %}
 <script>
+
+  function prepareProduzirAjax() {
+    var cells = document.getElementsByClassName("produzir_ajax");
+    var i;
+    for (i = cells.length - 1; i >= 0 ; i--) {
+      var link = cells[i].querySelector('a');
+      if (link) {
+          console.log(link.href);
+          link.onclick = processProduzirAjax;
+      } else {
+          console.log("No link found inside cell" + cell);
+      }
+    }
+  }
+
+  function processProduzirAjax(event) {
+    console.log('processProduzirAjax');
+    console.log(event);
+    var clickedLink = event.target;
+    console.log(clickedLink);
+    console.log(clickedLink.href);
+    var url=clickedLink.href;
+      $.ajax({
+        type: 'GET',
+        url: url,
+        data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success : function(data) {
+          if (data) {
+            console.log(data);
+            if (data['status'] == 'OK') {
+              console.log('reload');
+              // window.location.href = window.location.href + "?nocache=" + new Date().getTime();
+              if (window.location.href.endsWith("{{lote}}/")) {
+                window.location.reload();
+              } else {
+                window.location.href = window.location.href + "{{lote}}";
+              }
+            }
+          } else {
+            console.log('Sem retorno de link');
+          }
+        },  // success
+        error : function(data) {
+          console.log('Erro na requisição');
+        }  // error
+      });  // ajax
+    return false;
+  }
+
   var inp = document.getElementById('id_lote');
   inp.select();
+
+  prepareProduzirAjax();
+
 </script>
 {% endblock javascript %}
