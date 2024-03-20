@@ -69,17 +69,14 @@ class ProduzLote(View):
             return f"Erro ao inserir movimentação de lote: {e}"
 
     def process(self):
-        result_error = self.verifica_estagios()
-        if result_error:
-            return (self.ERROR_STATUS, result_error)
-
-        result_error = self.get_movimentacoes()
-        if result_error:
-            return (self.ERROR_STATUS, result_error)
-
-        result_error = self.insere_movimentacao()
-        if result_error:
-            return (self.ERROR_STATUS, result_error)
+        for passo in [
+            self.verifica_estagios,
+            self.get_movimentacoes,
+            self.insere_movimentacao,
+        ]:
+            result_error = passo()
+            if result_error:
+                return (self.ERROR_STATUS, result_error)
 
         return (self.OK_STATUS, "OK!")
             
