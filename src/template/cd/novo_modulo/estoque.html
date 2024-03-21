@@ -70,36 +70,153 @@
   <script type="text/javascript">
     {% include "layout/paginator_javascript.js" with form='myForm' field='page' only %}
 
-    var select_sum = document.querySelector("#select_sum");
-    var select_values = document.querySelectorAll(".select_value");
-    select_values.forEach((select_value) => {
-      select_value.addEventListener(
-        "click",
-        function (event) {
-          let el = event.target;
-          let el_parent = el.parentNode;
-          let el_marks = el_parent.querySelectorAll(".select_mark")
-          if (el.innerHTML.startsWith("+")) {
-            el.innerHTML = el.innerHTML.slice(1);
-            el_parent.style = "font-weight: normal;";
-            el_marks.forEach((el)=>{
-              el.innerHTML = el.innerHTML.slice(1, -1);
-            })
-            select_sum.innerHTML = parseInt(select_sum.innerHTML) - parseInt(el.innerHTML);
-          } else {
-            select_sum.innerHTML = parseInt("0" + select_sum.innerHTML) + parseInt(el.innerHTML);
-            el.innerHTML = "+" + el.innerHTML;
-            el_parent.style = "font-weight: bold;";
-            el_marks.forEach((el)=>{
-              el.innerHTML = "{" + el.innerHTML + "}";
-            }) 
-          }
-          if (select_sum.innerHTML == '0') {
-            select_sum.innerHTML = "";
-          }
-        }
-      );
-    });
+    function prepara_tudo() {
 
-</script>
+      var select_sum = document.querySelector("#select_sum");
+      var select_values = document.querySelectorAll(".select_value");
+      select_values.forEach((select_value) => {
+        select_value.addEventListener(
+          "click",
+          function (event) {
+            let el = event.target;
+            let el_parent = el.parentNode;
+            let el_marks = el_parent.querySelectorAll(".select_mark")
+            if (el.innerHTML.startsWith("+")) {
+              el.innerHTML = el.innerHTML.slice(1);
+              el_parent.style = "font-weight: normal;";
+              el_marks.forEach((el)=>{
+                el.innerHTML = el.innerHTML.slice(1, -1);
+              })
+              select_sum.innerHTML = parseInt(select_sum.innerHTML) - parseInt(el.innerHTML);
+            } else {
+              select_sum.innerHTML = parseInt("0" + select_sum.innerHTML) + parseInt(el.innerHTML);
+              el.innerHTML = "+" + el.innerHTML;
+              el_parent.style = "font-weight: bold;";
+              el_marks.forEach((el)=>{
+                el.innerHTML = "{" + el.innerHTML + "}";
+              }) 
+            }
+            if (select_sum.innerHTML == '0') {
+              select_sum.innerHTML = "";
+            }
+          }
+        );
+      }); // select_values.forEach((select_value)
+
+      var tpl_link_produz = "{{tpl_link_produz}}";
+      var liga_produz = document.querySelector(".liga_produz");
+      console.log(liga_produz);
+      liga_produz.addEventListener(
+        "dblclick",
+        function (event) {
+          if (event.ctrlKey) {
+            console.log('liga_produz click');
+            console.log(event.target);
+            var quantidades = document.querySelectorAll(".qtd_produz");
+            quantidades.forEach((quantidade) => {
+              console.log(quantidade);
+              let tr = quantidade.parentNode;
+              console.log(tr);
+
+              // lote
+              let lote_el = tr.querySelector(".lote_produz");
+              console.log(lote_el);
+              let lote_a = lote_el.querySelector("a");
+              console.log(lote_a);
+              let lote_num = lote_a.innerHTML.trim();
+
+              // estagio
+              let estagio_el = tr.querySelector(".estagio_produz");
+              console.log(estagio_el);
+              let estagio_num = estagio_el.innerHTML;
+
+              // URL
+              let qtd_num = quantidade.innerHTML;
+              let link_url = tpl_link_produz.replace("777777777", qtd_num);
+              link_url = link_url.replace("888888888", estagio_num);
+              link_url = link_url.replace("999999999", lote_num);
+
+              // link
+              let qtd_link = createLinkBlank(qtd_num, link_url);
+              quantidade.innerHTML = '';
+              quantidade.appendChild(qtd_link);
+            }) // quantidades.forEach
+            prepareProduzirAjax();
+          } // if (event.ctrlKey)
+        } // function (event)
+      ) // liga_produz.addEventListener
+    } // function prepara_tudo()
+
+    function createLinkBlank(text, url) {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.textContent = text;
+      return link;
+    }
+
+    function confirmWithEnter() {
+      const confirmationMessage = "Pressione Enter para confirmar ou Escape para cancelar";
+      return window.confirm(confirmationMessage);
+    }
+
+    function prepareProduzirAjax() {
+      console.log('prepareProduzirAjax');
+      var cells = document.getElementsByClassName("qtd_produz");
+      var i;
+      for (i = cells.length - 1; i >= 0 ; i--) {
+        console.log(cells[i]);
+        var link = cells[i].querySelector('a');
+        console.log(link)
+        if (link) {
+            console.log(link.href);
+            link.onclick = processProduzirAjax;
+        } else {
+            console.log("No link found inside cell" + cell);
+        }
+        console.log(link)
+      }
+    }
+
+    function processProduzirAjax(event) {
+      console.log('processProduzirAjax');
+      console.log(event);
+      var clickedLink = event.target;
+      console.log(clickedLink);
+      console.log(clickedLink.href);
+      var url=clickedLink.href;
+      if (confirmWithEnter()) {
+        console.log('Confirmou');
+        $.ajax({
+          type: 'GET',
+          url: url,
+          data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+          success : function(data) {
+            if (data) {
+              console.log(data);
+              if (data['status'] == 'OK') {
+                console.log('status OK');
+                clickedLink.insertAdjacentText('afterend', clickedLink.innerHTML);
+                let linkParent = clickedLink.parentNode;
+                linkParent.removeChild(clickedLink);
+              } else {
+                alert('Erro: ' + data['message']);
+              }
+            } else {
+              console.log('Sem retorno de link');
+            }
+          },  // success
+          error : function(data) {
+            console.log('Erro na requisição');
+          }  // error
+        });  // ajax
+      } else {
+        console.log('Cancelou ');
+      }
+      return false;
+    }
+
+    prepara_tudo();
+
+  </script>
 {% endblock %}

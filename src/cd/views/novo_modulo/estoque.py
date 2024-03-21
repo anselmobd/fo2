@@ -1,6 +1,8 @@
 import operator
 from pprint import pprint
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
@@ -33,7 +35,7 @@ class NovoEstoque(O2BaseGetPostView):
                 'tam': ['Tam.'],
                 'op': ['OP'],
                 'qtd_prog qtd_lote': ['Tam.Lote', 'r'],
-                'qtd_dbaixa': ['Qtd.Est.', 'r'],
+                'qtd_dbaixa': [('<span class="liga_produz">*Qtd.Est.</span>', ), 'r'],
                 'estagio': ['Estágio', 'c'],
                 'solicitacoes': ['Solicitações', 'c'],
                 'sol_fin': ['Solicit.Fin.', 'c'],
@@ -88,6 +90,9 @@ class NovoEstoque(O2BaseGetPostView):
             row['qtd_dbaixa'] = row['qtd']
             row['tot_emp'] = row['qtd_emp'] + row['qtd_sol']
             row['qtd_disp'] = row['qtd_dbaixa'] - row['tot_emp']
+            row['qtd_dbaixa|CLASS'] = 'qtd_produz'
+            row['lote|CLASS'] = ['lote_produz']
+            row['estagio|CLASS'] = ['estagio_produz']
         PrepRows(
             dados,
         ).date_dash(
@@ -112,7 +117,7 @@ class NovoEstoque(O2BaseGetPostView):
 
         for row in self.lotes:
             row['qtd_sol|CLASS'] = 'select_value'
-            row['lote|CLASS'] = 'select_mark'
+            row['lote|CLASS'].append('select_mark')
             row['endereco|CLASS'] = 'select_mark'
             row['solicitacoes|CLASS'] = 'select_mark'
         len_lotes = len(self.lotes)
@@ -176,6 +181,15 @@ class NovoEstoque(O2BaseGetPostView):
             ],
             'data': self.lotes,
             'len_lotes': len_lotes,
+            'tpl_link_produz': reverse(
+                'producao:produz_lote_programa',
+                args=[
+                    '999999999',
+                    '888888888',
+                    '777777777',
+                    'estoque',
+                ]
+            ),
         })
 
     def mount_estoque(self):
