@@ -120,6 +120,7 @@ class ProduzLote(View):
 
     def inicializa_variaveis(self, request, kwargs):
         self.cursor = db_cursor_so(request)
+        self.request = request
         self.lote = kwargs['lote']
         self.estagio = int(kwargs['estagio'])
         self.qtd = int(kwargs['qtd'])
