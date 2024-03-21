@@ -70,6 +70,9 @@
   <script type="text/javascript">
     {% include "layout/paginator_javascript.js" with form='myForm' field='page' only %}
 
+    var confirma_producao = true;
+    var gerar_links = true;
+
     function prepara_tudo() {
 
       var select_sum = document.querySelector("#select_sum");
@@ -110,38 +113,56 @@
         "dblclick",
         function (event) {
           if (event.ctrlKey) {
-            console.log('liga_produz click');
-            console.log(event.target);
-            var quantidades = document.querySelectorAll(".qtd_produz");
-            quantidades.forEach((quantidade) => {
-              console.log(quantidade);
-              let tr = quantidade.parentNode;
-              console.log(tr);
+            if (gerar_links) {
+              gerar_links = false;
+              console.log('liga_produz click');
+              console.log(event.target);
+              var quantidades = document.querySelectorAll(".qtd_produz");
+              quantidades.forEach((quantidade) => {
+                console.log(quantidade);
+                let tr = quantidade.parentNode;
+                console.log(tr);
 
-              // lote
-              let lote_el = tr.querySelector(".lote_produz");
-              console.log(lote_el);
-              let lote_a = lote_el.querySelector("a");
-              console.log(lote_a);
-              let lote_num = lote_a.innerHTML.trim();
+                // lote
+                let lote_el = tr.querySelector(".lote_produz");
+                console.log(lote_el);
+                let lote_a = lote_el.querySelector("a");
+                console.log(lote_a);
+                let lote_num = lote_a.innerHTML.trim();
 
-              // estagio
-              let estagio_el = tr.querySelector(".estagio_produz");
-              console.log(estagio_el);
-              let estagio_num = estagio_el.innerHTML;
+                // estagio
+                let estagio_el = tr.querySelector(".estagio_produz");
+                console.log(estagio_el);
+                let estagio_num = estagio_el.innerHTML;
 
-              // URL
-              let qtd_num = quantidade.innerHTML;
-              let link_url = tpl_link_produz.replace("777777777", qtd_num);
-              link_url = link_url.replace("888888888", estagio_num);
-              link_url = link_url.replace("999999999", lote_num);
+                // URL
+                let qtd_num = quantidade.innerHTML;
+                let link_url = tpl_link_produz.replace("777777777", qtd_num);
+                link_url = link_url.replace("888888888", estagio_num);
+                link_url = link_url.replace("999999999", lote_num);
 
-              // link
-              let qtd_link = createLinkBlank(qtd_num, link_url);
-              quantidade.innerHTML = '';
-              quantidade.appendChild(qtd_link);
-            }) // quantidades.forEach
-            prepareProduzirAjax();
+                // link
+                let qtd_link = createLinkBlank(qtd_num, link_url);
+                qtd_link.className = 'qtd_link';
+                quantidade.innerHTML = '';
+                quantidade.appendChild(qtd_link);
+              }) // quantidades.forEach
+              prepareProduzirAjax();
+            } // if (gerar_links)
+            else { // if not gerar_links - Links já estão gerados
+              if (confirmWithEnter()) {
+                try {
+                  confirma_producao = false;
+                  var qtd_links = document.querySelectorAll(".qtd_link");
+                  qtd_links.forEach((qtd_link) => {
+                    console.log(qtd_link);
+                    qtd_link.click();
+                  })
+                } finally {
+                  confirma_producao = true;
+                }            
+              }
+            } // if not gerar_links
           } // if (event.ctrlKey)
         } // function (event)
       ) // liga_produz.addEventListener
@@ -185,7 +206,11 @@
       console.log(clickedLink);
       console.log(clickedLink.href);
       var url=clickedLink.href;
-      if (confirmWithEnter()) {
+      let foi_confirmado = true;
+      if (confirma_producao) {
+        foi_confirmado = confirmWithEnter();
+      }
+      if (foi_confirmado) {
         console.log('Confirmou');
         $.ajax({
           type: 'GET',
