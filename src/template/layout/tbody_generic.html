@@ -21,7 +21,15 @@
     {% if not group or field not in group or row|get_item:'rowspan' != 0 %}
       {% with field|add:'|CLASS' as field_class %}
         {% if row|get_item:field_class %}
-          class="{{ row|get_item:field_class }}"
+          {% if row|get_item:field_class|get_type == 'list' %}
+            class="
+              {% for classe in row|get_item:field_class %}
+                {{classe}}
+              {% endfor%}
+            "
+            {% else %}
+            class="{{ row|get_item:field_class }}"
+          {% endif %}
         {% endif %}
       {% endwith %}
       {% with field|add:'|ID' as field_id %}
