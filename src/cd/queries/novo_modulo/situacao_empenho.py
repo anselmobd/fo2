@@ -95,7 +95,7 @@ def exec(
         AND sl.SOLICITACAO = {solicitacao}
     """
 
-    sql = f"""--
+    sql = """--
         SELECT
           -- PK fields
           sl.ORDEM_PRODUCAO
@@ -110,7 +110,7 @@ def exec(
         , sl.COR_DESTINO
     """
     if consulta:
-        sql += f"""--
+        sql += """--
             -- other fields
             , sl.SOLICITACAO
             , sl.SITUACAO
