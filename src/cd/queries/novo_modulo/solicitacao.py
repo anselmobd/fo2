@@ -1,5 +1,4 @@
 from pprint import pprint
-from typing import Iterable
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
@@ -63,8 +62,8 @@ def get_solicitacao(
         if not isinstance(lote, (tuple, list)):
             lote = [lote]
         cada_lote = [
-            f"((l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO = {l})\n"
-            for l in lote
+            f"((l.PERIODO_PRODUCAO * 100000) + sl.ORDEM_CONFECCAO = {cada_lote})\n"
+            for cada_lote in lote
         ]
         filtra_lote = " OR ".join(cada_lote)
         filtra_lote = f" AND ( {filtra_lote} )"
@@ -81,14 +80,14 @@ def get_solicitacao(
         filtra_situacao = f" AND ( {filtra_situacao} )"
 
     if order == 'sit_oc':
-        order_by = f"""--
+        order_by = """--
               sl.SITUACAO
             , lest.CODIGO_ESTAGIO
             , sl.ORDEM_PRODUCAO
             , sl.ORDEM_CONFECCAO
         """
     elif order == 'rota_end':
-        order_by = f"""--
+        order_by = """--
               COALESCE(e.ROTA, '-')
             , COALESCE(ec.COD_ENDERECO, '-')
             , sl.ORDEM_PRODUCAO
