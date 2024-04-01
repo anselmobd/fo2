@@ -3,7 +3,7 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
-from utils.functions.strings import lm
+from utils.functions.strings import dedent
 
 from beneficia.queries import ob_destinos
 
@@ -76,7 +76,7 @@ def query(
     #    da OB
     # 4: filtra por periodo de data de pendência e por estágio pendente
     # 5: busca outros dados da OB para apresentação na tela
-    sql = lm(f'''
+    sql = dedent(f'''
         WITH
           ob_min_seq_null AS
         (

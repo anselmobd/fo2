@@ -4,7 +4,7 @@ from pprint import pprint
 from utils.functions.dict import dict_get_none
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
-from utils.functions.strings import lms
+from utils.functions.strings import dedent_strip
 
 __all__ = ['query']
 
@@ -30,11 +30,11 @@ def query(
     pedido=None,
 ):
 
-    filtra_pedido = lms(f"""\
+    filtra_pedido = dedent_strip(f"""
         AND op.PEDIDO_VENDA = '{pedido}'
     """) if pedido else ''
 
-    sql = lms(f"""\
+    sql = dedent_strip(f"""
         SELECT 
           op.ORDEM_PRODUCAO OP
         , op.DATA_PROGRAMACAO DT_EMIT

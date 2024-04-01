@@ -2,30 +2,30 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
-from utils.functions.strings import lm
+from utils.functions.strings import dedent
 
 
 __all__ = ['por_celula_query']
 
 
 def por_celula_query(cursor, dada_de=None, dada_ate=None, celula=None, estagio=None):
-    filtro_dada_de = lm(
+    filtro_dada_de = dedent(
         f"AND ml.DATA_PRODUCAO >= DATE '{dada_de}'"
     ) if dada_de else ''
 
-    filtro_dada_ate = lm(
+    filtro_dada_ate = dedent(
         f"AND ml.DATA_PRODUCAO <= DATE '{dada_ate}'"
     ) if dada_ate else ''
 
-    filtro_celula = lm(
+    filtro_celula = dedent(
         f"AND l.CODIGO_FAMILIA = '{celula}'"
     ) if celula else ''
 
-    filtro_estagio = lm(
+    filtro_estagio = dedent(
         f"AND l.CODIGO_ESTAGIO = '{estagio}'"
     ) if estagio else ''
 
-    sql = lm(f'''
+    sql = dedent(f'''
         WITH mlseq AS
         ( SELECT 
             ml.PCPC040_PERCONF per

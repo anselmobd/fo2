@@ -2,13 +2,13 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist
 from utils.functions.queries import debug_cursor_execute
-from utils.functions.strings import lms
+from utils.functions.strings import dedent_strip
 
 
 def posicao_so_estagios(cursor, periodo=None, ordem_confeccao=None, lote=None):
     periodo = periodo if lote is None else lote[:4]
     ordem_confeccao = ordem_confeccao if lote is None else lote[4:]
-    sql = lms(f"""\
+    sql = dedent_strip(f"""
         SELECT
           l.CODIGO_ESTAGIO COD_EST
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST

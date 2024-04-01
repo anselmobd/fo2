@@ -162,9 +162,8 @@ def clean_split_digits_alphas(text):
     return parts
 
 
-def lm(string):
-    """Left Margin
-    Desidenta string de acordo com a identação da primeira linha.
+def dedent(string):
+    """Retira espaços vazios à esquerda
     Exemplo de uso:
     sql = textwrap.dedent('''\
         select
@@ -179,8 +178,8 @@ def lm(string):
     return textwrap.dedent(string)
 
 
-def lms(string):
-    return lm(string).strip("\n")
+def dedent_strip(string):
+    return dedent(string).strip("\n")
 
 
 def min_max_string(min, max, process_input=noneifempty, msg_format="{}", mm='min_max'):

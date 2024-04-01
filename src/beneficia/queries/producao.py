@@ -6,7 +6,7 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
-from utils.functions.strings import lm
+from utils.functions.strings import dedent_strip
 
 from beneficia.queries import ob_destinos
 
@@ -75,7 +75,7 @@ def query(
         filtra_tipo = ''
 
 
-    sql = lm(f'''
+    sql = dedent_strip(f'''
         SELECT DISTINCT
           bt.ORDEM_PRODUCAO OB
         , bt.SEQ_ESTAGIO SEQ_EST

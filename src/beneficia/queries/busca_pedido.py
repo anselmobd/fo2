@@ -2,7 +2,7 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
-from utils.functions.strings import lms
+from utils.functions.strings import dedent_strip
 
 __all__ = ['query']
 
@@ -16,23 +16,23 @@ def query(
     obs=None,
 ):
 
-    filtra_emissao_de = lms(f"""\
+    filtra_emissao_de = dedent_strip(f"""\
         AND ped.DATA_EMIS_VENDA >= DATE '{emissao_de}'
     """) if emissao_de else ''
 
-    filtra_emissao_ate = lms(f"""\
+    filtra_emissao_ate = dedent_strip(f"""\
         AND ped.DATA_EMIS_VENDA <= DATE '{emissao_ate}' 
     """) if emissao_ate else ''
 
     filtra_faturado = ''
     if faturado is not None:
         if faturado:
-            filtra_faturado = lms("""\
+            filtra_faturado = dedent_strip("""\
                 AND nf.NUM_NOTA_FISCAL IS NOT NULL 
                 AND nfe.DOCUMENTO IS NULL 
             """)
         else:
-            filtra_faturado = lms("""\
+            filtra_faturado = dedent_strip("""\
                 AND (
                   nf.NUM_NOTA_FISCAL IS NULL 
                   OR nfe.DOCUMENTO IS NOT NULL 
@@ -43,7 +43,7 @@ def query(
     #     AND ped.OBSERVACAO LIKE '%{obs}%' 
     # """) if obs else ''
 
-    sql = lms(f"""\
+    sql = dedent_strip(f"""\
         SELECT
           ped.PEDIDO_VENDA PEDIDO
         , ped.DATA_EMIS_VENDA DT_EMISSAO

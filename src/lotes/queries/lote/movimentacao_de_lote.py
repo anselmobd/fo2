@@ -2,13 +2,13 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
-from utils.functions.strings import lms
+from utils.functions.strings import dedent_strip
 
 import lotes.queries.lote.lote_estagios
 
 
 def insere(cursor, lote, estagio, qtd, estagio_modelo, sequencia_modelo, sequencia_nova):
-    sql = lms(f"""\
+    sql = dedent_strip(f"""
         INSERT INTO SYSTEXTIL.PCPC_045
         ( PCPC040_PERCONF, PCPC040_ORDCONF, PCPC040_ESTCONF, SEQUENCIA
         , DATA_PRODUCAO, HORA_PRODUCAO, QTDE_PRODUZIDA, QTDE_PECAS_2A
@@ -79,7 +79,7 @@ def get_movimentacoes_estagios(cursor, lote, estagios):
         for estagio in estagios
     ])
 
-    sql = lms(f"""\
+    sql = dedent_strip(f"""
         SELECT
           ml.*
         FROM PCPC_045 ml
@@ -99,7 +99,7 @@ def get_movimentacoes_estagios(cursor, lote, estagios):
 
 
 def corrige_usuario_programa(cursor, lote, estagio, sequencia, usuario, programa):
-    sql = lms(f"""\
+    sql = dedent_strip(f"""
         UPDATE PCPC_045 ml
         SET
           ml.USUARIO_SYSTEXTIL = '{usuario}:apoio.{programa}'

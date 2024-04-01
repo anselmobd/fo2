@@ -2,7 +2,10 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
-from utils.functions.strings import lm, lms
+from utils.functions.strings import (
+    dedent,
+    dedent_strip,
+)
 
 
 def finaliza(cursor, **kwargs):
@@ -48,31 +51,31 @@ def exec(
             "consulta ou altera_qtde como True nos kwargs"
         )
 
-    filtra_ordem_producao = lms(f"""
+    filtra_ordem_producao = dedent_strip(f"""
         AND sl.ORDEM_PRODUCAO = {ordem_producao}
     """) if ordem_producao else ""
 
-    filtra_ordem_confeccao = lms(f"""
+    filtra_ordem_confeccao = dedent_strip(f"""
         AND sl.ORDEM_CONFECCAO = {ordem_confeccao}
     """) if ordem_confeccao else ""
 
-    filtra_pedido_destino = lms(f"""
+    filtra_pedido_destino = dedent_strip(f"""
         AND sl.PEDIDO_DESTINO = {pedido_destino}
     """) if pedido_destino else ""
 
-    filtra_op_destino = lms(f"""
+    filtra_op_destino = dedent_strip(f"""
         AND sl.OP_DESTINO = {op_destino}
     """) if op_destino else ""
 
-    filtra_oc_destino = lms(f"""
+    filtra_oc_destino = dedent_strip(f"""
         AND sl.OC_DESTINO = {oc_destino}
     """) if oc_destino else ""
 
-    filtra_dep_destino = lms(f"""
+    filtra_dep_destino = dedent_strip(f"""
         AND sl.DEP_DESTINO = {dep_destino}
     """) if dep_destino else ""
 
-    filtra_grupo_destino = lms(f"""
+    filtra_grupo_destino = dedent_strip(f"""
         AND
           CASE WHEN sl.GRUPO_DESTINO = '00000'
           THEN l.PROCONF_GRUPO
@@ -80,23 +83,23 @@ def exec(
           END = '{grupo_destino}'
     """) if grupo_destino else ""
 
-    filtra_alter_destino = lms(f"""
+    filtra_alter_destino = dedent_strip(f"""
         AND sl.ALTER_DESTINO = {alter_destino}
     """) if alter_destino else ""
 
-    filtra_sub_destino = lms(f"""
+    filtra_sub_destino = dedent_strip(f"""
         AND sl.SUB_DESTINO = '{sub_destino}'
     """) if sub_destino else ""
 
-    filtra_cor_destino = lms(f"""
+    filtra_cor_destino = dedent_strip(f"""
         AND sl.COR_DESTINO = '{cor_destino}'
     """) if cor_destino else ""
 
-    filtra_solicitacao = lms(f"""
+    filtra_solicitacao = dedent_strip(f"""
         AND sl.SOLICITACAO = {solicitacao}
     """) if solicitacao else ""
 
-    sql = lm("""\
+    sql = dedent("""\
         SELECT
           -- PK fields
           sl.ORDEM_PRODUCAO
@@ -111,7 +114,7 @@ def exec(
         , sl.COR_DESTINO
     """)
     if consulta:
-        sql += lm("""\
+        sql += dedent("""\
               -- other fields
             , sl.SOLICITACAO
             , sl.SITUACAO
@@ -119,7 +122,7 @@ def exec(
             , sl.PERIODO_OC
             , sl.INCLUSAO
         """)
-    sql += lm(f"""\
+    sql += dedent(f"""\
         FROM pcpc_044 sl -- solicitação / lote
         -- Na tabela de solicitações aparece a OP de expedição também como
         -- reservada, com situação 4. Para tentar evitar isso, não listo
@@ -145,7 +148,7 @@ def exec(
     """)
     if finaliza or cancela:
         situacao = 5 if finaliza else 9
-        sql = lms(f"""
+        sql = dedent_strip(f"""
             UPDATE SYSTEXTIL.PCPC_044
             SET
               SITUACAO = {situacao}
@@ -168,7 +171,7 @@ def exec(
         """)
     elif altera_qtde:
         sinal_qtde = f"{qtde}" if qtde < 0 else f"+{qtde}"
-        sql = lms(f"""
+        sql = dedent_strip(f"""
             UPDATE SYSTEXTIL.PCPC_044
             SET
               QTDE = QTDE {sinal_qtde}
