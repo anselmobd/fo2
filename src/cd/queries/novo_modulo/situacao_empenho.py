@@ -47,53 +47,53 @@ def exec(
             "consulta ou altera_qtde como True nos kwargs"
         )
 
-    filtra_ordem_producao = "" if ordem_producao is None else f"""--
+    filtra_ordem_producao = f"""--
         AND sl.ORDEM_PRODUCAO = {ordem_producao}
-    """
+    """ if ordem_producao else ""
 
-    filtra_ordem_confeccao = "" if ordem_confeccao is None else f"""--
+    filtra_ordem_confeccao = f"""--
         AND sl.ORDEM_CONFECCAO = {ordem_confeccao}
-    """
+    """ if ordem_confeccao else ""
 
-    filtra_pedido_destino = "" if pedido_destino is None else f"""--
+    filtra_pedido_destino = f"""--
         AND sl.PEDIDO_DESTINO = {pedido_destino}
-    """
+    """ if pedido_destino else ""
 
-    filtra_op_destino = "" if op_destino is None else f"""--
+    filtra_op_destino = f"""--
         AND sl.OP_DESTINO = {op_destino}
-    """
+    """ if op_destino else ""
 
-    filtra_oc_destino = "" if oc_destino is None else f"""--
+    filtra_oc_destino = f"""--
         AND sl.OC_DESTINO = {oc_destino}
-    """
+    """ if oc_destino else ""
 
-    filtra_dep_destino = "" if dep_destino is None else f"""--
+    filtra_dep_destino = f"""--
         AND sl.DEP_DESTINO = {dep_destino}
-    """
+    """ if dep_destino else ""
 
-    filtra_grupo_destino = "" if grupo_destino is None else f"""--
+    filtra_grupo_destino = f"""--
         AND
           CASE WHEN sl.GRUPO_DESTINO = '00000'
           THEN l.PROCONF_GRUPO
           ELSE sl.GRUPO_DESTINO
           END = '{grupo_destino}'
-    """
+    """ if grupo_destino else ""
 
-    filtra_alter_destino = "" if alter_destino is None else f"""--
+    filtra_alter_destino = f"""--
         AND sl.ALTER_DESTINO = {alter_destino}
-    """
+    """ if alter_destino else ""
 
-    filtra_sub_destino = "" if sub_destino is None else f"""--
+    filtra_sub_destino = f"""--
         AND sl.SUB_DESTINO = '{sub_destino}'
-    """
+    """ if sub_destino else ""
 
-    filtra_cor_destino = "" if cor_destino is None else f"""--
+    filtra_cor_destino = f"""--
         AND sl.COR_DESTINO = '{cor_destino}'
-    """
+    """ if cor_destino else ""
 
-    filtra_solicitacao = "" if solicitacao is None else f"""--
+    filtra_solicitacao = f"""--
         AND sl.SOLICITACAO = {solicitacao}
-    """
+    """ if solicitacao else ""
 
     sql = """--
         SELECT
