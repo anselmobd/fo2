@@ -43,6 +43,7 @@ from cd.views.novo_modulo import (
     visao_cd,
 )
 from cd.views.api.palete.print import PaletePrint
+from cd.views.api.cancela_solicitacao import CancelSolicitacao
 
 
 app_name = 'cd'
@@ -165,6 +166,9 @@ urlpatterns = [
 
     re_path(r'^add1palete/$',
         add1palete.Add1Palete.as_view(), name='add1palete'),
+
+    re_path(r'^api/cancela_solicitacao/(?P<solicitacao>[^/]+)/$',
+        CancelSolicitacao.as_view(), name='cancela_solicitacao'),
 
     re_path(r'^api/palete_add/(?P<quant>.+)$',
         api_palete.palete_add, name='palete_add'),
