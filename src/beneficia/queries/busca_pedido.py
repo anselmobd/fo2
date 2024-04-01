@@ -27,12 +27,12 @@ def query(
     filtra_faturado = ''
     if faturado is not None:
         if faturado:
-            filtra_faturado = lms(f"""\
+            filtra_faturado = lms("""\
                 AND nf.NUM_NOTA_FISCAL IS NOT NULL 
                 AND nfe.DOCUMENTO IS NULL 
             """)
         else:
-            filtra_faturado = lms(f"""\
+            filtra_faturado = lms("""\
                 AND (
                   nf.NUM_NOTA_FISCAL IS NULL 
                   OR nfe.DOCUMENTO IS NOT NULL 
