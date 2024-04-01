@@ -2,6 +2,7 @@ from pprint import pprint
 
 from utils.functions.models.dictlist import dictlist_lower
 from utils.functions.queries import debug_cursor_execute
+from utils.functions.strings import lm, lms
 
 
 def finaliza(cursor, **kwargs):
@@ -47,55 +48,55 @@ def exec(
             "consulta ou altera_qtde como True nos kwargs"
         )
 
-    filtra_ordem_producao = f"""--
+    filtra_ordem_producao = lms(f"""
         AND sl.ORDEM_PRODUCAO = {ordem_producao}
-    """ if ordem_producao else ""
+    """) if ordem_producao else ""
 
-    filtra_ordem_confeccao = f"""--
+    filtra_ordem_confeccao = lms(f"""
         AND sl.ORDEM_CONFECCAO = {ordem_confeccao}
-    """ if ordem_confeccao else ""
+    """) if ordem_confeccao else ""
 
-    filtra_pedido_destino = f"""--
+    filtra_pedido_destino = lms(f"""
         AND sl.PEDIDO_DESTINO = {pedido_destino}
-    """ if pedido_destino else ""
+    """) if pedido_destino else ""
 
-    filtra_op_destino = f"""--
+    filtra_op_destino = lms(f"""
         AND sl.OP_DESTINO = {op_destino}
-    """ if op_destino else ""
+    """) if op_destino else ""
 
-    filtra_oc_destino = f"""--
+    filtra_oc_destino = lms(f"""
         AND sl.OC_DESTINO = {oc_destino}
-    """ if oc_destino else ""
+    """) if oc_destino else ""
 
-    filtra_dep_destino = f"""--
+    filtra_dep_destino = lms(f"""
         AND sl.DEP_DESTINO = {dep_destino}
-    """ if dep_destino else ""
+    """) if dep_destino else ""
 
-    filtra_grupo_destino = f"""--
+    filtra_grupo_destino = lms(f"""
         AND
           CASE WHEN sl.GRUPO_DESTINO = '00000'
           THEN l.PROCONF_GRUPO
           ELSE sl.GRUPO_DESTINO
           END = '{grupo_destino}'
-    """ if grupo_destino else ""
+    """) if grupo_destino else ""
 
-    filtra_alter_destino = f"""--
+    filtra_alter_destino = lms(f"""
         AND sl.ALTER_DESTINO = {alter_destino}
-    """ if alter_destino else ""
+    """) if alter_destino else ""
 
-    filtra_sub_destino = f"""--
+    filtra_sub_destino = lms(f"""
         AND sl.SUB_DESTINO = '{sub_destino}'
-    """ if sub_destino else ""
+    """) if sub_destino else ""
 
-    filtra_cor_destino = f"""--
+    filtra_cor_destino = lms(f"""
         AND sl.COR_DESTINO = '{cor_destino}'
-    """ if cor_destino else ""
+    """) if cor_destino else ""
 
-    filtra_solicitacao = f"""--
+    filtra_solicitacao = lms(f"""
         AND sl.SOLICITACAO = {solicitacao}
-    """ if solicitacao else ""
+    """) if solicitacao else ""
 
-    sql = """--
+    sql = lm("""\
         SELECT
           -- PK fields
           sl.ORDEM_PRODUCAO
@@ -108,17 +109,17 @@ def exec(
         , sl.ALTER_DESTINO
         , sl.SUB_DESTINO
         , sl.COR_DESTINO
-    """
+    """)
     if consulta:
-        sql += """--
-            -- other fields
+        sql += lm("""\
+              -- other fields
             , sl.SOLICITACAO
             , sl.SITUACAO
             , sl.QTDE
             , sl.PERIODO_OC
             , sl.INCLUSAO
-        """
-    sql += f"""--
+        """)
+    sql += lm(f"""\
         FROM pcpc_044 sl -- solicitação / lote
         -- Na tabela de solicitações aparece a OP de expedição também como
         -- reservada, com situação 4. Para tentar evitar isso, não listo
@@ -135,16 +136,16 @@ def exec(
           {filtra_pedido_destino} -- filtra_pedido_destino
           {filtra_op_destino} -- filtra_op_destino
           {filtra_oc_destino} -- filtra_oc_destino
-          {filtra_dep_destino} --filtra_dep_destino
+          {filtra_dep_destino} -- filtra_dep_destino
           {filtra_grupo_destino} -- filtra_grupo_destino
           {filtra_alter_destino} -- filtra_alter_destino
           {filtra_sub_destino} -- filtra_sub_destino
           {filtra_cor_destino} -- filtra_cor_destino
           {filtra_solicitacao} -- filtra_solicitacao
-    """
+    """)
     if finaliza or cancela:
         situacao = 5 if finaliza else 9
-        sql = f"""
+        sql = lms(f"""
             UPDATE SYSTEXTIL.PCPC_044
             SET
               SITUACAO = {situacao}
@@ -164,10 +165,10 @@ def exec(
             IN (
               {sql} --sql
             )
-        """
+        """)
     elif altera_qtde:
         sinal_qtde = f"{qtde}" if qtde < 0 else f"+{qtde}"
-        sql = f"""
+        sql = lms(f"""
             UPDATE SYSTEXTIL.PCPC_044
             SET
               QTDE = QTDE {sinal_qtde}
@@ -187,7 +188,7 @@ def exec(
             IN (
               {sql} --sql
             )
-        """
+        """)
     debug_cursor_execute(cursor, sql, exec=exec)
     if consulta:
         dados = dictlist_lower(cursor)
