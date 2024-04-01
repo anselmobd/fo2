@@ -51,29 +51,29 @@ def exec(
             "consulta ou altera_qtde como True nos kwargs"
         )
 
-    filtra_ordem_producao = dedent_strip(f"""
-        AND sl.ORDEM_PRODUCAO = {ordem_producao}
-    """) if ordem_producao else ""
+    filtra_ordem_producao = dedent_strip(
+        f"AND sl.ORDEM_PRODUCAO = {ordem_producao}"
+    ) if ordem_producao else ""
 
-    filtra_ordem_confeccao = dedent_strip(f"""
-        AND sl.ORDEM_CONFECCAO = {ordem_confeccao}
-    """) if ordem_confeccao else ""
+    filtra_ordem_confeccao = dedent_strip(
+        f"AND sl.ORDEM_CONFECCAO = {ordem_confeccao}"
+    ) if ordem_confeccao else ""
 
-    filtra_pedido_destino = dedent_strip(f"""
-        AND sl.PEDIDO_DESTINO = {pedido_destino}
-    """) if pedido_destino else ""
+    filtra_pedido_destino = dedent_strip(
+        f"AND sl.PEDIDO_DESTINO = {pedido_destino}"
+    ) if pedido_destino else ""
 
-    filtra_op_destino = dedent_strip(f"""
-        AND sl.OP_DESTINO = {op_destino}
-    """) if op_destino else ""
+    filtra_op_destino = dedent_strip(
+        f"AND sl.OP_DESTINO = {op_destino}"
+    ) if op_destino else ""
 
-    filtra_oc_destino = dedent_strip(f"""
-        AND sl.OC_DESTINO = {oc_destino}
-    """) if oc_destino else ""
+    filtra_oc_destino = dedent_strip(
+        f"AND sl.OC_DESTINO = {oc_destino}"
+    ) if oc_destino else ""
 
-    filtra_dep_destino = dedent_strip(f"""
-        AND sl.DEP_DESTINO = {dep_destino}
-    """) if dep_destino else ""
+    filtra_dep_destino = dedent_strip(
+        f"AND sl.DEP_DESTINO = {dep_destino}"
+    ) if dep_destino else ""
 
     filtra_grupo_destino = dedent_strip(f"""
         AND
@@ -83,21 +83,21 @@ def exec(
           END = '{grupo_destino}'
     """) if grupo_destino else ""
 
-    filtra_alter_destino = dedent_strip(f"""
-        AND sl.ALTER_DESTINO = {alter_destino}
-    """) if alter_destino else ""
+    filtra_alter_destino = dedent_strip(
+        f"AND sl.ALTER_DESTINO = {alter_destino}"
+    ) if alter_destino else ""
 
-    filtra_sub_destino = dedent_strip(f"""
-        AND sl.SUB_DESTINO = '{sub_destino}'
-    """) if sub_destino else ""
+    filtra_sub_destino = dedent_strip(
+        f"AND sl.SUB_DESTINO = '{sub_destino}'"
+    ) if sub_destino else ""
 
-    filtra_cor_destino = dedent_strip(f"""
-        AND sl.COR_DESTINO = '{cor_destino}'
-    """) if cor_destino else ""
+    filtra_cor_destino = dedent_strip(
+        f"AND sl.COR_DESTINO = '{cor_destino}'"
+    ) if cor_destino else ""
 
-    filtra_solicitacao = dedent_strip(f"""
-        AND sl.SOLICITACAO = {solicitacao}
-    """) if solicitacao else ""
+    filtra_solicitacao = dedent_strip(
+        f"AND sl.SOLICITACAO = {solicitacao}"
+    ) if solicitacao else ""
 
     sql = dedent("""\
         SELECT
