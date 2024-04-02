@@ -148,7 +148,7 @@ def exec(
     """)
     if finaliza or cancela:
         situacao = 5 if finaliza else 9
-        sql = dedent_strip(f"""
+        sql = dedent(f"""\
             UPDATE SYSTEXTIL.PCPC_044
             SET
               SITUACAO = {situacao}
