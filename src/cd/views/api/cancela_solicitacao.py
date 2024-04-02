@@ -59,7 +59,8 @@ class CancelSolicitacao(View):
 
     def cancela_empenhos(self):
         for idx, empenho in enumerate(self.empenhos):
-            self.cancela_empenho(empenho, idx)    
+            self.cancela_empenho(empenho, idx)
+            break 
 
     def cancela_empenho(self, empenho, idx):
         try:
@@ -67,10 +68,28 @@ class CancelSolicitacao(View):
                 self.set_situacao(empenho)
                 self.log_historico(idx)
         except Exception as _:
-            return False
+            return "Ocorreu algum erro ao cancelar empenho"
 
     def set_situacao(self, empenho):
         pprint(empenho)
+        print("set_situacao antes exec")
+        situacao_empenho.exec(
+            self.cursor,
+            cancela=True,
+            solicitacao=self.solicitacao,
+            ordem_producao=empenho['ordem_producao'],
+            ordem_confeccao=empenho['ordem_confeccao'],
+            pedido_destino=empenho['pedido_destino'],
+            op_destino=empenho['op_destino'],
+            oc_destino=empenho['oc_destino'],
+            dep_destino=empenho['dep_destino'],
+            grupo_destino=empenho['grupo_destino'],
+            alter_destino=empenho['alter_destino'],
+            sub_destino=empenho['sub_destino'],
+            cor_destino=empenho['cor_destino'],
+            exec=False,
+        )
+        print("set_situacao depois exec")
 
     def log_historico(self, idx):
         pprint(idx)
