@@ -48,6 +48,8 @@ class LoggedInUser(SingletonBaseMeta):
     def set_user(self, request):
         if request.user.is_authenticated:
             self.user = request.user
+        else:
+            self.user = None
 
     @property
     def current_user(self):
