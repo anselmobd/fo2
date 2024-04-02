@@ -17,6 +17,9 @@ def insere_hist(
     alter_destino,
     sub_destino,
     cor_destino,
+    solicitacao,
+    rotina='finaliza_emp_op',
+    exec=True,
 ):
     field = ':'.join(alteracao.keys())
     field = f":{field}:"
@@ -27,6 +30,8 @@ def insere_hist(
         news.append(pformat(alteracao[key]['new']))
     old = ':'.join(olds)
     new = ':'.join(news)
+
+    filtra_solicitacao = f"AND SOLICITACAO = {solicitacao}" if solicitacao else ""
 
     sql = f"""
         INSERT INTO PCPC_044_HIST_DUOMO (
@@ -40,10 +45,12 @@ def insere_hist(
         , ALTER_DESTINO
         , SUB_DESTINO
         , COR_DESTINO
+        , SOLICITACAO
         , CAMPO_ALTERADO
         , ANTIGO_VALOR
         , NOVO_VALOR
         , USUARIO_SYSTEXTIL
+        , ROTINA
         )
         SELECT
           ORDEM_PRODUCAO
@@ -56,10 +63,12 @@ def insere_hist(
         , ALTER_DESTINO
         , SUB_DESTINO
         , COR_DESTINO
+        , SOLICITACAO
         , '{field}'
         , '{old}'
         , '{new}'
         , '{usuario}'
+        , '{rotina}'
         FROM PCPC_044  -- empenhos
         WHERE 1=1
           AND ORDEM_PRODUCAO = {ordem_producao}
@@ -72,9 +81,10 @@ def insere_hist(
           AND ALTER_DESTINO = {alter_destino}
           AND SUB_DESTINO = '{sub_destino}'
           AND COR_DESTINO = '{cor_destino}'
+          {filtra_solicitacao} -- filtra_solicitacao
     """
     try:
-        debug_cursor_execute(cursor, sql)
+        debug_cursor_execute(cursor, sql, exec=exec)
         return cursor.rowcount
     except Exception as e:
         return -1
