@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from django.db import transaction
+from django.db import DatabaseError, transaction
 from django.http import JsonResponse
 from django.views import View
 
@@ -54,26 +54,29 @@ class CancelSolicitacao(View):
             consulta=True,
             solicitacao=self.solicitacao,
         )
-        if not self.empenhos:
+        if self.empenhos:
+            print("Quant. empenhos:", len(self.empenhos))
+        else:
             return "Não encontrado nenhum empenho não finalizado ou cancelado"
 
     def cancela_empenhos(self):
         for idx, empenho in enumerate(self.empenhos):
-            self.cancela_empenho(empenho, idx)
-            break 
+            if error := self.cancela_empenho_e_log(empenho):
+                return error
+            break
 
-    def cancela_empenho(self, empenho, idx):
+    def cancela_empenho_e_log(self, empenho):
         try:
-            with transaction.atomic():
-                self.set_situacao(empenho)
-                self.log_historico(idx)
-        except Exception as _:
-            return "Ocorreu algum erro ao cancelar empenho"
+            with transaction.atomic(using='sn'):
+                self.cancela_empenho(empenho)
+                self.log_historico(empenho)
+        except Exception as e:
+            return f"Ocorreu algum erro ao cancelar empenho <{e}>"
 
-    def set_situacao(self, empenho):
+    def cancela_empenho(self, empenho):
         pprint(empenho)
         print("set_situacao antes exec")
-        situacao_empenho.exec(
+        row_count = situacao_empenho.exec(
             self.cursor,
             cancela=True,
             solicitacao=self.solicitacao,
@@ -87,12 +90,49 @@ class CancelSolicitacao(View):
             alter_destino=empenho['alter_destino'],
             sub_destino=empenho['sub_destino'],
             cor_destino=empenho['cor_destino'],
-            exec=False,
+            # exec=False,
         )
-        print("set_situacao depois exec")
+        print("set_situacao depois exec", row_count)
+        if not row_count:
+            raise DatabaseError(
+                "Erro ao cancelar empenho "
+                f"da solicitacao {self.solicitacao} "
+                f"da OC {empenho['ordem_confeccao']} "
+                f"da OP {empenho['ordem_producao']}."
+            )
 
-    def log_historico(self, idx):
-        pprint(idx)
+    def log_historico(self, empenho):
+        count_insert = empenho_hist.insere_hist(
+            self.cursor,
+            usuario=self.matricula.usuario,
+            alteracao={
+                'situacao': {
+                    'old': empenho['situacao'],
+                    'new': 9,
+                }
+            },
+            ordem_producao=empenho['ordem_producao'],
+            ordem_confeccao=empenho['ordem_confeccao'],
+            pedido_destino=empenho['pedido_destino'],
+            op_destino=empenho['op_destino'],
+            oc_destino=empenho['oc_destino'],
+            dep_destino=empenho['dep_destino'],
+            grupo_destino=empenho['grupo_destino'],
+            alter_destino=empenho['alter_destino'],
+            sub_destino=empenho['sub_destino'],
+            cor_destino=empenho['cor_destino'],
+            solicitacao=self.solicitacao,
+            rotina='cancela_solicitacao',
+            # exec=False,
+        )
+        if count_insert != 1:
+            raise DatabaseError(
+                "Erro ao gravar histórico de cancelamento do empenho "
+                f"da solicitacao {self.solicitacao} "
+                f"da OC {empenho['ordem_confeccao']} "
+                f"da OP {empenho['ordem_producao']}."
+            )
+        # raise DatabaseError("Simula erro em log_historico")
 
 
     def process(self):
