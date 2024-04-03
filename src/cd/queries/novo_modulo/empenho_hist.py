@@ -20,6 +20,7 @@ def insere_hist(
     solicitacao,
     rotina='finaliza_emp_op',
     exec=True,
+    can_raise=False,
 ):
     field = ':'.join(alteracao.keys())
     field = f":{field}:"
@@ -87,4 +88,7 @@ def insere_hist(
         debug_cursor_execute(cursor, sql, exec=exec)
         return cursor.rowcount
     except Exception as e:
-        return -1
+        if can_raise:
+            raise e
+        else:
+            return -1
