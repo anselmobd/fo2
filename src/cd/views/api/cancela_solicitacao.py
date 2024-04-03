@@ -54,28 +54,19 @@ class CancelSolicitacao(View):
             consulta=True,
             solicitacao=self.solicitacao,
         )
-        if self.empenhos:
-            print("Quant. empenhos:", len(self.empenhos))
-        else:
+        if not self.empenhos:
             return "Não encontrado nenhum empenho não finalizado ou cancelado"
 
     def cancela_empenhos(self):
-        for idx, empenho in enumerate(self.empenhos):
-            if error := self.cancela_empenho_e_log(empenho):
-                return error
-            break
-
-    def cancela_empenho_e_log(self, empenho):
         try:
-            with transaction.atomic(using='sn'):
-                self.cancela_empenho(empenho)
-                self.log_historico(empenho)
+            for idx, empenho in enumerate(self.empenhos):
+                with transaction.atomic(using='sn'):
+                    self.cancela_empenho(empenho)
+                    self.log_historico(empenho)
         except Exception as e:
             return f"Ocorreu algum erro ao cancelar empenho <{e}>"
 
     def cancela_empenho(self, empenho):
-        pprint(empenho)
-        print("set_situacao antes exec")
         row_count = situacao_empenho.exec(
             self.cursor,
             cancela=True,
@@ -90,12 +81,10 @@ class CancelSolicitacao(View):
             alter_destino=empenho['alter_destino'],
             sub_destino=empenho['sub_destino'],
             cor_destino=empenho['cor_destino'],
-            # exec=False,
         )
-        print("set_situacao depois exec", row_count)
         if not row_count:
             raise DatabaseError(
-                "Erro ao cancelar empenho "
+                "Nenhum registro afetado ao cancelar empenho "
                 f"da solicitacao {self.solicitacao} "
                 f"da OC {empenho['ordem_confeccao']} "
                 f"da OP {empenho['ordem_producao']}."
@@ -123,17 +112,15 @@ class CancelSolicitacao(View):
             cor_destino=empenho['cor_destino'],
             solicitacao=self.solicitacao,
             rotina='cancela_solicitacao',
-            # exec=False,
+            can_raise=True,
         )
         if count_insert != 1:
             raise DatabaseError(
-                "Erro ao gravar histórico de cancelamento do empenho "
+                "Nenhum registro inserido ao gravar histórico de cancelamento do empenho "
                 f"da solicitacao {self.solicitacao} "
                 f"da OC {empenho['ordem_confeccao']} "
                 f"da OP {empenho['ordem_producao']}."
             )
-        # raise DatabaseError("Simula erro em log_historico")
-
 
     def process(self):
         for passo in [
@@ -148,7 +135,6 @@ class CancelSolicitacao(View):
                 return (self.ERROR_STATUS, result_error)
 
         return (self.OK_STATUS, "OK!")
-            
 
     def response(self, result):
         status, message = result
