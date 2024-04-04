@@ -12,9 +12,8 @@ from lotes.functions.varias import (
     modelo_de_ref,
     periodo_oc,
 )
-from lotes.functions.varias import modelo_de_ref
 
-from cd.queries.novo_modulo.gerais import *
+from cd.queries.novo_modulo.gerais import get_filtra_ref
 
 __all__ = ['query']
 
@@ -316,7 +315,7 @@ def query(
                     AND ec.COD_ENDERECO <= '{end_ate}' )
                 """
             elif end == "*":
-                filtra_end1 = f"""--
+                filtra_end1 = """--
                     ec.COD_ENDERECO IS NOT NULL
                 """
             else:
@@ -573,7 +572,6 @@ def query(
         """,
         'rota': "COALESCE(e.ROTA, '-')",
         'endereco': "COALESCE(ec.COD_ENDERECO, '-')",
-        'qtd_prog': "l.QTDE_PECAS_PROG",
         'est_sol': """
             ( SELECT
                 MOD(
