@@ -29,7 +29,7 @@
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
     <p>Legenda: Tot.=Total; L.=Lotes; Q.=Quantidade de itens; Prod.=Em produção; Fin.=Finalizado<br/>
-      Situçação: 1=A confirmar; 2=Confirmado; 3=Programado; 4=Solicitado; 5=Baixado</p>
+      Situçação: 1=A confirmar; 2=Confirmado; 3=Programado; 4=Solicitado; 5=Baixado; 9=Cancelado</p>
     {% include "layout/paginator.html" with data=data url_name='cd:novo_solicitacoes' only %}
   {% else %}
     {% if request.POST %}
