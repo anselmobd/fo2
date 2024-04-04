@@ -245,6 +245,7 @@ def query(
         60 = lotes com quantidade no estágio 60
         57 = lotes com quantidade no estágio 57
         fin = lotes finalizados
+        t: Não filtra
     modelos: filtra LOCALMENTE
         string com lista de modelos
         pode ter "-" antes do modelo
@@ -360,6 +361,7 @@ def query(
             )
         """
 
+    filtra_selecao_lotes = ""
     if selecao_lotes == '63':
         filtra_selecao_lotes = """--
             AND l.CODIGO_ESTAGIO = 63
