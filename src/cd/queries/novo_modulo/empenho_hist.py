@@ -17,7 +17,7 @@ def insere_hist(
     alter_destino,
     sub_destino,
     cor_destino,
-    solicitacao,
+    solicitacao,  # número ou 'sn'
     rotina='finaliza_emp_op',
     exec=True,
     can_raise=False,
@@ -32,7 +32,17 @@ def insere_hist(
     old = ':'.join(olds)
     new = ':'.join(news)
 
-    filtra_solicitacao = f"AND SOLICITACAO = {solicitacao}" if solicitacao else ""
+    filtra_solicitacao = ""
+    if solicitacao:
+        if solicitacao == 'sn':
+            filtra_solicitacao = """--
+                AND (
+                  SOLICITACAO IS NULL
+                  OR SOLICITACAO = 0
+                )
+            """
+        else:
+            filtra_solicitacao = f"AND SOLICITACAO = {solicitacao}"
 
     sql = f"""
         INSERT INTO PCPC_044_HIST_DUOMO (
