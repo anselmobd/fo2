@@ -156,7 +156,7 @@ class Solicitacoes(O2BaseGetPostView):
             'headers': fields.values(),
             'fields': fields.keys(),
             'style': untuple_keys_concat({
-                tuple(range(2, 19)): 'text-align: right;',
+                tuple(range(2, 21)): 'text-align: right;',
             }),
             'data': data,
             'qtd_solicit': qtd_solicit,
