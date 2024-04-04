@@ -636,7 +636,10 @@ def query(
                     -- AND sl.ORDEM_CONFECCAO <> 0
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO IN (1, 2, 3, 4)
-                    AND sl.SOLICITACAO IS NULL
+                    AND (
+                      sl.SOLICITACAO IS NULL
+					  OR sl.SOLICITACAO = 0
+					)
                 ),
                 0
             )
@@ -653,6 +656,7 @@ def query(
                     AND sl.GRUPO_DESTINO <> '0'
                     AND sl.SITUACAO IN (1, 2, 3, 4)
                     AND sl.SOLICITACAO IS NOT NULL
+                    AND sl.SOLICITACAO > 0
                 ),
                 0
             )
