@@ -40,7 +40,7 @@ def exec(
     alter_destino=None,
     sub_destino=None,
     cor_destino=None,
-    solicitacao=None,
+    solicitacao=None,  # número ou 'sn'
     qtde=None,
     exec=True,
 ):
@@ -95,9 +95,19 @@ def exec(
         f"AND sl.COR_DESTINO = '{cor_destino}'"
     ) if cor_destino else ""
 
-    filtra_solicitacao = dedent_strip(
-        f"AND sl.SOLICITACAO = {solicitacao}"
-    ) if solicitacao else ""
+    filtra_solicitacao = ""
+    if solicitacao:
+        if solicitacao == 'sn':
+            filtra_solicitacao = dedent_strip("""\
+                AND (
+                  sl.SOLICITACAO IS NULL
+                  OR sl.SOLICITACAO = 0
+                )
+            """)
+        else:
+            filtra_solicitacao = dedent_strip(
+                f"AND sl.SOLICITACAO = {solicitacao}"
+            )
 
     sql = dedent("""\
         SELECT
