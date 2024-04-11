@@ -184,8 +184,8 @@ class Lote(View):
                 ]),
             'se_data': data,
             'se_style': untuple_keys_concat({
-                (2, 3, 4, 5, 10, 11, 12, 13, 16, 17, 18): 'text-align: right;',
-                (6, 14, 15): 'text-align: center;',
+                (2, 3, 4, 5, 6, 8, 10, 11, 12, 13, 16, 17, 18): 'text-align: right;',
+                (7, 9, 14, 15): 'text-align: center;',
             }),
         })
 
