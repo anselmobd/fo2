@@ -40,56 +40,6 @@ class Lote(View):
         if len(data) != 0:
             headers = ['Posição', 'Quantidade', 'Estágio']
             fields = ['TIPO', 'QTD', 'ESTAGIO']
-            # if (
-            #     self.request.user.is_authenticated and
-            #     has_permission(self.request, 'lotes.pode_produzir_lote')
-            # ):
-            #     headers.append('Qtd.')
-            #     fields.append('QTD_ACAO')
-            #     headers.append('Ações')
-            #     fields.append('PRODUZ')
-            #     headers.append('...')
-            #     fields.append('EXTORNA')
-            #     for row in data:
-            #         if row['TIPO'] in ["A PRODUZIR", "FINALIZADO 1A."]:
-            #             if row['TIPO'] in ["A PRODUZIR"]:
-            #                 marca_qtd = "QTDPROD"
-            #                 row['PRODUZ'] = "Produzir⭢"
-            #                 row['PRODUZ|CLASS'] = 'produzir_ajax'
-            #                 row['PRODUZ|TARGET'] = 'BLANK'
-            #                 row['PRODUZ|A'] = reverse(
-            #                     'producao:produz_lote_programa',
-            #                     args=[
-            #                         lote,
-            #                         row['CODIGO_ESTAGIO'],
-            #                         marca_qtd,
-            #                         'lote_oc',
-            #                     ]
-            #                 )
-            #             else:
-            #                 row['PRODUZ'] = "-"
-            #                 marca_qtd = "QTDFINA"
-
-            #             row['QTD_ACAO|SAFE'] = True
-            #             row['QTD_ACAO'] = f"""
-            #                 <input value="{row['QTD']}" type="text" size="3" id="{marca_qtd}_{row['CODIGO_ESTAGIO']}">
-            #             """
-            #             row['EXTORNA'] = "Extornar⮌"
-            #             row['EXTORNA|CLASS'] = 'produzir_ajax'
-            #             row['EXTORNA|TARGET'] = 'BLANK'
-            #             row['EXTORNA|A'] = reverse(
-            #                 'producao:produz_lote_programa',
-            #                 args=[
-            #                     lote,
-            #                     row['CODIGO_ESTAGIO'],
-            #                     f"-{marca_qtd}",
-            #                     'lote_oc',
-            #                 ]
-            #             )
-            #         else:
-            #             row['QTD_ACAO'] = "-"
-            #             row['PRODUZ'] = "-"
-            #             row['EXTORNA'] = "-"
             context.update({
                 'p_headers': headers,
                 'p_fields': fields,
@@ -168,6 +118,50 @@ class Lote(View):
         estagios = []
         for row in data:
             estagios.append(row['COD_EST'])
+            if row['Q_DB'] > 0:
+                row['Q_PRODUZ|SAFE'] = True
+                row['Q_PRODUZ'] = f"""
+                    <input value="{row['Q_DB']}" type="text" size="3" id="QTDPROD_{row['COD_EST']}" class="input_ajax">
+                """
+                row['PRODUZ'] = "Produz⭣"
+                row['PRODUZ|CLASS'] = 'produzir_ajax'
+                row['PRODUZ|TARGET'] = 'BLANK'
+                row['PRODUZ|A'] = reverse(
+                    'producao:produz_lote_programa',
+                    args=[
+                        lote,
+                        row['COD_EST'],
+                        'QTDPROD',
+                        'lote_oc',
+                    ]
+                )
+            else:
+                row['Q_PRODUZ'] = "."
+                row['PRODUZ'] = "."
+        q_estornavel = data[-1]['Q_PROD']
+        for row in data[::-1]:
+            if q_estornavel > 0:
+                row['Q_ESTORMA|SAFE'] = True
+                row['Q_ESTORMA'] = f"""
+                    <input value="{q_estornavel}" type="text" size="3" id="QTDESTO_{row['COD_EST']}" class="input_ajax">
+                """
+                row['ESTORMA'] = "Extorna⮌"
+                row['ESTORMA|CLASS'] = 'produzir_ajax'
+                row['ESTORMA|TARGET'] = 'BLANK'
+                row['ESTORMA|A'] = reverse(
+                    'producao:produz_lote_programa',
+                    args=[
+                        lote,
+                        row['COD_EST'],
+                        '-QTDESTO',
+                        'lote_oc',
+                    ]
+                )
+            else:
+                row['Q_ESTORMA'] = "."
+                row['ESTORMA'] = "."
+            q_estornavel = row['Q_DB']
+        for row in data:
             for field in [
                     'Q_AP', 'Q_EP', 'Q_DB', 'Q_PROD', 'Q_2A', 'Q_PERDA',
                     'Q_CONSERTO', 'FAMI', 'OS']:
@@ -176,20 +170,22 @@ class Lote(View):
         context.update({
             'se_headers': (
                 ['Estágio', 'Progr.', 'A Prod.', 'Em Prod.', 'Disp. Baixa']
-                + []
+                + ["Qtd. Produz", "Produz", "Qtd. Extorna", "Extorna"]
                 + [
                     'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Cons./End.', 'Família', 'OS',
                     'Seq. Oper.', 'Seq. Est.', 'Est. Ant.',
                 ]),
             'se_fields': (
-                'EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_DB',
-                'Q_PROD', 'Q_2A', 'Q_PERDA', 'Q_CONSERTO', 'FAMI', 'OS',
-                'SEQ_OPER', 'SEQ_EST', 'EST_ANT',
-                ),
+                ['EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_DB']
+                + ['Q_PRODUZ', 'PRODUZ', 'Q_ESTORMA', 'ESTORMA']
+                + [
+                    'Q_PROD', 'Q_2A', 'Q_PERDA', 'Q_CONSERTO', 'FAMI', 'OS',
+                    'SEQ_OPER', 'SEQ_EST', 'EST_ANT',
+                ]),
             'se_data': data,
             'se_style': untuple_keys_concat({
-                (2, 3, 4, 5, 6, 7, 8, 9): 'text-align: right;',
-                (10, 11): 'text-align: center;',
+                (2, 3, 4, 5, 10, 11, 12, 13, 16, 17, 18): 'text-align: right;',
+                (6, 14, 15): 'text-align: center;',
             }),
         })
 
