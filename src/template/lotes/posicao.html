@@ -116,12 +116,18 @@
     var clickedLink = event.target;
     console.log(clickedLink);
     console.log(clickedLink.href);
-    var url=clickedLink.href;
+    let url=clickedLink.href;
+    let regex = /\/(\d+)\/XYZ/;
+    let match = url.match(regex);
+    let estagio = match[1];
+    let inputQtd = document.getElementById('qtd_'+estagio);
+    let qtd = inputQtd.value;
+    let novaUrl = url.replace(/XYZ/, qtd);
     if (confirmWithEnter()) {
       console.log('Confirmou');
       $.ajax({
         type: 'GET',
-        url: url,
+        url: novaUrl,
         data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
         success : function(data) {
           if (data) {

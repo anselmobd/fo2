@@ -36,15 +36,17 @@ class Lote(View):
         if len(data) != 0:
             headers = ['Posição', 'Quantidade', 'Estágio']
             fields = ['TIPO', 'QTD', 'ESTAGIO']
-            has_acao = False
             if (
                 self.request.user.is_authenticated and
                 has_permission(self.request, 'lotes.pode_produzir_lote')
             ):
+                headers.append('Qtd.')
+                fields.append('QTD_ACAO')
+                headers.append('Ação')
+                fields.append('PRODUZ')
                 for row in data:
-                    if row['TIPO'] == 'A PRODUZIR':
-                        has_acao = True
-                        row['PRODUZ'] = f"produzir {row['QTD']}"
+                    if row['TIPO'] in ["A PRODUZIR"]:
+                        row['PRODUZ'] = "produzir"
                         row['PRODUZ|CLASS'] = 'produzir_ajax'
                         row['PRODUZ|TARGET'] = 'BLANK'
                         row['PRODUZ|A'] = reverse(
@@ -52,15 +54,17 @@ class Lote(View):
                             args=[
                                 lote,
                                 row['CODIGO_ESTAGIO'],
-                                row['QTD'],
+                                "XYZ",
                                 'lote_oc',
                             ]
                         )
+                        row['QTD_ACAO|SAFE'] = True
+                        row['QTD_ACAO'] = f"""
+                            <input value="{row['QTD']}" type="text" size="3" id="qtd_{row['CODIGO_ESTAGIO']}">
+                        """
                     else:
+                        row['QTD_ACAO'] = "-"
                         row['PRODUZ'] = "-"
-            if has_acao:
-                headers.append('Ação')
-                fields.append('PRODUZ')
             context.update({
                 'p_headers': headers,
                 'p_fields': fields,
