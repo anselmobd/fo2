@@ -30,7 +30,10 @@ class ProduzLote(View):
         pprint(self.estagios)
         if not self.estagios:
             return "Lote não encontrado"
-        self.processa_estagios()
+
+    def verifica_quantidade(self):
+        self.estagio_selecionado = self.get_estagio_selecionado(self.estagios)
+        pprint(self.estagio_selecionado)
         qtd_estagio = self.estagio_selecionado['Q_DB']
         if qtd_estagio < self.qtd:
             return (
@@ -39,26 +42,27 @@ class ProduzLote(View):
                 f"que é menor do que {self.qtd}"
             )
 
-    def processa_estagios(self):
-        self.estagio_selecionado = next(
+    def get_estagio_selecionado(self, estagios):
+        return next(
             estagio
-            for estagio in self.estagios
+            for estagio in estagios
             if estagio['COD_EST'] == self.estagio
         )
-        pprint(self.estagio_selecionado['SEQ_EST'])
-        self.estagios_filtrados = [
+
+    def processa_estagios(self, estagios, estagio_selecionado):
+        return [
             estagio['COD_EST']
-            for estagio in self.estagios
-            if estagio['SEQ_EST'] <= self.estagio_selecionado['SEQ_EST']
+            for estagio in estagios
+            if estagio['SEQ_EST'] <= estagio_selecionado['SEQ_EST']
         ]
-        pprint(self.estagios_filtrados)
 
     def get_movimentacoes(self):
+        estagios_filtrados = self.processa_estagios(self.estagios, self.estagio_selecionado)
         try:
             self.movimentacoes = movimentacao_de_lote.get_movimentacoes_estagios(
                 cursor=self.cursor,
                 lote=self.lote,
-                estagios=self.estagios_filtrados,
+                estagios=estagios_filtrados,
             )
         except Exception as e:
             return f"Erro ao buscar movimentações do lote no estágio: {e}"
@@ -100,6 +104,7 @@ class ProduzLote(View):
         for passo in [
             self.verifica_usuario,
             self.verifica_estagios,
+            self.verifica_quantidade,
             self.get_movimentacoes,
             self.insere_movimentacao,
             self.corrige_usuario,
