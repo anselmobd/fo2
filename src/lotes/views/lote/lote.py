@@ -42,7 +42,7 @@ class Lote(View):
             ):
                 headers.append('Qtd.')
                 fields.append('QTD_ACAO')
-                headers.append('Ação')
+                headers.append('Ações')
                 fields.append('PRODUZ')
                 for row in data:
                     if row['TIPO'] in ["A PRODUZIR"]:

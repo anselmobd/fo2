@@ -110,6 +110,11 @@
     }
   }
 
+  function isPositiveInteger(str) {
+    const number = Number(str);
+    return Number.isInteger(number) && number > 0;
+  }
+
   function processProduzirAjax(event) {
     console.log('processProduzirAjax');
     console.log(event);
@@ -123,36 +128,41 @@
     let inputQtd = document.getElementById('qtd_'+estagio);
     let qtd = inputQtd.value;
     let novaUrl = url.replace(/XYZ/, qtd);
-    if (confirmWithEnter()) {
-      console.log('Confirmou');
-      $.ajax({
-        type: 'GET',
-        url: novaUrl,
-        data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
-        success : function(data) {
-          if (data) {
-            console.log(data);
-            if (data['status'] == 'OK') {
-              console.log('reload');
-              // window.location.href = window.location.href + "?nocache=" + new Date().getTime();
-              if (window.location.href.endsWith("{{lote}}/")) {
-                window.location.reload();
+    if (isPositiveInteger(qtd)){
+      if (confirmWithEnter()) {
+        console.log('Confirmou');
+        $.ajax({
+          type: 'GET',
+          url: novaUrl,
+          data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+          success : function(data) {
+            if (data) {
+              console.log(data);
+              if (data['status'] == 'OK') {
+                console.log('reload');
+                // window.location.href = window.location.href + "?nocache=" + new Date().getTime();
+                if (window.location.href.endsWith("{{lote}}/")) {
+                  window.location.reload();
+                } else {
+                  window.location.href = window.location.href + "{{lote}}";
+                }
               } else {
-                window.location.href = window.location.href + "{{lote}}";
+                alert('Erro: ' + data['message']);
               }
             } else {
-              alert('Erro: ' + data['message']);
+              console.log('Sem retorno de link');
             }
-          } else {
-            console.log('Sem retorno de link');
-          }
-        },  // success
-        error : function(data) {
-          console.log('Erro na requisição');
-        }  // error
-      });  // ajax
+          },  // success
+          error : function(data) {
+            console.log('Erro na requisição');
+          }  // error
+        });  // ajax
+      } else {
+        console.log('Cancelou');
+      }
     } else {
-      console.log('Cancelou ');
+      console.log('Negativo');
+      alert('Erro: Quantidade tem que ser inteira positiva');
     }
     return false;
   }
