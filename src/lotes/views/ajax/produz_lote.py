@@ -8,9 +8,11 @@ from fo2.connections import db_cursor_so
 from geral.functions import has_permission
 from utils.classes import LoggedInUser
 
-from lotes.queries.lote import movimentacao_de_lote
-from lotes.queries.lote import lote_estagios
-
+from lotes.queries.lote import (
+    lote_estagios,
+    movimentacao_de_lote,
+    quantidade_finalizada,
+)
 
 class ProduzLote(View):
 
@@ -27,26 +29,56 @@ class ProduzLote(View):
     def verifica_estagios(self):
         self.estagios = lote_estagios.get_estagios(
             self.cursor, self.lote, ['COD_EST', 'Q_DB', 'SEQ_EST'])
-        pprint(self.estagios)
         if not self.estagios:
             return "Lote não encontrado"
 
-    def verifica_quantidade(self):
-        self.estagio_selecionado = self.get_estagio_selecionado(self.estagios)
-        pprint(self.estagio_selecionado)
-        qtd_estagio = self.estagio_selecionado['Q_DB']
-        if qtd_estagio < self.qtd:
-            return (
-                f"Estágio {self.estagio} do lote {self.lote} "
-                f"com quantidade {qtd_estagio} disponível para baixa, "
-                f"que é menor do que {self.qtd}"
-            )
+    def busca_qtd_finalizada(self):
+        dados = quantidade_finalizada.query(self.cursor, self.lote)
+        if dados:
+            finalizada = dados[0]
+            self.estagios.append({
+                'COD_EST': 99,
+                'Q_DB': finalizada['qtd'],
+                'SEQ_EST': finalizada['ultima_sequencia']+1,
+            })
+        pprint(self.estagios)
 
-    def get_estagio_selecionado(self, estagios):
+    def verifica_quantidade(self):
+        self.estagio_selecionado = self.get_estagio_selecionado()
+        proximo_estagio = self.get_proximo_estagio()
+        pprint(self.estagio_selecionado)
+        if self.qtd < 0:
+            qtd_teste = -self.qtd
+            qtd_estagio = proximo_estagio['Q_DB']
+        else:
+            qtd_teste = self.qtd
+            qtd_estagio = self.estagio_selecionado['Q_DB']
+        if qtd_estagio < qtd_teste:
+            if self.qtd < 0:
+                return (
+                    f"Estágio posterior ao {self.estagio} do lote {self.lote} "
+                    f"com quantidade {qtd_estagio} disponível para estorno, "
+                    f"que é menor do que {qtd_teste}"
+                )
+            else:
+                return (
+                    f"Estágio {self.estagio} do lote {self.lote} "
+                    f"com quantidade {qtd_estagio} disponível para baixa, "
+                    f"que é menor do que {self.qtd}"
+                )
+
+    def get_estagio_selecionado(self):
         return next(
             estagio
-            for estagio in estagios
+            for estagio in self.estagios
             if estagio['COD_EST'] == self.estagio
+        )
+
+    def get_proximo_estagio(self):
+        return next(
+            estagio
+            for estagio in self.estagios
+            if estagio['SEQ_EST'] == self.estagio_selecionado['SEQ_EST'] + 1
         )
 
     def processa_estagios(self, estagios, estagio_selecionado):
@@ -104,6 +136,7 @@ class ProduzLote(View):
         for passo in [
             self.verifica_usuario,
             self.verifica_estagios,
+            self.busca_qtd_finalizada,
             self.verifica_quantidade,
             self.get_movimentacoes,
             self.insere_movimentacao,
