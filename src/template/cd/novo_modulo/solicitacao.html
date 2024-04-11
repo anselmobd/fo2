@@ -19,7 +19,12 @@
     {% if sem_numero %}
       <h4>Solicitação: {{solicitacao}}</h4>
     {% else %}
-      <h4>Solicitação: {% include "layout/alink.html" with link=link_solicitacao text=solicitacao only %}</h4>
+      <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center">
+        <h4>Solicitação: {% include "layout/alink.html" with link=link_solicitacao text=solicitacao only %}</h4>
+        {% if request.user.is_authenticated and request.user.username == 'anselmo_sis' %}
+          <span><a target="_blank" href="{% url 'cd:cancela_solicitacao' solicitacao %}" onclick="return confirm('Confirma cancelar solicitação {{solicitacao}}?')">Cancela solicitação {{solicitacao}}</a></span>
+        {% endif %}
+      </div>
     {% endif %}
     {% if pedido %}
       <h4>Pedido destino: {{pedido}}</h4>
