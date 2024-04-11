@@ -122,12 +122,13 @@
     console.log(clickedLink);
     console.log(clickedLink.href);
     let url=clickedLink.href;
-    let regex = /\/(\d+)\/XYZ/;
+    let regex = /\/(\d+)\/.?(QTD.{4})/;
     let match = url.match(regex);
     let estagio = match[1];
-    let inputQtd = document.getElementById('qtd_'+estagio);
+    let marca = match[2];
+    let inputQtd = document.getElementById(marca+'_'+estagio);
     let qtd = inputQtd.value;
-    let novaUrl = url.replace(/XYZ/, qtd);
+    let novaUrl = url.replace(/QTD.{4}/, qtd);
     if (isPositiveInteger(qtd)){
       if (confirmWithEnter()) {
         console.log('Confirmou');
