@@ -38,16 +38,18 @@ ul { margin-left: -1.5em }
 --------------------------------------------------
 */
 
-.stnavbar{
+.stnavbar {
   text-decoration: none;
-  .stlogo{
-    font-family: "Roboto";
-    font-weight: 100;
-    color:#2764ae;
-  }
-  .stlogo b{
-    font-weight:900;
-  }
+}
+
+.stnavbar.stlogo {
+  font-family: "Roboto";
+  font-weight: 100;
+  color:#2764ae;
+}
+
+.stnavbar.stlogo b {
+  font-weight:900;
 }
 
 /* Thin */
