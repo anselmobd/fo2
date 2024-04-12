@@ -170,14 +170,14 @@ class Lote(View):
         context.update({
             'se_headers': (
                 ['Estágio', 'Progr.', 'A Prod.', 'Em Prod.', 'Disp. Baixa']
-                + ["Qtd. Produz", "Produz", "Qtd. Extorna", "Extorna"]
+                + (["Qtd. Produz", "Produz", "Qtd. Extorna", "Extorna"] if produz_estorna else [])
                 + [
                     'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Cons./End.', 'Família', 'OS',
                     'Seq. Oper.', 'Seq. Est.', 'Est. Ant.',
                 ]),
             'se_fields': (
                 ['EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_DB']
-                + ['Q_PRODUZ', 'PRODUZ', 'Q_ESTORMA', 'ESTORMA']
+                + (['Q_PRODUZ', 'PRODUZ', 'Q_ESTORMA', 'ESTORMA'] if produz_estorna else [])
                 + [
                     'Q_PROD', 'Q_2A', 'Q_PERDA', 'Q_CONSERTO', 'FAMI', 'OS',
                     'SEQ_OPER', 'SEQ_EST', 'EST_ANT',
