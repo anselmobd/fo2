@@ -264,12 +264,12 @@ def my_make_key_cache(*args):
     for value in args[1:]:
         if isinstance(value, str):
             add_value(values, value)
-        try:
-            for subvalue in iter(value):
-                add_value(values, subvalue)
-        except TypeError:
-            add_value(values, value)
-
+        else:
+            try:
+                for subvalue in iter(value):
+                    add_value(values, subvalue)
+            except TypeError:
+                add_value(values, value)
     braces = ['{}'] * len(values)
     key = '|'.join(braces)
     key = key.format(*values)
