@@ -4,7 +4,7 @@ from pathlib import Path
 from pprint import pprint, pformat
 
 from django.core.cache import cache
-from django.db import DatabaseError, transaction, IntegrityError
+from django.db import transaction, IntegrityError
 from django.utils import timezone
 
 from fo2.connections import db_cursor_so
@@ -539,6 +539,8 @@ class RealocaSolicitacoes(O2BaseGetPostView):
 
     def analisa_solicitacoes(self):
         self.mount_itens()
+        if not self.modelo:
+            return
 
         self.mount_lotes_solicitados()
         if not self.lotes_solis:
@@ -559,7 +561,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         self.mount_rascunho_oti()
 
     def grava_alteracoes(self, f):
-        f.write(f"empenho.exclui\n\n")
+        f.write("empenho.exclui\n\n")
         for lote_row in self.registros_solis:
             f.write(f"ordem_producao = {lote_row['ordem_producao']}\n")
             f.write(f"ordem_confeccao = {lote_row['ordem_confeccao']}\n")
@@ -674,7 +676,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 f.write(f"\nERRO <{e}>\n")
                 return False
 
-            f.write(f"\nFINALIZADO\n")
+            f.write("\nFINALIZADO\n")
         return True
 
     def mount_context(self):

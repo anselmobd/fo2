@@ -44,7 +44,7 @@ class RealocaSolicitacoesForm(forms.Form):
     )
 
     modelo = forms.CharField(
-        required=True,
+        required=False,
         min_length=1,
         max_length=5,
         widget=forms.TextInput(
@@ -56,7 +56,7 @@ class RealocaSolicitacoesForm(forms.Form):
     )
 
     cor = forms.CharField(
-        required=True,
+        required=False,
         min_length=1,
         max_length=6,
         widget=forms.TextInput(
@@ -70,7 +70,7 @@ class RealocaSolicitacoesForm(forms.Form):
 
     tam = forms.CharField(
         label='Tamanho',
-        required=True,
+        required=False,
         min_length=1,
         max_length=3,
         widget=forms.TextInput(
