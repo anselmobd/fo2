@@ -28,16 +28,16 @@
   {% if prox_modelo or ante_modelo %}
     <p>Item {{item_atual}}/{{items.len}} ;
     {% if prox_modelo %}
-      Próximo item <a href="#" onclick="set_item('{{prox_modelo|safe}}', '{{prox_cor}}', '{{prox_tam}}');">{{prox_modelo|safe}} {{prox_cor}} {{prox_tam}}</a>
+      Próximo <a href="#" onclick="set_item('{{prox_modelo|safe}}', '{{prox_cor}}', '{{prox_tam}}');">{{prox_modelo|safe}} {{prox_cor}} {{prox_tam}}</a>
     {% endif %}
     {% if prox_modelo and ante_modelo %}
       ;
     {% endif %}
     {% if ante_modelo %}
-      Item anterior <a href="#" onclick="set_item('{{ante_modelo|safe}}', '{{ante_cor}}', '{{ante_tam}}');">{{ante_modelo|safe}} {{ante_cor}} {{ante_tam}}</a>
+      Anterior <a href="#" onclick="set_item('{{ante_modelo|safe}}', '{{ante_cor}}', '{{ante_tam}}');">{{ante_modelo|safe}} {{ante_cor}} {{ante_tam}}</a>
     {% endif %}
     {% if form.endereco.value %}
-      &nbsp;&nbsp;|&nbsp;&nbsp; <a href="#" onclick="limpa_endereco();">Limpa endereço</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp; <a href="#" onclick="limpa_endereco();">Limpa campo "Endereço destino"</a>
     {% endif %}
     </p>
   {% endif %}
