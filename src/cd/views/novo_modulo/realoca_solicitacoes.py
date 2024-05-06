@@ -330,7 +330,7 @@ class RealocaSolicitacoes(O2BaseGetPostView):
                 self.tam,
             ):
                 self.context.update({
-                    'item_atual': idx,
+                    'item_atual': idx+1,
                     'prox_modelo': item['modelo'],
                     'prox_cor': item['cor'],
                     'prox_tam': item['tam'],
