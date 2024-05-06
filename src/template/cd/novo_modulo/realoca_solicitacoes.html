@@ -26,7 +26,7 @@
     <h3>{{msg}}</h3>
   {% endif %}
   {% if prox_modelo or ante_modelo %}
-    <p>Analisa:
+    <p>Item {{item_atual}}/{{items.len}} ;
     {% if prox_modelo %}
       Próximo item <a href="#" onclick="set_item('{{prox_modelo|safe}}', '{{prox_cor}}', '{{prox_tam}}');">{{prox_modelo|safe}} {{prox_cor}} {{prox_tam}}</a>
     {% endif %}

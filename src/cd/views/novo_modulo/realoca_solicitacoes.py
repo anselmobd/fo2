@@ -323,13 +323,14 @@ class RealocaSolicitacoes(O2BaseGetPostView):
         })
         pre_last_item = ('', '', '')
         last_item = ('', '', '')
-        for item in self.items:
+        for idx, item in enumerate(self.items):
             if last_item == (
                 self.modelo,
                 self.cor,
                 self.tam,
             ):
                 self.context.update({
+                    'item_atual': idx,
                     'prox_modelo': item['modelo'],
                     'prox_cor': item['cor'],
                     'prox_tam': item['tam'],
