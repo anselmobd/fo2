@@ -116,7 +116,7 @@ class RealocaSolicitacoesForm(forms.Form):
         ('s', "Sim"),
     ]
     forca_oti = forms.ChoiceField(
-        label='Força otimização após comparativo?',
+        label='Força botão "Otimiza" após comparativo?',
         choices=CHOICES,
         initial='n',
     )
