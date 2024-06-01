@@ -192,13 +192,13 @@ class FaturamentoParaMetaForm(
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        empresas = Empresa.objects.all().order_by('codigo_empresa')
-        for empresa in empresas:
-            self.empresa_choices.append((
-                str(empresa.codigo_empresa),
-                f"{empresa.codigo_empresa}-{empresa.nome_fantasia}",
-            ))
+        if not self.empresa_choices:
+            empresas = Empresa.objects.all().order_by('codigo_empresa')
+            for empresa in empresas:
+                self.empresa_choices.append((
+                    str(empresa.codigo_empresa),
+                    f"{empresa.codigo_empresa}-{empresa.nome_fantasia}",
+                ))
         self.fields['empresa'].choices = self.empresa_choices
 
     class Meta:
