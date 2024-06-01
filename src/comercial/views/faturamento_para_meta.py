@@ -24,6 +24,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
+        empresa = self.form.cleaned_data['empresa']
         ano = self.form.cleaned_data['ano']
         mes = self.form.cleaned_data['mes']
         ref = self.form.cleaned_data['ref']
@@ -49,6 +50,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             ano_atual = ano
 
         self.context.update({
+            'empresa': dict(self.Form_class.empresa_choices)[empresa],
             'ano': ano_atual,
             'mes': mes,
             'ref': ref,
@@ -65,7 +67,8 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         faturados = comercial.queries.faturamento_para_meta(
             cursor, ano_atual, mes, ref=ref, tamanho=tamanho, cor=cor, 
             cliente=cliente, tipo=apresentacao, ordem=ordem,
-            colecao=colecao_codigo, verifica_devolucao=exclui=='devolvidas')
+            colecao=colecao_codigo, verifica_devolucao=exclui=='devolvidas',
+            empresa=empresa)
 
         if len(faturados) == 0:
             self.context.update({

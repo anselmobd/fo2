@@ -11,6 +11,7 @@ from base.forms.fields import (
 from utils.functions import mes_atual, ano_atual
 
 from systextil.models import Colecao
+from systextil.models.base import Empresa
 
 
 class ClienteForm(forms.Form):
@@ -135,6 +136,11 @@ class FaturamentoParaMetaForm(
         O2FieldCorForm,
         O2FieldClienteForm):
 
+    empresa_choices = []
+
+    empresa = forms.ChoiceField(
+        required=True, initial=None)
+
     ano = forms.IntegerField(
         required=False,
         initial=ano_atual,
@@ -184,9 +190,21 @@ class FaturamentoParaMetaForm(
         initial='canceladas',
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        empresas = Empresa.objects.all().order_by('codigo_empresa')
+        for empresa in empresas:
+            self.empresa_choices.append((
+                str(empresa.codigo_empresa),
+                f"{empresa.codigo_empresa}-{empresa.nome_fantasia}",
+            ))
+        self.fields['empresa'].choices = self.empresa_choices
+
     class Meta:
         autofocus_field = 'ano'
         order_fields = [
+            'empresa',
             'ano',
             'mes',
             'ref',
