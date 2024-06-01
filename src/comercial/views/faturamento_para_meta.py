@@ -110,13 +110,14 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         tabela = {
             'mes': {
                 'headers': [
-                    'Mês', 'Valor',
+                    'Mês', 'Quantidade', 'Valor',
                 ],
                 'fields': [
-                    'mes', 'valor',
+                    'mes', 'qtd', 'valor',
                 ],
                 'style': {
                     2: 'text-align: right;',
+                    3: 'text-align: right;',
                 },
             },
             'nota': {
