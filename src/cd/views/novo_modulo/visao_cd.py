@@ -30,6 +30,12 @@ class VisaoCd(O2BaseGetView):
 
         ecd = EnderecoCd()
         lotes = conteudo_local(self.cursor, qtd63=True)
+        if not lotes:
+            self.context.update({
+                'msgerr': "Nenhum lote encontrado!",
+            })
+            return
+        
         for lote in lotes:
             ecd.endereco = lote['endereco']
             lote.update(ecd.details_dict)
