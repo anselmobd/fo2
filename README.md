@@ -1,15 +1,17 @@
 # fo2
 
-## Fabril  Oxigenai
+## Fabril Oxigenai
 
 Projeto de **Intranet** desenvolvido para uma grande fábrica de roupas.
 
-Boa parte das funcionalidades dessa intranet é agrupada como um subprojeto chamado "**Apoio ao ERP**", pois é exatamente isso, um complemento ao ERP utilizado pela empresa.
-O objetivo desse "complemento" é facilitar, sempre que possível, a vida dos usuários desse ERP, que poderia/deveria ser mais amigável em muitos contextos.
-O ERP roda sobre Oracle, e o "**Apoio ao ERP**" acessa esse banco de dados prioritáriamente utilizando "raw SQL", sendo comtabilizadas mais de 700 queries, utilizadas em todas as views criadas.
+A maior parte das funcionalidades dessa intranet está agrupada em um subprojeto chamado "**Apoio ao ERP**", pois tem exatamente esse propósito: complementar o ERP utilizado pela empresa. O objetivo é tornar o uso do ERP mais simples e amigável, especialmente em cenários onde sua interface nativa apresenta limitações.
 
-Rotinas auxiliares, funcionalidades totalmente separadas do ERP, que representam algo em torno de 25% do projeto todo, utilizam PostgreSQL.
+O ERP roda sobre Oracle, e o "**Apoio ao ERP**" acessa esse banco de dados principalmente por meio de raw SQL. São mais de 700 queries utilizadas nas diversas views da aplicação.
 
-Trata-se de um projeto monolítico no padrão MVC (Model-View-Controller), desenvolvido com Python e Django, HTML, CSS e um pouco de JavaScript puro.
+Além disso, cerca de 25% do sistema é composto por rotinas auxiliares e funcionalidades independentes do ERP, que utilizam PostgreSQL como banco de dados.
 
-Sobre a infraestrutura: O projeto era todo servido localmente, dentro da empresa: Aplicação e os dois bancos de dados. A partir de certo momento o banco de dados Oracle passou a ser hospedado na OracleCloud, por uma necessidade do ERP. A aplicação da intranet (com o Apoio ao ERP), assim como o banco de dados PostgreSQL, continuaram locais.
+O projeto é monolítico, seguindo o padrão arquitetural **MVC (Model-View-Controller)**, e foi desenvolvido com **Python (Django)**, **HTML**, **CSS**, e um pouco de **JavaScript puro**.
+
+### Infraestrutura
+
+Inicialmente, toda a aplicação e os bancos de dados eram hospedados localmente na empresa. Em um determinado momento, o banco Oracle foi migrado para a **Oracle Cloud**, por demanda do ERP. No entanto, a aplicação da intranet (incluindo o Apoio ao ERP) e o banco PostgreSQL permaneceram em servidores locais.
